@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OffPeak — Fill the dead hours. Save big, today.</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #1D9E75;
+      --dark-green: #085041;
+      --red: #E53E3E;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.5;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .logo span { color: var(--green); }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .btn-ghost {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 4px;
+    }
+    .btn-primary {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--green);
+      border: none;
+      border-radius: 8px;
+      padding: 9px 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity .15s;
+    }
+    .btn-primary:hover { opacity: .88; }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+    }
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 24px 16px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ── URGENCY BAR ── */
+    .urgency-bar {
+      background: #FFF7ED;
+      border-bottom: 1px solid #FED7AA;
+      text-align: center;
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #92400E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #F97316;
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(.75); }
+    }
+    #deal-count { font-weight: 700; color: #D97706; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--bg);
+      padding: 72px 24px 64px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #D1FAE5;
+      color: var(--dark-green);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      color: var(--text);
+      max-width: 680px;
+      margin: 0 auto 16px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--green);
+    }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 36px;
+    }
+
+    /* Search bar */
+    .search-bar {
+      display: flex;
+      max-width: 640px;
+      margin: 0 auto 28px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    }
+    .search-bar .field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      padding: 0 16px;
+    }
+    .search-bar .field + .field {
+      border-left: 1.5px solid var(--border);
+    }
+    .search-bar .field svg { color: var(--muted); flex-shrink: 0; }
+    .search-bar input {
+      border: none;
+      outline: none;
+      font-size: 14px;
+      color: var(--text);
+      width: 100%;
+      padding: 14px 0;
+      background: transparent;
+    }
+    .search-bar input::placeholder { color: #9CA3AF; }
+    .search-btn {
+      background: var(--green);
+      border: none;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 0 24px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity .15s;
+      min-width: 90px;
+    }
+    .search-btn:hover { opacity: .88; }
+
+    /* Category pills */
+    .categories {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      border-radius: 20px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .pill:hover, .pill.active {
+      border-color: var(--green);
+      color: var(--green);
+      background: #F0FDF8;
+    }
+    .pill.active { font-weight: 600; }
+
+    /* ── DEALS SECTION ── */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 56px 24px;
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .section-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -.5px;
+    }
+    .section-header a {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+      text-decoration: none;
+    }
+    .section-header a:hover { text-decoration: underline; }
+
+    /* Deal cards grid */
+    .deals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .deal-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: box-shadow .15s, transform .15s;
+      cursor: pointer;
+    }
+    .deal-card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,.1);
+      transform: translateY(-2px);
+    }
+    .card-thumb {
+      position: relative;
+      height: 148px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+    }
+    .badge-discount {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--red);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: .3px;
+    }
+    .badge-time {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,.55);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card-body { padding: 14px 16px 16px; }
+    .card-category {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 4px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .card-merchant {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .price-block { display: flex; align-items: baseline; gap: 6px; }
+    .price-now {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .price-was {
+      font-size: 13px;
+      color: #9CA3AF;
+      text-decoration: line-through;
+    }
+    .card-distance {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── STATS ── */
+    .stats-section {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      text-align: center;
+    }
+    .stat-item {}
+    .stat-number {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -1px;
+      margin-bottom: 4px;
+    }
+    .stat-number span { color: var(--green); }
+    .stat-label {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .stat-divider {
+      width: 1px;
+      background: var(--border);
+      margin: 0 auto;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 24px;
+      text-align: center;
+    }
+    .how-section h2 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -.8px;
+      margin-bottom: 8px;
+    }
+    .how-section p.sub {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 48px;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      position: relative;
+    }
+    .step-connector {
+      position: absolute;
+      top: 28px;
+      left: calc(33.33% - 10px);
+      right: calc(33.33% - 10px);
+      height: 2px;
+      background: var(--border);
+      pointer-events: none;
+    }
+    .step {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .step-num {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #D1FAE5;
+      color: var(--dark-green);
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    .step-icon {
+      font-size: 28px;
+      margin-bottom: -4px;
+    }
+    .step h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .step p {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 220px;
+      margin: 0 auto;
+    }
+
+    /* ── MERCHANT CTA BANNER ── */
+    .merchant-banner {
+      background: var(--dark-green);
+      padding: 72px 24px;
+      text-align: center;
+    }
+    .merchant-banner h2 {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -.8px;
+      margin-bottom: 12px;
+    }
+    .merchant-banner p {
+      font-size: 16px;
+      color: rgba(255,255,255,.7);
+      max-width: 480px;
+      margin: 0 auto 32px;
+    }
+    .merchant-banner-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-white {
+      background: var(--white);
+      color: var(--dark-green);
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 28px;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+    .btn-white:hover { opacity: .9; }
+    .btn-outline-white {
+      background: transparent;
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 600;
+      border: 2px solid rgba(255,255,255,.4);
+      border-radius: 10px;
+      padding: 11px 28px;
+      cursor: pointer;
+      transition: border-color .15s;
+    }
+    .btn-outline-white:hover { border-color: var(--white); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #111827;
+      color: rgba(255,255,255,.6);
+      padding: 48px 24px 32px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .footer-brand .logo {
+      color: var(--white);
+      font-size: 20px;
+      display: block;
+      margin-bottom: 12px;
+    }
+    .footer-brand p {
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 240px;
+    }
+    .footer-col h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a {
+      font-size: 13px;
+      color: rgba(255,255,255,.55);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 28px;
+      font-size: 12px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom a {
+      color: rgba(255,255,255,.4);
+      text-decoration: none;
+    }
+    .footer-bottom a:hover { color: rgba(255,255,255,.7); }
+    .footer-socials { display: flex; gap: 16px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .deals-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: 1fr; gap: 40px; }
+      .step-connector { display: none; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .deals-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .search-bar { flex-direction: column; border-radius: 12px; }
+      .search-bar .field + .field { border-left: none; border-top: 1.5px solid var(--border); }
+      .search-btn { padding: 14px; border-radius: 0 0 10px 10px; }
+      .nav-right .btn-ghost { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">off<span>peak</span></a>
+    <ul class="nav-links">
+      <li><a href="#deals">Deals</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#merchant">For Merchants</a></li>
+      <li><a href="#">Cities</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-ghost">Log in</button>
+      <button class="btn-primary">Sign up free</button>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#deals">Deals</a>
+    <a href="#how">How it works</a>
+    <a href="#merchant">For Merchants</a>
+    <a href="#">Cities</a>
+    <a href="#">Log in</a>
+  </div>
+</nav>
+
+<!-- ══ URGENCY BAR ══ -->
+<div class="urgency-bar">
+  <div class="pulse-dot"></div>
+  <span><span id="deal-count">1,247</span> deals going live right now — slots filling up fast!</span>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="6"/></svg>
+    Hyperlocal deals · Updated every 15 min
+  </div>
+  <h1>Fill the dead hours.<br><em>Save big,</em> today.</h1>
+  <p class="hero-sub">Merchants unlock steep off-peak discounts. You grab them before they expire.</p>
+
+  <div class="search-bar">
+    <div class="field">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <input type="text" placeholder="Your location (e.g. Koramangala)" id="loc-input" />
+    </div>
+    <div class="field">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" placeholder="Service or merchant name" />
+    </div>
+    <button class="search-btn">Search</button>
+  </div>
+
+  <div class="categories">
+    <button class="pill active" onclick="setActive(this, 'All')">🏷️ All</button>
+    <button class="pill" onclick="setActive(this, 'Salons')">✂️ Salons</button>
+    <button class="pill" onclick="setActive(this, 'Restaurants')">🍽️ Restaurants</button>
+    <button class="pill" onclick="setActive(this, 'Spas')">💆 Spas</button>
+    <button class="pill" onclick="setActive(this, 'Fitness')">🏋️ Fitness</button>
+    <button class="pill" onclick="setActive(this, 'Clinics')">🩺 Clinics</button>
+  </div>
+</section>
+
+<!-- ══ DEALS SECTION ══ -->
+<div class="section" id="deals">
+  <div class="section-header">
+    <h2>Hot deals near you</h2>
+    <a href="#">View all →</a>
+  </div>
+  <div class="deals-grid" id="deals-grid">
+    <!-- cards injected by JS -->
+  </div>
+</div>
+
+<!-- ══ STATS ══ -->
+<div class="stats-section">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-number">2,400<span>+</span></div>
+      <div class="stat-label">Merchant partners across India</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">₹3.2<span>Cr</span></div>
+      <div class="stat-label">Saved by customers this month</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">31,000<span>+</span></div>
+      <div class="stat-label">Off-peak deals every month</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HOW IT WORKS ══ -->
+<div class="how-section" id="how">
+  <h2>How OffPeak works</h2>
+  <p class="sub">Three steps between you and a ridiculous deal.</p>
+  <div class="steps">
+    <div class="step-connector"></div>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-icon">📍</div>
+      <div>
+        <h3>Drop your location</h3>
+        <p>Tell us where you are. We find every verified merchant within 5 km.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-icon">⚡</div>
+      <div>
+        <h3>Grab a live deal</h3>
+        <p>Pick a time-limited off-peak slot. Discounts vanish when slots fill.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-icon">🎉</div>
+      <div>
+        <h3>Walk in and save</h3>
+        <p>Show your booking code. Pay the slashed price. Leave happy.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MERCHANT BANNER ══ -->
+<div class="merchant-banner" id="merchant">
+  <h2>Got empty slots? Fill them<br>with OffPeak.</h2>
+  <p>List your off-peak hours, set your own discount, and get customers through the door — at zero commission for the first 3 months.</p>
+  <div class="merchant-banner-btns">
+    <button class="btn-white">List your business free →</button>
+    <button class="btn-outline-white">See how it works</button>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo">off<span>peak</span></a>
+        <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Browse deals</a></li>
+          <li><a href="#">How it works</a></li>
+          <li><a href="#">Cities</a></li>
+          <li><a href="#">Download app</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Merchants</h4>
+        <ul>
+          <li><a href="#">List your business</a></li>
+          <li><a href="#">Merchant dashboard</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Success stories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+      <div class="footer-socials">
+        <a href="#">Twitter</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Mobile menu toggle
+  function toggleMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+  }
+
+  // ── Category pill active state
+  function setActive(el, cat) {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    renderDeals(cat);
+  }
+
+  // ── Live deal counter animation
+  let dealBase = 1247;
+  setInterval(() => {
+    dealBase += Math.floor(Math.random() * 3) - 1;
+    if (dealBase < 1100) dealBase = 1100;
+    document.getElementById('deal-count').textContent = dealBase.toLocaleString('en-IN');
+  }, 4000);
+
+  // ── Deal data
+  const deals = [
+    { id:1, category:'Salons', emoji:'✂️', bg:'#EDE9FE', discount:'52% OFF', time:'2:00–4:00 PM', title:'Classic Haircut + Wash', merchant:'Savio John Salon', price:'₹299', was:'₹620', dist:'0.4 km' },
+    { id:2, category:'Restaurants', emoji:'🍜', bg:'#FEF3C7', discount:'40% OFF', time:'3:00–5:30 PM', title:'Thali Combo for Two', merchant:'Copper Chimney Bistro', price:'₹349', was:'₹580', dist:'0.8 km' },
+    { id:3, category:'Spas', emoji:'💆', bg:'#D1FAE5', discount:'60% OFF', time:'11:00 AM–1:00 PM', title:'60-min Deep Tissue Massage', merchant:'Serenity Wellness Studio', price:'₹599', was:'₹1,500', dist:'1.2 km' },
+    { id:4, category:'Fitness', emoji:'🏋️', bg:'#DBEAFE', discount:'70% OFF', time:'10:00 AM–12:00 PM', title:'Day Pass + Personal Training', merchant:'Iron Arena Gym', price:'₹149', was:'₹499', dist:'0.6 km' },
+    { id:5, category:'Clinics', emoji:'🦷', bg:'#FCE7F3', discount:'45% OFF', time:'9:00–11:00 AM', title:'Teeth Cleaning & Polishing', merchant:'Smile Studio Dental', price:'₹449', was:'₹820', dist:'1.5 km' },
+    { id:6, category:'Restaurants', emoji:'☕', bg:'#FEF9C3', discount:'35% OFF', time:'2:30–5:00 PM', title:'Cafe Combo (Coffee + Snack)', merchant:'The Third Wave Café', price:'₹149', was:'₹230', dist:'0.3 km' },
+    { id:7, category:'Salons', emoji:'💅', bg:'#FDE8FF', discount:'50% OFF', time:'1:00–3:00 PM', title:'Manicure + Pedicure', merchant:'Gloss Nail Studio', price:'₹349', was:'₹700', dist:'0.9 km' },
+    { id:8, category:'Spas', emoji:'🧖', bg:'#ECFDF5', discount:'55% OFF', time:'10:00 AM–12:00 PM', title:'Head Spa & Scalp Therapy', merchant:'Zen Garden Spa', price:'₹499', was:'₹1,100', dist:'2.1 km' },
+    { id:9, category:'Fitness', emoji:'🧘', bg:'#EFF6FF', discount:'65% OFF', time:'7:00–9:00 AM', title:'Yoga Flow Class (1 session)', merchant:'Breathe Yoga Studio', price:'₹99', was:'₹280', dist:'1.0 km' },
+  ];
+
+  function renderDeals(cat = 'All') {
+    const filtered = cat === 'All' ? deals : deals.filter(d => d.category === cat);
+    const grid = document.getElementById('deals-grid');
+    grid.innerHTML = filtered.map(d => `
+      <div class="deal-card">
+        <div class="card-thumb" style="background:${d.bg}">
+          ${d.emoji}
+          <span class="badge-discount">${d.discount}</span>
+          <span class="badge-time">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            ${d.time}
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="card-category">${d.category}</div>
+          <div class="card-title">${d.title}</div>
+          <div class="card-merchant">${d.merchant}</div>
+          <div class="card-footer">
+            <div class="price-block">
+              <span class="price-now">${d.price}</span>
+              <span class="price-was">${d.was}</span>
+            </div>
+            <div class="card-distance">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${d.dist}
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Initial render
+  renderDeals();
+
+  // ── Geolocation (best-effort)
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      // In production you'd reverse-geocode here
+      document.getElementById('loc-input').placeholder = 'Using your current location';
+    });
+  }
+</script>
+</body>
+</html>
