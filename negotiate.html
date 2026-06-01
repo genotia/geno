@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Negotiate by AI — OffPeak</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #1D9E75;
+      --dark-green: #085041;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --white: #ffffff;
+      /* Dark theme for negotiate page */
+      --dk-bg: #0D1F1A;
+      --dk-card: #152820;
+      --dk-card2: #1A3028;
+      --dk-border: #1F3D30;
+      --dk-text: #F0FDF8;
+      --dk-muted: rgba(240,253,248,.5);
+      --dk-green: #4ADEAB;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.5;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted); transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--green); font-weight: 700; }
+    .nav-links .negotiate-link {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--green);
+      font-weight: 600;
+    }
+    .nav-links .negotiate-link:hover { color: var(--dark-green); }
+    .nav-links .negotiate-link.active { color: var(--dark-green); font-weight: 700; }
+    .negotiate-nav-wrap { position: relative; }
+    .negotiate-sub {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: .2px;
+      margin-top: -2px;
+      line-height: 1;
+    }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .btn-ghost { font-size: 14px; font-weight: 500; color: var(--text); background: none; border: none; cursor: pointer; padding: 8px 4px; }
+    .btn-primary { font-size: 14px; font-weight: 600; color: var(--white); background: var(--green); border: none; border-radius: 8px; padding: 9px 20px; cursor: pointer; white-space: nowrap; transition: opacity .15s; }
+    .btn-primary:hover { opacity: .88; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: var(--white); border-bottom: 1px solid var(--border); padding: 8px 24px 16px; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { text-decoration: none; font-size: 15px; font-weight: 500; color: var(--muted); padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ══ NEGOTIATE PAGE — DARK THEME ══ */
+    .neg-page { background: var(--dk-bg); min-height: calc(100vh - 64px); }
+
+    /* ── HERO ── */
+    .neg-hero {
+      background: linear-gradient(160deg, #0A2E22 0%, #0D1F1A 100%);
+      padding: 52px 24px 44px;
+      text-align: center;
+      border-bottom: 1px solid var(--dk-border);
+    }
+    .neg-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(29,158,117,.2);
+      border: 1px solid rgba(29,158,117,.3);
+      color: var(--dk-green);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+    }
+    .neg-badge .dot {
+      width: 6px; height: 6px;
+      background: var(--dk-green);
+      border-radius: 50%;
+      animation: blink 1.4s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .neg-hero h1 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      color: var(--dk-text);
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+    .neg-hero p {
+      font-size: 16px;
+      color: var(--dk-muted);
+      max-width: 440px;
+      margin: 0 auto 32px;
+    }
+
+    .neg-stats {
+      display: flex;
+      gap: 0;
+      justify-content: center;
+      max-width: 480px;
+      margin: 0 auto;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--dk-border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .neg-stat {
+      flex: 1;
+      padding: 16px 12px;
+      text-align: center;
+      border-right: 1px solid var(--dk-border);
+    }
+    .neg-stat:last-child { border-right: none; }
+    .neg-stat .val {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--dk-text);
+      letter-spacing: -.5px;
+    }
+    .neg-stat .val em { color: var(--dk-green); font-style: normal; }
+    .neg-stat .lbl { font-size: 11px; color: var(--dk-muted); margin-top: 2px; }
+
+    /* ── MAIN CONTENT LAYOUT ── */
+    .neg-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* ── MODE SELECTOR ── */
+    .neg-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--dk-muted);
+      margin-bottom: 14px;
+    }
+
+    .mode-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+
+    .mode-card {
+      background: var(--dk-card);
+      border: 1.5px solid var(--dk-border);
+      border-radius: 14px;
+      padding: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: border-color .15s, background .15s;
+      position: relative;
+    }
+    .mode-card:hover { border-color: var(--green); background: #1A3028; }
+    .mode-card.selected {
+      border-color: var(--dk-green);
+      background: rgba(29,158,117,.08);
+    }
+
+    .mode-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .mode-icon.green { background: rgba(29,158,117,.2); }
+    .mode-icon.purple { background: rgba(139,92,246,.2); }
+    .mode-icon.orange { background: rgba(249,115,22,.2); }
+
+    .mode-info { flex: 1; }
+    .mode-title { font-size: 16px; font-weight: 700; color: var(--dk-text); margin-bottom: 4px; }
+    .mode-desc { font-size: 13px; color: var(--dk-muted); line-height: 1.45; margin-bottom: 10px; }
+
+    .mode-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      letter-spacing: .2px;
+    }
+    .mode-tag.popular { background: rgba(29,158,117,.15); color: var(--dk-green); border: 1px solid rgba(29,158,117,.25); }
+    .mode-tag.gps { background: rgba(59,130,246,.15); color: #93C5FD; border: 1px solid rgba(59,130,246,.25); }
+    .mode-tag.long { background: rgba(249,115,22,.15); color: #FDBA74; border: 1px solid rgba(249,115,22,.25); }
+
+    .mode-check {
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid var(--dk-border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s;
+    }
+    .mode-card.selected .mode-check {
+      background: var(--dk-green);
+      border-color: var(--dk-green);
+    }
+    .mode-card.selected .mode-check::after {
+      content: '✓';
+      font-size: 12px;
+      color: var(--dark-green);
+      font-weight: 800;
+    }
+
+    /* ── CTA BUTTON ── */
+    .btn-start {
+      width: 100%;
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-start:hover { opacity: .9; }
+
+    /* ── RIGHT PANEL ── */
+    .neg-right { display: flex; flex-direction: column; gap: 20px; }
+
+    /* ── ACTIVE NEGOTIATIONS ── */
+    .active-neg-panel {
+      background: var(--dk-card);
+      border: 1px solid var(--dk-border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .active-neg-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--dk-border);
+    }
+    .active-neg-title { font-size: 15px; font-weight: 700; color: var(--dk-text); }
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(29,158,117,.15);
+      border: 1px solid rgba(29,158,117,.2);
+      color: var(--dk-green);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .live-dot {
+      width: 6px; height: 6px;
+      background: var(--dk-green);
+      border-radius: 50%;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    .neg-item {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--dk-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: background .15s;
+      cursor: pointer;
+    }
+    .neg-item:last-child { border-bottom: none; }
+    .neg-item:hover { background: rgba(255,255,255,.03); }
+
+    .neg-item-info .merchant { font-size: 14px; font-weight: 600; color: var(--dk-text); }
+    .neg-item-info .detail { font-size: 12px; color: var(--dk-muted); margin-top: 2px; }
+
+    .neg-item-status { text-align: right; flex-shrink: 0; }
+    .status-badge {
+      display: inline-block;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      margin-bottom: 3px;
+    }
+    .status-badge.negotiating { background: rgba(249,115,22,.15); color: #FDBA74; }
+    .status-badge.ready { background: rgba(29,158,117,.15); color: var(--dk-green); }
+    .status-badge.waiting { background: rgba(107,114,128,.15); color: #9CA3AF; }
+    .status-sub {
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .status-sub.green { color: var(--dk-green); }
+    .status-sub.orange { color: #FDBA74; }
+    .status-sub.muted { color: var(--dk-muted); }
+
+    /* ── HOW IT WORKS (right panel) ── */
+    .how-panel {
+      background: var(--dk-card);
+      border: 1px solid var(--dk-border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .how-panel h3 { font-size: 14px; font-weight: 700; color: var(--dk-text); margin-bottom: 16px; }
+    .how-steps { display: flex; flex-direction: column; gap: 14px; }
+    .how-step { display: flex; gap: 12px; align-items: flex-start; }
+    .how-num {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: rgba(29,158,117,.15);
+      color: var(--dk-green);
+      font-size: 13px;
+      font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .how-text .ht { font-size: 13px; font-weight: 700; color: var(--dk-text); }
+    .how-text .hd { font-size: 12px; color: var(--dk-muted); line-height: 1.4; }
+
+    /* ── GUARANTEE STRIP ── */
+    .guarantee-strip {
+      background: rgba(29,158,117,.08);
+      border: 1px solid rgba(29,158,117,.15);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .guarantee-strip .icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .guarantee-strip .gt { font-size: 13px; font-weight: 700; color: var(--dk-green); }
+    .guarantee-strip .gd { font-size: 12px; color: var(--dk-muted); margin-top: 2px; line-height: 1.4; }
+
+    /* ── BELOW FOLD — Why this works ── */
+    .neg-why {
+      border-top: 1px solid var(--dk-border);
+      padding: 56px 24px;
+    }
+    .neg-why-inner { max-width: 1100px; margin: 0 auto; }
+    .neg-why h2 { font-size: 26px; font-weight: 800; color: var(--dk-text); letter-spacing: -.5px; margin-bottom: 8px; }
+    .neg-why p.sub { font-size: 14px; color: var(--dk-muted); margin-bottom: 32px; }
+    .why-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .why-card-dark {
+      background: var(--dk-card);
+      border: 1px solid var(--dk-border);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .why-card-dark .wicon { font-size: 24px; margin-bottom: 10px; }
+    .why-card-dark h4 { font-size: 14px; font-weight: 700; color: var(--dk-text); margin-bottom: 6px; }
+    .why-card-dark p { font-size: 13px; color: var(--dk-muted); line-height: 1.55; }
+
+    /* ── NAVIGATION OPTIONS ── */
+    .nav-options {
+      border-top: 1px solid var(--dk-border);
+      padding: 48px 24px;
+    }
+    .nav-options-inner { max-width: 1100px; margin: 0 auto; }
+    .nav-options h2 { font-size: 22px; font-weight: 800; color: var(--dk-text); margin-bottom: 8px; }
+    .nav-options p.sub { font-size: 14px; color: var(--dk-muted); margin-bottom: 28px; }
+    .nav-opt-list { display: flex; flex-direction: column; gap: 10px; }
+    .nav-opt-item {
+      background: var(--dk-card);
+      border: 1px solid var(--dk-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .nav-opt-item .opt-info .opt-title { font-size: 14px; font-weight: 700; color: var(--dk-text); }
+    .nav-opt-item .opt-info .opt-desc { font-size: 12px; color: var(--dk-muted); margin-top: 2px; }
+    .nav-opt-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .tag-recommended { background: rgba(29,158,117,.15); color: var(--dk-green); border: 1px solid rgba(29,158,117,.25); }
+    .tag-avoid { background: rgba(229,62,62,.12); color: #FCA5A5; border: 1px solid rgba(229,62,62,.2); }
+    .tag-launch { background: rgba(249,115,22,.12); color: #FDBA74; border: 1px solid rgba(249,115,22,.2); }
+    .tag-consider { background: rgba(139,92,246,.12); color: #C4B5FD; border: 1px solid rgba(139,92,246,.2); }
+    .tag-narrow { background: rgba(107,114,128,.12); color: #9CA3AF; border: 1px solid rgba(107,114,128,.2); }
+
+    /* ── NEGOTIATION MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.6);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: #152820;
+      border: 1px solid var(--dk-border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform .2s;
+      box-shadow: 0 24px 64px rgba(0,0,0,.5);
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--dk-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-header .mh-left { display: flex; align-items: center; gap: 10px; }
+    .modal-avatar {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: rgba(29,158,117,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .modal-title { font-size: 16px; font-weight: 700; color: var(--dk-text); }
+    .modal-sub { font-size: 12px; color: var(--dk-muted); }
+    .modal-close {
+      width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--dk-border);
+      background: rgba(255,255,255,.05); cursor: pointer; font-size: 16px; color: var(--dk-muted);
+      display: flex; align-items: center; justify-content: center; transition: background .15s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,.1); }
+    .modal-body { padding: 20px 24px 24px; }
+
+    .modal-field { margin-bottom: 18px; }
+    .modal-label { font-size: 13px; font-weight: 600; color: var(--dk-text); margin-bottom: 8px; display: block; }
+    .modal-input {
+      width: 100%;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--dk-border);
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 14px;
+      color: var(--dk-text);
+      outline: none;
+      transition: border-color .15s;
+    }
+    .modal-input:focus { border-color: var(--green); }
+    .modal-input::placeholder { color: var(--dk-muted); }
+
+    .target-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .target-opt {
+      border: 1.5px solid var(--dk-border);
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .15s;
+      background: transparent;
+    }
+    .target-opt:hover { border-color: var(--green); }
+    .target-opt.sel { border-color: var(--dk-green); background: rgba(29,158,117,.1); }
+    .target-opt .to-lbl { font-size: 10px; color: var(--dk-muted); font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
+    .target-opt .to-val { font-size: 15px; font-weight: 800; color: var(--dk-text); margin: 3px 0; }
+    .target-opt.sel .to-val { color: var(--dk-green); }
+    .target-opt .to-tag { font-size: 10px; color: var(--dk-muted); }
+
+    .modal-note {
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--dk-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--dk-muted);
+      margin-bottom: 18px;
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Chat window */
+    .chat-window {
+      border: 1px solid var(--dk-border);
+      border-radius: 12px;
+      height: 260px;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: rgba(0,0,0,.2);
+      scroll-behavior: smooth;
+      margin-bottom: 16px;
+    }
+    .chat-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--dk-border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+    }
+    .cs-dot { width: 8px; height: 8px; border-radius: 50%; background: #F97316; animation: blink 1.2s ease-in-out infinite; flex-shrink: 0; }
+    .cs-dot.done { background: var(--dk-green); animation: none; }
+    .cs-text { font-size: 13px; font-weight: 600; color: var(--dk-text); }
+    .cs-sub { font-size: 11px; color: var(--dk-muted); }
+
+    .cmsg { display: flex; gap: 8px; align-items: flex-end; opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s; }
+    .cmsg.vis { opacity: 1; transform: translateY(0); }
+    .cmsg.bot { flex-direction: row; }
+    .cmsg.merchant { flex-direction: row-reverse; }
+    .cmsg.sys { justify-content: center; }
+    .cmsg-av {
+      width: 26px; height: 26px; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0;
+    }
+    .cmsg-av.b { background: rgba(29,158,117,.2); }
+    .cmsg-av.m { background: rgba(59,130,246,.2); }
+    .cmsg-wrap { display: flex; flex-direction: column; }
+    .cmsg.merchant .cmsg-wrap { align-items: flex-end; }
+    .cmsg-lbl { font-size: 9px; color: var(--dk-muted); font-weight: 700; letter-spacing: .3px; margin-bottom: 2px; text-transform: uppercase; }
+    .cmsg-bubble {
+      max-width: 80%;
+      padding: 8px 11px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .cmsg.bot .cmsg-bubble { background: rgba(255,255,255,.07); color: var(--dk-text); border-bottom-left-radius: 3px; }
+    .cmsg.merchant .cmsg-bubble { background: rgba(59,130,246,.15); color: #BFDBFE; border-bottom-right-radius: 3px; }
+    .cmsg.sys .cmsg-bubble { background: rgba(29,158,117,.15); color: var(--dk-green); font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 20px; }
+    .typing-dots {
+      display: flex; gap: 3px; padding: 9px 11px;
+      background: rgba(255,255,255,.07); border-radius: 10px; border-bottom-left-radius: 3px; width: fit-content;
+    }
+    .typing-dots span {
+      width: 5px; height: 5px; background: var(--dk-muted); border-radius: 50%;
+      animation: td 1s ease-in-out infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: .15s; }
+    .typing-dots span:nth-child(3) { animation-delay: .3s; }
+    @keyframes td { 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-4px);opacity:1} }
+
+    /* result */
+    .result-card {
+      background: rgba(29,158,117,.08);
+      border: 1.5px solid rgba(29,158,117,.3);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .rc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .rc-icon { font-size: 22px; }
+    .rc-name { font-size: 14px; font-weight: 700; color: var(--dk-text); }
+    .rc-mer { font-size: 12px; color: var(--dk-muted); }
+    .rc-prices {
+      display: flex; align-items: center; gap: 10px;
+      padding-top: 12px; border-top: 1px solid rgba(29,158,117,.2);
+    }
+    .rc-new { font-size: 26px; font-weight: 800; color: var(--dk-green); }
+    .rc-was { font-size: 13px; color: var(--dk-muted); text-decoration: line-through; }
+    .rc-badge { margin-left: auto; background: #E53E3E; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+    .expiry-bar {
+      background: rgba(249,115,22,.1); border: 1px solid rgba(249,115,22,.2);
+      border-radius: 8px; padding: 10px 12px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: #FDBA74; font-weight: 500; margin-bottom: 14px;
+    }
+    #expiry-timer { font-weight: 800; }
+    .result-btns { display: flex; gap: 10px; }
+    .btn-book-now { flex: 2; background: var(--green); color: #fff; border: none; border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity .15s; }
+    .btn-book-now:hover { opacity: .88; }
+    .btn-decline { flex: 1; background: transparent; color: var(--dk-muted); border: 1px solid var(--dk-border); border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600; cursor: pointer; transition: border-color .15s; }
+    .btn-decline:hover { border-color: var(--dk-muted); }
+
+    /* booked */
+    .booked-screen { text-align: center; padding: 8px 0; }
+    .booked-icon { font-size: 48px; margin-bottom: 12px; }
+    .booked-title { font-size: 20px; font-weight: 800; color: var(--dk-text); margin-bottom: 6px; }
+    .booked-sub { font-size: 13px; color: var(--dk-muted); margin-bottom: 20px; }
+    .code-box { background: rgba(255,255,255,.05); border: 2px dashed rgba(29,158,117,.4); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    .code-lbl { font-size: 10px; color: var(--dk-muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .code-val { font-size: 26px; font-weight: 800; letter-spacing: 5px; color: var(--dk-green); }
+    .btn-done { width: 100%; background: var(--green); color: #fff; border: none; border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; max-width: 260px; margin: 0 auto; display: block; transition: opacity .15s; }
+    .btn-done:hover { opacity: .88; }
+
+    /* screens */
+    .mscreen { display: none; }
+    .mscreen.active { display: block; }
+
+    /* ── FOOTER ── */
+    footer { background: #0A1A14; color: rgba(255,255,255,.4); padding: 40px 24px 28px; border-top: 1px solid var(--dk-border); }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .footer-brand .logo { color: rgba(255,255,255,.8); font-size: 20px; display: block; margin-bottom: 10px; }
+    .footer-brand p { font-size: 13px; line-height: 1.6; max-width: 220px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.6); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 14px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,.35); text-decoration: none; transition: color .15s; }
+    .footer-col ul a:hover { color: rgba(255,255,255,.7); }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; font-size: 12px; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom a { color: rgba(255,255,255,.25); text-decoration: none; }
+    .footer-socials { display: flex; gap: 14px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .neg-body { grid-template-columns: 1fr; }
+      .why-cards { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .why-cards { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .nav-right .btn-ghost { display: none; }
+      .neg-stats { flex-direction: column; }
+      .neg-stat { border-right: none; border-bottom: 1px solid var(--dk-border); }
+      .neg-stat:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">off<span>peak</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#deals">Deals</a></li>
+      <li><a href="index.html#how">How it works</a></li>
+      <li>
+        <div class="negotiate-nav-wrap">
+          <a href="negotiate.html" class="negotiate-link active">
+            🤖 Negotiate by AI
+          </a>
+          <span class="negotiate-sub">Let AI get you a better price</span>
+        </div>
+      </li>
+      <li><a href="merchants.html">For Merchants</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-ghost">Log in</button>
+      <button class="btn-primary">Sign up free</button>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html#deals">Deals</a>
+    <a href="index.html#how">How it works</a>
+    <a href="negotiate.html" style="color:#1D9E75;font-weight:700;">🤖 Negotiate by AI</a>
+    <a href="merchants.html">For Merchants</a>
+    <a href="#">Log in</a>
+  </div>
+</nav>
+
+<!-- ══ NEGOTIATE PAGE ══ -->
+<div class="neg-page">
+
+  <!-- Hero -->
+  <div class="neg-hero">
+    <div class="neg-badge"><div class="dot"></div> AI-powered · global</div>
+    <h1>Let AI get you a better price</h1>
+    <p>Negotiate with any merchant. You set the ask. We handle the rest.</p>
+    <div class="neg-stats">
+      <div class="neg-stat">
+        <div class="val"><em>58%</em></div>
+        <div class="lbl">Acceptance rate</div>
+      </div>
+      <div class="neg-stat">
+        <div class="val">₹<em>1,200</em></div>
+        <div class="lbl">Avg saving</div>
+      </div>
+      <div class="neg-stat">
+        <div class="val"><em>3</em> min</div>
+        <div class="lbl">Avg time</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main body -->
+  <div class="neg-body">
+
+    <!-- LEFT — Mode selector + CTA -->
+    <div>
+      <div class="neg-section-label">Choose your mode</div>
+
+      <div class="mode-cards">
+        <!-- Pre-visit deal -->
+        <div class="mode-card selected" onclick="selectMode(this)">
+          <div class="mode-icon green">📅</div>
+          <div class="mode-info">
+            <div class="mode-title">Pre-visit deal</div>
+            <div class="mode-desc">Planning to go somewhere? AI locks in a deal before you arrive.</div>
+            <div class="mode-tag popular">Most popular</div>
+          </div>
+          <div class="mode-check"></div>
+        </div>
+
+        <!-- Walk-in rescue -->
+        <div class="mode-card" onclick="selectMode(this)">
+          <div class="mode-icon purple">📍</div>
+          <div class="mode-info">
+            <div class="mode-title">Walk-in rescue</div>
+            <div class="mode-desc">Standing outside right now? AI negotiates while you wait.</div>
+            <div class="mode-tag gps">GPS-triggered</div>
+          </div>
+          <div class="mode-check"></div>
+        </div>
+
+        <!-- Membership deal -->
+        <div class="mode-card" onclick="selectMode(this)">
+          <div class="mode-icon orange">🎟️</div>
+          <div class="mode-info">
+            <div class="mode-title">Membership deal</div>
+            <div class="mode-desc">Gym, salon, clinic — AI negotiates your recurring package.</div>
+            <div class="mode-tag long">Long-term savings</div>
+          </div>
+          <div class="mode-check"></div>
+        </div>
+      </div>
+
+      <button class="btn-start" onclick="openNegModal()">
+        🤖 Start a new negotiation
+      </button>
+    </div>
+
+    <!-- RIGHT — Active negotiations + how it works -->
+    <div class="neg-right">
+
+      <!-- Active negotiations -->
+      <div class="active-neg-panel">
+        <div class="active-neg-header">
+          <div class="active-neg-title">Active negotiations</div>
+          <div class="live-badge"><div class="live-dot"></div> 2 live</div>
+        </div>
+        <div class="neg-item">
+          <div class="neg-item-info">
+            <div class="merchant">Barbeque Nation</div>
+            <div class="detail">Group of 10 · Sat 7pm</div>
+          </div>
+          <div class="neg-item-status">
+            <div class="status-badge negotiating">Negotiating</div><br>
+            <span class="status-sub orange">Round 2</span>
+          </div>
+        </div>
+        <div class="neg-item">
+          <div class="neg-item-info">
+            <div class="merchant">Serenity Spa</div>
+            <div class="detail">Couples package · Sun</div>
+          </div>
+          <div class="neg-item-status">
+            <div class="status-badge ready">Deal ready</div><br>
+            <span class="status-sub green">₹840 saved</span>
+          </div>
+        </div>
+        <div class="neg-item">
+          <div class="neg-item-info">
+            <div class="merchant">FitStop Gym</div>
+            <div class="detail">Monthly pass · recurring</div>
+          </div>
+          <div class="neg-item-status">
+            <div class="status-badge waiting">Awaiting reply</div><br>
+            <span class="status-sub muted">12 min ago</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- How it works -->
+      <div class="how-panel">
+        <h3>How DealBot negotiates</h3>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="how-num">1</div>
+            <div class="how-text">
+              <div class="ht">You set the ask</div>
+              <div class="hd">Pick a target price and preferred time. DealBot never shows the merchant your floor.</div>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-num">2</div>
+            <div class="how-text">
+              <div class="ht">AI contacts the merchant</div>
+              <div class="hd">DealBot reaches out via WhatsApp, negotiates in real-time across multiple rounds.</div>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="how-num">3</div>
+            <div class="how-text">
+              <div class="ht">Deal lands in your pocket</div>
+              <div class="hd">You get a notification. Accept within 2 hours to lock in your booking code.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guarantee -->
+      <div class="guarantee-strip">
+        <div class="icon">🛡️</div>
+        <div>
+          <div class="gt">Zero risk. No payment until you confirm.</div>
+          <div class="gd">DealBot only books if you approve the negotiated price. You're always in control.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Why this works -->
+  <div class="neg-why">
+    <div class="neg-why-inner">
+      <h2>Why negotiating online works</h2>
+      <p class="sub">People negotiate better when they're not face-to-face. We built the science into software.</p>
+      <div class="why-cards">
+        <div class="why-card-dark">
+          <div class="wicon">🧠</div>
+          <h4>Different mental model, different entry point</h4>
+          <p>Browsing deals is passive — scroll and pick. Negotiating is active — you set a goal and an agent works for you. These are two completely different user intents that should never compete for attention in the same menu.</p>
+        </div>
+        <div class="why-card-dark">
+          <div class="wicon">🔄</div>
+          <h4>The live feed is the retention hook</h4>
+          <p>Showing active negotiations with live status, round count, and savings creates a reason to open OffPeak even when you're not starting something new. It's your engagement loop.</p>
+        </div>
+        <div class="why-card-dark">
+          <div class="wicon">🌍</div>
+          <h4>Global positioning from day one</h4>
+          <p>"Negotiate" is universally understood across every market — India, UAE, Singapore, UK. It needs no translation or cultural adaptation. A feature this powerful deserves its own top-level tab.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation placement rationale -->
+  <div class="nav-options">
+    <div class="nav-options-inner">
+      <h2>Navigation placement</h2>
+      <p class="sub">Why "Negotiate by AI" is a top-level menu item — not hidden under Deals.</p>
+      <div class="nav-opt-list">
+        <div class="nav-opt-item">
+          <div class="opt-info">
+            <div class="opt-title">Top-level tab — "Negotiate by AI"</div>
+            <div class="opt-desc">Own tab in nav. Equal standing with Deals and Bookings. Standalone icon + label.</div>
+          </div>
+          <span class="nav-opt-tag tag-recommended">Recommended</span>
+        </div>
+        <div class="nav-opt-item">
+          <div class="opt-info">
+            <div class="opt-title">Submenu under "Deals"</div>
+            <div class="opt-desc">Deals → Browse Deals / Negotiate. Hidden one level down, low discoverability.</div>
+          </div>
+          <span class="nav-opt-tag tag-avoid">Avoid</span>
+        </div>
+        <div class="nav-opt-item">
+          <div class="opt-info">
+            <div class="opt-title">Homepage card / banner</div>
+            <div class="opt-desc">Featured card on home screen linking into Negotiate. Good for launch promotion, bad as permanent home.</div>
+          </div>
+          <span class="nav-opt-tag tag-launch">Launch only</span>
+        </div>
+        <div class="nav-opt-item">
+          <div class="opt-info">
+            <div class="opt-title">Floating action button (FAB)</div>
+            <div class="opt-desc">Always-visible "Negotiate" button overlaid on every screen. High visibility but disrupts other screens.</div>
+          </div>
+          <span class="nav-opt-tag tag-consider">Consider for v2</span>
+        </div>
+        <div class="nav-opt-item">
+          <div class="opt-info">
+            <div class="opt-title">Menu item — "Group Deal"</div>
+            <div class="opt-desc">Accurate for one mode only. Misses solo and membership users. Limits global appeal.</div>
+          </div>
+          <span class="nav-opt-tag tag-narrow">Too narrow</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .neg-page -->
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">off<span>peak</span></a>
+        <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="index.html#deals">Browse deals</a></li>
+          <li><a href="negotiate.html">Negotiate by AI</a></li>
+          <li><a href="index.html#how">How it works</a></li>
+          <li><a href="#">Download app</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Merchants</h4>
+        <ul>
+          <li><a href="merchants.html">For Merchants</a></li>
+          <li><a href="#">Merchant dashboard</a></li>
+          <li><a href="merchants.html#pricing">Pricing</a></li>
+          <li><a href="#">Success stories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+      <div class="footer-socials">
+        <a href="#">Twitter</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ NEGOTIATION MODAL ══ -->
+<div class="modal-overlay" id="neg-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+
+    <div class="modal-header">
+      <div class="mh-left">
+        <div class="modal-avatar">🤖</div>
+        <div>
+          <div class="modal-title">DealBot by OffPeak</div>
+          <div class="modal-sub">AI negotiates on your behalf</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Screen 1: Setup -->
+      <div class="mscreen active" id="ms-setup">
+        <div class="modal-field">
+          <label class="modal-label">Which merchant?</label>
+          <input class="modal-input" type="text" placeholder="e.g. Serenity Spa, Barbeque Nation..." id="merchant-input" />
+        </div>
+        <div class="modal-field">
+          <label class="modal-label">What service?</label>
+          <input class="modal-input" type="text" placeholder="e.g. Couple's massage, Table for 4..." id="service-input" />
+        </div>
+        <div class="modal-field">
+          <label class="modal-label">Your target price</label>
+          <div class="target-options" id="target-opts">
+            <div class="target-opt" onclick="selectTarget(this, 0.9)">
+              <div class="to-lbl">Listed</div>
+              <div class="to-val" id="to-0">—</div>
+              <div class="to-tag">Secure slot</div>
+            </div>
+            <div class="target-opt sel" onclick="selectTarget(this, 0.8)">
+              <div class="to-lbl">~10% more</div>
+              <div class="to-val" id="to-1">—</div>
+              <div class="to-tag">Good ask</div>
+            </div>
+            <div class="target-opt" onclick="selectTarget(this, 0.7)">
+              <div class="to-lbl">~20% more</div>
+              <div class="to-val" id="to-2">—</div>
+              <div class="to-tag">Bold ask</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-note">
+          💡 DealBot never reveals your target to the merchant. It negotiates from the top down.
+        </div>
+        <button class="btn-start" onclick="startChat()">🤖 Let DealBot negotiate for me</button>
+      </div>
+
+      <!-- Screen 2: Live chat -->
+      <div class="mscreen" id="ms-chat">
+        <div class="chat-status">
+          <div class="cs-dot" id="cs-dot"></div>
+          <div>
+            <div class="cs-text" id="cs-text">DealBot is reaching out...</div>
+            <div class="cs-sub">via WhatsApp · usually responds within 3 min</div>
+          </div>
+        </div>
+        <div class="chat-window" id="chat-win"></div>
+      </div>
+
+      <!-- Screen 3: Result -->
+      <div class="mscreen" id="ms-result">
+        <div style="text-align:center;margin-bottom:16px">
+          <div style="font-size:40px;margin-bottom:8px">🎉</div>
+          <div style="font-size:18px;font-weight:800;color:var(--dk-text);margin-bottom:4px">DealBot nailed it!</div>
+          <div style="font-size:13px;color:var(--dk-muted)" id="result-sub"></div>
+        </div>
+        <div class="result-card" id="result-card"></div>
+        <div class="expiry-bar">⏳ Expires in <span id="expiry-timer">1:59:47</span> — book now to lock in</div>
+        <div class="result-btns">
+          <button class="btn-book-now" onclick="confirmBooking()">Book this deal →</button>
+          <button class="btn-decline" onclick="closeModal()">Not now</button>
+        </div>
+      </div>
+
+      <!-- Screen 4: Booked -->
+      <div class="mscreen" id="ms-booked">
+        <div class="booked-screen">
+          <div class="booked-icon">✅</div>
+          <div class="booked-title">You're booked!</div>
+          <div class="booked-sub" id="booked-sub"></div>
+          <div class="code-box">
+            <div class="code-lbl">Booking code</div>
+            <div class="code-val" id="booking-code"></div>
+          </div>
+          <button class="btn-done" onclick="closeModal()">Done</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+  }
+
+  function selectMode(el) {
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  /* ── Modal ── */
+  let expiryInterval = null;
+  let expirySeconds = 7187;
+  let chatTimeouts = [];
+  let selectedMultiplier = 0.8;
+  let basePrice = 1200;
+
+  function openNegModal() {
+    // reset
+    showScreen('setup');
+    document.getElementById('merchant-input').value = '';
+    document.getElementById('service-input').value = '';
+    updatePriceOptions(basePrice);
+    document.getElementById('neg-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('neg-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+    chatTimeouts.forEach(t => clearTimeout(t));
+    chatTimeouts = [];
+    if (expiryInterval) { clearInterval(expiryInterval); expiryInterval = null; }
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('neg-overlay')) closeModal();
+  }
+
+  function showScreen(name) {
+    document.querySelectorAll('.mscreen').forEach(s => s.classList.remove('active'));
+    document.getElementById('ms-' + name).classList.add('active');
+  }
+
+  function updatePriceOptions(base) {
+    document.getElementById('to-0').textContent = '₹' + Math.round(base * 0.9);
+    document.getElementById('to-1').textContent = '₹' + Math.round(base * 0.8);
+    document.getElementById('to-2').textContent = '₹' + Math.round(base * 0.7);
+  }
+
+  function selectTarget(el, mult) {
+    document.querySelectorAll('.target-opt').forEach(o => o.classList.remove('sel'));
+    el.classList.add('sel');
+    selectedMultiplier = mult;
+  }
+
+  /* ── Chat simulation ── */
+  const merchantName = () => document.getElementById('merchant-input').value || 'Serenity Spa';
+  const serviceName = () => document.getElementById('service-input').value || 'Off-peak service';
+
+  function startChat() {
+    showScreen('chat');
+    const chatEl = document.getElementById('chat-win');
+    chatEl.innerHTML = '';
+    chatTimeouts.forEach(t => clearTimeout(t));
+    chatTimeouts = [];
+
+    const target = Math.round(basePrice * selectedMultiplier);
+    const mer = merchantName();
+    const svc = serviceName();
+
+    const script = [
+      { d: 500,  from: 'sys',      text: `DealBot connected to ${mer} via WhatsApp` },
+      { d: 1400, from: 'bot',      text: `Hi! I'm DealBot from OffPeak 👋 A verified customer is interested in "${svc}" for an off-peak slot. Could you offer a special rate?` },
+      { d: 3200, from: 'merchant', text: `Hello! Our off-peak rate is ₹${basePrice}. That's already a good discount from our regular price.` },
+      { d: 4800, from: 'bot',      text: `Appreciate that! The customer is flexible on timing and ready to confirm immediately. Could you go to ₹${target}? They'd book right now.` },
+      { d: 6800, from: 'merchant', text: `Let me check with the manager for a moment...` },
+      { d: 9000, from: 'merchant', text: `Okay, we can do ₹${target} for today's off-peak window. Slot must be confirmed within 2 hours. 🙏` },
+      { d: 10400, from: 'bot',     text: `Excellent! 🎉 Locking in the slot now. The customer will receive their booking code shortly. Thank you!` },
+      { d: 11600, from: 'sys',     text: `Deal secured — ₹${basePrice - target} saved!` },
+    ];
+
+    script.forEach((msg, idx) => {
+      const showTyping = msg.from !== 'sys' && idx > 0;
+      const typingDelay = msg.d - 900;
+
+      if (showTyping && typingDelay > 0) {
+        const t1 = setTimeout(() => {
+          const tid = 'typ-' + idx;
+          const tel = document.createElement('div');
+          tel.id = tid;
+          tel.className = 'cmsg bot vis';
+          tel.innerHTML = `<div class="cmsg-av b">🤖</div><div class="typing-dots"><span></span><span></span><span></span></div>`;
+          if (msg.from === 'merchant') {
+            tel.className = 'cmsg merchant vis';
+            tel.innerHTML = `<div class="cmsg-av m">🏪</div><div class="typing-dots"><span></span><span></span><span></span></div>`;
+          }
+          chatEl.appendChild(tel);
+          chatEl.scrollTop = chatEl.scrollHeight;
+        }, typingDelay);
+        chatTimeouts.push(t1);
+      }
+
+      const t2 = setTimeout(() => {
+        document.getElementById('typ-' + idx)?.remove();
+        const el = document.createElement('div');
+        el.className = `cmsg ${msg.from}`;
+        if (msg.from === 'sys') {
+          el.innerHTML = `<div class="cmsg-bubble">${msg.text}</div>`;
+        } else {
+          const av = msg.from === 'bot' ? '🤖' : '🏪';
+          const avc = msg.from === 'bot' ? 'b' : 'm';
+          const lbl = msg.from === 'bot' ? 'DEALBOT' : mer.toUpperCase().substring(0,12);
+          el.innerHTML = `
+            <div class="cmsg-av ${avc}">${av}</div>
+            <div class="cmsg-wrap">
+              <div class="cmsg-lbl">${lbl}</div>
+              <div class="cmsg-bubble">${msg.text}</div>
+            </div>`;
+        }
+        chatEl.appendChild(el);
+        chatEl.scrollTop = chatEl.scrollHeight;
+        requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('vis')));
+
+        if (idx === 0) {
+          document.getElementById('cs-text').textContent = `Connected to ${mer}`;
+        }
+        if (idx === script.length - 1) {
+          document.getElementById('cs-dot').className = 'cs-dot done';
+          document.getElementById('cs-text').textContent = 'Deal secured!';
+          setTimeout(() => showResult(target, mer, svc), 1200);
+        }
+      }, msg.d);
+      chatTimeouts.push(t2);
+    });
+  }
+
+  function showResult(target, mer, svc) {
+    const saved = basePrice - target;
+    const totalPct = Math.round((basePrice - target) / basePrice * 100 + 40); // vs original
+
+    document.getElementById('result-sub').textContent =
+      `DealBot saved you ₹${saved} extra on top of the off-peak deal!`;
+
+    document.getElementById('result-card').innerHTML = `
+      <div class="rc-head">
+        <div class="rc-icon">✨</div>
+        <div>
+          <div class="rc-name">${svc}</div>
+          <div class="rc-mer">${mer}</div>
+        </div>
+      </div>
+      <div class="rc-prices">
+        <span class="rc-new">₹${target}</span>
+        <span class="rc-was">₹${basePrice}</span>
+        <span class="rc-badge">${totalPct}% OFF</span>
+      </div>
+    `;
+
+    expirySeconds = 7187;
+    updateExpiry();
+    expiryInterval = setInterval(updateExpiry, 1000);
+    showScreen('result');
+  }
+
+  function updateExpiry() {
+    if (expirySeconds <= 0) { clearInterval(expiryInterval); return; }
+    expirySeconds--;
+    const h = Math.floor(expirySeconds / 3600);
+    const m = Math.floor((expirySeconds % 3600) / 60);
+    const s = expirySeconds % 60;
+    document.getElementById('expiry-timer').textContent =
+      `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+
+  function confirmBooking() {
+    if (expiryInterval) { clearInterval(expiryInterval); expiryInterval = null; }
+    const code = 'OP' + Math.random().toString(36).substring(2,8).toUpperCase();
+    document.getElementById('booking-code').textContent = code;
+    const mer = merchantName();
+    const target = Math.round(basePrice * selectedMultiplier);
+    document.getElementById('booked-sub').textContent =
+      `Show this code at ${mer}. Pay ₹${target} at the counter.`;
+    showScreen('booked');
+
+    // update live feed
+    addToLiveFeed(mer, target);
+  }
+
+  function addToLiveFeed(mer, price) {
+    const panel = document.querySelector('.active-neg-panel');
+    const header = panel.querySelector('.active-neg-header');
+    const newItem = document.createElement('div');
+    newItem.className = 'neg-item';
+    newItem.innerHTML = `
+      <div class="neg-item-info">
+        <div class="merchant">${mer}</div>
+        <div class="detail">Just negotiated · now</div>
+      </div>
+      <div class="neg-item-status">
+        <div class="status-badge ready">Deal ready</div><br>
+        <span class="status-sub green">₹${basePrice - price} saved</span>
+      </div>
+    `;
+    panel.insertBefore(newItem, header.nextSibling);
+  }
+</script>
+</body>
+</html>
