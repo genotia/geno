@@ -21,6 +21,22 @@
     .nav-links a { text-decoration:none; font-size:14px; font-weight:500; color:var(--muted); transition:color .15s; }
     .nav-links a:hover { color:var(--text); }
     .nav-links a.active { color:var(--green); font-weight:700; }
+    .has-mega { position:relative; }
+    .mega-drop { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); background:white; border:1px solid var(--border); border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.13); z-index:300; width:580px; display:none; overflow:hidden; }
+    .has-mega:hover .mega-drop { display:grid; grid-template-columns:1fr 1px 1fr; }
+    .mega-col { padding:22px; }
+    .mega-col-head { font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+    .mega-item { display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:10px; cursor:pointer; transition:background .15s; text-decoration:none; }
+    .mega-item:hover { background:var(--bg); }
+    .mega-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+    .mega-item-name { font-size:14px; font-weight:700; color:var(--text); }
+    .mega-item-desc { font-size:12px; color:var(--muted); margin-top:2px; line-height:1.4; }
+    .mega-divider-v { background:var(--border); }
+    .mega-sub-head { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin:14px 0 7px; }
+    .mega-chips { display:flex; flex-wrap:wrap; gap:5px; }
+    .mega-chip { padding:4px 10px; border-radius:20px; background:var(--bg); font-size:11px; font-weight:500; color:var(--text); border:1px solid var(--border); }
+    .mega-cta { display:inline-flex; align-items:center; gap:5px; margin-top:14px; font-size:13px; font-weight:700; color:var(--green); text-decoration:none; }
+    .mega-cta:hover { text-decoration:underline; }
     .nav-right { display:flex; align-items:center; gap:12px; }
     .btn-ghost { font-size:14px; font-weight:500; color:var(--text); background:none; border:none; cursor:pointer; padding:8px 4px; }
     .btn-primary { font-size:14px; font-weight:600; color:var(--white); background:var(--green); border:none; border-radius:8px; padding:9px 20px; cursor:pointer; transition:opacity .15s; white-space:nowrap; }
@@ -358,7 +374,34 @@
       </li>
       <li><a href="booking.html" class="active">Booking</a></li>
       <li><a href="index.html#how">How it works</a></li>
-      <li><a href="merchants.html">For Merchants</a></li>
+      <li class="has-mega">
+        <a href="merchants.html" style="display:flex;align-items:center;gap:4px">For Merchants <span style="font-size:10px">▾</span></a>
+        <div class="mega-drop">
+          <div class="mega-col">
+            <div class="mega-col-head">🏪 Merchant OS</div>
+            <a href="merchants.html" class="mega-item">
+              <div class="mega-icon" style="background:rgba(29,158,117,.1)">📊</div>
+              <div><div class="mega-item-name">Merchant OS</div><div class="mega-item-desc">Full SaaS platform for salons, spas, gyms &amp; clinics</div></div>
+            </a>
+            <div style="margin-top:12px"><div class="mega-sub-head">Includes</div>
+            <div class="mega-chips"><span class="mega-chip">📅 Bookings</span><span class="mega-chip">👥 Staff</span><span class="mega-chip">📈 Analytics</span><span class="mega-chip">💰 Payments</span></div></div>
+            <a href="merchants.html" class="mega-cta">Explore Merchant OS →</a>
+          </div>
+          <div class="mega-divider-v"></div>
+          <div class="mega-col">
+            <div class="mega-col-head">🤖 AI Agents</div>
+            <a href="ai-agents.html" class="mega-item">
+              <div class="mega-icon" style="background:rgba(139,92,246,.1)">🤖</div>
+              <div><div class="mega-item-name">AI Agents Platform</div><div class="mega-item-desc">22 AI workers that run your business 24/7</div></div>
+            </a>
+            <div class="mega-sub-head">General Agents</div>
+            <div class="mega-chips"><span class="mega-chip">💰 Revenue</span><span class="mega-chip">😊 Customer Cx</span><span class="mega-chip">⚙️ Operations</span><span class="mega-chip">📣 Marketing</span></div>
+            <div class="mega-sub-head">Vertical Agents</div>
+            <div class="mega-chips"><span class="mega-chip">💇 Salon &amp; Spa</span><span class="mega-chip">🏋️ Gym</span><span class="mega-chip">🍽️ Restaurant</span><span class="mega-chip">🏥 Clinic</span></div>
+            <a href="ai-agents.html" class="mega-cta">Explore AI Agents →</a>
+          </div>
+        </div>
+      </li>
     </ul>
     <div class="nav-right">
       <button class="btn-ghost">Log in</button>
@@ -371,7 +414,8 @@
     <a href="negotiate.html" style="color:#1D9E75;font-weight:700;">🤖 Negotiate by AI</a>
     <a href="booking.html" style="color:#1D9E75;font-weight:700;">Booking</a>
     <a href="index.html#how">How it works</a>
-    <a href="merchants.html">For Merchants</a>
+    <a href="merchants.html">Merchant OS</a>
+    <a href="ai-agents.html">🤖 AI Agents</a>
     <a href="#">Log in</a>
   </div>
 </nav>

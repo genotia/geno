@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Agents — Genoti AI</title>
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --green:#1D9E75; --dark-green:#085041; --text:#111827; --muted:#6B7280;
+      --border:#E5E7EB; --bg:#F9FAFB; --white:#fff; --red:#EF4444; --orange:#F59E0B;
+      --purple:#8B5CF6; --blue:#3B82F6; --teal:#14B8A6;
+    }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; color:var(--text); background:var(--bg); line-height:1.5; }
+
+    /* ── NAV ── */
+    nav { position:sticky; top:0; z-index:200; background:var(--white); border-bottom:1px solid var(--border); }
+    .nav-inner { max-width:1200px; margin:0 auto; padding:0 24px; height:64px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .logo { font-size:22px; font-weight:800; letter-spacing:-.5px; color:var(--text); text-decoration:none; flex-shrink:0; }
+    .logo span { color:var(--green); }
+    .nav-links { display:flex; gap:28px; list-style:none; }
+    .nav-links a { text-decoration:none; font-size:14px; font-weight:500; color:var(--muted); transition:color .15s; }
+    .nav-links a:hover { color:var(--text); }
+    .nav-links a.active { color:var(--green); font-weight:700; }
+    .nav-right { display:flex; align-items:center; gap:12px; }
+    .btn-ghost { font-size:14px; font-weight:500; color:var(--text); background:none; border:none; cursor:pointer; padding:8px 4px; }
+    .btn-primary { font-size:14px; font-weight:600; color:var(--white); background:var(--green); border:none; border-radius:8px; padding:9px 20px; cursor:pointer; transition:opacity .15s; white-space:nowrap; }
+    .btn-primary:hover { opacity:.88; }
+    .hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+    .hamburger span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; }
+    .mobile-menu { display:none; flex-direction:column; background:var(--white); border-bottom:1px solid var(--border); padding:8px 24px 16px; }
+    .mobile-menu.open { display:flex; }
+    .mobile-menu a { text-decoration:none; font-size:15px; font-weight:500; color:var(--muted); padding:10px 0; border-bottom:1px solid var(--border); }
+    .mobile-menu a:last-child { border-bottom:none; }
+
+    /* MEGA MENU */
+    .has-mega { position:relative; }
+    .mega-drop { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); background:white; border:1px solid var(--border); border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.13); z-index:300; width:580px; display:none; overflow:hidden; }
+    .has-mega:hover .mega-drop { display:grid; grid-template-columns:1fr 1px 1fr; }
+    .mega-col { padding:22px; }
+    .mega-col-head { font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+    .mega-item { display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:10px; cursor:pointer; transition:background .15s; text-decoration:none; }
+    .mega-item:hover { background:var(--bg); }
+    .mega-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+    .mega-item-name { font-size:14px; font-weight:700; color:var(--text); }
+    .mega-item-desc { font-size:12px; color:var(--muted); margin-top:2px; line-height:1.4; }
+    .mega-divider-v { background:var(--border); }
+    .mega-sub-head { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin:14px 0 7px; }
+    .mega-chips { display:flex; flex-wrap:wrap; gap:5px; }
+    .mega-chip { padding:4px 10px; border-radius:20px; background:var(--bg); font-size:11px; font-weight:500; color:var(--text); border:1px solid var(--border); }
+    .mega-cta { display:inline-flex; align-items:center; gap:5px; margin-top:14px; font-size:13px; font-weight:700; color:var(--green); text-decoration:none; }
+    .mega-cta:hover { text-decoration:underline; }
+
+    /* ── HERO ── */
+    .agents-hero {
+      background:linear-gradient(160deg,#071f16 0%,#0d2e22 45%,#0a2518 100%);
+      padding:64px 24px 72px; text-align:center; position:relative; overflow:hidden;
+    }
+    .agents-hero::before { content:''; position:absolute; top:-60px; right:-60px; width:360px; height:360px; background:radial-gradient(circle,rgba(29,158,117,.2) 0%,transparent 70%); border-radius:50%; }
+    .agents-hero::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:40px; background:var(--bg); clip-path:ellipse(55% 100% at 50% 100%); }
+    .ah-inner { max-width:760px; margin:0 auto; position:relative; z-index:1; }
+    .ah-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(74,222,171,.15); border:1px solid rgba(74,222,171,.3); color:#4ADEAB; font-size:11px; font-weight:700; padding:5px 14px; border-radius:20px; margin-bottom:20px; letter-spacing:.6px; text-transform:uppercase; }
+    .ah-badge .dot { width:6px; height:6px; background:#4ADEAB; border-radius:50%; animation:blink 1.4s infinite; }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
+    .agents-hero h1 { font-size:clamp(28px,5vw,54px); font-weight:800; letter-spacing:-1.5px; color:#F0FDF8; margin-bottom:14px; line-height:1.1; }
+    .agents-hero h1 em { font-style:normal; color:#4ADEAB; }
+    .agents-hero p { font-size:17px; color:rgba(240,253,248,.6); max-width:520px; margin:0 auto 40px; }
+    .ah-stats { display:flex; gap:0; justify-content:center; max-width:520px; margin:0 auto; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:14px; overflow:hidden; }
+    .ah-stat { flex:1; padding:16px 10px; text-align:center; border-right:1px solid rgba(255,255,255,.08); }
+    .ah-stat:last-child { border-right:none; }
+    .ah-stat .v { font-size:24px; font-weight:800; color:#F0FDF8; letter-spacing:-.5px; }
+    .ah-stat .v em { color:#4ADEAB; font-style:normal; }
+    .ah-stat .l { font-size:11px; color:rgba(240,253,248,.5); margin-top:2px; }
+
+    /* ── CATEGORY TABS ── */
+    .agents-section { max-width:1200px; margin:0 auto; padding:48px 24px 60px; }
+    .cat-tabs-wrap { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:36px; }
+    .cat-tab { display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:24px; border:1.5px solid var(--border); background:var(--white); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .15s; }
+    .cat-tab:hover { border-color:var(--green); color:var(--green); }
+    .cat-tab.active { color:white; border-color:transparent; }
+    .cat-tab .tab-count { background:rgba(255,255,255,.25); color:inherit; font-size:11px; font-weight:700; padding:1px 7px; border-radius:10px; }
+
+    /* ── AGENT CARDS ── */
+    .agents-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .agent-card { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:20px; transition:transform .2s,box-shadow .2s; }
+    .agent-card:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.08); }
+    .ac-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+    .ac-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+    .ac-badge { font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; }
+    .badge-live { background:rgba(29,158,117,.1); color:var(--green); }
+    .badge-soon { background:rgba(107,114,128,.1); color:var(--muted); }
+    .ac-name { font-size:15px; font-weight:700; color:var(--text); margin-bottom:5px; }
+    .ac-desc { font-size:13px; color:var(--muted); line-height:1.5; }
+
+    /* ── VERTICALS ── */
+    .verticals-section { background:white; border-top:1px solid var(--border); padding:56px 24px 64px; }
+    .vs-inner { max-width:1200px; margin:0 auto; }
+    .vs-header { text-align:center; margin-bottom:40px; }
+    .vs-eyebrow { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--green); background:rgba(29,158,117,.08); padding:5px 14px; border-radius:20px; margin-bottom:12px; }
+    .vs-title { font-size:clamp(22px,4vw,36px); font-weight:800; color:var(--text); letter-spacing:-.5px; margin-bottom:10px; }
+    .vs-sub { font-size:15px; color:var(--muted); max-width:500px; margin:0 auto; }
+    .verticals-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+    .vertical-card { border-radius:18px; overflow:hidden; border:1px solid var(--border); }
+    .vc-head { padding:24px 24px 20px; display:flex; align-items:center; gap:14px; }
+    .vc-emoji { width:52px; height:52px; border-radius:14px; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-size:26px; }
+    .vc-head-name { font-size:18px; font-weight:800; color:white; }
+    .vc-head-sub { font-size:13px; color:rgba(255,255,255,.7); margin-top:2px; }
+    .vc-agents { padding:16px 20px 20px; background:var(--bg); display:flex; flex-direction:column; gap:10px; }
+    .vc-agent { background:white; border:1px solid var(--border); border-radius:10px; padding:13px; display:flex; align-items:flex-start; gap:10px; }
+    .vca-icon { font-size:18px; flex-shrink:0; }
+    .vca-name { font-size:13px; font-weight:700; color:var(--text); }
+    .vca-desc { font-size:12px; color:var(--muted); margin-top:2px; }
+
+    /* ── CTA ── */
+    .agents-cta { background:linear-gradient(135deg,#0D1F1A,#0A2E22); padding:64px 24px; text-align:center; }
+    .cta-inner { max-width:600px; margin:0 auto; }
+    .agents-cta h2 { font-size:clamp(24px,4vw,38px); font-weight:800; color:#F0FDF8; letter-spacing:-.5px; margin-bottom:14px; }
+    .agents-cta p { font-size:16px; color:rgba(240,253,248,.6); margin-bottom:32px; }
+    .cta-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .btn-cta-primary { padding:14px 28px; background:#4ADEAB; color:#0D1F1A; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; transition:opacity .15s; }
+    .btn-cta-primary:hover { opacity:.9; }
+    .btn-cta-ghost { padding:14px 28px; background:rgba(255,255,255,.08); color:#F0FDF8; border:1px solid rgba(255,255,255,.2); border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; transition:all .15s; }
+    .btn-cta-ghost:hover { background:rgba(255,255,255,.14); }
+
+    /* ── FOOTER ── */
+    footer { background:#111827; color:rgba(255,255,255,.6); padding:44px 24px 28px; }
+    .footer-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:36px; margin-bottom:36px; }
+    .f-logo { font-size:20px; font-weight:800; color:white; letter-spacing:-.5px; margin-bottom:8px; }
+    .f-logo span { color:var(--green); }
+    .f-tagline { font-size:13px; line-height:1.6; }
+    .footer-col h4 { font-size:13px; font-weight:700; color:white; margin-bottom:12px; }
+    .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .footer-col ul a { text-decoration:none; font-size:13px; color:rgba(255,255,255,.55); transition:color .15s; }
+    .footer-col ul a:hover { color:white; }
+    .footer-bottom { border-top:1px solid rgba(255,255,255,.1); padding-top:20px; font-size:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+    .footer-bottom a { color:rgba(255,255,255,.5); text-decoration:none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width:900px) { .agents-grid { grid-template-columns:repeat(2,1fr); } .verticals-grid { grid-template-columns:1fr; } .footer-inner { grid-template-columns:1fr 1fr; } }
+    @media (max-width:640px) {
+      .nav-links { display:none; } .hamburger { display:flex; } .nav-right .btn-ghost { display:none; }
+      .agents-grid { grid-template-columns:1fr; } .footer-inner { grid-template-columns:1fr; }
+      .ah-stats { flex-wrap:wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Genoti <span>AI</span></a>
+    <ul class="nav-links">
+      <li>
+        <div style="display:flex;flex-direction:column;line-height:1.1">
+          <a href="index.html#deals" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280">NearBy Deals</a>
+          <span style="font-size:10px;color:#6B7280;margin-top:1px">OffPeak Hours</span>
+        </div>
+      </li>
+      <li>
+        <div style="display:flex;flex-direction:column;line-height:1.1">
+          <a href="negotiate.html" style="color:#1D9E75;font-weight:700;font-size:14px;text-decoration:none">🤖 Negotiate by AI</a>
+          <span style="font-size:10px;color:#6B7280;margin-top:1px">Let AI get you a better price</span>
+        </div>
+      </li>
+      <li><a href="booking.html">Booking</a></li>
+      <li><a href="index.html#how">How it works</a></li>
+      <li class="has-mega">
+        <a href="merchants.html" style="display:flex;align-items:center;gap:4px">For Merchants <span style="font-size:10px">▾</span></a>
+        <div class="mega-drop">
+          <div class="mega-col">
+            <div class="mega-col-head">🏪 Merchant OS</div>
+            <a href="merchants.html" class="mega-item">
+              <div class="mega-icon" style="background:rgba(29,158,117,.1)">📊</div>
+              <div><div class="mega-item-name">Merchant OS</div><div class="mega-item-desc">Full SaaS platform for salons, spas, gyms &amp; clinics</div></div>
+            </a>
+            <div style="margin-top:12px">
+              <div class="mega-sub-head">Includes</div>
+              <div class="mega-chips">
+                <span class="mega-chip">📅 Bookings</span><span class="mega-chip">👥 Staff</span>
+                <span class="mega-chip">📈 Analytics</span><span class="mega-chip">💰 Payments</span>
+                <span class="mega-chip">📣 Marketing</span>
+              </div>
+            </div>
+            <a href="merchants.html" class="mega-cta">Explore Merchant OS →</a>
+          </div>
+          <div class="mega-divider-v"></div>
+          <div class="mega-col">
+            <div class="mega-col-head">🤖 AI Agents</div>
+            <a href="ai-agents.html" class="mega-item">
+              <div class="mega-icon" style="background:rgba(139,92,246,.1)">🤖</div>
+              <div><div class="mega-item-name">AI Agents Platform</div><div class="mega-item-desc">22 AI workers that run your business 24/7</div></div>
+            </a>
+            <div style="margin-top:4px">
+              <div class="mega-sub-head">General Agents</div>
+              <div class="mega-chips">
+                <span class="mega-chip">💰 Revenue</span><span class="mega-chip">😊 Customer Cx</span>
+                <span class="mega-chip">⚙️ Operations</span><span class="mega-chip">📣 Marketing</span>
+              </div>
+              <div class="mega-sub-head">Vertical Agents</div>
+              <div class="mega-chips">
+                <span class="mega-chip">💇 Salon &amp; Spa</span><span class="mega-chip">🏋️ Gym</span>
+                <span class="mega-chip">🍽️ Restaurant</span><span class="mega-chip">🏥 Clinic</span>
+              </div>
+            </div>
+            <a href="ai-agents.html" class="mega-cta active">Explore AI Agents →</a>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-ghost">Log in</button>
+      <button class="btn-primary">Get started free</button>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html#deals">NearBy Deals</a>
+    <a href="negotiate.html" style="color:#1D9E75;font-weight:700;">🤖 Negotiate by AI</a>
+    <a href="booking.html">Booking</a>
+    <a href="index.html#how">How it works</a>
+    <a href="merchants.html">Merchant OS</a>
+    <a href="ai-agents.html" style="color:#8B5CF6;font-weight:700;">🤖 AI Agents</a>
+    <a href="#">Log in</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="agents-hero">
+  <div class="ah-inner">
+    <div class="ah-badge"><span class="dot"></span> Agentic AI Platform</div>
+    <h1>AI Employees for<br><em>Every Local Business</em></h1>
+    <p>Replace repetitive work with AI workers that increase revenue, improve customer experience, and optimise operations.</p>
+    <div class="ah-stats">
+      <div class="ah-stat"><div class="v">22<em>+</em></div><div class="l">AI Agents</div></div>
+      <div class="ah-stat"><div class="v">4</div><div class="l">Industry Verticals</div></div>
+      <div class="ah-stat"><div class="v">24<em>/7</em></div><div class="l">Always on</div></div>
+      <div class="ah-stat"><div class="v">40<em>%</em></div><div class="l">Avg. revenue lift</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GENERAL AGENTS -->
+<div class="agents-section">
+  <div class="cat-tabs-wrap" id="cat-tabs"></div>
+  <div class="agents-grid" id="agents-grid"></div>
+</div>
+
+<!-- VERTICAL AGENTS -->
+<div class="verticals-section">
+  <div class="vs-inner">
+    <div class="vs-header">
+      <div class="vs-eyebrow">Industry Specific</div>
+      <div class="vs-title">Vertical-Specific AI Agents</div>
+      <div class="vs-sub">Purpose-built agents trained for your exact industry — not generic AI.</div>
+    </div>
+    <div class="verticals-grid" id="verticals-grid"></div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="agents-cta">
+  <div class="cta-inner">
+    <h2>Ready to hire your first AI employee?</h2>
+    <p>Start with one agent, scale to a full AI workforce. No technical setup required.</p>
+    <div class="cta-btns">
+      <button class="btn-cta-primary">Start free trial →</button>
+      <button class="btn-cta-ghost">Talk to sales</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="f-logo">Genoti <span>AI</span></div>
+      <div class="f-tagline">Agentic AI platform for local businesses — salons, spas, gyms, restaurants &amp; clinics.</div>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul>
+        <li><a href="ai-agents.html">AI Agents</a></li>
+        <li><a href="merchants.html">Merchant OS</a></li>
+        <li><a href="booking.html">Booking</a></li>
+        <li><a href="negotiate.html">Negotiate by AI</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Verticals</h4>
+      <ul>
+        <li><a href="#">Salon &amp; Spa</a></li>
+        <li><a href="#">Gym &amp; Fitness</a></li>
+        <li><a href="#">Restaurant</a></li>
+        <li><a href="#">Clinic &amp; MedSpa</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Genoti AI · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+    <div style="display:flex;gap:16px"><a href="#">Twitter</a><a href="#">LinkedIn</a></div>
+  </div>
+</footer>
+
+<script>
+const CATS = [
+  { id:'revenue',   label:'Revenue',       icon:'💰', color:'#1D9E75', bg:'rgba(29,158,117,.1)', count:5 },
+  { id:'cx',        label:'Customer Cx',   icon:'😊', color:'#8B5CF6', bg:'rgba(139,92,246,.1)', count:5 },
+  { id:'ops',       label:'Operations',    icon:'⚙️', color:'#3B82F6', bg:'rgba(59,130,246,.1)', count:5 },
+  { id:'marketing', label:'Marketing',     icon:'📣', color:'#F59E0B', bg:'rgba(245,158,11,.1)', count:4 },
+  { id:'data',      label:'Intelligence',  icon:'📊', color:'#14B8A6', bg:'rgba(20,184,166,.1)', count:4 },
+];
+
+const AGENTS = {
+  revenue: [
+    {n:'AI Sales Agent',            icon:'💼', desc:'Converts inquiries into confirmed bookings automatically via chat and voice.'},
+    {n:'AI Upsell Agent',           icon:'⬆️', desc:'Recommends premium add-ons and upgrades at the perfect moment in the customer journey.'},
+    {n:'AI Dynamic Pricing Agent',  icon:'💱', desc:'Adjusts prices in real-time based on demand, time of day, and seat occupancy.'},
+    {n:'AI Yield Management Agent', icon:'📈', desc:'Maximises revenue per appointment slot by intelligently filling gaps in your calendar.'},
+    {n:'AI Membership Agent',       icon:'🎟️', desc:'Sells, manages, and auto-renews subscription plans with zero manual effort.'},
+  ],
+  cx: [
+    {n:'AI Receptionist',       icon:'📞', desc:'Handles calls, messages, and walk-ins 24/7 — never miss a customer again.'},
+    {n:'AI Concierge Agent',    icon:'🛎️', desc:'Personalises service recommendations for every customer based on their history.'},
+    {n:'AI Review Agent',       icon:'⭐', desc:'Collects, monitors, and responds to reviews automatically across all platforms.'},
+    {n:'AI Loyalty Agent',      icon:'🎁', desc:'Manages rewards, points, and repeat-visit incentives to keep customers coming back.'},
+    {n:'AI Retention Agent',    icon:'🔄', desc:'Re-engages lapsed customers with smart, timely offers before they go to a competitor.'},
+  ],
+  ops: [
+    {n:'AI Scheduler',          icon:'📅', desc:'Optimises staff schedules, shift planning, and resource allocation automatically.'},
+    {n:'AI Workforce Manager',  icon:'👥', desc:'Tracks attendance, performance, and team productivity in one dashboard.'},
+    {n:'AI Inventory Agent',    icon:'📦', desc:'Monitors stock levels and triggers automatic reorders before you run out.'},
+    {n:'AI Procurement Agent',  icon:'🛒', desc:'Automates supplier ordering with cost-optimised recommendations.'},
+    {n:'AI Expense Auditor',    icon:'🔍', desc:'Flags anomalies, controls costs, and generates expense reports in real time.'},
+  ],
+  marketing: [
+    {n:'AI Campaign Manager',   icon:'📣', desc:'Plans and executes targeted promotions across SMS, email, and social channels.'},
+    {n:'AI Social Media Agent', icon:'📱', desc:'Creates and publishes branded content to Instagram, Google, and Facebook automatically.'},
+    {n:'AI Local SEO Agent',    icon:'📍', desc:'Boosts your Google Maps ranking and local search visibility without paid ads.'},
+    {n:'AI Referral Agent',     icon:'🤝', desc:'Automates word-of-mouth referral programs that consistently drive new clients.'},
+  ],
+  data: [
+    {n:'AI Customer Data Platform', icon:'🗄️', desc:'Unifies all customer data from bookings, payments, and reviews into one profile.'},
+    {n:'AI Business Analyst',       icon:'📊', desc:'Delivers daily insights, KPIs, and performance reports — no spreadsheets needed.'},
+    {n:'AI Forecasting Agent',      icon:'🔮', desc:'Predicts demand, revenue trends, and customer churn weeks in advance.'},
+    {n:'AI Competitive Intelligence',icon:'🕵️', desc:'Monitors competitor pricing, reviews, and promotions in your local area.'},
+  ],
+};
+
+const VERTICALS = [
+  {
+    name:'Restaurant', emoji:'🍽️', grad:'linear-gradient(135deg,#F59E0B,#B45309)',
+    agents:[
+      {icon:'🍽️', n:'AI Waiter',                      d:'Takes orders, answers menu questions, and upsells specials via chat or kiosk.'},
+      {icon:'📝', n:'AI Order Taker',                  d:'Processes voice and digital orders accurately with zero wait time.'},
+      {icon:'👨‍🍳', n:'AI Kitchen Agent',               d:'Optimises prep times, ticket flow, and kitchen coordination in real time.'},
+      {icon:'🪑', n:'AI Table Optimisation Agent',     d:'Maximises table turns and reduces walk-away wait times.'},
+    ]
+  },
+  {
+    name:'Salon & Spa', emoji:'💇', grad:'linear-gradient(135deg,#1D9E75,#085041)',
+    agents:[
+      {icon:'✂️', n:'AI Stylist Assistant',             d:'Helps clients choose services, styles, and products that suit them.'},
+      {icon:'📅', n:'AI Rebooking Agent',               d:'Automatically re-books clients before they drift to another salon.'},
+      {icon:'🎁', n:'AI Package Recommendation Agent',  d:'Suggests seasonal bundles and packages to increase average spend.'},
+    ]
+  },
+  {
+    name:'Gym & Fitness', emoji:'🏋️', grad:'linear-gradient(135deg,#EF4444,#991B1B)',
+    agents:[
+      {icon:'💪', n:'AI Fitness Coach',                 d:'Delivers personalised workout and nutrition recommendations for every member.'},
+      {icon:'🔄', n:'AI Membership Retention Agent',    d:'Identifies at-risk members and re-engages them before they cancel.'},
+    ]
+  },
+  {
+    name:'Clinic & MedSpa', emoji:'🏥', grad:'linear-gradient(135deg,#3B82F6,#1D4ED8)',
+    agents:[
+      {icon:'📋', n:'AI Appointment Coordinator',       d:'Schedules, confirms, and manages patient appointments automatically.'},
+      {icon:'💬', n:'AI Follow-Up Agent',               d:'Sends post-treatment follow-ups and care instructions on time.'},
+      {icon:'🚫', n:'AI No-Show Reduction Agent',       d:'Cuts no-show rates with smart reminders and frictionless rebooking.'},
+    ]
+  },
+];
+
+let activeCat = 'revenue';
+
+function renderTabs() {
+  document.getElementById('cat-tabs').innerHTML = CATS.map(c =>
+    `<button class="cat-tab${c.id===activeCat?' active':''}"
+      style="${c.id===activeCat?`background:${c.color};border-color:${c.color}`:''}"
+      onclick="switchCat('${c.id}')">
+      ${c.icon} ${c.label}
+      <span class="tab-count">${c.count}</span>
+    </button>`
+  ).join('');
+}
+
+function switchCat(id) {
+  activeCat = id;
+  renderTabs();
+  renderAgents();
+}
+
+function renderAgents() {
+  const cat = CATS.find(c => c.id===activeCat);
+  const list = AGENTS[activeCat] || [];
+  document.getElementById('agents-grid').innerHTML = list.map((a,i) =>
+    `<div class="agent-card">
+      <div class="ac-top">
+        <div class="ac-icon" style="background:${cat.bg}">${a.icon}</div>
+        <span class="ac-badge ${i<2?'badge-live':'badge-soon'}">${i<2?'● Live':'Coming soon'}</span>
+      </div>
+      <div class="ac-name">${a.n}</div>
+      <div class="ac-desc">${a.desc}</div>
+    </div>`
+  ).join('');
+}
+
+function renderVerticals() {
+  document.getElementById('verticals-grid').innerHTML = VERTICALS.map(v =>
+    `<div class="vertical-card">
+      <div class="vc-head" style="background:${v.grad}">
+        <div class="vc-emoji">${v.emoji}</div>
+        <div>
+          <div class="vc-head-name">${v.name}</div>
+          <div class="vc-head-sub">${v.agents.length} AI Agent${v.agents.length>1?'s':''}</div>
+        </div>
+      </div>
+      <div class="vc-agents">
+        ${v.agents.map(a=>`
+          <div class="vc-agent">
+            <div class="vca-icon">${a.icon}</div>
+            <div><div class="vca-name">${a.n}</div><div class="vca-desc">${a.d}</div></div>
+          </div>`
+        ).join('')}
+      </div>
+    </div>`
+  ).join('');
+}
+
+function toggleMenu() { document.getElementById('mobile-menu').classList.toggle('open'); }
+
+renderTabs();
+renderAgents();
+renderVerticals();
+</script>
+</body>
+</html>
