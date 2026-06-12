@@ -1032,6 +1032,17 @@
       .price-options { grid-template-columns: repeat(3, 1fr); }
       .chat-window { height: 240px; }
     }
+    .browse-section { background:var(--white); border-bottom:1px solid var(--border); padding:40px 24px; }
+    .browse-inner { max-width:1200px; margin:0 auto; }
+    .browse-title { font-size:20px; font-weight:800; color:var(--text); letter-spacing:-.3px; margin-bottom:20px; }
+    .browse-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:12px; }
+    .browse-card { display:flex; flex-direction:column; align-items:center; gap:8px; padding:18px 10px; border-radius:14px; border:1.5px solid var(--border); background:var(--bg); cursor:pointer; text-align:center; text-decoration:none; transition:all .2s; }
+    .browse-card:hover { border-color:var(--green); transform:translateY(-2px); box-shadow:0 6px 20px rgba(29,158,117,.12); }
+    .browse-icon { width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; }
+    .browse-name { font-size:12px; font-weight:700; color:var(--text); line-height:1.3; }
+    .browse-sub { font-size:10px; color:var(--muted); line-height:1.4; }
+    @media (max-width:1100px) { .browse-grid { grid-template-columns:repeat(4,1fr); } }
+    @media (max-width:640px)  { .browse-grid { grid-template-columns:repeat(3,1fr); } }
     .trust-bar { position:sticky; top:64px; z-index:99; background:linear-gradient(90deg,#0f172a 0%,#1e293b 100%); padding:10px 32px; display:flex; align-items:center; justify-content:center; gap:0; }
     .trust-step { display:flex; align-items:center; gap:8px; padding:0 20px; }
     .trust-step-icon { width:30px; height:30px; background:rgba(255,255,255,.1); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
@@ -1151,13 +1162,59 @@
 
   <div class="categories">
     <button class="pill active" onclick="setActive(this, 'All')">🏷️ All</button>
-    <button class="pill" onclick="setActive(this, 'Salons')">✂️ Salons</button>
-    <button class="pill" onclick="setActive(this, 'Restaurants')">🍽️ Restaurants</button>
-    <button class="pill" onclick="setActive(this, 'Spas')">💆 Spas</button>
-    <button class="pill" onclick="setActive(this, 'Fitness')">🏋️ Fitness</button>
-    <button class="pill" onclick="setActive(this, 'Clinics')">🩺 Clinics</button>
+    <button class="pill" onclick="setActive(this, 'Health')">🏥 Health & Medical</button>
+    <button class="pill" onclick="setActive(this, 'Beauty')">💇 Beauty & Wellness</button>
+    <button class="pill" onclick="setActive(this, 'Fitness')">🏋️ Fitness & Sports</button>
+    <button class="pill" onclick="setActive(this, 'Food')">🍽️ Food & Cafes</button>
+    <button class="pill" onclick="setActive(this, 'Home')">🔧 Home Services</button>
+    <button class="pill" onclick="setActive(this, 'Pets')">🐾 Pet Care</button>
+    <button class="pill" onclick="setActive(this, 'Coaching')">📚 Coaching</button>
   </div>
 </section>
+
+<!-- ══ BROWSE CATEGORIES ══ -->
+<div class="browse-section">
+  <div class="browse-inner">
+    <div class="browse-title">Browse by category</div>
+    <div class="browse-grid">
+      <a href="booking.html" class="browse-card">
+        <div class="browse-icon" style="background:linear-gradient(135deg,#14B8A6,#0F766E)">🏥</div>
+        <div class="browse-name">Health & Medical</div>
+        <div class="browse-sub">Doctors · Clinics · Dentists · Labs · Diagnostics</div>
+      </a>
+      <a href="booking.html" class="browse-card">
+        <div class="browse-icon" style="background:linear-gradient(135deg,#EC4899,#9D174D)">💇</div>
+        <div class="browse-name">Beauty & Wellness</div>
+        <div class="browse-sub">Salons · Spa · MedSpa · Laser Clinics</div>
+      </a>
+      <a href="booking.html" class="browse-card">
+        <div class="browse-icon" style="background:linear-gradient(135deg,#EF4444,#991B1B)">🏋️</div>
+        <div class="browse-name">Fitness & Sports</div>
+        <div class="browse-sub">Gyms · Yoga · Personal Training · Sports</div>
+      </a>
+      <a href="booking.html" class="browse-card">
+        <div class="browse-icon" style="background:linear-gradient(135deg,#F59E0B,#B45309)">🍽️</div>
+        <div class="browse-name">Food & Cafes</div>
+        <div class="browse-sub">Restaurants · Cafes</div>
+      </a>
+      <a href="booking.html" class="browse-card">
+        <div class="browse-icon" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8)">🔧</div>
+        <div class="browse-name">Home Services</div>
+        <div class="browse-sub">Cleaning · Repair · Maintenance</div>
+      </a>
+      <a href="booking.html" class="browse-card">
+        <div class="browse-icon" style="background:linear-gradient(135deg,#8B5CF6,#5B21B6)">🐾</div>
+        <div class="browse-name">Pet Care</div>
+        <div class="browse-sub">Veterinary · Grooming</div>
+      </a>
+      <a href="booking.html" class="browse-card">
+        <div class="browse-icon" style="background:linear-gradient(135deg,#1D9E75,#085041)">📚</div>
+        <div class="browse-name">Coaching</div>
+        <div class="browse-sub">Coaching · Training</div>
+      </a>
+    </div>
+  </div>
+</div>
 
 <!-- ══ DEALS SECTION ══ -->
 <div class="section" id="deals">
