@@ -380,12 +380,12 @@
       </li>
       <li>
         <div style="display:flex;flex-direction:column;line-height:1.1">
-          <a href="negotiate.html" style="color:#1D9E75;font-weight:700;font-size:14px;text-decoration:none">🤝 AI Negotiator</a>
+          <a href="negotiate.html" style="color:#6B7280;font-weight:600;font-size:14px;text-decoration:none">🤝 AI Negotiator</a>
           <span style="font-size:10px;color:#6B7280;margin-top:1px">Your personal AI deal maker</span>
         </div>
       </li>
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
-          <a href="booking.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">🛎️ BookNow</a>
+          <a href="booking.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px">🛎️ BookNow</a>
           <span style="font-size:10px;color:#6B7280;margin-top:1px">Book free. Pay in store</span>
         </div></li>
       <li class="has-mega">
@@ -425,7 +425,7 @@
   </div>
   <div class="mobile-menu" id="mobile-menu">
     <a href="index.html#deals">⚡ Last-Minute Deals</a>
-    <a href="negotiate.html" style="color:#1D9E75;font-weight:700;">🤝 AI Negotiator</a>
+    <a href="negotiate.html">🤝 AI Negotiator</a>
     <a href="booking.html" style="color:#1D9E75;font-weight:700;">🛎️ BookNow</a>
     <a href="merchants.html">💼 Merchant OS</a>
     <a href="ai-agents.html">🤖 AI Agents</a>
@@ -800,6 +800,33 @@ const VENUES = [
   {id:10,name:'NailArt Studio',type:'nails',tags:['Manicure','Pedicure','Gel Nails'],rating:4.7,reviews:89,dist:'0.3 km',distKm:.3,area:'Koramangala',addr:'7, 1st Cross, Koramangala',hours:'10 AM – 8 PM',from:'₹500',avail:'tomorrow',grad:'linear-gradient(135deg,#EC4899,#9D174D)',emoji:'💅',fav:false},
   {id:11,name:'Elite Physique',type:'gym',tags:['Strength','Boxing','Recovery'],rating:4.8,reviews:267,dist:'1.3 km',distKm:1.3,area:'Jayanagar',addr:'14, 4th Block, Jayanagar',hours:'5 AM – 10 PM',from:'₹250',avail:'today',grad:'linear-gradient(135deg,#EF4444,#7F1D1D)',emoji:'🏋️',fav:false},
   {id:12,name:'DermaCare Clinic',type:'medspa',tags:['Chemical Peel','Microneedling','Laser'],rating:4.9,reviews:143,dist:'0.8 km',distKm:.8,area:'Jayanagar',addr:'22, 5th Main, Jayanagar',hours:'9 AM – 7 PM',from:'₹800',avail:'today',grad:'linear-gradient(135deg,#6366F1,#3730A3)',emoji:'💉',fav:false},
+
+  /* ── Health & Medical ── */
+  {id:13,name:'Dr. Smile Dental',type:'dental',tags:['Teeth Cleaning','Root Canal','Braces'],rating:4.9,reviews:203,dist:'1.5 km',distKm:1.5,area:'Koramangala',addr:'22, 4th Block, Koramangala',hours:'9 AM – 7 PM',from:'₹449',avail:'today',grad:'linear-gradient(135deg,#14B8A6,#0F766E)',emoji:'🦷',fav:false},
+  {id:14,name:'Healify Clinics',type:'clinic',tags:['General Physician','Paediatrics','Gynaecology'],rating:4.8,reviews:376,dist:'0.7 km',distKm:.7,area:'Indiranagar',addr:'8, 1st Stage, Indiranagar',hours:'8 AM – 9 PM',from:'₹199',avail:'today',grad:'linear-gradient(135deg,#10B981,#047857)',emoji:'🩺',fav:false},
+  {id:15,name:'ClearVision Eye Care',type:'eye',tags:['Eye Check-up','Lasik Consult','Contact Lens'],rating:4.7,reviews:145,dist:'1.1 km',distKm:1.1,area:'HSR Layout',addr:'5, Sector 7, HSR Layout',hours:'9 AM – 6 PM',from:'₹249',avail:'today',grad:'linear-gradient(135deg,#6366F1,#4338CA)',emoji:'👁️',fav:false},
+
+  /* ── Beauty & Wellness ── */
+  {id:16,name:'LaserZone Clinic',type:'laser',tags:['Laser Hair Removal','Skin Rejuvenation','PRP'],rating:4.9,reviews:167,dist:'0.8 km',distKm:.8,area:'Jayanagar',addr:'15, 4th Main, Jayanagar',hours:'10 AM – 7 PM',from:'₹800',avail:'today',grad:'linear-gradient(135deg,#EC4899,#BE185D)',emoji:'✨',fav:false},
+  {id:17,name:'Studio 11 Salon',type:'salon',tags:['Hair Spa','Nail Art','Threading'],rating:4.6,reviews:294,dist:'0.6 km',distKm:.6,area:'BTM Layout',addr:'44, 6th Main, BTM Layout',hours:'9 AM – 8 PM',from:'₹350',avail:'today',grad:'linear-gradient(135deg,#F472B6,#BE185D)',emoji:'💇',fav:false},
+
+  /* ── Fitness & Sports ── */
+  {id:18,name:'AquaFit Sports Club',type:'swim',tags:['Swimming','Aqua Aerobics','Diving'],rating:4.8,reviews:123,dist:'1.8 km',distKm:1.8,area:'Whitefield',addr:'12, EPIP Zone, Whitefield',hours:'6 AM – 9 PM',from:'₹149',avail:'today',grad:'linear-gradient(135deg,#0EA5E9,#0369A1)',emoji:'🏊',fav:false},
+  {id:19,name:'The Box CrossFit',type:'gym',tags:['CrossFit','Olympic Lifting','Conditioning'],rating:4.8,reviews:198,dist:'1.3 km',distKm:1.3,area:'Koramangala',addr:'67, 3rd Block, Koramangala',hours:'5:30 AM – 9 PM',from:'₹199',avail:'today',grad:'linear-gradient(135deg,#EF4444,#B91C1C)',emoji:'🥊',fav:false},
+  {id:20,name:'Iron Arena Gym',type:'gym',tags:['Personal Training','Strength','Body Transformation'],rating:4.9,reviews:315,dist:'0.6 km',distKm:.6,area:'Bannerghatta Rd',addr:'9, Bannerghatta Road, JP Nagar',hours:'5 AM – 11 PM',from:'₹149',avail:'today',grad:'linear-gradient(135deg,#EF4444,#7F1D1D)',emoji:'🏋️',fav:false},
+  {id:21,name:'Breathe Yoga Studio',type:'yoga',tags:['Hatha Yoga','Pranayama','Meditation'],rating:4.9,reviews:211,dist:'1.0 km',distKm:1.0,area:'Indiranagar',addr:'47, 12th Cross, Indiranagar',hours:'6 AM – 9 PM',from:'₹99',avail:'today',grad:'linear-gradient(135deg,#8B5CF6,#6D28D9)',emoji:'🧘',fav:false},
+
+  /* ── Food & Dining ── */
+  {id:22,name:'Copper Chimney Bistro',type:'restaurant',tags:['North Indian','Mughlai','Thali'],rating:4.8,reviews:532,dist:'0.8 km',distKm:.8,area:'Koramangala',addr:'34, 5th Block, Koramangala',hours:'12 PM – 11 PM',from:'₹349',avail:'today',grad:'linear-gradient(135deg,#F59E0B,#92400E)',emoji:'🍜',fav:false},
+  {id:23,name:'The Third Wave Café',type:'cafe',tags:['Specialty Coffee','Brunch','Working Space'],rating:4.7,reviews:287,dist:'0.3 km',distKm:.3,area:'Indiranagar',addr:'100 Feet Road, Indiranagar',hours:'8 AM – 10 PM',from:'₹149',avail:'today',grad:'linear-gradient(135deg,#92400E,#78350F)',emoji:'☕',fav:false},
+  {id:24,name:'The Grand Table',type:'restaurant',tags:['Continental','Buffet','Fine Dining'],rating:4.9,reviews:412,dist:'1.4 km',distKm:1.4,area:'MG Road',addr:'5, Brigade Road, MG Road',hours:'12 PM – 11 PM',from:'₹499',avail:'today',grad:'linear-gradient(135deg,#F59E0B,#B45309)',emoji:'🥗',fav:false},
+  {id:25,name:'Brick & Dough',type:'cafe',tags:['Pizza','Pasta','Desserts'],rating:4.6,reviews:194,dist:'0.5 km',distKm:.5,area:'HSR Layout',addr:'22, 27th Main, HSR Layout',hours:'11 AM – 11 PM',from:'₹299',avail:'today',grad:'linear-gradient(135deg,#EF4444,#DC2626)',emoji:'🍕',fav:false},
+
+  /* ── Diagnostics ── */
+  {id:26,name:'HealthFirst Diagnostics',type:'diagnostic',tags:['Blood Tests','Full Body Check','Diabetes Panel'],rating:4.9,reviews:318,dist:'0.9 km',distKm:.9,area:'Koramangala',addr:'40, 5th Cross, Koramangala',hours:'7 AM – 8 PM',from:'₹399',avail:'today',grad:'linear-gradient(135deg,#EF4444,#DC2626)',emoji:'🩸',fav:false},
+  {id:27,name:'ClearScan Imaging Centre',type:'imaging',tags:['X-Ray','Ultrasound','CT Scan','MRI'],rating:4.8,reviews:189,dist:'1.1 km',distKm:1.1,area:'HSR Layout',addr:'18, Sector 2, HSR Layout',hours:'8 AM – 8 PM',from:'₹199',avail:'today',grad:'linear-gradient(135deg,#3B82F6,#1D4ED8)',emoji:'🫁',fav:false},
+  {id:28,name:'MedLab Express',type:'diagnostic',tags:['Thyroid Profile','Lipid Panel','Urine Analysis'],rating:4.7,reviews:241,dist:'0.7 km',distKm:.7,area:'Indiranagar',addr:'28, CMH Road, Indiranagar',hours:'7 AM – 7 PM',from:'₹249',avail:'today',grad:'linear-gradient(135deg,#10B981,#059669)',emoji:'🔬',fav:false},
+  {id:29,name:'Precision Scan & Diagnostics',type:'imaging',tags:['MRI','Ultrasound Abdomen','2D Echo'],rating:4.8,reviews:176,dist:'1.6 km',distKm:1.6,area:'Jayanagar',addr:'12, 9th Block, Jayanagar',hours:'8 AM – 8 PM',from:'₹599',avail:'today',grad:'linear-gradient(135deg,#6366F1,#4338CA)',emoji:'🧠',fav:false},
 ];
 
 const SERVICES_BY_TYPE = {
@@ -811,6 +838,14 @@ const SERVICES_BY_TYPE = {
   clinic:[{n:'General Consultation',d:'30 min',p:'₹400'},{n:'Follow-up Visit',d:'15 min',p:'₹200'},{n:'Health Screening',d:'60 min',p:'₹1,200'},{n:'Vaccination',d:'15 min',p:'₹150'},{n:'Physiotherapy',d:'45 min',p:'₹600'}],
   nails:[{n:'Classic Manicure',d:'45 min',p:'₹500'},{n:'Gel Manicure',d:'60 min',p:'₹800'},{n:'Pedicure',d:'60 min',p:'₹600'},{n:'Nail Art',d:'30 min',p:'₹400'},{n:'Gel Removal',d:'20 min',p:'₹200'}],
   yoga:[{n:'Yoga Class',d:'60 min',p:'₹350'},{n:'Meditation Session',d:'45 min',p:'₹300'},{n:'Pilates',d:'60 min',p:'₹500'},{n:'Power Yoga',d:'60 min',p:'₹400'}],
+  dental:[{n:'Teeth Cleaning & Polishing',d:'60 min',p:'₹449'},{n:'Root Canal Treatment',d:'90 min',p:'₹3,500'},{n:'Dental Check-up',d:'30 min',p:'₹200'},{n:'Teeth Whitening',d:'60 min',p:'₹2,500'},{n:'Braces Consultation',d:'30 min',p:'₹300'},{n:'Tooth Extraction',d:'30 min',p:'₹600'}],
+  eye:[{n:'Eye Check-up & Prescription',d:'30 min',p:'₹249'},{n:'Contact Lens Fitting',d:'20 min',p:'₹150'},{n:'Lasik Consultation',d:'45 min',p:'₹500'},{n:'Glaucoma Screening',d:'30 min',p:'₹400'},{n:'Retina Check-up',d:'45 min',p:'₹600'}],
+  laser:[{n:'Laser Hair Removal – Full Arms',d:'45 min',p:'₹1,500'},{n:'Laser Hair Removal – Full Legs',d:'60 min',p:'₹2,000'},{n:'Skin Rejuvenation',d:'45 min',p:'₹2,500'},{n:'PRP Hair Treatment',d:'60 min',p:'₹4,000'},{n:'Carbon Laser Peel',d:'45 min',p:'₹3,000'}],
+  swim:[{n:'Swimming Day Pass',d:'60 min',p:'₹149'},{n:'Aqua Aerobics Class',d:'45 min',p:'₹200'},{n:'Swimming Lessons (1 hr)',d:'60 min',p:'₹500'},{n:'Personal Swimming Coach',d:'60 min',p:'₹800'},{n:'Diving Intro Session',d:'45 min',p:'₹600'}],
+  restaurant:[{n:'Table for Two – Lunch',d:'90 min',p:'₹349'},{n:'Table for Two – Dinner',d:'90 min',p:'₹499'},{n:'Weekend Brunch Buffet',d:'120 min',p:'₹499'},{n:'Private Dining Room',d:'120 min',p:'₹1,200'}],
+  cafe:[{n:'Café Combo (Coffee + Snack)',d:'30 min',p:'₹149'},{n:'Brunch Platter (2 pax)',d:'60 min',p:'₹349'},{n:'Working Space – Half Day',d:'4 hr',p:'₹299'},{n:'Coffee Tasting Experience',d:'45 min',p:'₹250'}],
+  diagnostic:[{n:'Full Body Blood Test (65 tests)',d:'15 min',p:'₹399'},{n:'Thyroid Profile (T3, T4, TSH)',d:'15 min',p:'₹249'},{n:'Diabetes Panel (HbA1c)',d:'10 min',p:'₹199'},{n:'Lipid Profile',d:'10 min',p:'₹149'},{n:'CBC + Urine Analysis',d:'15 min',p:'₹299'}],
+  imaging:[{n:'Chest X-Ray (Digital)',d:'20 min',p:'₹199'},{n:'Ultrasound Abdomen (Full)',d:'30 min',p:'₹599'},{n:'CT Scan – Head',d:'30 min',p:'₹2,500'},{n:'MRI Brain',d:'45 min',p:'₹4,500'},{n:'2D Echo',d:'30 min',p:'₹1,200'}],
 };
 
 const STAFF_BY_TYPE = {
@@ -822,6 +857,14 @@ const STAFF_BY_TYPE = {
   clinic:[{n:'Dr. Amit R.',r:'General Physician',star:'4.9',i:'AR'},{n:'Dr. Priya L.',r:'Specialist',star:'4.8',i:'PL'},{n:'Nurse Asha',r:'Senior Nurse',star:'5.0',i:'NA'}],
   nails:[{n:'Rashi P.',r:'Nail Artist',star:'4.9',i:'RP'},{n:'Sneha K.',r:'Nail Tech',star:'4.7',i:'SK'}],
   yoga:[{n:'Devika R.',r:'Senior Instructor',star:'5.0',i:'DR'},{n:'Ananya P.',r:'Yoga Instructor',star:'4.9',i:'AP'}],
+  dental:[{n:'Dr. Rahul S.',r:'Senior Dentist',star:'4.9',i:'RS'},{n:'Dr. Ananya T.',r:'Orthodontist',star:'4.8',i:'AT'},{n:'Dr. Priya M.',r:'Endodontist',star:'4.9',i:'PM'}],
+  eye:[{n:'Dr. Vijay K.',r:'Senior Ophthalmologist',star:'4.9',i:'VK'},{n:'Dr. Neha R.',r:'Optometrist',star:'4.8',i:'NR'},{n:'Dr. Suresh P.',r:'Retina Specialist',star:'4.9',i:'SP'}],
+  laser:[{n:'Dr. Sana K.',r:'Laser Specialist',star:'4.9',i:'SK'},{n:'Nisha P.',r:'Skin Therapist',star:'4.8',i:'NP'},{n:'Kavita R.',r:'PRP Specialist',star:'4.7',i:'KR'}],
+  swim:[{n:'Coach Arjun',r:'Head Swimming Coach',star:'5.0',i:'AJ'},{n:'Coach Divya',r:'Aqua Aerobics Trainer',star:'4.8',i:'DJ'}],
+  restaurant:[{n:'Mr. Rajesh',r:'Table Manager',star:'5.0',i:'RJ'},{n:'Ms. Priya',r:'Guest Relations',star:'4.9',i:'PY'}],
+  cafe:[{n:'Barista Sam',r:'Head Barista',star:'4.9',i:'BS'},{n:'Chef Nisha',r:'Brunch Chef',star:'4.8',i:'CN'}],
+  diagnostic:[{n:'Lab Tech Suresh',r:'Senior Phlebotomist',star:'4.9',i:'ST'},{n:'Ms. Divya',r:'Lab Manager',star:'4.8',i:'DV'}],
+  imaging:[{n:'Dr. Kiran M.',r:'Radiologist',star:'4.9',i:'KM'},{n:'Ms. Radha',r:'Imaging Technician',star:'4.8',i:'RD'}],
 };
 
 const SLOTS_BY_DOW = {
@@ -879,17 +922,29 @@ function renderCats() {
   ).join('');
 }
 
+const CAT_TYPES = {
+  health:  ['clinic','dental','eye'],
+  beauty:  ['salon','spa','medspa','nails','laser'],
+  fitness: ['fitness','gym','yoga','swim'],
+  food:    ['restaurant','cafe'],
+  home:    ['home'],
+  pets:    ['pets'],
+  coaching:['coaching'],
+  diagnostic:['diagnostic','imaging'],
+};
+
 function filterByType(type) {
   searchType = type; searchQuery = '';
   const cat = CATS.find(c => c.id === type);
-  showResults(VENUES.filter(v => v.type === type), cat ? cat.name : type);
+  const types = CAT_TYPES[type] || [type];
+  showResults(VENUES.filter(v => types.includes(v.type)), cat ? cat.name : type);
 }
 
 /* ─────────────────────────────────────────────
    FEATURED GRID
 ───────────────────────────────────────────── */
 function renderFeatured() {
-  const featured = VENUES.filter(v => v.avail === 'today').slice(0,6);
+  const featured = VENUES.filter(v => v.avail === 'today').slice(0,12);
   document.getElementById('featured-grid').innerHTML = featured.map(v => venueCardHTML(v)).join('');
 }
 
