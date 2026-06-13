@@ -1,0 +1,56 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0A2E22"/>
+      <stop offset="100%" stop-color="#081811"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="200" cy="130" r="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1D9E75" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#1D9E75" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="400" rx="56" fill="url(#bg)"/>
+  <!-- Soft glow behind sparkle -->
+  <rect width="400" height="400" rx="56" fill="url(#glow)"/>
+  <!-- Subtle green border -->
+  <rect width="400" height="400" rx="56" fill="none" stroke="#1D9E75" stroke-width="1.5" opacity="0.35"/>
+
+  <!-- 4-pointed sparkle star centred at (200, 128) -->
+  <polygon
+    points="200,72 221,109 258,128 221,147 200,184 179,147 142,128 179,109"
+    fill="#4ADEAB"/>
+
+  <!-- Accent dots -->
+  <circle cx="266" cy="78"  r="6"   fill="#4ADEAB" opacity="0.55"/>
+  <circle cx="136" cy="178" r="4"   fill="#4ADEAB" opacity="0.35"/>
+  <circle cx="270" cy="170" r="3.5" fill="#1D9E75" opacity="0.65"/>
+
+  <!-- "Genoti" wordmark -->
+  <text x="200" y="258"
+        text-anchor="middle"
+        font-family="Arial Black, Arial, Helvetica, sans-serif"
+        font-weight="900"
+        font-size="68"
+        fill="#F0FDF8">Genoti</text>
+
+  <!-- "AI" in brand green -->
+  <text x="200" y="316"
+        text-anchor="middle"
+        font-family="Arial Black, Arial, Helvetica, sans-serif"
+        font-weight="900"
+        font-size="46"
+        letter-spacing="14"
+        fill="#4ADEAB">AI</text>
+
+  <!-- Tagline -->
+  <text x="200" y="356"
+        text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif"
+        font-weight="400"
+        font-size="12"
+        letter-spacing="2.5"
+        fill="#F0FDF8"
+        opacity="0.4">Discover - Book Direct - Save More</text>
+</svg>
