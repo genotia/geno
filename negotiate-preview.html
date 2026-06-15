@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Negotiator — Genoti AI</title>
+  <title>AI Negotiator — Genoti AI (Preview v2)</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -427,7 +427,7 @@
         <span style="font-size:10px;color:#6B7280;margin-top:1px">Save up to 75% during offpeak hours.</span>
       </div></li>
       <li><div style="display:flex;flex-direction:column;line-height:1.1">
-        <a href="negotiate.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px">🤝 AI Negotiator</a>
+        <a href="negotiate-preview.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px">🤝 AI Negotiator</a>
         <span style="font-size:10px;color:#6B7280;margin-top:1px">Your personal AI deal maker</span>
       </div></li>
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
@@ -471,7 +471,7 @@
   </div>
   <div class="mobile-menu" id="mm">
     <a href="index.html#deals">⚡ Last-Minute Deals</a>
-    <a href="negotiate.html" style="color:#1D9E75;font-weight:700;">🤝 AI Negotiator</a>
+    <a href="negotiate-preview.html" style="color:#1D9E75;font-weight:700;">🤝 AI Negotiator</a>
     <a href="booking.html">🛎️ BookNow</a>
     <a href="merchants.html">💼 Merchant OS</a>
     <a href="ai-agents.html">🤖 AI Agents</a>
@@ -521,11 +521,11 @@
       </div>
       <div class="cat-pills" id="cat-pills">
         <button class="cat-pill active" onclick="setCat('all', this)">All</button>
-        <button class="cat-pill" onclick="setCat('health', this)">🏥 Health & Medical</button>
-        <button class="cat-pill" onclick="setCat('beauty', this)">💅 Beauty & Wellness</button>
-        <button class="cat-pill" onclick="setCat('fitness', this)">🏋️ Fitness & Sports</button>
-        <button class="cat-pill" onclick="setCat('dining', this)">🍽️ Food & Dining</button>
-        <button class="cat-pill" onclick="setCat('diagnostics', this)">🔬 Diagnostics</button>
+        <button class="cat-pill" onclick="setCat('restaurant', this)">🍽️ Restaurants</button>
+        <button class="cat-pill" onclick="setCat('spa', this)">💆 Spas</button>
+        <button class="cat-pill" onclick="setCat('salon', this)">✂️ Salons</button>
+        <button class="cat-pill" onclick="setCat('gym', this)">🏋️ Gyms</button>
+        <button class="cat-pill" onclick="setCat('clinic', this)">🏥 Clinics</button>
       </div>
     </div>
   </div>
@@ -733,7 +733,7 @@
       </div>
       <div class="footer-col"><h4>Product</h4><ul>
         <li><a href="index.html#deals">Browse deals</a></li>
-        <li><a href="negotiate.html">AI Negotiator</a></li>
+        <li><a href="negotiate-preview.html">AI Negotiator</a></li>
         <li><a href="index.html#how">How it works</a></li>
         <li><a href="#">Download app</a></li>
       </ul></div>
@@ -958,36 +958,16 @@
 <script>
 /* ── DATA ── */
 const MERCHANTS = [
-  // Health & Medical
-  { id:1,  name:'Apollo Dental Care',     cat:'health',      emoji:'🦷', dist:'0.4 km', rating:'4.5', offpeak:'Mon–Fri AM',        basePrice:2500, service:'Dental cleaning & checkup' },
-  { id:2,  name:'Dr. Mehta\'s Clinic',    cat:'health',      emoji:'👨‍⚕️', dist:'0.6 km', rating:'4.3', offpeak:'Tue–Thu 2–5pm',     basePrice:800,  service:'General consultation' },
-  { id:3,  name:'City Medical Centre',    cat:'health',      emoji:'🏥', dist:'1.0 km', rating:'4.1', offpeak:'Mon–Fri AM',        basePrice:1200, service:'Full health checkup package' },
-  { id:4,  name:'SmilePro Dentistry',     cat:'health',      emoji:'😁', dist:'0.9 km', rating:'4.4', offpeak:'Mon–Thu',           basePrice:3200, service:'Teeth whitening session' },
-
-  // Beauty & Wellness
-  { id:5,  name:'Serenity Spa',           cat:'beauty',      emoji:'💆', dist:'0.4 km', rating:'4.6', offpeak:'Mon–Thu all day',   basePrice:2400, service:'Deep tissue massage' },
-  { id:6,  name:'YLG Salon',              cat:'beauty',      emoji:'💇', dist:'0.2 km', rating:'4.0', offpeak:'Tue–Thu',           basePrice:800,  service:'Hair colour + cut' },
-  { id:7,  name:'Laser Skin Studio',      cat:'beauty',      emoji:'✨', dist:'0.8 km', rating:'4.4', offpeak:'Mon–Wed',           basePrice:3500, service:'Laser hair removal session' },
-  { id:8,  name:'Naturals Salon',         cat:'beauty',      emoji:'✂️', dist:'0.6 km', rating:'4.1', offpeak:'Mon–Wed',           basePrice:700,  service:'Full hair treatment' },
-  { id:9,  name:'Tattva Wellness',        cat:'beauty',      emoji:'🧘', dist:'1.1 km', rating:'4.3', offpeak:'Weekdays',          basePrice:2000, service:'Aromatherapy session' },
-
-  // Fitness & Sports
-  { id:10, name:'FitStop Gym',            cat:'fitness',     emoji:'🏋️', dist:'0.5 km', rating:'4.2', offpeak:'10am–4pm',          basePrice:1200, service:'Monthly membership' },
-  { id:11, name:'Cult.fit Studio',        cat:'fitness',     emoji:'🤸', dist:'0.9 km', rating:'4.5', offpeak:'Weekday AM',        basePrice:1500, service:'3-month membership' },
-  { id:12, name:'ZenYoga Studio',         cat:'fitness',     emoji:'🪷', dist:'0.7 km', rating:'4.4', offpeak:'Mon–Fri 10am–4pm', basePrice:1000, service:'Monthly yoga classes' },
-  { id:13, name:'Coach Ravi PT',          cat:'fitness',     emoji:'💪', dist:'1.2 km', rating:'4.6', offpeak:'Weekday daytime',   basePrice:2000, service:'Personal training · 8 sessions' },
-
-  // Food & Dining
-  { id:14, name:'Barbeque Nation',        cat:'dining',      emoji:'🍖', dist:'0.3 km', rating:'4.2', offpeak:'Mon–Fri 2–5pm',     basePrice:1800, service:'Group buffet dinner' },
-  { id:15, name:'Social Brewpub',         cat:'dining',      emoji:'🍺', dist:'0.8 km', rating:'4.4', offpeak:'Weekday lunch',     basePrice:1400, service:'Bistro set menu' },
-  { id:16, name:'Punjab Grill',           cat:'dining',      emoji:'🍛', dist:'1.2 km', rating:'4.1', offpeak:'Mon–Thu 1–4pm',     basePrice:1600, service:'Thali for groups' },
-  { id:17, name:'The Brew Room Café',     cat:'dining',      emoji:'☕', dist:'0.5 km', rating:'4.3', offpeak:'Weekday AM & PM',   basePrice:600,  service:'Café package for groups' },
-
-  // Diagnostics
-  { id:18, name:'Dr. Lal PathLabs',       cat:'diagnostics', emoji:'🔬', dist:'0.6 km', rating:'4.5', offpeak:'Mon–Fri AM',        basePrice:1500, service:'Full blood test panel' },
-  { id:19, name:'Thyrocare Labs',         cat:'diagnostics', emoji:'🧪', dist:'0.9 km', rating:'4.3', offpeak:'Weekday AM',        basePrice:900,  service:'Thyroid + vitamin panel' },
-  { id:20, name:'RadioScan MRI Centre',   cat:'diagnostics', emoji:'🧲', dist:'1.4 km', rating:'4.2', offpeak:'Mon–Thu 10am–2pm', basePrice:6500, service:'MRI scan (brain / spine)' },
-  { id:21, name:'ClearView Imaging',      cat:'diagnostics', emoji:'📡', dist:'1.1 km', rating:'4.1', offpeak:'Weekday AM',        basePrice:3500, service:'CT scan / Ultrasound' },
+  { id:1, name:'Barbeque Nation',   cat:'restaurant', emoji:'🍖', dist:'0.3 km', rating:'4.2', offpeak:'Mon–Fri 2–5pm', basePrice:1800, service:'Group buffet dinner' },
+  { id:2, name:'Social Brewpub',    cat:'restaurant', emoji:'🍺', dist:'0.8 km', rating:'4.4', offpeak:'Weekday lunch', basePrice:1400, service:'Bistro set menu' },
+  { id:3, name:'Punjab Grill',      cat:'restaurant', emoji:'🍛', dist:'1.2 km', rating:'4.1', offpeak:'Mon–Thu 1–4pm', basePrice:1600, service:'Thali for groups' },
+  { id:4, name:'Serenity Spa',      cat:'spa',        emoji:'💆', dist:'0.4 km', rating:'4.6', offpeak:'Mon–Thu all day', basePrice:2400, service:'Deep tissue massage' },
+  { id:5, name:'Tattva Wellness',   cat:'spa',        emoji:'🧘', dist:'1.1 km', rating:'4.3', offpeak:'Weekdays', basePrice:2000, service:'Aromatherapy session' },
+  { id:6, name:'YLG Salon',         cat:'salon',      emoji:'💇', dist:'0.2 km', rating:'4.0', offpeak:'Tue–Thu', basePrice:800,  service:'Hair colour + cut' },
+  { id:7, name:'Naturals Salon',    cat:'salon',      emoji:'✂️', dist:'0.6 km', rating:'4.1', offpeak:'Mon–Wed', basePrice:700,  service:'Full hair treatment' },
+  { id:8, name:'FitStop Gym',       cat:'gym',        emoji:'🏋️', dist:'0.5 km', rating:'4.2', offpeak:'10am–4pm', basePrice:1200, service:'Monthly pass' },
+  { id:9, name:'Cult.fit Studio',   cat:'gym',        emoji:'🤸', dist:'0.9 km', rating:'4.5', offpeak:'Weekday AM', basePrice:1500, service:'3-month membership' },
+  { id:10, name:'DentaCare Clinic', cat:'clinic',     emoji:'🦷', dist:'0.7 km', rating:'4.3', offpeak:'Mon–Fri AM', basePrice:3500, service:'Teeth cleaning' },
 ];
 
 let currentCat = 'all';
