@@ -1012,6 +1012,15 @@
     .booking-code-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
     .booking-code { font-size: 28px; font-weight: 800; letter-spacing: 6px; color: var(--dark-green); }
 
+    /* ── TRUST BAR ── */
+    .trust-bar { position:sticky; top:64px; z-index:99; background:linear-gradient(90deg,#0f172a 0%,#1e293b 100%); padding:10px 32px; display:flex; align-items:center; justify-content:center; gap:0; }
+    .trust-step { display:flex; align-items:center; gap:8px; padding:0 20px; }
+    .trust-step-icon { width:30px; height:30px; background:rgba(255,255,255,.1); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+    .trust-step-title { font-size:12px; font-weight:700; color:white; }
+    .trust-step-sub { font-size:10px; color:#94a3b8; }
+    .trust-arrow { color:#1D9E75; font-size:16px; font-weight:700; opacity:.8; padding:0 4px; }
+    .trust-badge { margin-left:28px; padding:5px 14px; background:rgba(29,158,117,.2); border:1px solid rgba(29,158,117,.4); border-radius:20px; font-size:11px; font-weight:700; color:#4ade80; white-space:nowrap; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .nav-links { display: none; }
@@ -1020,26 +1029,43 @@
       .steps { grid-template-columns: 1fr; gap: 40px; }
       .step-connector { display: none; }
       .footer-top { grid-template-columns: 1fr 1fr; }
+      /* Trust bar: scrollable on tablets so steps don't overflow */
+      .trust-bar { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 8px 16px; justify-content: flex-start; }
+      .trust-bar::-webkit-scrollbar { display: none; }
+      .trust-badge { flex-shrink: 0; margin-left: 12px; }
     }
     @media (max-width: 600px) {
+      /* Layout */
       .deals-grid { grid-template-columns: 1fr; }
       .stats-inner { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr; }
       .footer-bottom { flex-direction: column; text-align: center; }
+      .nav-right .btn-ghost { display: none; }
+      /* Trust bar: show badge only, hide steps */
+      .trust-step { display: none; }
+      .trust-arrow { display: none; }
+      .trust-bar { justify-content: center; padding: 7px 12px; overflow-x: unset; }
+      .trust-badge { margin-left: 0; font-size: 11px; }
+      /* Hero: tighten vertical breathing room */
+      .hero { padding: 36px 16px 40px; }
+      .hero-sub { font-size: 15px; margin-bottom: 24px; }
+      /* Search bar: stack fields vertically */
       .search-bar { flex-direction: column; border-radius: 12px; }
       .search-bar .field + .field { border-left: none; border-top: 1.5px solid var(--border); }
       .search-btn { padding: 14px; border-radius: 0 0 10px 10px; }
-      .nav-right .btn-ghost { display: none; }
-      .price-options { grid-template-columns: repeat(3, 1fr); }
+      /* Section spacing */
+      .section { padding: 40px 16px; }
+      .how-section { padding: 48px 16px; }
+      .merchant-banner { padding: 48px 16px; }
+      .section-header { flex-direction: column; gap: 6px; }
+      /* Urgency bar: wrap text gracefully */
+      .urgency-bar { flex-wrap: wrap; gap: 6px; font-size: 12px; text-align: center; }
+      /* Modal: 2-col price grid fits much better than 3 on small screens */
+      .price-options { grid-template-columns: repeat(2, 1fr); }
       .chat-window { height: 240px; }
+      /* Card action buttons: meet 44px touch target minimum */
+      .btn-book, .btn-negotiate { min-height: 44px; padding: 12px; font-size: 14px; }
     }
-    .trust-bar { position:sticky; top:64px; z-index:99; background:linear-gradient(90deg,#0f172a 0%,#1e293b 100%); padding:10px 32px; display:flex; align-items:center; justify-content:center; gap:0; }
-    .trust-step { display:flex; align-items:center; gap:8px; padding:0 20px; }
-    .trust-step-icon { width:30px; height:30px; background:rgba(255,255,255,.1); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
-    .trust-step-title { font-size:12px; font-weight:700; color:white; }
-    .trust-step-sub { font-size:10px; color:#94a3b8; }
-    .trust-arrow { color:#1D9E75; font-size:16px; font-weight:700; opacity:.8; padding:0 4px; }
-    .trust-badge { margin-left:28px; padding:5px 14px; background:rgba(29,158,117,.2); border:1px solid rgba(29,158,117,.4); border-radius:20px; font-size:11px; font-weight:700; color:#4ade80; white-space:nowrap; }
   </style>
 </head>
 <body>
