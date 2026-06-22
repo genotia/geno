@@ -50,18 +50,61 @@
     .btn-add:hover { opacity: .88; }
 
     /* ── HOME PANEL ── */
-    .home-greeting { margin-bottom: 24px; }
+    .home-greeting { margin-bottom: 22px; }
     .home-greeting h2 { font-size: 22px; font-weight: 800; letter-spacing: -.4px; }
     .home-greeting p { font-size: 14px; color: var(--muted); margin-top: 3px; }
-    .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
-    .home-widget { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-    .home-widget-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .home-widget { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; min-height: 220px; }
+    .home-widget-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 18px 20px 14px; border-bottom: 1px solid var(--border); }
     .home-widget-title { font-size: 14px; font-weight: 700; }
-    .home-widget-link { font-size: 12px; font-weight: 600; color: var(--green); background: none; border: none; cursor: pointer; font-family: inherit; }
-    .home-widget-body { padding: 16px 20px; }
-    .home-appt-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
-    .home-appt-row:last-child { border-bottom: none; }
-    .home-empty { text-align: center; padding: 28px 16px; color: var(--muted); font-size: 13px; }
+    .home-widget-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .home-widget-link { font-size: 12px; font-weight: 600; color: var(--green); background: none; border: none; cursor: pointer; font-family: inherit; white-space: nowrap; padding-top: 2px; }
+    .home-widget-link:hover { text-decoration: underline; }
+    .home-widget-body { padding: 0; flex: 1; }
+    .hw-loading { padding: 40px 20px; text-align: center; color: var(--muted); font-size: 13px; }
+    .hw-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 20px; color: var(--muted); text-align: center; flex: 1; }
+    .hw-empty-icon { font-size: 32px; margin-bottom: 10px; opacity: .4; }
+    .hw-empty-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .hw-empty-sub { font-size: 12px; }
+    /* Sales widget */
+    .hw-sales-big { padding: 24px 20px 10px; }
+    .hw-sales-num { font-size: 38px; font-weight: 800; letter-spacing: -1.5px; color: var(--text); }
+    .hw-sales-label { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .hw-sales-sub { font-size: 12px; color: var(--green); font-weight: 600; margin-top: 6px; }
+    /* Appointment rows */
+    .hw-row { display: flex; align-items: center; gap: 10px; padding: 11px 20px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .hw-row:last-child { border-bottom: none; }
+    .hw-row-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .hw-row-main { flex: 1; min-width: 0; }
+    .hw-row-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hw-row-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .hw-row-right { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    /* Activity feed */
+    .hw-act-row { display: flex; align-items: flex-start; gap: 10px; padding: 11px 20px; border-bottom: 1px solid var(--border); font-size: 12px; }
+    .hw-act-row:last-child { border-bottom: none; }
+    .hw-act-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+    .hw-act-text { flex: 1; line-height: 1.5; }
+    .hw-act-time { color: var(--muted); font-size: 11px; white-space: nowrap; }
+    /* Services table */
+    .hw-svc-table { width: 100%; border-collapse: collapse; }
+    .hw-svc-table th { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; padding: 10px 20px; text-align: left; background: var(--bg); border-bottom: 1px solid var(--border); }
+    .hw-svc-table th:not(:first-child) { text-align: right; }
+    .hw-svc-table td { padding: 10px 20px; font-size: 13px; border-bottom: 1px solid var(--border); }
+    .hw-svc-table tr:last-child td { border-bottom: none; }
+    .hw-svc-table td:not(:first-child) { text-align: right; font-weight: 700; }
+    .hw-svc-delta { font-size: 11px; font-weight: 600; }
+    .hw-svc-delta.up { color: var(--green); }
+    .hw-svc-delta.down { color: #DC2626; }
+    /* Staff ranking */
+    .hw-staff-row { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); }
+    .hw-staff-row:last-child { border-bottom: none; }
+    .hw-staff-rank { font-size: 13px; font-weight: 800; color: var(--muted); width: 18px; flex-shrink: 0; }
+    .hw-staff-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .hw-staff-info { flex: 1; min-width: 0; }
+    .hw-staff-name { font-size: 13px; font-weight: 600; }
+    .hw-staff-role { font-size: 11px; color: var(--muted); }
+    .hw-staff-count { font-size: 14px; font-weight: 800; color: var(--text); }
+    .hw-staff-count-label { font-size: 11px; color: var(--muted); }
 
     /* ── STATS ── */
     .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
@@ -331,6 +374,7 @@
       .hamburger { display: flex; }
       .main-wrap { width: 100%; }
       .home-grid { grid-template-columns: 1fr; }
+      .hw-sales-num { font-size: 28px; }
       .setup-grid { grid-template-columns: 1fr; }
       .prod-grid { grid-template-columns: 1fr; }
       .stats-row { grid-template-columns: 1fr 1fr; }
@@ -384,57 +428,82 @@
   <div class="tab-panel active" id="tab-home">
     <div class="home-greeting">
       <h2 id="home-greeting-text">Good day 👋</h2>
-      <p id="home-greeting-sub">Here's what's happening today</p>
+      <p id="home-greeting-sub">Loading…</p>
     </div>
-    <!-- Quick stats -->
-    <div class="stats-row" style="grid-template-columns:repeat(4,1fr)">
-      <div class="stat-card">
-        <div class="stat-value" id="home-stat-today">—</div>
-        <div class="stat-label">Today's bookings</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value orange" id="home-stat-pending">—</div>
-        <div class="stat-label">Pending</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" style="color:#DC2626" id="home-stat-unassigned">—</div>
-        <div class="stat-label">Unassigned</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value green" id="home-stat-deals">—</div>
-        <div class="stat-label">Active deals</div>
-      </div>
-    </div>
-    <!-- Widgets -->
     <div class="home-grid">
+
+      <!-- 1. Recent sales -->
       <div class="home-widget">
         <div class="home-widget-head">
-          <span class="home-widget-title">📅 Today's appointments</span>
-          <button class="home-widget-link" onclick="switchPage('schedule',document.getElementById('nav-schedule'))">View schedule →</button>
+          <div>
+            <div class="home-widget-title">Recent sales</div>
+            <div class="home-widget-sub">Last 7 days</div>
+          </div>
+          <button class="home-widget-link" onclick="switchPage('bookings',document.getElementById('nav-bookings'))">View all</button>
         </div>
-        <div class="home-widget-body" id="home-today-list"><div class="home-empty">Loading…</div></div>
+        <div class="home-widget-body" id="hw-recent-sales"><div class="hw-loading">Loading…</div></div>
       </div>
+
+      <!-- 2. Upcoming appointments -->
       <div class="home-widget">
         <div class="home-widget-head">
-          <span class="home-widget-title">⏳ Needs assignment</span>
-          <button class="home-widget-link" onclick="switchPage('bookings',document.getElementById('nav-bookings'))">View all →</button>
+          <div>
+            <div class="home-widget-title">Upcoming appointments</div>
+            <div class="home-widget-sub">Next 7 days</div>
+          </div>
+          <button class="home-widget-link" onclick="switchPage('schedule',document.getElementById('nav-schedule'))">View schedule</button>
         </div>
-        <div class="home-widget-body" id="home-unassigned-list"><div class="home-empty">Loading…</div></div>
+        <div class="home-widget-body" id="hw-upcoming"><div class="hw-loading">Loading…</div></div>
       </div>
+
+      <!-- 3. Appointments activity -->
       <div class="home-widget">
         <div class="home-widget-head">
-          <span class="home-widget-title">🛎️ Recent bookings</span>
-          <button class="home-widget-link" onclick="switchPage('bookings',document.getElementById('nav-bookings'))">All bookings →</button>
+          <div>
+            <div class="home-widget-title">Appointments activity</div>
+            <div class="home-widget-sub">Recent changes</div>
+          </div>
+          <button class="home-widget-link" onclick="switchPage('bookings',document.getElementById('nav-bookings'))">All bookings</button>
         </div>
-        <div class="home-widget-body" id="home-recent-list"><div class="home-empty">Loading…</div></div>
+        <div class="home-widget-body" id="hw-activity"><div class="hw-loading">Loading…</div></div>
       </div>
+
+      <!-- 4. Today's next appointments -->
       <div class="home-widget">
         <div class="home-widget-head">
-          <span class="home-widget-title">📋 Your deals</span>
-          <button class="home-widget-link" onclick="switchPage('deals',document.getElementById('nav-deals'))">Manage deals →</button>
+          <div>
+            <div class="home-widget-title">Today's next appointments</div>
+            <div class="home-widget-sub" id="hw-today-date"></div>
+          </div>
+          <button class="home-widget-link" onclick="switchPage('schedule',document.getElementById('nav-schedule'))">Schedule</button>
         </div>
-        <div class="home-widget-body" id="home-deals-list"><div class="home-empty">Loading…</div></div>
+        <div class="home-widget-body" id="hw-today"><div class="hw-loading">Loading…</div></div>
       </div>
+
+      <!-- 5. Top services -->
+      <div class="home-widget">
+        <div class="home-widget-head">
+          <div>
+            <div class="home-widget-title">Top services</div>
+            <div class="home-widget-sub">Bookings by deal</div>
+          </div>
+          <button class="home-widget-link" onclick="switchPage('deals',document.getElementById('nav-deals'))">Deals</button>
+        </div>
+        <div class="home-widget-body" id="hw-top-services"><div class="hw-loading">Loading…</div></div>
+      </div>
+
+      <!-- 6. Top team member -->
+      <div class="home-widget">
+        <div class="home-widget-head">
+          <div>
+            <div class="home-widget-title">Top team member</div>
+            <div class="home-widget-sub">This month's bookings</div>
+          </div>
+          <button class="home-widget-link" onclick="switchPage('productivity',document.getElementById('nav-productivity'))">Insights</button>
+        </div>
+        <div class="home-widget-body" id="hw-top-staff"><div class="hw-loading">Loading…</div></div>
+      </div>
+
     </div>
   </div><!-- /tab-home -->
 
@@ -1102,77 +1171,151 @@
   }
 
   /* ── HOME ── */
+  function hwEmpty(icon, title, sub) {
+    return `<div class="hw-empty"><div class="hw-empty-icon">${icon}</div><div class="hw-empty-title">${title}</div><div class="hw-empty-sub">${sub}</div></div>`;
+  }
+
   async function loadHome() {
-    const today = new Date().toISOString().split('T')[0];
-    const [{ data: bks }, { data: deals }] = await Promise.all([
+    const now   = new Date();
+    const today = now.toISOString().split('T')[0];
+    const hr    = now.getHours();
+    const greet = hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening';
+    document.getElementById('home-greeting-text').textContent = greet + ', ' + currentMerchant.name + ' 👋';
+    document.getElementById('home-greeting-sub').textContent  = now.toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    document.getElementById('hw-today-date').textContent      = now.toLocaleDateString('en-IN', { day:'numeric', month:'short' });
+
+    // Date helpers
+    const d7ago   = new Date(now); d7ago.setDate(now.getDate() - 7);
+    const d7ahead = new Date(now); d7ahead.setDate(now.getDate() + 7);
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+    const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString().split('T')[0];
+    const lastMonthEnd   = new Date(now.getFullYear(), now.getMonth(), 0).toISOString().split('T')[0];
+
+    const [{ data: bks }, { data: staffList }] = await Promise.all([
       db.from('bookings')
-        .select('*, assigned_staff:staff_id(name,color), assigned_room:room_id(name)')
+        .select('*, assigned_staff:staff_id(id,name,color,role), assigned_room:room_id(name)')
         .eq('merchant_id', currentMerchant.id),
-      db.from('deals').select('*').eq('merchant_id', currentMerchant.id).eq('active', true),
+      db.from('staff').select('*').eq('merchant_id', currentMerchant.id).eq('active', true),
     ]);
-    const bookings   = bks   || [];
-    const activeDeals = deals || [];
+    const bookings = bks || [];
+    const active   = bookings.filter(b => b.status !== 'cancelled');
 
-    const todayBks   = bookings.filter(b => b.booking_date === today && b.status !== 'cancelled');
-    const pendingBks = bookings.filter(b => b.status === 'pending');
-    const unassigned = bookings.filter(b => b.status !== 'cancelled' && !b.staff_id);
-    const recent     = [...bookings].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,5);
+    // ── 1. Recent sales (last 7 days) ──
+    const recent7 = active.filter(b => b.booking_date >= d7ago.toISOString().split('T')[0]);
+    const prev7start = new Date(d7ago); prev7start.setDate(prev7start.getDate() - 7);
+    const prev7 = active.filter(b => b.booking_date >= prev7start.toISOString().split('T')[0] && b.booking_date < d7ago.toISOString().split('T')[0]);
+    const delta = recent7.length - prev7.length;
+    const deltaHtml = delta === 0 ? '' : `<div class="hw-sales-sub">${delta > 0 ? '▲' : '▼'} ${Math.abs(delta)} vs previous 7 days</div>`;
+    document.getElementById('hw-recent-sales').innerHTML = recent7.length
+      ? `<div class="hw-sales-big">
+           <div class="hw-sales-num">${recent7.length}</div>
+           <div class="hw-sales-label">${recent7.length === 1 ? 'booking' : 'bookings'} in the last 7 days</div>
+           ${deltaHtml}
+         </div>
+         ${recent7.slice(0,4).map(b => {
+           const d = new Date(b.booking_date + 'T00:00:00').toLocaleDateString('en-IN', { day:'numeric', month:'short' });
+           return `<div class="hw-row">
+             <div class="hw-row-dot" style="background:${b.assigned_staff?.color || 'var(--border)'}"></div>
+             <div class="hw-row-main"><div class="hw-row-name">${b.customer_name}</div><div class="hw-row-sub">${b.deal_title}</div></div>
+             <div class="hw-row-right">${d}</div>
+           </div>`;
+         }).join('')}`
+      : hwEmpty('📈', 'No Sales Data', 'Make some appointments for sales data to appear');
 
-    document.getElementById('home-stat-today').textContent      = todayBks.length;
-    document.getElementById('home-stat-pending').textContent    = pendingBks.length;
-    document.getElementById('home-stat-unassigned').textContent = unassigned.length;
-    document.getElementById('home-stat-deals').textContent      = activeDeals.length;
+    // ── 2. Upcoming appointments (next 7 days) ──
+    const upcoming = active
+      .filter(b => b.booking_date > today && b.booking_date <= d7ahead.toISOString().split('T')[0])
+      .sort((a,b) => a.booking_date.localeCompare(b.booking_date));
+    document.getElementById('hw-upcoming').innerHTML = upcoming.length
+      ? upcoming.slice(0,6).map(b => {
+          const d = new Date(b.booking_date + 'T00:00:00').toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'short' });
+          return `<div class="hw-row">
+            <div class="hw-row-dot" style="background:${b.assigned_staff?.color || 'var(--border)'}"></div>
+            <div class="hw-row-main"><div class="hw-row-name">${b.customer_name}</div><div class="hw-row-sub">${b.deal_title}${b.assigned_staff ? ' · ' + b.assigned_staff.name : ''}</div></div>
+            <div class="hw-row-right">${d}</div>
+          </div>`;
+        }).join('')
+      : hwEmpty('📅', 'Your schedule is empty', 'Make some appointments for schedule data to appear');
 
-    // Today's appointments
-    document.getElementById('home-today-list').innerHTML = todayBks.length ? todayBks.map(b => `
-      <div class="home-appt-row">
-        ${b.assigned_staff ? `<div style="width:8px;height:8px;border-radius:50%;background:${b.assigned_staff.color};flex-shrink:0"></div>` : '<div style="width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0"></div>'}
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:600;font-size:13px">${b.customer_name}</div>
-          <div style="font-size:11px;color:var(--muted)">${b.deal_title} · ${b.time_slot}</div>
-        </div>
-        ${b.assigned_staff ? `<span style="font-size:11px;color:var(--muted)">${b.assigned_staff.name}${b.assigned_room ? ' · ' + b.assigned_room.name : ''}</span>` : `<button class="btn-assign-inline" onclick="openAssignModal('${b.id}')">＋ Assign</button>`}
-      </div>`).join('')
-    : '<div class="home-empty">No appointments today</div>';
+    // ── 3. Appointments activity (recent events) ──
+    const actFeed = [...bookings].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,8);
+    document.getElementById('hw-activity').innerHTML = actFeed.length
+      ? actFeed.map(b => {
+          const ago = (() => {
+            const diff = Math.floor((now - new Date(b.created_at)) / 60000);
+            if (diff < 1)  return 'just now';
+            if (diff < 60) return diff + 'm ago';
+            const h = Math.floor(diff / 60);
+            if (h < 24)   return h + 'h ago';
+            return Math.floor(h / 24) + 'd ago';
+          })();
+          const dotColor = b.status === 'confirmed' ? 'var(--green)' : b.status === 'cancelled' ? 'var(--border)' : '#D97706';
+          return `<div class="hw-act-row">
+            <div class="hw-act-dot" style="background:${dotColor}"></div>
+            <div class="hw-act-text"><strong>${b.customer_name}</strong> booked <em>${b.deal_title}</em><br><span style="color:var(--muted)">${b.booking_date} · <span class="status-badge status-${b.status}">${b.status}</span></span></div>
+            <div class="hw-act-time">${ago}</div>
+          </div>`;
+        }).join('')
+      : hwEmpty('🕐', 'No recent activity', 'Visit the Bookings section to add some appointments');
 
-    // Unassigned
-    document.getElementById('home-unassigned-list').innerHTML = unassigned.length ? unassigned.slice(0,5).map(b => {
-      const d = new Date(b.booking_date + 'T00:00:00').toLocaleDateString('en-IN', { day:'numeric', month:'short' });
-      return `<div class="home-appt-row">
-        <div style="width:8px;height:8px;border-radius:50%;background:#DC2626;flex-shrink:0"></div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:600;font-size:13px">${b.customer_name}</div>
-          <div style="font-size:11px;color:var(--muted)">${d} · ${b.deal_title}</div>
-        </div>
-        <button class="btn-assign-inline" onclick="openAssignModal('${b.id}')">＋ Assign</button>
-      </div>`;
-    }).join('')
-    : '<div class="home-empty">All appointments assigned ✓</div>';
+    // ── 4. Today's next appointments ──
+    const todayBks = active.filter(b => b.booking_date === today).sort((a,b) => (a.time_slot||'').localeCompare(b.time_slot||''));
+    document.getElementById('hw-today').innerHTML = todayBks.length
+      ? todayBks.map(b => `
+          <div class="hw-row">
+            <div class="hw-row-dot" style="background:${b.assigned_staff?.color || 'var(--border)'}"></div>
+            <div class="hw-row-main">
+              <div class="hw-row-name">${b.customer_name}</div>
+              <div class="hw-row-sub">${b.time_slot}${b.assigned_staff ? ' · ' + b.assigned_staff.name : ' · <span style="color:#DC2626">Unassigned</span>'}</div>
+            </div>
+            ${!b.assigned_staff ? `<button class="btn-assign-inline" onclick="openAssignModal('${b.id}')">＋ Assign</button>` : `<span class="status-badge status-${b.status}">${b.status}</span>`}
+          </div>`).join('')
+      : hwEmpty('📅', 'No Appointments Today', 'Visit the Schedule section to add some appointments');
 
-    // Recent bookings
-    document.getElementById('home-recent-list').innerHTML = recent.length ? recent.map(b => {
-      const d = new Date(b.booking_date + 'T00:00:00').toLocaleDateString('en-IN', { day:'numeric', month:'short' });
-      return `<div class="home-appt-row">
-        <span class="status-badge status-${b.status}">${b.status}</span>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:600;font-size:13px">${b.customer_name}</div>
-          <div style="font-size:11px;color:var(--muted)">${d} · ${b.deal_title}</div>
-        </div>
-      </div>`;
-    }).join('')
-    : '<div class="home-empty">No bookings yet</div>';
+    // ── 5. Top services ──
+    const svcThis = {}; const svcLast = {};
+    bookings.forEach(b => {
+      const k = b.deal_title || 'Unknown';
+      if (b.booking_date >= monthStart)    { svcThis[k] = (svcThis[k] || 0) + 1; }
+      if (b.booking_date >= lastMonthStart && b.booking_date <= lastMonthEnd) { svcLast[k] = (svcLast[k] || 0) + 1; }
+    });
+    const allSvcKeys = [...new Set([...Object.keys(svcThis), ...Object.keys(svcLast)])];
+    const sortedSvc  = allSvcKeys.sort((a,b) => (svcThis[b]||0) - (svcThis[a]||0)).slice(0,6);
+    document.getElementById('hw-top-services').innerHTML = sortedSvc.length
+      ? `<table class="hw-svc-table">
+           <thead><tr><th>Service</th><th>This month</th><th>Last month</th></tr></thead>
+           <tbody>${sortedSvc.map(k => {
+             const t = svcThis[k] || 0, l = svcLast[k] || 0;
+             const delta = t - l;
+             const deltaStr = delta === 0 ? '' : `<span class="hw-svc-delta ${delta>0?'up':'down'}">${delta>0?'▲':'▼'}${Math.abs(delta)}</span>`;
+             return `<tr><td>${k}</td><td>${t} ${deltaStr}</td><td>${l}</td></tr>`;
+           }).join('')}</tbody>
+         </table>`
+      : hwEmpty('🏷️', 'No services data', 'Bookings will appear here once made');
 
-    // Active deals
-    document.getElementById('home-deals-list').innerHTML = activeDeals.length ? activeDeals.slice(0,5).map(d => `
-      <div class="home-appt-row">
-        <span style="font-size:20px">${d.emoji || '🏷️'}</span>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:600;font-size:13px">${d.title}</div>
-          <div style="font-size:11px;color:var(--muted)">${d.discount_pct}% off · ${d.time_slot}</div>
-        </div>
-        <span style="font-size:12px;font-weight:700;color:var(--green)">${d.booked || 0}/${d.capacity || '∞'}</span>
-      </div>`).join('')
-    : '<div class="home-empty">No active deals</div>';
+    // ── 6. Top team member ──
+    const staffCount = {};
+    bookings.filter(b => b.booking_date >= monthStart && b.assigned_staff).forEach(b => {
+      const s = b.assigned_staff;
+      staffCount[s.id] = staffCount[s.id] || { name: s.name, color: s.color, role: s.role, count: 0 };
+      staffCount[s.id].count++;
+    });
+    const ranked = Object.values(staffCount).sort((a,b) => b.count - a.count).slice(0,5);
+    document.getElementById('hw-top-staff').innerHTML = ranked.length
+      ? ranked.map((s,i) => `
+          <div class="hw-staff-row">
+            <div class="hw-staff-rank">${i+1}</div>
+            <div class="hw-staff-dot" style="background:${s.color}">${s.name.charAt(0)}</div>
+            <div class="hw-staff-info">
+              <div class="hw-staff-name">${s.name}</div>
+              <div class="hw-staff-role">${s.role || 'Therapist'}</div>
+            </div>
+            <div style="text-align:right">
+              <div class="hw-staff-count">${s.count}</div>
+              <div class="hw-staff-count-label">bookings</div>
+            </div>
+          </div>`).join('')
+      : hwEmpty('📊', 'No sales this month', 'Create some sales for sales data to appear');
   }
 
   /* ── LOAD DEALS ── */
