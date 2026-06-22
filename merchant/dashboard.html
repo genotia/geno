@@ -250,13 +250,58 @@
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
-    /* ── TEAM SUB-NAV ── */
-    .nav-sub { padding-left: 28px; font-size: 13px; }
-    .nav-group-toggle { cursor: pointer; }
-    .nav-group-toggle .nav-chevron { margin-left: auto; font-size: 11px; transition: transform .2s; color: rgba(255,255,255,.4); }
-    .nav-group-toggle.open .nav-chevron { transform: rotate(90deg); }
-    .nav-sub-group { display: none; }
-    .nav-sub-group.open { display: flex; flex-direction: column; gap: 1px; }
+    /* ── COLLAPSIBLE NAV GROUPS ── */
+    .nav-group { margin-bottom: 3px; }
+    .nav-group-toggle {
+      background: rgba(255,255,255,.06) !important;
+      border-radius: 10px;
+      position: relative;
+    }
+    .nav-group-toggle:hover { background: rgba(255,255,255,.11) !important; }
+    .nav-group-toggle.open {
+      background: rgba(74,222,154,.13) !important;
+      color: #fff !important;
+      border-radius: 10px 10px 0 0;
+    }
+    .nav-chevron {
+      margin-left: auto;
+      width: 22px; height: 22px;
+      border-radius: 7px;
+      background: rgba(255,255,255,.1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-style: normal;
+      flex-shrink: 0;
+      transition: transform .28s cubic-bezier(.4,0,.2,1), background .2s, color .2s;
+      color: rgba(255,255,255,.5);
+    }
+    .nav-group-toggle.open .nav-chevron {
+      transform: rotate(180deg);
+      background: rgba(74,222,154,.25);
+      color: #4ADE9A;
+    }
+    .nav-sub-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .32s cubic-bezier(.4,0,.2,1), padding .28s;
+      background: rgba(0,0,0,.18);
+      border-radius: 0 0 10px 10px;
+      padding: 0 5px;
+    }
+    .nav-sub-group.open { max-height: 400px; padding: 5px; }
+    .nav-sub {
+      padding-left: 14px !important;
+      font-size: 13px;
+      border-left: 2px solid rgba(255,255,255,.08);
+      margin-left: 4px;
+      border-radius: 0 8px 8px 0 !important;
+    }
+    .nav-sub.active, .nav-sub:hover { border-left-color: #4ADE9A; }
 
     /* ── TEAM MEMBERS ── */
     .team-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
@@ -849,52 +894,62 @@
     <button class="nav-item"        id="nav-roster"       onclick="switchPage('roster',this)"><span class="nav-icon">👥</span> Roster</button>
     <button class="nav-item"        id="nav-productivity" onclick="switchPage('productivity',this)"><span class="nav-icon">📊</span> Insights</button>
     <button class="nav-item admin-only" id="nav-setup" style="display:none" onclick="switchPage('setup',this)"><span class="nav-icon">⚙️</span> Setup</button>
-    <button class="nav-item nav-group-toggle" id="nav-team-toggle" onclick="toggleTeamNav(this)">
-      <span class="nav-icon">👥</span> Team <span class="nav-chevron">›</span>
-    </button>
-    <div class="nav-sub-group" id="team-sub-group">
-      <button class="nav-item nav-sub" id="nav-team-members" onclick="switchPage('team-members',this)"><span class="nav-icon">👤</span> Team members</button>
-      <button class="nav-item nav-sub" id="nav-shifts"       onclick="switchPage('shifts',this)"><span class="nav-icon">📆</span> Scheduled shifts</button>
-      <button class="nav-item nav-sub" id="nav-timesheets"   onclick="switchPage('timesheets',this)"><span class="nav-icon">⏱️</span> Timesheets</button>
-      <button class="nav-item nav-sub" id="nav-sales"        onclick="switchPage('sales',this)"><span class="nav-icon">💰</span> Sales</button>
+    <div class="nav-group">
+      <button class="nav-item nav-group-toggle" id="nav-team-toggle" onclick="toggleTeamNav(this)">
+        <span class="nav-icon">👥</span> Team <span class="nav-chevron">▾</span>
+      </button>
+      <div class="nav-sub-group" id="team-sub-group">
+        <button class="nav-item nav-sub" id="nav-team-members" onclick="switchPage('team-members',this)"><span class="nav-icon">👤</span> Team members</button>
+        <button class="nav-item nav-sub" id="nav-shifts"       onclick="switchPage('shifts',this)"><span class="nav-icon">📆</span> Scheduled shifts</button>
+        <button class="nav-item nav-sub" id="nav-timesheets"   onclick="switchPage('timesheets',this)"><span class="nav-icon">⏱️</span> Timesheets</button>
+        <button class="nav-item nav-sub" id="nav-sales"        onclick="switchPage('sales',this)"><span class="nav-icon">💰</span> Sales</button>
+      </div>
     </div>
-    <button class="nav-item nav-group-toggle" id="nav-clientdb-toggle" onclick="toggleClientNav(this)">
-      <span class="nav-icon">🧑‍🤝‍🧑</span> ClientDB <span class="nav-chevron">›</span>
-    </button>
-    <div class="nav-sub-group" id="clientdb-sub-group">
-      <button class="nav-item nav-sub" id="nav-clients-list"     onclick="switchPage('clients-list',this)"><span class="nav-icon">📋</span> Clients list</button>
-      <button class="nav-item nav-sub" id="nav-client-segments"  onclick="switchPage('client-segments',this)"><span class="nav-icon">🏷️</span> Client segments</button>
-      <button class="nav-item nav-sub" id="nav-client-loyalty"   onclick="switchPage('client-loyalty',this)"><span class="nav-icon">⭐</span> Rewards & Loyalty</button>
+    <div class="nav-group">
+      <button class="nav-item nav-group-toggle" id="nav-clientdb-toggle" onclick="toggleClientNav(this)">
+        <span class="nav-icon">🧑‍🤝‍🧑</span> ClientDB <span class="nav-chevron">▾</span>
+      </button>
+      <div class="nav-sub-group" id="clientdb-sub-group">
+        <button class="nav-item nav-sub" id="nav-clients-list"    onclick="switchPage('clients-list',this)"><span class="nav-icon">📋</span> Clients list</button>
+        <button class="nav-item nav-sub" id="nav-client-segments" onclick="switchPage('client-segments',this)"><span class="nav-icon">🏷️</span> Client segments</button>
+        <button class="nav-item nav-sub" id="nav-client-loyalty"  onclick="switchPage('client-loyalty',this)"><span class="nav-icon">⭐</span> Rewards & Loyalty</button>
+      </div>
     </div>
-    <button class="nav-item nav-group-toggle" id="nav-catalog-toggle" onclick="toggleCatalogNav(this)">
-      <span class="nav-icon">📚</span> Catalog <span class="nav-chevron">›</span>
-    </button>
-    <div class="nav-sub-group" id="catalog-sub-group">
-      <button class="nav-item nav-sub" id="nav-service-menu"    onclick="switchPage('service-menu',this)"><span class="nav-icon">💆</span> Service menu</button>
-      <button class="nav-item nav-sub" id="nav-memberships"     onclick="switchPage('memberships',this)"><span class="nav-icon">🎫</span> Memberships</button>
-      <button class="nav-item nav-sub" id="nav-product-list"    onclick="switchPage('product-list',this)"><span class="nav-icon">🛍️</span> Products</button>
+    <div class="nav-group">
+      <button class="nav-item nav-group-toggle" id="nav-catalog-toggle" onclick="toggleCatalogNav(this)">
+        <span class="nav-icon">📚</span> Catalog <span class="nav-chevron">▾</span>
+      </button>
+      <div class="nav-sub-group" id="catalog-sub-group">
+        <button class="nav-item nav-sub" id="nav-service-menu"  onclick="switchPage('service-menu',this)"><span class="nav-icon">💆</span> Service menu</button>
+        <button class="nav-item nav-sub" id="nav-memberships"   onclick="switchPage('memberships',this)"><span class="nav-icon">🎫</span> Memberships</button>
+        <button class="nav-item nav-sub" id="nav-product-list"  onclick="switchPage('product-list',this)"><span class="nav-icon">🛍️</span> Products</button>
+      </div>
     </div>
     <button class="nav-item" id="nav-generate-bill" onclick="switchPage('generate-bill',this)">
       <span class="nav-icon">🧾</span> Generate Bill
     </button>
-    <button class="nav-item nav-group-toggle" id="nav-inv-toggle" onclick="toggleInvNav(this)">
-      <span class="nav-icon">📦</span> Inventory <span class="nav-chevron">›</span>
-    </button>
-    <div class="nav-sub-group" id="inv-sub-group">
-      <button class="nav-item nav-sub" id="nav-inv-overview"    onclick="switchPage('inv-overview',this)"><span class="nav-icon">📊</span> Overview</button>
-      <button class="nav-item nav-sub" id="nav-inv-items"       onclick="switchPage('inv-items',this)"><span class="nav-icon">🗂️</span> Stock items</button>
-      <button class="nav-item nav-sub" id="nav-inv-intake"      onclick="switchPage('inv-intake',this)"><span class="nav-icon">📥</span> Stock intake</button>
-      <button class="nav-item nav-sub" id="nav-inv-usage"       onclick="switchPage('inv-usage',this)"><span class="nav-icon">📤</span> Stock usage</button>
-      <button class="nav-item nav-sub" id="nav-inv-adjustments" onclick="switchPage('inv-adjustments',this)"><span class="nav-icon">🔧</span> Adjustments</button>
-      <button class="nav-item nav-sub" id="nav-inv-suppliers"   onclick="switchPage('inv-suppliers',this)"><span class="nav-icon">🏭</span> Suppliers</button>
+    <div class="nav-group">
+      <button class="nav-item nav-group-toggle" id="nav-inv-toggle" onclick="toggleInvNav(this)">
+        <span class="nav-icon">📦</span> Inventory <span class="nav-chevron">▾</span>
+      </button>
+      <div class="nav-sub-group" id="inv-sub-group">
+        <button class="nav-item nav-sub" id="nav-inv-overview"    onclick="switchPage('inv-overview',this)"><span class="nav-icon">📊</span> Overview</button>
+        <button class="nav-item nav-sub" id="nav-inv-items"       onclick="switchPage('inv-items',this)"><span class="nav-icon">🗂️</span> Stock items</button>
+        <button class="nav-item nav-sub" id="nav-inv-intake"      onclick="switchPage('inv-intake',this)"><span class="nav-icon">📥</span> Stock intake</button>
+        <button class="nav-item nav-sub" id="nav-inv-usage"       onclick="switchPage('inv-usage',this)"><span class="nav-icon">📤</span> Stock usage</button>
+        <button class="nav-item nav-sub" id="nav-inv-adjustments" onclick="switchPage('inv-adjustments',this)"><span class="nav-icon">🔧</span> Adjustments</button>
+        <button class="nav-item nav-sub" id="nav-inv-suppliers"   onclick="switchPage('inv-suppliers',this)"><span class="nav-icon">🏭</span> Suppliers</button>
+      </div>
     </div>
-    <button class="nav-item nav-group-toggle" id="nav-mktg-toggle" onclick="toggleMarketingNav(this)">
-      <span class="nav-icon">📣</span> Marketing <span class="nav-chevron">›</span>
-    </button>
-    <div class="nav-sub-group" id="mktg-sub-group">
-      <button class="nav-item nav-sub" id="nav-mktg-whatsapp" onclick="switchPage('mktg-whatsapp',this)"><span class="nav-icon">💬</span> WhatsApp</button>
-      <button class="nav-item nav-sub" id="nav-mktg-email"    onclick="switchPage('mktg-email',this)"><span class="nav-icon">📧</span> Email</button>
-      <button class="nav-item nav-sub" id="nav-mktg-sms"      onclick="switchPage('mktg-sms',this)"><span class="nav-icon">📱</span> SMS</button>
+    <div class="nav-group">
+      <button class="nav-item nav-group-toggle" id="nav-mktg-toggle" onclick="toggleMarketingNav(this)">
+        <span class="nav-icon">📣</span> Marketing <span class="nav-chevron">▾</span>
+      </button>
+      <div class="nav-sub-group" id="mktg-sub-group">
+        <button class="nav-item nav-sub" id="nav-mktg-whatsapp" onclick="switchPage('mktg-whatsapp',this)"><span class="nav-icon">💬</span> WhatsApp</button>
+        <button class="nav-item nav-sub" id="nav-mktg-email"    onclick="switchPage('mktg-email',this)"><span class="nav-icon">📧</span> Email</button>
+        <button class="nav-item nav-sub" id="nav-mktg-sms"      onclick="switchPage('mktg-sms',this)"><span class="nav-icon">📱</span> SMS</button>
+      </div>
     </div>
   </nav>
   <div class="sb-foot">
