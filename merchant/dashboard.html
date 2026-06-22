@@ -221,8 +221,80 @@
     .cal-booking-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
     .cal-booking-row:last-child { border-bottom: none; }
 
+    /* ── SETUP TAB ── */
+    .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .setup-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .setup-card-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+    .setup-card-title { font-size: 15px; font-weight: 700; }
+    .btn-sm-add { padding: 6px 14px; border-radius: 8px; border: none; background: var(--green); color: var(--white); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .setup-list { list-style: none; }
+    .setup-item { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .setup-item:last-child { border-bottom: none; }
+    .staff-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .setup-item-name { font-weight: 600; flex: 1; }
+    .setup-item-sub { font-size: 12px; color: var(--muted); }
+    .setup-item-actions { display: flex; gap: 6px; margin-left: auto; }
+    .btn-icon { width: 28px; height: 28px; border-radius: 7px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .12s; }
+    .btn-icon:hover { border-color: var(--green); background: #F0FDF8; }
+    .inactive-row { opacity: .45; }
+    /* ── ROSTER TAB ── */
+    .roster-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .roster-grid { width: 100%; border-collapse: collapse; }
+    .roster-grid th { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; padding: 12px 10px; text-align: center; background: var(--bg); border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
+    .roster-grid th:first-child { text-align: left; padding-left: 20px; min-width: 160px; }
+    .roster-grid td { padding: 10px; text-align: center; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
+    .roster-grid td:first-child { text-align: left; padding-left: 20px; }
+    .roster-grid tr:last-child td { border-bottom: none; }
+    .roster-grid td:last-child, .roster-grid th:last-child { border-right: none; }
+    .roster-cell { width: 36px; height: 36px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--white); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; transition: all .12s; }
+    .roster-cell.on { border-color: transparent; color: var(--white); font-size: 12px; font-weight: 700; }
+    .roster-cell:not(.on):hover { border-color: var(--green); background: #F0FDF8; }
+    .staff-name-cell { display: flex; align-items: center; gap: 8px; }
+    /* ── SCHEDULE TAB ── */
+    .schedule-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .sch-nav-btn { width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--white); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .12s; }
+    .sch-nav-btn:hover { border-color: var(--green); color: var(--green); }
+    .sch-date-label { font-size: 16px; font-weight: 700; }
+    .sch-today-btn { padding: 6px 14px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .12s; }
+    .sch-today-btn:hover { border-color: var(--green); color: var(--green); }
+    .schedule-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: auto; }
+    .sch-grid { width: 100%; border-collapse: collapse; min-width: 900px; }
+    .sch-grid th { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; padding: 10px 8px; text-align: center; background: var(--bg); border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); white-space: nowrap; }
+    .sch-grid th:first-child { text-align: left; padding-left: 16px; min-width: 130px; }
+    .sch-grid td { padding: 6px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); vertical-align: top; height: 72px; }
+    .sch-grid td:first-child { font-size: 13px; font-weight: 600; padding-left: 16px; vertical-align: middle; }
+    .sch-grid tr:last-child td { border-bottom: none; }
+    .sch-grid td:last-child, .sch-grid th:last-child { border-right: none; }
+    .sch-appt { border-radius: 8px; padding: 6px 8px; font-size: 11px; font-weight: 600; color: var(--white); line-height: 1.4; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+    .sch-appt .appt-ref { font-size: 10px; opacity: .85; }
+    .sch-empty-cell { width: 100%; height: 100%; border-radius: 6px; border: 1.5px dashed var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--muted); font-size: 18px; transition: all .12s; }
+    .sch-empty-cell:hover { border-color: var(--green); color: var(--green); background: #F0FDF8; }
+    .pending-queue { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 16px; }
+    .pending-queue-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+    .pending-bk { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .pending-bk:last-child { border-bottom: none; }
+    .btn-assign { padding: 5px 12px; border-radius: 7px; border: 1.5px solid var(--green); background: #F0FDF8; color: var(--green); font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; margin-left: auto; }
+    .btn-assign:hover { background: #D1FAE5; }
+    /* ── PRODUCTIVITY TAB ── */
+    .prod-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .prod-section-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+    .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+    .prod-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+    .prod-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 13px; }
+    .prod-row:last-child { margin-bottom: 0; }
+    .prod-name { min-width: 110px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .prod-bar-wrap { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .prod-bar { height: 100%; border-radius: 4px; transition: width .4s; }
+    .prod-pct { font-size: 12px; font-weight: 700; min-width: 36px; text-align: right; }
+    /* assign modal */
+    .assign-modal-body { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+    .assign-field label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 5px; }
+    .assign-select { width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; outline: none; appearance: none; background: var(--white); transition: border-color .15s; }
+    .assign-select:focus { border-color: var(--green); }
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
+      .setup-grid { grid-template-columns: 1fr; }
+      .prod-grid { grid-template-columns: 1fr; }
       .stats-row { grid-template-columns: 1fr; }
       .nav-center { display: none; }
       .user-email { display: none; }
@@ -262,6 +334,10 @@
   <div class="tab-bar">
     <button class="tab-btn active" onclick="switchTab('deals', this)">📋 Deals</button>
     <button class="tab-btn"        onclick="switchTab('bookings', this)">🛎️ Bookings</button>
+    <button class="tab-btn"        onclick="switchTab('schedule', this)">📅 Schedule</button>
+    <button class="tab-btn"        onclick="switchTab('roster', this)">👥 Roster</button>
+    <button class="tab-btn"        onclick="switchTab('productivity', this)">📊 Insights</button>
+    <button class="tab-btn admin-only" style="display:none" onclick="switchTab('setup', this)">⚙️ Setup</button>
   </div>
 
   <!-- ── DEALS TAB ── -->
@@ -348,7 +424,153 @@
     </div>
   </div><!-- /tab-bookings -->
 
+  <!-- ── SCHEDULE TAB ── -->
+  <div class="tab-panel" id="tab-schedule">
+    <div class="schedule-nav">
+      <button class="sch-nav-btn" onclick="schNav(-1)">‹</button>
+      <span class="sch-date-label" id="sch-date-label"></span>
+      <button class="sch-nav-btn" onclick="schNav(1)">›</button>
+      <button class="sch-today-btn" onclick="schGoToday()">Today</button>
+    </div>
+    <div class="pending-queue" id="pending-queue" style="display:none">
+      <div class="pending-queue-title">⏳ Pending assignments</div>
+      <div id="pending-queue-list"></div>
+    </div>
+    <div class="schedule-wrap">
+      <div id="sch-grid-wrap"><div class="loading-state">Loading schedule…</div></div>
+    </div>
+  </div><!-- /tab-schedule -->
+
+  <!-- ── ROSTER TAB ── -->
+  <div class="tab-panel" id="tab-roster">
+    <div class="roster-wrap">
+      <div id="roster-grid-wrap"><div class="loading-state">Loading roster…</div></div>
+    </div>
+  </div><!-- /tab-roster -->
+
+  <!-- ── PRODUCTIVITY TAB ── -->
+  <div class="tab-panel" id="tab-productivity">
+    <div class="prod-stats" id="prod-stats"></div>
+    <div class="prod-grid">
+      <div class="prod-card">
+        <div class="prod-section-title">👩‍⚕️ Therapist utilisation</div>
+        <div id="prod-staff-chart"></div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-section-title">🚪 Room occupancy</div>
+        <div id="prod-room-chart"></div>
+      </div>
+    </div>
+  </div><!-- /tab-productivity -->
+
+  <!-- ── SETUP TAB ── -->
+  <div class="tab-panel" id="tab-setup">
+    <div class="setup-grid">
+      <!-- Staff -->
+      <div class="setup-card">
+        <div class="setup-card-header">
+          <span class="setup-card-title">👩‍⚕️ Therapists</span>
+          <button class="btn-sm-add" onclick="openStaffModal()">＋ Add</button>
+        </div>
+        <ul class="setup-list" id="staff-list"><li class="setup-item" style="color:var(--muted)">Loading…</li></ul>
+      </div>
+      <!-- Rooms -->
+      <div class="setup-card">
+        <div class="setup-card-header">
+          <span class="setup-card-title">🚪 Rooms</span>
+          <button class="btn-sm-add" onclick="openRoomModal()">＋ Add</button>
+        </div>
+        <ul class="setup-list" id="room-list"><li class="setup-item" style="color:var(--muted)">Loading…</li></ul>
+      </div>
+    </div>
+  </div><!-- /tab-setup -->
+
 </main>
+
+<!-- ── STAFF MODAL ── -->
+<div class="modal-overlay" id="staff-modal-overlay" onclick="if(event.target===this)closeStaffModal()">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-header-left"><div style="font-size:22px">👩‍⚕️</div><div class="modal-title" id="staff-modal-title">Add Therapist</div></div>
+      <button class="modal-close" onclick="closeStaffModal()">✕</button>
+    </div>
+    <form id="staff-form" onsubmit="saveStaff(event)">
+      <div class="form-body">
+        <div class="field-group"><label>Name *</label><input type="text" id="sf-name" required placeholder="e.g. Anita Sharma" /></div>
+        <div class="field-group"><label>Role</label><input type="text" id="sf-role" placeholder="Therapist" /></div>
+        <div class="field-row">
+          <div class="field-group"><label>Phone</label><input type="tel" id="sf-phone" placeholder="+91 98765 43210" /></div>
+          <div class="field-group"><label>Email</label><input type="email" id="sf-email" placeholder="anita@spa.com" /></div>
+        </div>
+        <div class="field-group">
+          <label>Colour tag</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap" id="staff-color-picker">
+            <div class="swatch selected" style="background:#1D9E75" data-color="#1D9E75" onclick="pickStaffColor(this)"></div>
+            <div class="swatch" style="background:#7C3AED" data-color="#7C3AED" onclick="pickStaffColor(this)"></div>
+            <div class="swatch" style="background:#2563EB" data-color="#2563EB" onclick="pickStaffColor(this)"></div>
+            <div class="swatch" style="background:#DC2626" data-color="#DC2626" onclick="pickStaffColor(this)"></div>
+            <div class="swatch" style="background:#D97706" data-color="#D97706" onclick="pickStaffColor(this)"></div>
+            <div class="swatch" style="background:#DB2777" data-color="#DB2777" onclick="pickStaffColor(this)"></div>
+            <div class="swatch" style="background:#0891B2" data-color="#0891B2" onclick="pickStaffColor(this)"></div>
+            <div class="swatch" style="background:#059669" data-color="#059669" onclick="pickStaffColor(this)"></div>
+          </div>
+        </div>
+        <div class="form-err" id="staff-err"></div>
+        <button type="submit" class="btn-submit" id="staff-submit-btn">Add Therapist →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── ROOM MODAL ── -->
+<div class="modal-overlay" id="room-modal-overlay" onclick="if(event.target===this)closeRoomModal()">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-header-left"><div style="font-size:22px">🚪</div><div class="modal-title" id="room-modal-title">Add Room</div></div>
+      <button class="modal-close" onclick="closeRoomModal()">✕</button>
+    </div>
+    <form id="room-form" onsubmit="saveRoom(event)">
+      <div class="form-body">
+        <div class="field-group"><label>Room name *</label><input type="text" id="rm-name" required placeholder="e.g. Room 1" /></div>
+        <div class="field-group">
+          <label>Type</label>
+          <select id="rm-type" class="assign-select">
+            <option>Treatment Room</option>
+            <option>Couple Suite</option>
+            <option>VIP Room</option>
+            <option>Dry Room</option>
+            <option>Steam Room</option>
+          </select>
+        </div>
+        <div class="form-err" id="room-err"></div>
+        <button type="submit" class="btn-submit" id="room-submit-btn">Add Room →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ── ASSIGN MODAL ── -->
+<div class="modal-overlay" id="assign-modal-overlay" onclick="if(event.target===this)closeAssignModal()">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-header-left"><div style="font-size:22px">📌</div><div class="modal-title">Assign Appointment</div></div>
+      <button class="modal-close" onclick="closeAssignModal()">✕</button>
+    </div>
+    <div class="form-body assign-modal-body">
+      <div id="assign-booking-summary" style="background:var(--bg);border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.7"></div>
+      <div class="assign-field">
+        <label>Therapist *</label>
+        <select id="assign-staff" class="assign-select"><option value="">— select therapist —</option></select>
+      </div>
+      <div class="assign-field">
+        <label>Room *</label>
+        <select id="assign-room" class="assign-select"><option value="">— select room —</option></select>
+      </div>
+      <div class="form-err" id="assign-err"></div>
+      <button class="btn-submit" onclick="confirmAssign()">Confirm Assignment →</button>
+    </div>
+  </div>
+</div>
 
 <!-- ── ADD DEAL MODAL ── -->
 <div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
@@ -1092,6 +1314,424 @@
   async function logout() {
     await db.auth.signOut();
     location.href = 'index.html';
+  }
+
+  init();
+
+  /* ════════════════════════════════════════════
+     SETUP — STAFF
+  ════════════════════════════════════════════ */
+  let currentStaff  = [];
+  let currentRooms  = [];
+  let editingStaffId = null;
+  let editingRoomId  = null;
+  let selectedStaffColor = '#1D9E75';
+
+  async function loadStaff() {
+    const { data } = await db.from('staff').select('*')
+      .eq('merchant_id', currentMerchant.id).order('name');
+    currentStaff = data || [];
+    renderStaffList();
+  }
+
+  function renderStaffList() {
+    const ul = document.getElementById('staff-list');
+    if (!currentStaff.length) { ul.innerHTML = '<li class="setup-item" style="color:var(--muted)">No therapists yet. Add one!</li>'; return; }
+    ul.innerHTML = currentStaff.map(s => `
+      <li class="setup-item ${s.active ? '' : 'inactive-row'}">
+        <div class="staff-dot" style="background:${s.color}"></div>
+        <div>
+          <div class="setup-item-name">${s.name}</div>
+          <div class="setup-item-sub">${s.role}${s.phone ? ' · ' + s.phone : ''}</div>
+        </div>
+        <div class="setup-item-actions">
+          <button class="btn-icon" title="Edit" onclick="openStaffModal(${JSON.stringify(s).replace(/"/g,'&quot;')})">✏️</button>
+          <button class="btn-icon" title="${s.active ? 'Deactivate' : 'Activate'}" onclick="toggleStaff('${s.id}',${!s.active})">${s.active ? '⏸' : '▶️'}</button>
+        </div>
+      </li>`).join('');
+  }
+
+  function openStaffModal(staff = null) {
+    editingStaffId = staff ? staff.id : null;
+    selectedStaffColor = staff ? staff.color : '#1D9E75';
+    document.getElementById('staff-modal-title').textContent = staff ? 'Edit Therapist' : 'Add Therapist';
+    document.getElementById('staff-submit-btn').textContent  = staff ? 'Save Changes →' : 'Add Therapist →';
+    document.getElementById('sf-name').value  = staff ? staff.name  : '';
+    document.getElementById('sf-role').value  = staff ? staff.role  : '';
+    document.getElementById('sf-phone').value = staff ? (staff.phone || '') : '';
+    document.getElementById('sf-email').value = staff ? (staff.email || '') : '';
+    document.getElementById('staff-err').textContent = '';
+    document.querySelectorAll('#staff-color-picker .swatch').forEach(s =>
+      s.classList.toggle('selected', s.dataset.color === selectedStaffColor));
+    document.getElementById('staff-modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeStaffModal() {
+    document.getElementById('staff-modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function pickStaffColor(el) {
+    document.querySelectorAll('#staff-color-picker .swatch').forEach(s => s.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedStaffColor = el.dataset.color;
+  }
+  async function saveStaff(e) {
+    e.preventDefault();
+    const btn = document.getElementById('staff-submit-btn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    const payload = {
+      merchant_id: currentMerchant.id,
+      name:  document.getElementById('sf-name').value.trim(),
+      role:  document.getElementById('sf-role').value.trim() || 'Therapist',
+      phone: document.getElementById('sf-phone').value.trim(),
+      email: document.getElementById('sf-email').value.trim(),
+      color: selectedStaffColor,
+    };
+    const { error } = editingStaffId
+      ? await db.from('staff').update(payload).eq('id', editingStaffId)
+      : await db.from('staff').insert(payload);
+    if (error) { document.getElementById('staff-err').textContent = error.message; btn.disabled = false; btn.textContent = editingStaffId ? 'Save Changes →' : 'Add Therapist →'; return; }
+    closeStaffModal();
+    await loadStaff();
+  }
+  async function toggleStaff(id, active) {
+    await db.from('staff').update({ active }).eq('id', id);
+    await loadStaff();
+  }
+
+  /* ── SETUP — ROOMS ── */
+  async function loadRooms() {
+    const { data } = await db.from('rooms').select('*')
+      .eq('merchant_id', currentMerchant.id).order('name');
+    currentRooms = data || [];
+    renderRoomList();
+  }
+
+  function renderRoomList() {
+    const ul = document.getElementById('room-list');
+    if (!currentRooms.length) { ul.innerHTML = '<li class="setup-item" style="color:var(--muted)">No rooms yet. Add one!</li>'; return; }
+    ul.innerHTML = currentRooms.map(r => `
+      <li class="setup-item ${r.active ? '' : 'inactive-row'}">
+        <span style="font-size:20px">🚪</span>
+        <div>
+          <div class="setup-item-name">${r.name}</div>
+          <div class="setup-item-sub">${r.room_type}</div>
+        </div>
+        <div class="setup-item-actions">
+          <button class="btn-icon" title="Edit" onclick="openRoomModal(${JSON.stringify(r).replace(/"/g,'&quot;')})">✏️</button>
+          <button class="btn-icon" title="${r.active ? 'Deactivate' : 'Activate'}" onclick="toggleRoom('${r.id}',${!r.active})">${r.active ? '⏸' : '▶️'}</button>
+        </div>
+      </li>`).join('');
+  }
+
+  function openRoomModal(room = null) {
+    editingRoomId = room ? room.id : null;
+    document.getElementById('room-modal-title').textContent = room ? 'Edit Room' : 'Add Room';
+    document.getElementById('room-submit-btn').textContent  = room ? 'Save Changes →' : 'Add Room →';
+    document.getElementById('rm-name').value = room ? room.name : '';
+    document.getElementById('rm-type').value = room ? room.room_type : 'Treatment Room';
+    document.getElementById('room-err').textContent = '';
+    document.getElementById('room-modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeRoomModal() {
+    document.getElementById('room-modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  async function saveRoom(e) {
+    e.preventDefault();
+    const btn = document.getElementById('room-submit-btn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    const payload = {
+      merchant_id: currentMerchant.id,
+      name:      document.getElementById('rm-name').value.trim(),
+      room_type: document.getElementById('rm-type').value,
+    };
+    const { error } = editingRoomId
+      ? await db.from('rooms').update(payload).eq('id', editingRoomId)
+      : await db.from('rooms').insert(payload);
+    if (error) { document.getElementById('room-err').textContent = error.message; btn.disabled = false; btn.textContent = editingRoomId ? 'Save Changes →' : 'Add Room →'; return; }
+    closeRoomModal();
+    await loadRooms();
+  }
+  async function toggleRoom(id, active) {
+    await db.from('rooms').update({ active }).eq('id', id);
+    await loadRooms();
+  }
+
+  /* ════════════════════════════════════════════
+     ROSTER
+  ════════════════════════════════════════════ */
+  let currentRoster = [];
+  const WEEK_DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  async function loadRoster() {
+    const { data } = await db.from('roster').select('*').eq('merchant_id', currentMerchant.id);
+    currentRoster = data || [];
+    renderRosterGrid();
+  }
+
+  function renderRosterGrid() {
+    const active = currentStaff.filter(s => s.active);
+    if (!active.length) {
+      document.getElementById('roster-grid-wrap').innerHTML = '<div class="empty-state">Add therapists in Setup first.</div>';
+      return;
+    }
+    const rosterMap = {};
+    currentRoster.forEach(r => { rosterMap[r.staff_id + '_' + r.day_of_week] = r; });
+
+    document.getElementById('roster-grid-wrap').innerHTML = `
+      <table class="roster-grid">
+        <thead><tr>
+          <th>Therapist</th>
+          ${WEEK_DAYS.map(d => `<th>${d}</th>`).join('')}
+        </tr></thead>
+        <tbody>
+          ${active.map(s => `
+            <tr>
+              <td>
+                <div class="staff-name-cell">
+                  <div class="staff-dot" style="background:${s.color}"></div>
+                  <span style="font-weight:600;font-size:13px">${s.name}</span>
+                </div>
+              </td>
+              ${WEEK_DAYS.map(d => {
+                const key = s.id + '_' + d;
+                const r = rosterMap[key];
+                return `<td>
+                  <div class="roster-cell ${r ? 'on' : ''}" style="${r ? 'background:' + s.color : ''}"
+                    onclick="toggleRosterCell('${s.id}','${d}','${s.color}',this)">
+                    ${r ? '✓' : ''}
+                  </div>
+                </td>`;
+              }).join('')}
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  async function toggleRosterCell(staffId, day, color, el) {
+    const isOn = el.classList.contains('on');
+    if (isOn) {
+      await db.from('roster').delete().eq('staff_id', staffId).eq('day_of_week', day);
+      el.classList.remove('on'); el.style.background = ''; el.textContent = '';
+    } else {
+      const { error } = await db.from('roster').upsert({
+        merchant_id: currentMerchant.id, staff_id: staffId,
+        day_of_week: day, start_time: '09:00', end_time: '18:00',
+      }, { onConflict: 'staff_id,day_of_week' });
+      if (!error) { el.classList.add('on'); el.style.background = color; el.textContent = '✓'; }
+    }
+  }
+
+  /* ════════════════════════════════════════════
+     SCHEDULE
+  ════════════════════════════════════════════ */
+  let schDate = new Date();
+  const SCH_HOURS = [8,9,10,11,12,13,14,15,16,17,18,19,20];
+  let pendingBookings   = [];
+  let assigningBookingId = null;
+
+  function schNav(dir) {
+    schDate = new Date(schDate); schDate.setDate(schDate.getDate() + dir);
+    loadSchedule();
+  }
+  function schGoToday() { schDate = new Date(); loadSchedule(); }
+
+  async function loadSchedule() {
+    const dateStr = schDate.toISOString().split('T')[0];
+    document.getElementById('sch-date-label').textContent =
+      schDate.toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+    const [{ data: bks }, { data: rms }] = await Promise.all([
+      db.from('bookings').select('*, staff(name,color), rooms(name)')
+        .eq('merchant_id', currentMerchant.id).eq('booking_date', dateStr),
+      db.from('rooms').select('*').eq('merchant_id', currentMerchant.id).eq('active', true).order('name'),
+    ]);
+
+    const booked    = (bks || []).filter(b => b.status !== 'cancelled');
+    pendingBookings = booked.filter(b => !b.room_id);
+    const assigned  = booked.filter(b => b.room_id);
+    const rooms     = rms || [];
+
+    // Pending queue
+    const pq = document.getElementById('pending-queue');
+    const pql = document.getElementById('pending-queue-list');
+    if (pendingBookings.length) {
+      pq.style.display = '';
+      pql.innerHTML = pendingBookings.map(b => `
+        <div class="pending-bk">
+          <span class="status-badge status-${b.status}">${b.status}</span>
+          <strong>${b.customer_name}</strong>
+          <span style="color:var(--muted);font-size:12px">${b.deal_title} · ${b.time_slot}</span>
+          <button class="btn-assign" onclick="openAssignModal('${b.id}')">Assign →</button>
+        </div>`).join('');
+    } else { pq.style.display = 'none'; }
+
+    if (!rooms.length) {
+      document.getElementById('sch-grid-wrap').innerHTML = '<div class="empty-state">Add rooms in Setup first.</div>';
+      return;
+    }
+
+    // Build lookup: room_id → [bookings]
+    const byRoom = {};
+    rooms.forEach(r => { byRoom[r.id] = []; });
+    assigned.forEach(b => { if (byRoom[b.room_id]) byRoom[b.room_id].push(b); });
+
+    const hourLabel = h => {
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      return (h % 12 || 12) + ' ' + ampm;
+    };
+
+    // Render grid
+    const apptInHour = (roomId, h) => {
+      const appt = byRoom[roomId]?.find(b => {
+        if (!b.start_time) return false;
+        const sh = parseInt(b.start_time.split(':')[0]);
+        const eh = parseInt((b.end_time || b.start_time).split(':')[0]);
+        return h >= sh && h < (eh || sh + 1);
+      });
+      if (appt) {
+        const color = appt.staff?.color || '#1D9E75';
+        return `<div class="sch-appt" style="background:${color}">
+          <span>${appt.staff?.name || 'Unassigned'}</span>
+          <span class="appt-ref">${appt.booking_ref} · ${appt.deal_title}</span>
+        </div>`;
+      }
+      return `<div class="sch-empty-cell" onclick="openAssignModalForSlot('${roomId}',${h})">＋</div>`;
+    };
+
+    document.getElementById('sch-grid-wrap').innerHTML = `
+      <table class="sch-grid">
+        <thead><tr>
+          <th>Room</th>
+          ${SCH_HOURS.map(h => `<th>${hourLabel(h)}</th>`).join('')}
+        </tr></thead>
+        <tbody>
+          ${rooms.map(r => `
+            <tr>
+              <td>${r.name}<br><span style="font-size:11px;color:var(--muted)">${r.room_type}</span></td>
+              ${SCH_HOURS.map(h => `<td>${apptInHour(r.id, h)}</td>`).join('')}
+            </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  /* ── ASSIGN MODAL ── */
+  function openAssignModal(bookingId) {
+    assigningBookingId = bookingId;
+    const bk = pendingBookings.find(b => b.id === bookingId);
+    document.getElementById('assign-booking-summary').innerHTML =
+      `<strong>${bk.customer_name}</strong> · ${bk.deal_title}<br>
+       🕐 ${bk.time_slot} · ${bk.booking_ref}`;
+    populateAssignDropdowns();
+    document.getElementById('assign-err').textContent = '';
+    document.getElementById('assign-modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function openAssignModalForSlot(roomId, hour) {
+    if (!pendingBookings.length) return;
+    openAssignModal(pendingBookings[0].id);
+    // Pre-select room
+    setTimeout(() => { document.getElementById('assign-room').value = roomId; }, 50);
+  }
+  function closeAssignModal() {
+    document.getElementById('assign-modal-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function populateAssignDropdowns() {
+    const staffSel = document.getElementById('assign-staff');
+    const roomSel  = document.getElementById('assign-room');
+    const dow = schDate.toLocaleDateString('en-IN', { weekday:'short' });
+    const rosterDay = currentRoster.filter(r => r.day_of_week === dow).map(r => r.staff_id);
+    const onDuty = currentStaff.filter(s => s.active && (rosterDay.includes(s.id) || !rosterDay.length));
+    staffSel.innerHTML = '<option value="">— select therapist —</option>' +
+      onDuty.map(s => `<option value="${s.id}">${s.name} · ${s.role}</option>`).join('');
+    roomSel.innerHTML = '<option value="">— select room —</option>' +
+      currentRooms.filter(r => r.active).map(r => `<option value="${r.id}">${r.name} (${r.room_type})</option>`).join('');
+  }
+  async function confirmAssign() {
+    const staffId = document.getElementById('assign-staff').value;
+    const roomId  = document.getElementById('assign-room').value;
+    const errEl   = document.getElementById('assign-err');
+    if (!staffId || !roomId) { errEl.textContent = 'Please select both therapist and room.'; return; }
+    const { error } = await db.from('bookings')
+      .update({ staff_id: staffId, room_id: roomId, status: 'confirmed' })
+      .eq('id', assigningBookingId);
+    if (error) { errEl.textContent = error.message; return; }
+    closeAssignModal();
+    await loadSchedule();
+  }
+
+  /* ════════════════════════════════════════════
+     PRODUCTIVITY
+  ════════════════════════════════════════════ */
+  async function loadProductivity() {
+    const [{ data: bks }, { data: rms }] = await Promise.all([
+      db.from('bookings').select('*, staff(name,color), rooms(name)')
+        .eq('merchant_id', currentMerchant.id).neq('status','cancelled'),
+      db.from('rooms').select('*').eq('merchant_id', currentMerchant.id).eq('active', true),
+    ]);
+    const bookings = bks || [];
+    const rooms    = rms || [];
+
+    // Summary stats
+    const confirmed = bookings.filter(b => b.status === 'confirmed').length;
+    const assigned  = bookings.filter(b => b.staff_id).length;
+    document.getElementById('prod-stats').innerHTML = `
+      <div class="stat-card"><div class="stat-value">${bookings.length}</div><div class="stat-label">Total bookings</div></div>
+      <div class="stat-card"><div class="stat-value green">${confirmed}</div><div class="stat-label">Confirmed</div></div>
+      <div class="stat-card"><div class="stat-value orange">${assigned}</div><div class="stat-label">Assigned to staff</div></div>`;
+
+    // Staff chart
+    const staffCount = {};
+    bookings.forEach(b => {
+      if (!b.staff) return;
+      const k = b.staff.name;
+      staffCount[k] = staffCount[k] || { count: 0, color: b.staff.color };
+      staffCount[k].count++;
+    });
+    const maxStaff = Math.max(...Object.values(staffCount).map(v => v.count), 1);
+    const staffRows = Object.entries(staffCount).sort((a,b) => b[1].count - a[1].count).map(([name, v]) => `
+      <div class="prod-row">
+        <div class="prod-name">${name}</div>
+        <div class="prod-bar-wrap"><div class="prod-bar" style="width:${Math.round(v.count/maxStaff*100)}%;background:${v.color}"></div></div>
+        <div class="prod-pct" style="color:${v.color}">${v.count}</div>
+      </div>`).join('');
+    document.getElementById('prod-staff-chart').innerHTML = staffRows || '<div style="color:var(--muted);font-size:13px">No assigned appointments yet.</div>';
+
+    // Room chart
+    const roomCount = {};
+    bookings.forEach(b => { if (b.rooms?.name) { roomCount[b.rooms.name] = (roomCount[b.rooms.name] || 0) + 1; } });
+    const maxRoom = Math.max(...Object.values(roomCount), 1);
+    const roomRows = rooms.map(r => {
+      const c = roomCount[r.name] || 0;
+      const pct = Math.round(c / maxRoom * 100);
+      return `<div class="prod-row">
+        <div class="prod-name">${r.name}</div>
+        <div class="prod-bar-wrap"><div class="prod-bar" style="width:${pct}%;background:var(--green)"></div></div>
+        <div class="prod-pct">${c}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('prod-room-chart').innerHTML = roomRows || '<div style="color:var(--muted);font-size:13px">No room assignments yet.</div>';
+  }
+
+  /* ── UPDATE switchTab to trigger loaders ── */
+  const _origSwitchTab = switchTab;
+  // Override switchTab to load data on first visit
+  const tabLoaded = {};
+  switchTab = function(tab, btn) {
+    _origSwitchTab(tab, btn);
+    if (tabLoaded[tab]) return;
+    tabLoaded[tab] = true;
+    if (tab === 'setup')       { loadStaff(); loadRooms(); }
+    if (tab === 'roster')      { Promise.all([loadStaff(), loadRooms()]).then(loadRoster); }
+    if (tab === 'schedule')    { Promise.all([loadStaff(), loadRooms(), loadRosterData()]).then(loadSchedule); }
+    if (tab === 'productivity'){ loadProductivity(); }
+  };
+  async function loadRosterData() {
+    const { data } = await db.from('roster').select('*').eq('merchant_id', currentMerchant.id);
+    currentRoster = data || [];
   }
 
   init();
