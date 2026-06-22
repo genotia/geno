@@ -247,6 +247,115 @@
     /* ── PANELS ── */
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
+
+    /* ── TEAM SUB-NAV ── */
+    .nav-sub { padding-left: 28px; font-size: 13px; }
+    .nav-group-toggle { cursor: pointer; }
+    .nav-group-toggle .nav-chevron { margin-left: auto; font-size: 11px; transition: transform .2s; color: rgba(255,255,255,.4); }
+    .nav-group-toggle.open .nav-chevron { transform: rotate(90deg); }
+    .nav-sub-group { display: none; }
+    .nav-sub-group.open { display: flex; flex-direction: column; gap: 1px; }
+
+    /* ── TEAM MEMBERS ── */
+    .team-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+    .team-search { flex: 1; min-width: 200px; display: flex; align-items: center; gap: 8px; background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 8px 14px; }
+    .team-search input { border: none; outline: none; font-size: 14px; font-family: inherit; width: 100%; background: transparent; }
+    .team-search-icon { color: var(--muted); font-size: 14px; }
+    .team-table { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .team-table table { width: 100%; border-collapse: collapse; }
+    .team-table th { font-size: 12px; font-weight: 700; color: var(--muted); padding: 12px 18px; text-align: left; border-bottom: 1px solid var(--border); background: var(--bg); }
+    .team-table td { padding: 14px 18px; font-size: 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .team-table tr:last-child td { border-bottom: none; }
+    .team-avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .team-member-cell { display: flex; align-items: center; gap: 12px; }
+    .team-member-name { font-weight: 700; font-size: 14px; }
+    .team-member-role { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .team-contact { font-size: 13px; line-height: 1.6; }
+    .perm-badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; background: var(--bg); border: 1px solid var(--border); color: var(--text); }
+    .perm-badge.admin { background: #FEF3C7; border-color: #FDE68A; color: #92400E; }
+    .actions-btn { display: flex; align-items: center; gap: 5px; padding: 7px 13px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all .12s; }
+    .actions-btn:hover { border-color: var(--green); color: var(--green); }
+
+    /* ── SCHEDULED SHIFTS ── */
+    .shifts-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+    .shifts-week-label { font-size: 14px; font-weight: 700; background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; padding: 7px 16px; }
+    .shifts-nav-btn { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--white); font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .12s; }
+    .shifts-nav-btn:hover { border-color: var(--green); color: var(--green); }
+    .shifts-today-btn { padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .12s; color: var(--muted); }
+    .shifts-today-btn:hover { border-color: var(--green); color: var(--green); }
+    .shifts-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: auto; }
+    .shifts-grid { width: 100%; border-collapse: collapse; min-width: 800px; }
+    .shifts-grid th { font-size: 12px; font-weight: 700; color: var(--muted); padding: 12px 10px; text-align: center; background: var(--bg); border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
+    .shifts-grid th:first-child { text-align: left; padding-left: 18px; min-width: 200px; }
+    .shifts-grid th:last-child { border-right: none; }
+    .shifts-grid td { padding: 8px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); text-align: center; }
+    .shifts-grid td:first-child { text-align: left; padding-left: 18px; }
+    .shifts-grid td:last-child { border-right: none; }
+    .shifts-grid tr:last-child td { border-bottom: none; }
+    .shift-cell { display: flex; align-items: center; justify-content: center; min-height: 48px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; padding: 6px 8px; transition: all .12s; user-select: none; }
+    .shift-cell.working { background: rgba(29,158,117,.12); color: var(--dark-green); border: 1.5px solid rgba(29,158,117,.25); }
+    .shift-cell.working:hover { background: rgba(29,158,117,.2); }
+    .shift-cell.off { background: var(--bg); color: var(--muted); border: 1.5px dashed var(--border); font-size: 11px; }
+    .shift-cell.off:hover { border-color: var(--green); color: var(--green); background: #F0FDF8; }
+    .shift-staff-cell { display: flex; align-items: center; gap: 10px; }
+    .shift-staff-info .staff-name { font-weight: 700; font-size: 13px; }
+    .shift-staff-info .staff-hours { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .th-day-name { font-size: 12px; font-weight: 700; }
+    .th-day-hrs { font-size: 11px; font-weight: 500; color: var(--muted); margin-top: 2px; }
+
+    /* ── TIMESHEETS ── */
+    .timesheet-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .timesheet-grid { width: 100%; border-collapse: collapse; min-width: 700px; }
+    .timesheet-grid th { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; padding: 12px 14px; background: var(--bg); border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); text-align: center; }
+    .timesheet-grid th:first-child { text-align: left; min-width: 180px; }
+    .timesheet-grid th:last-child { border-right: none; }
+    .timesheet-grid td { padding: 12px 14px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); text-align: center; font-size: 13px; }
+    .timesheet-grid td:first-child { text-align: left; }
+    .timesheet-grid td:last-child { border-right: none; }
+    .timesheet-grid tr:last-child td { border-bottom: none; }
+    .ts-hrs { font-weight: 700; font-size: 14px; color: var(--text); }
+    .ts-hrs.zero { color: var(--border); }
+    .ts-status { font-size: 11px; font-weight: 600; margin-top: 2px; }
+    .ts-status.scheduled { color: var(--green); }
+    .ts-total { font-weight: 800; font-size: 15px; color: var(--dark-green); }
+
+    /* ── SALES / PAY RUNS ── */
+    .payrun-header { margin-bottom: 6px; }
+    .payrun-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -.4px; }
+    .payrun-header p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .payrun-toolbar { display: flex; align-items: center; gap: 10px; margin: 18px 0; flex-wrap: wrap; }
+    .payrun-week-label { font-size: 14px; font-weight: 700; background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; padding: 7px 16px; }
+    .payrun-search { display: flex; align-items: center; gap: 8px; background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; padding: 7px 14px; margin-left: auto; }
+    .payrun-search input { border: none; outline: none; font-size: 13px; font-family: inherit; width: 160px; background: transparent; }
+    .payrun-totals { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto; gap: 0; background: var(--white); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 16px; }
+    .payrun-total-cell { padding: 18px 20px; border-right: 1px solid var(--border); }
+    .payrun-total-cell:last-child { border-right: none; display: flex; align-items: center; padding: 18px 16px; }
+    .payrun-total-label { font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+    .payrun-total-amt { font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
+    .payrun-total-amt.topay { color: var(--green); }
+    .pay-team-btn { background: var(--green); color: #fff; border: none; border-radius: 20px; padding: 10px 20px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit; }
+    .pay-team-btn:hover { opacity: .88; }
+    .payrun-staff-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
+    .payrun-staff-row { display: grid; grid-template-columns: 260px 1fr 1fr 1fr 1fr 1fr; align-items: center; padding: 18px 20px; gap: 0; }
+    .payrun-staff-identity { display: flex; align-items: center; gap: 12px; }
+    .payrun-field { }
+    .payrun-field-label { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
+    .payrun-field-amt { font-size: 15px; font-weight: 700; }
+    .payrun-field-amt.topay { color: var(--green); font-size: 16px; }
+    .payrun-actions-row { padding: 0 20px 14px; border-top: 1px solid var(--border); display: flex; gap: 10px; padding-top: 10px; }
+    .payrun-action-link { font-size: 13px; font-weight: 600; color: var(--green); background: none; border: none; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 4px; }
+
+    /* ── SHIFT EDIT MODAL ── */
+    .shift-modal { position: fixed; inset: 0; z-index: 999; display: none; align-items: center; justify-content: center; }
+    .shift-modal.open { display: flex; }
+    .shift-modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.4); }
+    .shift-modal-box { position: relative; background: var(--white); border-radius: 16px; padding: 24px; width: 320px; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
+    .shift-modal-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+    .shift-modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .shift-time-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .shift-time-row select { flex: 1; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; outline: none; }
+    .shift-time-row select:focus { border-color: var(--green); }
+    .shift-sep { color: var(--muted); font-size: 18px; }
     /* ── BOOKINGS ── */
     .bk-filter-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
     .bk-filter-btn { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .12s; }
@@ -402,6 +511,16 @@
     <button class="nav-item"        id="nav-roster"       onclick="switchPage('roster',this)"><span class="nav-icon">👥</span> Roster</button>
     <button class="nav-item"        id="nav-productivity" onclick="switchPage('productivity',this)"><span class="nav-icon">📊</span> Insights</button>
     <button class="nav-item admin-only" id="nav-setup" style="display:none" onclick="switchPage('setup',this)"><span class="nav-icon">⚙️</span> Setup</button>
+    <div class="sb-section-label">Team</div>
+    <button class="nav-item nav-group-toggle" id="nav-team-toggle" onclick="toggleTeamNav(this)">
+      <span class="nav-icon">👥</span> Team <span class="nav-chevron">›</span>
+    </button>
+    <div class="nav-sub-group" id="team-sub-group">
+      <button class="nav-item nav-sub" id="nav-team-members" onclick="switchPage('team-members',this)"><span class="nav-icon">👤</span> Team members</button>
+      <button class="nav-item nav-sub" id="nav-shifts"       onclick="switchPage('shifts',this)"><span class="nav-icon">📆</span> Scheduled shifts</button>
+      <button class="nav-item nav-sub" id="nav-timesheets"   onclick="switchPage('timesheets',this)"><span class="nav-icon">⏱️</span> Timesheets</button>
+      <button class="nav-item nav-sub" id="nav-sales"        onclick="switchPage('sales',this)"><span class="nav-icon">💰</span> Sales</button>
+    </div>
   </nav>
   <div class="sb-foot">
     <div class="sb-merchant-name" id="sb-merchant-name">—</div>
@@ -676,6 +795,98 @@
       </div>
     </div>
   </div><!-- /tab-setup -->
+
+  <!-- ══════════════════ TEAM MEMBERS ══════════════════ -->
+  <div class="tab-panel" id="tab-team-members">
+    <div class="team-toolbar">
+      <div class="team-search">
+        <span class="team-search-icon">🔍</span>
+        <input type="text" id="tm-search" placeholder="Search team members…" oninput="filterTeamMembers()" />
+      </div>
+      <button class="btn-add admin-only" onclick="switchPage('setup',document.getElementById('nav-setup'))">＋ Add member</button>
+    </div>
+    <div class="team-table">
+      <table>
+        <thead><tr>
+          <th style="width:40px"><input type="checkbox" /></th>
+          <th>Name</th>
+          <th>Contact</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="tm-tbody"><tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div><!-- /tab-team-members -->
+
+  <!-- ══════════════════ SCHEDULED SHIFTS ══════════════════ -->
+  <div class="tab-panel" id="tab-shifts">
+    <div class="shifts-toolbar">
+      <button class="shifts-today-btn" onclick="shiftsGoToday()">This week</button>
+      <button class="shifts-nav-btn" onclick="shiftsNav(-1)">‹</button>
+      <span class="shifts-week-label" id="shifts-week-label">—</span>
+      <button class="shifts-nav-btn" onclick="shiftsNav(1)">›</button>
+      <button class="btn-add admin-only" style="margin-left:auto" onclick="openShiftModal(null,null)">＋ Add shift</button>
+    </div>
+    <div class="shifts-wrap">
+      <div id="shifts-grid-wrap"><div class="loading-state">Loading shifts…</div></div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:14px;padding:0 4px">
+      💡 The schedule shows your team's availability for bookings. Click any cell to set or edit a shift.
+    </p>
+  </div><!-- /tab-shifts -->
+
+  <!-- ══════════════════ TIMESHEETS ══════════════════ -->
+  <div class="tab-panel" id="tab-timesheets">
+    <div class="shifts-toolbar">
+      <button class="shifts-today-btn" onclick="tsGoToday()">This week</button>
+      <button class="shifts-nav-btn" onclick="tsNav(-1)">‹</button>
+      <span class="shifts-week-label" id="ts-week-label">—</span>
+      <button class="shifts-nav-btn" onclick="tsNav(1)">›</button>
+    </div>
+    <div class="timesheet-wrap">
+      <div id="ts-grid-wrap"><div class="loading-state">Loading timesheets…</div></div>
+    </div>
+  </div><!-- /tab-timesheets -->
+
+  <!-- ══════════════════ SALES / PAY RUNS ══════════════════ -->
+  <div class="tab-panel" id="tab-sales">
+    <div class="payrun-header">
+      <h2>Pay runs</h2>
+      <p>Calculate and settle the amount owed to your team for commissions and wages.</p>
+    </div>
+    <div class="payrun-toolbar">
+      <button class="shifts-nav-btn" onclick="salesNav(-1)">‹</button>
+      <span class="payrun-week-label" id="sales-week-label">—</span>
+      <button class="shifts-nav-btn" onclick="salesNav(1)">›</button>
+      <div class="payrun-search">
+        <span style="color:var(--muted)">🔍</span>
+        <input type="text" id="sales-search" placeholder="Search by name" oninput="filterSalesRows()" />
+      </div>
+    </div>
+    <div class="payrun-totals" id="sales-totals"></div>
+    <div id="sales-staff-list"><div class="loading-state">Loading…</div></div>
+  </div><!-- /tab-sales -->
+
+  <!-- ══════════════════ SHIFT EDIT MODAL ══════════════════ -->
+  <div class="shift-modal" id="shift-modal">
+    <div class="shift-modal-backdrop" onclick="closeShiftModal()"></div>
+    <div class="shift-modal-box">
+      <div class="shift-modal-title" id="shift-modal-title">Edit shift</div>
+      <div class="shift-modal-sub" id="shift-modal-sub"></div>
+      <div class="shift-time-row">
+        <select id="shift-start-sel"></select>
+        <span class="shift-sep">–</span>
+        <select id="shift-end-sel"></select>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-submit" onclick="saveShift()">Save shift</button>
+        <button class="btn-submit" style="background:#FEE2E2;color:#DC2626" onclick="deleteShift()">Remove</button>
+        <button class="btn-cancel" onclick="closeShiftModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
 
   </div><!-- /content -->
   </div><!-- /content-scroll -->
@@ -1676,8 +1887,6 @@
     location.href = 'index.html';
   }
 
-  init();
-
   /* ════════════════════════════════════════════
      SETUP — STAFF
   ════════════════════════════════════════════ */
@@ -2137,6 +2346,380 @@
     document.getElementById('prod-room-chart').innerHTML = roomRows || '<div style="color:var(--muted);font-size:13px">No room assignments yet.</div>';
   }
 
+  /* ════════════════════════════════════════════
+     TEAM SIDEBAR TOGGLE
+  ════════════════════════════════════════════ */
+  function toggleTeamNav(btn) {
+    btn.classList.toggle('open');
+    document.getElementById('team-sub-group').classList.toggle('open');
+  }
+  function openTeamNav() {
+    document.getElementById('nav-team-toggle').classList.add('open');
+    document.getElementById('team-sub-group').classList.add('open');
+  }
+
+  /* ── PAGE_TITLES extension ── */
+  PAGE_TITLES['team-members'] = 'Team members';
+  PAGE_TITLES['shifts']       = 'Scheduled shifts';
+  PAGE_TITLES['timesheets']   = 'Timesheets';
+  PAGE_TITLES['sales']        = 'Sales';
+
+  /* ════════════════════════════════════════════
+     TEAM MEMBERS
+  ════════════════════════════════════════════ */
+  let allTeamMembers = [];
+
+  async function loadTeamMembers() {
+    const { data } = await db.from('staff').select('*')
+      .eq('merchant_id', currentMerchant.id).order('name');
+    allTeamMembers = data || [];
+    renderTeamMembers(allTeamMembers);
+  }
+
+  function renderTeamMembers(list) {
+    const tbody = document.getElementById('tm-tbody');
+    if (!list.length) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--muted)">
+        <div style="font-size:32px;margin-bottom:10px">👤</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text)">No team members yet</div>
+        <div style="font-size:13px;margin-top:4px">Add therapists in Setup first</div>
+      </td></tr>`;
+      return;
+    }
+    tbody.innerHTML = list.map(s => {
+      const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      const permLabel = s.role === 'Admin' ? 'Admin' : 'Team member';
+      const permClass = s.role === 'Admin' ? 'admin' : '';
+      return `<tr style="${s.active ? '' : 'opacity:.5'}">
+        <td><input type="checkbox" /></td>
+        <td>
+          <div class="team-member-cell">
+            <div class="team-avatar" style="background:${s.color}">${initials}</div>
+            <div>
+              <div class="team-member-name">${s.name}</div>
+              <div class="team-member-role">${s.role || 'Therapist'}</div>
+            </div>
+          </div>
+        </td>
+        <td class="team-contact">
+          ${s.email ? `<div>${s.email}</div>` : ''}
+          ${s.phone ? `<div style="color:var(--muted)">${s.phone}</div>` : '<div style="color:var(--muted)">—</div>'}
+        </td>
+        <td><span class="perm-badge ${permClass}">${permLabel}</span></td>
+        <td><span class="status-badge ${s.active ? 'status-confirmed' : 'status-cancelled'}">${s.active ? 'Active' : 'Inactive'}</span></td>
+        <td>
+          <div style="display:flex;gap:6px">
+            <button class="actions-btn" onclick="openEditStaff('${s.id}');switchPage('setup',document.getElementById('nav-setup'))">Actions ▾</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  function filterTeamMembers() {
+    const q = document.getElementById('tm-search').value.toLowerCase();
+    renderTeamMembers(allTeamMembers.filter(s =>
+      s.name.toLowerCase().includes(q) || (s.email||'').toLowerCase().includes(q) || (s.phone||'').includes(q)
+    ));
+  }
+
+  /* ════════════════════════════════════════════
+     SCHEDULED SHIFTS
+  ════════════════════════════════════════════ */
+  const SHIFT_DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  let shiftsWeekOffset = 0;
+  let shiftEditMeta = null; // { staffId, day }
+
+  function getWeekDates(offset = 0) {
+    const now = new Date();
+    const dow = now.getDay();
+    const mon = new Date(now);
+    mon.setDate(now.getDate() - (dow === 0 ? 6 : dow - 1) + offset * 7);
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(mon); d.setDate(mon.getDate() + i); return d;
+    });
+  }
+  function fmt12h(t) {
+    if (!t) return '';
+    const [h, m] = t.split(':').map(Number);
+    const ap = h >= 12 ? 'PM' : 'AM';
+    return (h % 12 || 12) + (m ? ':' + String(m).padStart(2,'0') : '') + ' ' + ap;
+  }
+  function weekLabel(dates) {
+    const [mon, sun] = [dates[0], dates[6]];
+    const opts = { day:'numeric', month:'short', year:'numeric' };
+    return mon.toLocaleDateString('en-IN', { day:'numeric', month:'short' })
+      + ' – ' + sun.toLocaleDateString('en-IN', opts);
+  }
+
+  function shiftsNav(d) { shiftsWeekOffset += d; loadShifts(); }
+  function shiftsGoToday() { shiftsWeekOffset = 0; loadShifts(); }
+
+  async function loadShifts() {
+    const dates = getWeekDates(shiftsWeekOffset);
+    document.getElementById('shifts-week-label').textContent = weekLabel(dates);
+    if (!currentStaff.length) await loadStaff();
+    if (!currentRoster.length) await loadRosterData();
+    renderShiftsGrid(dates);
+  }
+
+  function renderShiftsGrid(dates) {
+    const active = currentStaff.filter(s => s.active);
+    if (!active.length) {
+      document.getElementById('shifts-grid-wrap').innerHTML = '<div class="empty-state">Add team members in Setup first.</div>';
+      return;
+    }
+    const rMap = {};
+    currentRoster.forEach(r => { rMap[r.staff_id + '_' + r.day_of_week] = r; });
+
+    // Column total hours
+    const colHrs = SHIFT_DAYS.map(day => {
+      return active.reduce((sum, s) => {
+        const r = rMap[s.id + '_' + day];
+        if (!r) return sum;
+        const diff = (parseInt(r.end_time) - parseInt(r.start_time));
+        return sum + diff;
+      }, 0);
+    });
+
+    document.getElementById('shifts-grid-wrap').innerHTML = `
+      <table class="shifts-grid">
+        <thead><tr>
+          <th style="min-width:220px">Team member</th>
+          ${dates.map((d, i) => `<th>
+            <div class="th-day-name">${SHIFT_DAYS[i]}, ${d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div>
+            <div class="th-day-hrs">${colHrs[i] ? colHrs[i] + ' hr' : '0 hr'}</div>
+          </th>`).join('')}
+        </tr></thead>
+        <tbody>
+          ${active.map(s => {
+            const initials = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+            const weekHrs = SHIFT_DAYS.reduce((sum, day) => {
+              const r = rMap[s.id + '_' + day];
+              if (!r) return sum;
+              return sum + (parseInt(r.end_time) - parseInt(r.start_time));
+            }, 0);
+            return `<tr>
+              <td>
+                <div class="shift-staff-cell">
+                  <div class="team-avatar" style="background:${s.color};width:36px;height:36px;font-size:13px">${initials}</div>
+                  <div class="shift-staff-info">
+                    <div class="staff-name">${s.name}</div>
+                    <div class="staff-hours">${weekHrs} hr</div>
+                  </div>
+                </div>
+              </td>
+              ${SHIFT_DAYS.map(day => {
+                const r = rMap[s.id + '_' + day];
+                const label = r ? fmt12h(r.start_time) + ' – ' + fmt12h(r.end_time) : 'Not working';
+                return `<td><div class="shift-cell ${r ? 'working' : 'off'}"
+                  onclick="openShiftModal('${s.id}','${day}')">${label}</div></td>`;
+              }).join('')}
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  /* ── Shift edit modal ── */
+  function buildShiftTimeOpts() {
+    const opts = [];
+    for (let h = 6; h <= 23; h++) {
+      for (let m of [0, 30]) {
+        const val = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+        opts.push(`<option value="${val}">${fmt12h(val)}</option>`);
+      }
+    }
+    return opts.join('');
+  }
+
+  function openShiftModal(staffId, day) {
+    if (!staffId) return;
+    shiftEditMeta = { staffId, day };
+    const s    = currentStaff.find(x => x.id === staffId);
+    const r    = currentRoster.find(x => x.staff_id === staffId && x.day_of_week === day);
+    document.getElementById('shift-modal-title').textContent = day + ' shift — ' + (s?.name || '');
+    document.getElementById('shift-modal-sub').textContent   = r ? 'Currently: ' + fmt12h(r.start_time) + ' – ' + fmt12h(r.end_time) : 'No shift set';
+    const startSel = document.getElementById('shift-start-sel');
+    const endSel   = document.getElementById('shift-end-sel');
+    startSel.innerHTML = buildShiftTimeOpts();
+    endSel.innerHTML   = buildShiftTimeOpts();
+    startSel.value = r ? r.start_time : '09:00';
+    endSel.value   = r ? r.end_time   : '18:00';
+    document.getElementById('shift-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeShiftModal() {
+    document.getElementById('shift-modal').classList.remove('open');
+    document.body.style.overflow = '';
+    shiftEditMeta = null;
+  }
+  async function saveShift() {
+    const { staffId, day } = shiftEditMeta;
+    const start = document.getElementById('shift-start-sel').value;
+    const end   = document.getElementById('shift-end-sel').value;
+    if (end <= start) { alert('End time must be after start time.'); return; }
+    await db.from('roster').upsert({
+      merchant_id: currentMerchant.id, staff_id: staffId,
+      day_of_week: day, start_time: start, end_time: end,
+    }, { onConflict: 'staff_id,day_of_week' });
+    await loadRosterData();
+    closeShiftModal();
+    renderShiftsGrid(getWeekDates(shiftsWeekOffset));
+  }
+  async function deleteShift() {
+    const { staffId, day } = shiftEditMeta;
+    await db.from('roster').delete().eq('staff_id', staffId).eq('day_of_week', day);
+    currentRoster = currentRoster.filter(r => !(r.staff_id === staffId && r.day_of_week === day));
+    closeShiftModal();
+    renderShiftsGrid(getWeekDates(shiftsWeekOffset));
+  }
+
+  /* ════════════════════════════════════════════
+     TIMESHEETS
+  ════════════════════════════════════════════ */
+  let tsWeekOffset = 0;
+  function tsNav(d) { tsWeekOffset += d; loadTimesheets(); }
+  function tsGoToday() { tsWeekOffset = 0; loadTimesheets(); }
+
+  async function loadTimesheets() {
+    const dates = getWeekDates(tsWeekOffset);
+    document.getElementById('ts-week-label').textContent = weekLabel(dates);
+    if (!currentStaff.length)  await loadStaff();
+    if (!currentRoster.length) await loadRosterData();
+    renderTimesheets(dates);
+  }
+
+  function renderTimesheets(dates) {
+    const active = currentStaff.filter(s => s.active);
+    if (!active.length) {
+      document.getElementById('ts-grid-wrap').innerHTML = '<div class="empty-state">Add team members in Setup first.</div>';
+      return;
+    }
+    const rMap = {};
+    currentRoster.forEach(r => { rMap[r.staff_id + '_' + r.day_of_week] = r; });
+
+    document.getElementById('ts-grid-wrap').innerHTML = `
+      <table class="timesheet-grid">
+        <thead><tr>
+          <th>Team member</th>
+          ${SHIFT_DAYS.map((d,i) => `<th>${d}<br><span style="font-size:10px;font-weight:500">${dates[i].toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</span></th>`).join('')}
+          <th>Total</th>
+        </tr></thead>
+        <tbody>
+          ${active.map(s => {
+            const initials = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+            let weekTotal = 0;
+            const cells = SHIFT_DAYS.map(day => {
+              const r = rMap[s.id + '_' + day];
+              if (!r) return `<td><div class="ts-hrs zero">—</div></td>`;
+              const hrs = parseFloat(r.end_time) - parseFloat(r.start_time);
+              weekTotal += hrs;
+              return `<td>
+                <div class="ts-hrs">${hrs}h</div>
+                <div class="ts-status scheduled">Scheduled</div>
+              </td>`;
+            });
+            return `<tr>
+              <td>
+                <div class="shift-staff-cell">
+                  <div class="team-avatar" style="background:${s.color};width:34px;height:34px;font-size:12px">${initials}</div>
+                  <div><div style="font-weight:700;font-size:13px">${s.name}</div><div style="font-size:11px;color:var(--muted)">${s.role||'Therapist'}</div></div>
+                </div>
+              </td>
+              ${cells.join('')}
+              <td><div class="ts-total">${weekTotal}h</div></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  /* ════════════════════════════════════════════
+     SALES / PAY RUNS
+  ════════════════════════════════════════════ */
+  let salesWeekOffset = 0;
+  let allSalesData    = [];
+
+  function salesNav(d) { salesWeekOffset += d; loadSales(); }
+
+  async function loadSales() {
+    const dates    = getWeekDates(salesWeekOffset);
+    const weekStart = dates[0].toISOString().split('T')[0];
+    const weekEnd   = dates[6].toISOString().split('T')[0];
+    document.getElementById('sales-week-label').textContent = weekLabel(dates);
+    if (!currentStaff.length) await loadStaff();
+
+    const { data: bks } = await db.from('bookings')
+      .select('*, assigned_staff:staff_id(id,name,color,role,commission_pct)')
+      .eq('merchant_id', currentMerchant.id)
+      .gte('booking_date', weekStart).lte('booking_date', weekEnd)
+      .eq('status', 'confirmed');
+
+    const bookings = bks || [];
+    const active   = currentStaff.filter(s => s.active);
+
+    // Build per-staff earnings
+    allSalesData = active.map(s => {
+      const myBks   = bookings.filter(b => b.staff_id === s.id);
+      const commPct = s.commission_pct || 0;
+      // Earnings = booking count × commission (₹0 until rate is set)
+      const earnings = 0; // placeholder — no price data on bookings yet
+      return { staff: s, bookings: myBks, count: myBks.length, earnings, other: 0, paid: 0 };
+    });
+
+    renderSales(allSalesData);
+  }
+
+  function renderSales(data) {
+    const totEarnings = data.reduce((s, r) => s + r.earnings, 0);
+    const totOther    = data.reduce((s, r) => s + r.other, 0);
+    const totPaid     = data.reduce((s, r) => s + r.paid, 0);
+    const totTotal    = totEarnings + totOther;
+    const totToPay    = totTotal - totPaid;
+    const fmt = n => '₹' + Number(n).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+
+    document.getElementById('sales-totals').innerHTML = `
+      <div class="payrun-total-cell"><div class="payrun-total-label">Earnings</div><div class="payrun-total-amt">${fmt(totEarnings)}</div></div>
+      <div class="payrun-total-cell"><div class="payrun-total-label">Other</div><div class="payrun-total-amt">${fmt(totOther)}</div></div>
+      <div class="payrun-total-cell"><div class="payrun-total-label">Total</div><div class="payrun-total-amt">${fmt(totTotal)}</div></div>
+      <div class="payrun-total-cell"><div class="payrun-total-label">Paid</div><div class="payrun-total-amt">${fmt(totPaid)}</div></div>
+      <div class="payrun-total-cell"><div class="payrun-total-label">To pay</div><div class="payrun-total-amt topay">${fmt(totToPay)}</div></div>
+      <div class="payrun-total-cell"><button class="pay-team-btn" onclick="alert('Pay run feature coming soon!')">Pay team</button></div>`;
+
+    if (!data.length) {
+      document.getElementById('sales-staff-list').innerHTML = '<div class="empty-state">No team members found.</div>';
+      return;
+    }
+    document.getElementById('sales-staff-list').innerHTML = data.map(r => {
+      const s        = r.staff;
+      const initials = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      const toPay    = r.earnings + r.other - r.paid;
+      const fmt      = n => '₹' + Number(n).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+      return `<div class="payrun-staff-card" id="pr-${s.id}">
+        <div class="payrun-staff-row">
+          <div class="payrun-staff-identity">
+            <div class="team-avatar" style="background:${s.color};width:44px;height:44px;font-size:16px">${initials}</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">${s.name}</div>
+              <div style="font-size:12px;color:var(--green);margin-top:2px;cursor:pointer">Actions ▾</div>
+            </div>
+          </div>
+          <div class="payrun-field"><div class="payrun-field-label">Earnings</div><div class="payrun-field-amt">${fmt(r.earnings)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${r.count} booking${r.count===1?'':'s'}</div></div>
+          <div class="payrun-field"><div class="payrun-field-label">Other</div><div class="payrun-field-amt">${fmt(r.other)}</div></div>
+          <div class="payrun-field"><div class="payrun-field-label">Total</div><div class="payrun-field-amt">${fmt(r.earnings + r.other)}</div></div>
+          <div class="payrun-field"><div class="payrun-field-label">Paid</div><div class="payrun-field-amt">${fmt(r.paid)}</div></div>
+          <div class="payrun-field"><div class="payrun-field-label">To pay</div><div class="payrun-field-amt topay">${fmt(toPay)}</div></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function filterSalesRows() {
+    const q = document.getElementById('sales-search').value.toLowerCase();
+    renderSales(allSalesData.filter(r => r.staff.name.toLowerCase().includes(q)));
+  }
+
   /* ── LAZY-LOAD ON FIRST VISIT ── */
   const tabLoaded = {};
   const _origSwitchPage = switchPage;
@@ -2144,10 +2727,14 @@
     _origSwitchPage(page, btn);
     if (tabLoaded[page]) return;
     tabLoaded[page] = true;
-    if (page === 'setup')        { loadStaff(); loadRooms(); }
-    if (page === 'roster')       { Promise.all([loadStaff(), loadRooms()]).then(loadRoster); }
-    if (page === 'schedule')     { Promise.all([loadStaff(), loadRooms(), loadRosterData()]).then(loadSchedule); }
-    if (page === 'productivity') { loadProductivity(); }
+    if (page === 'setup')         { loadStaff(); loadRooms(); }
+    if (page === 'roster')        { Promise.all([loadStaff(), loadRooms()]).then(loadRoster); }
+    if (page === 'schedule')      { Promise.all([loadStaff(), loadRooms(), loadRosterData()]).then(loadSchedule); }
+    if (page === 'productivity')  { loadProductivity(); }
+    if (page === 'team-members')  { openTeamNav(); loadTeamMembers(); }
+    if (page === 'shifts')        { openTeamNav(); loadShifts(); }
+    if (page === 'timesheets')    { openTeamNav(); loadTimesheets(); }
+    if (page === 'sales')         { openTeamNav(); loadSales(); }
   };
   async function loadRosterData() {
     const { data } = await db.from('roster').select('*').eq('merchant_id', currentMerchant.id);
