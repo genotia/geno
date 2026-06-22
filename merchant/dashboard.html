@@ -1355,7 +1355,9 @@
     editingStaffId = staff ? staff.id : null;
     selectedStaffColor = staff ? staff.color : '#1D9E75';
     document.getElementById('staff-modal-title').textContent = staff ? 'Edit Therapist' : 'Add Therapist';
-    document.getElementById('staff-submit-btn').textContent  = staff ? 'Save Changes →' : 'Add Therapist →';
+    const btn = document.getElementById('staff-submit-btn');
+    btn.textContent = staff ? 'Save Changes →' : 'Add Therapist →';
+    btn.disabled = false;
     document.getElementById('sf-name').value  = staff ? staff.name  : '';
     document.getElementById('sf-role').value  = staff ? staff.role  : '';
     document.getElementById('sf-phone').value = staff ? (staff.phone || '') : '';
@@ -1427,7 +1429,9 @@
   function openRoomModal(room = null) {
     editingRoomId = room ? room.id : null;
     document.getElementById('room-modal-title').textContent = room ? 'Edit Room' : 'Add Room';
-    document.getElementById('room-submit-btn').textContent  = room ? 'Save Changes →' : 'Add Room →';
+    const btn = document.getElementById('room-submit-btn');
+    btn.textContent = room ? 'Save Changes →' : 'Add Room →';
+    btn.disabled = false;
     document.getElementById('rm-name').value = room ? room.name : '';
     document.getElementById('rm-type').value = room ? room.room_type : 'Treatment Room';
     document.getElementById('room-err').textContent = '';
