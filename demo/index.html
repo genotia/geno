@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OffPeak — Fill the idle hours. Save big, today.</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #1D9E75;
+      --dark-green: #085041;
+      --red: #E53E3E;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.5;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .logo span { color: var(--green); }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--green); font-weight: 700; }
+    .has-mega { position:relative; }
+    .mega-drop { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); background:white; border:1px solid var(--border); border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.13); z-index:300; width:580px; display:none; overflow:hidden; }
+    .has-mega:hover .mega-drop { display:grid; grid-template-columns:1fr 1px 1fr; }
+    .mega-col { padding:22px; }
+    .mega-col-head { font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+    .mega-item { display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:10px; cursor:pointer; transition:background .15s; text-decoration:none; }
+    .mega-item:hover { background:var(--bg); }
+    .mega-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+    .mega-item-name { font-size:14px; font-weight:700; color:var(--text); }
+    .mega-item-desc { font-size:12px; color:var(--muted); margin-top:2px; line-height:1.4; }
+    .mega-divider-v { background:var(--border); }
+    .mega-sub-head { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin:14px 0 7px; }
+    .mega-chips { display:flex; flex-wrap:wrap; gap:5px; }
+    .mega-chip { padding:4px 10px; border-radius:20px; background:var(--bg); font-size:11px; font-weight:500; color:var(--text); border:1px solid var(--border); }
+    .mega-cta { display:inline-flex; align-items:center; gap:5px; margin-top:14px; font-size:13px; font-weight:700; color:var(--green); text-decoration:none; }
+    .mega-cta:hover { text-decoration:underline; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .btn-ghost {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 4px;
+    }
+    .btn-primary {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--green);
+      border: none;
+      border-radius: 8px;
+      padding: 9px 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity .15s;
+    }
+    .btn-primary:hover { opacity: .88; }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+    }
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 24px 16px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ── URGENCY BAR ── */
+    .urgency-bar {
+      background: #FFF7ED;
+      border-bottom: 1px solid #FED7AA;
+      text-align: center;
+      padding: 9px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #92400E;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #F97316;
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(.75); }
+    }
+    #deal-count { font-weight: 700; color: #D97706; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--bg);
+      padding: 72px 24px 64px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #D1FAE5;
+      color: var(--dark-green);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      color: var(--text);
+      max-width: 680px;
+      margin: 0 auto 16px;
+    }
+    .hero h1 em { font-style: normal; color: var(--green); }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 36px;
+    }
+
+    .search-bar {
+      display: flex;
+      max-width: 640px;
+      margin: 0 auto 28px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    }
+    .search-bar .field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      padding: 0 16px;
+    }
+    .search-bar .field + .field { border-left: 1.5px solid var(--border); }
+    .search-bar .field svg { color: var(--muted); flex-shrink: 0; }
+    .search-bar input {
+      border: none;
+      outline: none;
+      font-size: 14px;
+      color: var(--text);
+      width: 100%;
+      padding: 14px 0;
+      background: transparent;
+    }
+    .search-bar input::placeholder { color: #9CA3AF; }
+    .search-btn {
+      background: var(--green);
+      border: none;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 0 24px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity .15s;
+      min-width: 90px;
+    }
+    .search-btn:hover { opacity: .88; }
+
+    .categories {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      border-radius: 20px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .pill:hover, .pill.active {
+      border-color: var(--green);
+      color: var(--green);
+      background: #F0FDF8;
+    }
+    .pill.active { font-weight: 600; }
+
+    /* ── DEALS SECTION ── */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 56px 24px;
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .section-header h2 { font-size: 24px; font-weight: 700; letter-spacing: -.5px; }
+    .section-header a {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+      text-decoration: none;
+    }
+    .section-header a:hover { text-decoration: underline; }
+
+    .deals-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .deal-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: box-shadow .15s, transform .15s;
+      cursor: pointer;
+    }
+    .deal-card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,.1);
+      transform: translateY(-2px);
+    }
+    .card-thumb {
+      position: relative;
+      height: 148px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+    }
+    .badge-discount {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--red);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: .3px;
+    }
+    .badge-time {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,.55);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card-body { padding: 14px 16px 16px; }
+    .card-category {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 4px;
+    }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .card-merchant { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .price-block { display: flex; align-items: baseline; gap: 6px; }
+    .price-now { font-size: 18px; font-weight: 800; color: var(--text); }
+    .price-was { font-size: 13px; color: #9CA3AF; text-decoration: line-through; }
+    .card-distance {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── NEGOTIATE BUTTON ── */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .btn-book {
+      flex: 1;
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+    .btn-book:hover { opacity: .88; }
+    .btn-negotiate {
+      flex: 1;
+      background: var(--white);
+      color: var(--dark-green);
+      border: 1.5px solid var(--dark-green);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: background .15s, color .15s;
+    }
+    .btn-negotiate:hover { background: #F0FDF8; }
+    .btn-negotiate .bot-icon { font-size: 14px; }
+
+    /* ── STATS ── */
+    .stats-section {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -1px;
+      margin-bottom: 4px;
+    }
+    .stat-number span { color: var(--green); }
+    .stat-label { font-size: 14px; color: var(--muted); font-weight: 500; }
+
+    /* ── HOW IT WORKS ── */
+    .how-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 24px;
+      text-align: center;
+    }
+    .how-section h2 { font-size: 32px; font-weight: 800; letter-spacing: -.8px; margin-bottom: 8px; }
+    .how-section p.sub { font-size: 16px; color: var(--muted); margin-bottom: 48px; }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      position: relative;
+    }
+    .step-connector {
+      position: absolute;
+      top: 28px;
+      left: calc(33.33% - 10px);
+      right: calc(33.33% - 10px);
+      height: 2px;
+      background: var(--border);
+      pointer-events: none;
+    }
+    .step {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .step-num {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #D1FAE5;
+      color: var(--dark-green);
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+    .step-icon { font-size: 28px; margin-bottom: -4px; }
+    .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .step p { font-size: 14px; color: var(--muted); max-width: 220px; margin: 0 auto; }
+
+    /* ── MERCHANT BANNER ── */
+    .merchant-banner {
+      background: var(--dark-green);
+      padding: 72px 24px;
+      text-align: center;
+    }
+    .merchant-banner h2 {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -.8px;
+      margin-bottom: 12px;
+    }
+    .merchant-banner p { font-size: 16px; color: rgba(255,255,255,.7); max-width: 480px; margin: 0 auto 32px; }
+    .merchant-banner-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-white {
+      background: var(--white);
+      color: var(--dark-green);
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 28px;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+    .btn-white:hover { opacity: .9; }
+    .btn-outline-white {
+      background: transparent;
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 600;
+      border: 2px solid rgba(255,255,255,.4);
+      border-radius: 10px;
+      padding: 11px 28px;
+      cursor: pointer;
+      transition: border-color .15s;
+    }
+    .btn-outline-white:hover { border-color: var(--white); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #111827;
+      color: rgba(255,255,255,.6);
+      padding: 48px 24px 32px;
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .footer-brand .logo { color: var(--white); font-size: 20px; display: block; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; line-height: 1.6; max-width: 240px; }
+    .footer-col h4 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,.55); text-decoration: none; transition: color .15s; }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 28px;
+      font-size: 12px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
+    .footer-bottom a:hover { color: rgba(255,255,255,.7); }
+    .footer-socials { display: flex; gap: 16px; }
+
+    /* ══════════════════════════════════════
+       AI NEGOTIATOR MODAL
+    ══════════════════════════════════════ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      background: var(--white);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform .2s;
+      box-shadow: 0 24px 64px rgba(0,0,0,.2);
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-header-left { display: flex; align-items: center; gap: 10px; }
+    .bot-avatar {
+      width: 40px;
+      height: 40px;
+      background: #D1FAE5;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .modal-title { font-size: 16px; font-weight: 700; }
+    .modal-subtitle { font-size: 12px; color: var(--muted); }
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s;
+    }
+    .modal-close:hover { background: var(--border); }
+
+    /* Deal summary inside modal */
+    .modal-deal-summary {
+      margin: 16px 24px;
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .modal-deal-emoji {
+      font-size: 28px;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .modal-deal-info .deal-name { font-size: 14px; font-weight: 700; }
+    .modal-deal-info .deal-merchant { font-size: 12px; color: var(--muted); }
+    .modal-deal-info .deal-prices {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .modal-deal-info .deal-prices .now { font-size: 15px; font-weight: 800; color: var(--green); }
+    .modal-deal-info .deal-prices .was { font-size: 12px; color: #9CA3AF; text-decoration: line-through; }
+
+    /* Step screens */
+    .modal-screen { display: none; padding: 20px 24px 24px; }
+    .modal-screen.active { display: block; }
+
+    /* Step 1 — preferences */
+    .pref-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .pref-sublabel { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 4px; }
+    .price-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .price-opt {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .price-opt:hover { border-color: var(--green); background: #F0FDF8; }
+    .price-opt.selected { border-color: var(--green); background: #F0FDF8; }
+    .price-opt .opt-label { font-size: 11px; color: var(--muted); }
+    .price-opt .opt-val { font-size: 14px; font-weight: 700; color: var(--text); margin-top: 2px; }
+    .price-opt.selected .opt-val { color: var(--green); }
+
+    .time-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .time-opt {
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--muted);
+      transition: all .15s;
+    }
+    .time-opt:hover { border-color: var(--green); color: var(--green); }
+    .time-opt.selected { border-color: var(--green); color: var(--green); background: #F0FDF8; font-weight: 600; }
+
+    .pref-note {
+      background: #FFF7ED;
+      border: 1px solid #FED7AA;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #92400E;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .btn-start-negotiate {
+      width: 100%;
+      background: var(--dark-green);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity .15s;
+    }
+    .btn-start-negotiate:hover { opacity: .9; }
+
+    /* Step 2 — chat negotiation */
+    .chat-status-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 10px 12px;
+      background: var(--bg);
+      border-radius: 10px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #F97316;
+      animation: pulse 1.2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    .status-dot.green { background: var(--green); animation: none; }
+    .status-text { font-size: 13px; font-weight: 600; color: var(--text); }
+    .status-sub { font-size: 11px; color: var(--muted); }
+
+    .chat-window {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      height: 300px;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: #FAFAFA;
+      scroll-behavior: smooth;
+    }
+    .chat-msg {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .3s, transform .3s;
+    }
+    .chat-msg.visible { opacity: 1; transform: translateY(0); }
+    .chat-msg.from-bot { flex-direction: row; }
+    .chat-msg.from-merchant { flex-direction: row-reverse; }
+    .chat-msg.from-system { justify-content: center; }
+
+    .msg-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .msg-avatar.bot { background: #D1FAE5; }
+    .msg-avatar.merchant { background: #DBEAFE; }
+
+    .msg-bubble {
+      max-width: 75%;
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .from-bot .msg-bubble {
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+    .from-merchant .msg-bubble {
+      background: #EFF6FF;
+      color: #1E40AF;
+      border-bottom-right-radius: 4px;
+    }
+    .from-system .msg-bubble {
+      background: #D1FAE5;
+      color: var(--dark-green);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+    }
+    .msg-label {
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 3px;
+      font-weight: 600;
+      letter-spacing: .3px;
+    }
+    .msg-wrap { display: flex; flex-direction: column; }
+    .from-merchant .msg-wrap { align-items: flex-end; }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 10px 12px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      border-bottom-left-radius: 4px;
+      width: fit-content;
+    }
+    .typing-indicator span {
+      width: 6px;
+      height: 6px;
+      background: #9CA3AF;
+      border-radius: 50%;
+      animation: typing 1s ease-in-out infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: .15s; }
+    .typing-indicator span:nth-child(3) { animation-delay: .3s; }
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); opacity: .4; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* Step 3 — result */
+    .result-success {
+      text-align: center;
+      padding: 8px 0 16px;
+    }
+    .result-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .result-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .result-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+
+    .negotiated-deal-card {
+      background: #F0FDF8;
+      border: 2px solid var(--green);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .negotiated-deal-card .nd-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .negotiated-deal-card .nd-emoji {
+      font-size: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .negotiated-deal-card .nd-name { font-size: 14px; font-weight: 700; }
+    .negotiated-deal-card .nd-merchant { font-size: 12px; color: var(--muted); }
+    .negotiated-deal-card .nd-prices {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #A7F3D0;
+    }
+    .nd-new-price { font-size: 28px; font-weight: 800; color: var(--green); }
+    .nd-was-price { font-size: 14px; color: #9CA3AF; text-decoration: line-through; }
+    .nd-savings-badge {
+      margin-left: auto;
+      background: var(--red);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .deal-expiry-bar {
+      background: #FFF7ED;
+      border: 1px solid #FED7AA;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: #92400E;
+      font-weight: 500;
+    }
+    #expiry-timer { font-weight: 800; color: #D97706; }
+
+    .result-btns { display: flex; gap: 10px; }
+    .btn-confirm-book {
+      flex: 2;
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      padding: 13px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+    .btn-confirm-book:hover { opacity: .88; }
+    .btn-decline {
+      flex: 1;
+      background: var(--white);
+      color: var(--muted);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 13px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color .15s;
+    }
+    .btn-decline:hover { border-color: var(--muted); }
+
+    /* transcript toggle */
+    .transcript-toggle {
+      font-size: 12px;
+      color: var(--green);
+      cursor: pointer;
+      text-align: center;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    .transcript-toggle:hover { text-decoration: underline; }
+    .transcript-preview {
+      display: none;
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+    .transcript-preview.open { display: block; }
+    .transcript-line { margin-bottom: 6px; }
+    .transcript-line b { color: var(--text); }
+
+    /* step 4 — booked */
+    .booked-screen { text-align: center; padding: 16px 0; }
+    .booked-icon { font-size: 56px; margin-bottom: 12px; }
+    .booked-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .booked-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .booking-code-box {
+      background: var(--bg);
+      border: 2px dashed var(--green);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .booking-code-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .booking-code { font-size: 28px; font-weight: 800; letter-spacing: 6px; color: var(--dark-green); }
+
+    /* ── TRUST BAR ── */
+    .trust-bar { position:sticky; top:64px; z-index:99; background:linear-gradient(90deg,#0f172a 0%,#1e293b 100%); padding:10px 32px; display:flex; align-items:center; justify-content:center; gap:0; }
+    .trust-step { display:flex; align-items:center; gap:8px; padding:0 20px; }
+    .trust-step-icon { width:30px; height:30px; background:rgba(255,255,255,.1); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+    .trust-step-title { font-size:12px; font-weight:700; color:white; }
+    .trust-step-sub { font-size:10px; color:#94a3b8; }
+    .trust-arrow { color:#1D9E75; font-size:16px; font-weight:700; opacity:.8; padding:0 4px; }
+    .trust-badge { margin-left:28px; padding:5px 14px; background:rgba(29,158,117,.2); border:1px solid rgba(29,158,117,.4); border-radius:20px; font-size:11px; font-weight:700; color:#4ade80; white-space:nowrap; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .deals-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: 1fr; gap: 40px; }
+      .step-connector { display: none; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      /* Trust bar: scrollable on tablets so steps don't overflow */
+      .trust-bar { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 8px 16px; justify-content: flex-start; }
+      .trust-bar::-webkit-scrollbar { display: none; }
+      .trust-badge { flex-shrink: 0; margin-left: 12px; }
+    }
+    @media (max-width: 600px) {
+      /* Layout */
+      .deals-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .nav-right .btn-ghost { display: none; }
+      /* Trust bar: show badge only, hide steps */
+      .trust-step { display: none; }
+      .trust-arrow { display: none; }
+      .trust-bar { justify-content: center; padding: 7px 12px; overflow-x: unset; }
+      .trust-badge { margin-left: 0; font-size: 11px; }
+      /* Hero: tighten vertical breathing room */
+      .hero { padding: 36px 16px 40px; }
+      .hero-sub { font-size: 15px; margin-bottom: 24px; }
+      /* Search bar: stack fields vertically */
+      .search-bar { flex-direction: column; border-radius: 12px; }
+      .search-bar .field + .field { border-left: none; border-top: 1.5px solid var(--border); }
+      .search-btn { padding: 14px; border-radius: 0 0 10px 10px; }
+      /* Section spacing */
+      .section { padding: 40px 16px; }
+      .how-section { padding: 48px 16px; }
+      .merchant-banner { padding: 48px 16px; }
+      .section-header { flex-direction: column; gap: 6px; }
+      /* Urgency bar: wrap text gracefully */
+      .urgency-bar { flex-wrap: wrap; gap: 6px; font-size: 12px; text-align: center; }
+      /* Modal: 2-col price grid fits much better than 3 on small screens */
+      .price-options { grid-template-columns: repeat(2, 1fr); }
+      .chat-window { height: 240px; }
+      /* Card action buttons: meet 44px touch target minimum */
+      .btn-book, .btn-negotiate { min-height: 44px; padding: 12px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="nav-inner">
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
+      <a href="#" class="logo">✨ Genoti <span>AI</span></a>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover, Book here, Save more</span>
+    </div>
+    <ul class="nav-links">
+      <li>
+        <div style="display:flex;flex-direction:column;line-height:1.1">
+          <a href="#deals" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px">⚡ Off-Peak Deals</a>
+          <span style="font-size:10px;color:#6B7280;margin-top:1px">Save up to 75%</span>
+        </div>
+      </li>
+      <li>
+        <div style="display:flex;flex-direction:column;line-height:1.1">
+          <a href="negotiate.html" style="color:#6B7280;font-weight:600;font-size:14px;text-decoration:none;display:flex;align-items:center;gap:4px">🤝 AI Negotiator</a>
+          <span style="font-size:10px;color:#6B7280;margin-top:1px">Personal AI agent</span>
+        </div>
+      </li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+          <a href="booking.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">🛎️ BookNow</a>
+          <span style="font-size:10px;color:#6B7280;margin-top:1px">Zero commission</span>
+        </div></li>
+      <li class="has-mega">
+        <a href="merchants.html" style="display:flex;align-items:center;gap:4px">💼 For Merchants <span style="font-size:10px">▾</span></a>
+        <div class="mega-drop">
+          <div class="mega-col">
+            <div class="mega-col-head">🏪 Merchant OS</div>
+            <a href="merchants.html" class="mega-item">
+              <div class="mega-icon" style="background:rgba(29,158,117,.1)">📊</div>
+              <div><div class="mega-item-name">Merchant OS</div><div class="mega-item-desc">Full SaaS platform for salons, spas, gyms &amp; clinics</div></div>
+            </a>
+            <div style="margin-top:12px">
+              <div class="mega-sub-head">Includes</div>
+              <div class="mega-chips"><span class="mega-chip">📅 Bookings</span><span class="mega-chip">👥 Staff</span><span class="mega-chip">📈 Analytics</span><span class="mega-chip">💰 Payments</span></div>
+            </div>
+            <a href="merchants.html" class="mega-cta">Explore Merchant OS →</a>
+          </div>
+          <div class="mega-divider-v"></div>
+          <div class="mega-col">
+            <div class="mega-col-head">🤖 AI Agents</div>
+            <a href="ai-agents.html" class="mega-item">
+              <div class="mega-icon" style="background:rgba(139,92,246,.1)">🤖</div>
+              <div><div class="mega-item-name">AI Agents Platform</div><div class="mega-item-desc">22 AI workers that run your business 24/7</div></div>
+            </a>
+            <div class="mega-sub-head">General Agents</div>
+            <div class="mega-chips"><span class="mega-chip">💰 Revenue</span><span class="mega-chip">😊 Customer Cx</span><span class="mega-chip">⚙️ Operations</span><span class="mega-chip">📣 Marketing</span></div>
+            <div class="mega-sub-head">Vertical Agents</div>
+            <div class="mega-chips"><span class="mega-chip">💇 Salon &amp; Spa</span><span class="mega-chip">🏋️ Gym</span><span class="mega-chip">🍽️ Restaurant</span><span class="mega-chip">🏥 Clinic</span></div>
+            <a href="ai-agents.html" class="mega-cta">Explore AI Agents →</a>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-ghost">Log in</button>
+      <button class="btn-primary">Sign up free</button>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#deals" style="color:#1D9E75;font-weight:700;">⚡ Off-Peak Deals</a>
+    <a href="negotiate.html">🤝 AI Negotiator</a>
+    <a href="booking.html">🛎️ BookNow</a>
+    <a href="merchants.html">💼 Merchant OS</a>
+    <a href="ai-agents.html" style="color:#8B5CF6;font-weight:700;">🤖 AI Agents</a>
+    <a href="#">Log in</a>
+  </div>
+</nav>
+
+<div class="trust-bar">
+  <div class="trust-step"><div class="trust-step-icon">🔍</div><div><div class="trust-step-title">Search</div><div class="trust-step-sub">Find local services</div></div></div>
+  <div class="trust-arrow">→</div>
+  <div class="trust-step"><div class="trust-step-icon">📅</div><div><div class="trust-step-title">Pick a slot</div><div class="trust-step-sub">Choose date &amp; time</div></div></div>
+  <div class="trust-arrow">→</div>
+  <div class="trust-step"><div class="trust-step-icon">✅</div><div><div class="trust-step-title">Show up &amp; enjoy</div><div class="trust-step-sub">Pay directly at the store</div></div></div>
+  <div class="trust-badge">🎉 Zero platform fees &nbsp;·&nbsp; No hidden charges &nbsp;·&nbsp; Always free to book</div>
+</div>
+
+<!-- ══ URGENCY BAR ══ -->
+<div class="urgency-bar">
+  <div class="pulse-dot"></div>
+  <span><span id="deal-count">1,247</span> deals going live right now — slots filling up fast!</span>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="6"/></svg>
+    Hyperlocal deals · Updated every 15 min
+  </div>
+  <h1>Fill the idle hours.<br><em>Save big,</em> today.</h1>
+  <p class="hero-sub">Merchants unlock steep off-peak discounts. You grab them before they expire.</p>
+
+  <div class="search-bar">
+    <div class="field">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <input type="text" placeholder="Your location (e.g. Koramangala)" id="loc-input" />
+    </div>
+    <div class="field">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" placeholder="Service or merchant name" />
+    </div>
+    <button class="search-btn">Search</button>
+  </div>
+
+  <div class="categories">
+    <button class="pill active" onclick="setActive(this, 'All')">🏷️ All</button>
+    <button class="pill" onclick="setActive(this, 'Health & Medical')">🏥 Health & Medical</button>
+    <button class="pill" onclick="setActive(this, 'Beauty & Wellness')">💇 Beauty & Wellness</button>
+    <button class="pill" onclick="setActive(this, 'Fitness & Sports')">🏋️ Fitness & Sports</button>
+    <button class="pill" onclick="setActive(this, 'Food & Dining')">🍽️ Food & Dining</button>
+    <button class="pill" onclick="setActive(this, 'Diagnostics')">🔬 Diagnostics</button>
+  </div>
+</section>
+
+
+<!-- ══ DEALS SECTION ══ -->
+<div class="section" id="deals">
+  <div class="section-header">
+    <h2>Hot deals near you</h2>
+    <a href="#">View all →</a>
+  </div>
+  <div class="deals-grid" id="deals-grid"></div>
+</div>
+
+<!-- ══ STATS ══ -->
+<div class="stats-section">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-number">2,400<span>+</span></div>
+      <div class="stat-label">Merchant partners across India</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">₹3.2<span>Cr</span></div>
+      <div class="stat-label">Saved by customers this month</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">31,000<span>+</span></div>
+      <div class="stat-label">Off-peak deals every month</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HOW IT WORKS ══ -->
+<div class="how-section" id="how">
+  <h2>How OffPeak works</h2>
+  <p class="sub">Three steps between you and a ridiculous deal.</p>
+  <div class="steps">
+    <div class="step-connector"></div>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-icon">📍</div>
+      <div>
+        <h3>Drop your location</h3>
+        <p>Tell us where you are. We find every verified merchant within 5 km.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-icon">⚡</div>
+      <div>
+        <h3>Grab a live deal</h3>
+        <p>Pick a time-limited off-peak slot. Discounts vanish when slots fill.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-icon">🎉</div>
+      <div>
+        <h3>Walk in and save</h3>
+        <p>Show your booking code. Pay the slashed price. Leave happy.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MERCHANT BANNER ══ -->
+<div class="merchant-banner" id="merchant">
+  <h2>Got empty slots? Fill them<br>with OffPeak.</h2>
+  <p>List your off-peak hours, set your own discount, and get customers through the door — at zero commission for the first 3 months.</p>
+  <div class="merchant-banner-btns">
+    <button class="btn-white">List your business free →</button>
+    <button class="btn-outline-white">See how it works</button>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo">✨ Genoti <span>AI</span></a>
+        <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Browse deals</a></li>
+          <li><a href="#">How it works</a></li>
+          <li><a href="#">Cities</a></li>
+          <li><a href="#">Download app</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Merchants</h4>
+        <ul>
+          <li><a href="#">List your business</a></li>
+          <li><a href="#">Merchant dashboard</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Success stories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+      <div class="footer-socials">
+        <a href="#">Twitter</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════
+     AI NEGOTIATOR MODAL
+══════════════════════════════════════ -->
+<div class="modal-overlay" id="neg-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="neg-modal">
+
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="bot-avatar">🤖</div>
+        <div>
+          <div class="modal-title">DealBot by OffPeak</div>
+          <div class="modal-subtitle">AI negotiates on your behalf</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <!-- Deal summary (always visible) -->
+    <div class="modal-deal-summary" id="modal-deal-summary">
+      <div class="modal-deal-emoji" id="modal-emoji"></div>
+      <div class="modal-deal-info">
+        <div class="deal-name" id="modal-deal-name"></div>
+        <div class="deal-merchant" id="modal-merchant-name"></div>
+        <div class="deal-prices">
+          <span class="now" id="modal-price-now"></span>
+          <span class="was" id="modal-price-was"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 1: Preferences -->
+    <div class="modal-screen active" id="screen-prefs">
+      <label class="pref-label">Target price <span class="pref-sublabel">— what would feel like a win?</span></label>
+      <div class="price-options" id="price-options">
+        <!-- injected by JS -->
+      </div>
+
+      <label class="pref-label">Preferred time slot</label>
+      <div class="time-options" id="time-options">
+        <!-- injected by JS -->
+      </div>
+
+      <div class="pref-note">
+        💡 DealBot never reveals your target to the merchant. It negotiates from the top down.
+      </div>
+
+      <button class="btn-start-negotiate" onclick="startNegotiation()">
+        🤖 Let DealBot negotiate for me
+      </button>
+    </div>
+
+    <!-- Screen 2: Live negotiation chat -->
+    <div class="modal-screen" id="screen-chat">
+      <div class="chat-status-bar">
+        <div class="status-dot" id="status-dot"></div>
+        <div>
+          <div class="status-text" id="status-text">DealBot is reaching out...</div>
+          <div class="status-sub" id="status-sub">via WhatsApp · responding usually within 2 min</div>
+        </div>
+      </div>
+      <div class="chat-window" id="chat-window"></div>
+    </div>
+
+    <!-- Screen 3: Deal result -->
+    <div class="modal-screen" id="screen-result">
+      <div class="result-success">
+        <div class="result-icon">🎉</div>
+        <div class="result-title">DealBot nailed it!</div>
+        <div class="result-sub" id="result-sub"></div>
+      </div>
+      <div class="negotiated-deal-card" id="negotiated-card"></div>
+      <div class="deal-expiry-bar">
+        ⏳ This deal expires in <span id="expiry-timer">1:59:47</span> — book now to lock it in
+      </div>
+      <div class="transcript-toggle" onclick="toggleTranscript()">📄 See full negotiation transcript</div>
+      <div class="transcript-preview" id="transcript-preview"></div>
+      <div class="result-btns">
+        <button class="btn-confirm-book" onclick="confirmBook()">Book this deal →</button>
+        <button class="btn-decline" onclick="closeModal()">Not now</button>
+      </div>
+    </div>
+
+    <!-- Screen 4: Booked confirmation -->
+    <div class="modal-screen" id="screen-booked">
+      <div class="booked-screen">
+        <div class="booked-icon">✅</div>
+        <div class="booked-title">You're booked!</div>
+        <div class="booked-sub" id="booked-sub"></div>
+        <div class="booking-code-box">
+          <div class="booking-code-label">Your booking code</div>
+          <div class="booking-code" id="booking-code"></div>
+        </div>
+        <button class="btn-confirm-book" onclick="closeModal()" style="max-width:280px;margin:0 auto;display:block;">Done</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  /* ── Mobile menu ── */
+  function toggleMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+  }
+
+  /* ── Category pills ── */
+  function setActive(el, cat) {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    renderDeals(cat);
+  }
+
+  /* ── Live deal counter ── */
+  let dealBase = 1247;
+  setInterval(() => {
+    dealBase += Math.floor(Math.random() * 3) - 1;
+    if (dealBase < 1100) dealBase = 1100;
+    document.getElementById('deal-count').textContent = dealBase.toLocaleString('en-IN');
+  }, 4000);
+
+  /* ── Deal data ── */
+  const deals = [
+    // Health & Medical
+    { id:1,  category:'Health & Medical', emoji:'🦷',  bg:'#ECFDF5', discount:'45% OFF', time:'9:00–11:00 AM',    title:'Teeth Cleaning & Polishing',      merchant:'Smile Studio Dental',       priceNum:449,  wasNum:820,  price:'₹449',  was:'₹820',   dist:'1.5 km' },
+    { id:2,  category:'Health & Medical', emoji:'🩺',  bg:'#F0FDF4', discount:'60% OFF', time:'10:00 AM–12:00 PM',title:'General Physician Consultation',  merchant:'Healify Clinics',           priceNum:199,  wasNum:500,  price:'₹199',  was:'₹500',   dist:'0.7 km' },
+    { id:3,  category:'Health & Medical', emoji:'👁️', bg:'#ECFDF5', discount:'50% OFF', time:'2:00–5:00 PM',     title:'Eye Check-up & Prescription',     merchant:'ClearVision Eye Care',      priceNum:249,  wasNum:500,  price:'₹249',  was:'₹500',   dist:'1.1 km' },
+
+    // Beauty & Wellness
+    { id:4,  category:'Beauty & Wellness', emoji:'✂️',  bg:'#EDE9FE', discount:'52% OFF', time:'2:00–4:00 PM',    title:'Classic Haircut + Blow Dry',      merchant:'Savio John Salon',          priceNum:299,  wasNum:620,  price:'₹299',  was:'₹620',   dist:'0.4 km' },
+    { id:5,  category:'Beauty & Wellness', emoji:'💆',  bg:'#FDF4FF', discount:'60% OFF', time:'11:00 AM–1:00 PM',title:'60-min Deep Tissue Massage',      merchant:'Serenity Wellness Studio',  priceNum:599,  wasNum:1500, price:'₹599',  was:'₹1,500', dist:'1.2 km' },
+    { id:6,  category:'Beauty & Wellness', emoji:'💅',  bg:'#FDE8FF', discount:'50% OFF', time:'1:00–3:00 PM',    title:'Manicure + Pedicure',             merchant:'Gloss Nail Studio',         priceNum:349,  wasNum:700,  price:'₹349',  was:'₹700',   dist:'0.9 km' },
+    { id:7,  category:'Beauty & Wellness', emoji:'✨',  bg:'#F5F3FF', discount:'55% OFF', time:'10:00 AM–1:00 PM',title:'HydraFacial (MedSpa)',            merchant:'Glow MedSpa & Skin Clinic', priceNum:799,  wasNum:1800, price:'₹799',  was:'₹1,800', dist:'2.0 km' },
+    { id:8,  category:'Beauty & Wellness', emoji:'💇',  bg:'#FDF2F8', discount:'40% OFF', time:'3:00–6:00 PM',    title:'Hair Spa + Deep Conditioning',    merchant:'Studio 11 Salon',           priceNum:449,  wasNum:749,  price:'₹449',  was:'₹749',   dist:'0.6 km' },
+
+    // Fitness & Sports
+    { id:9,  category:'Fitness & Sports', emoji:'🏋️', bg:'#DBEAFE', discount:'70% OFF', time:'10:00 AM–12:00 PM',title:'Day Pass + Personal Training',   merchant:'Iron Arena Gym',            priceNum:149,  wasNum:499,  price:'₹149',  was:'₹499',   dist:'0.6 km' },
+    { id:10, category:'Fitness & Sports', emoji:'🧘',  bg:'#EFF6FF', discount:'65% OFF', time:'7:00–9:00 AM',    title:'Yoga Flow Class (1 session)',     merchant:'Breathe Yoga Studio',       priceNum:99,   wasNum:280,  price:'₹99',   was:'₹280',   dist:'1.0 km' },
+    { id:11, category:'Fitness & Sports', emoji:'🏊',  bg:'#E0F2FE', discount:'60% OFF', time:'6:00–8:00 AM',    title:'Swimming Pool Day Pass',          merchant:'AquaFit Sports Club',       priceNum:149,  wasNum:380,  price:'₹149',  was:'₹380',   dist:'1.8 km' },
+    { id:12, category:'Fitness & Sports', emoji:'🥊',  bg:'#FEF2F2', discount:'55% OFF', time:'5:00–7:00 PM',    title:'CrossFit Drop-in Class',          merchant:'The Box CrossFit Studio',   priceNum:199,  wasNum:449,  price:'₹199',  was:'₹449',   dist:'1.3 km' },
+
+    // Food & Dining
+    { id:13, category:'Food & Dining', emoji:'🍜',  bg:'#FEF3C7', discount:'40% OFF', time:'3:00–5:30 PM',    title:'Thali Combo for Two',             merchant:'Copper Chimney Bistro',     priceNum:349,  wasNum:580,  price:'₹349',  was:'₹580',   dist:'0.8 km' },
+    { id:14, category:'Food & Dining', emoji:'☕',  bg:'#FEF9C3', discount:'35% OFF', time:'2:30–5:00 PM',    title:'Cafe Combo (Coffee + Snack)',     merchant:'The Third Wave Café',       priceNum:149,  wasNum:230,  price:'₹149',  was:'₹230',   dist:'0.3 km' },
+    { id:15, category:'Food & Dining', emoji:'🥗',  bg:'#F0FFF4', discount:'45% OFF', time:'12:00–3:00 PM',   title:'Weekend Brunch Buffet',           merchant:'The Grand Table',           priceNum:499,  wasNum:899,  price:'₹499',  was:'₹899',   dist:'1.4 km' },
+    { id:16, category:'Food & Dining', emoji:'🍕',  bg:'#FFF7ED', discount:'38% OFF', time:'3:00–6:00 PM',    title:'Pizza + Pasta Combo for Two',     merchant:'Brick & Dough',             priceNum:349,  wasNum:560,  price:'₹349',  was:'₹560',   dist:'0.5 km' },
+
+    // Diagnostics
+    { id:17, category:'Diagnostics', emoji:'🩸',  bg:'#FFF1F2', discount:'55% OFF', time:'7:00–10:00 AM',   title:'Full Body Blood Test (65 tests)',  merchant:'HealthFirst Diagnostics',   priceNum:399,  wasNum:880,  price:'₹399',  was:'₹880',   dist:'0.9 km' },
+    { id:18, category:'Diagnostics', emoji:'🫁',  bg:'#F0F9FF', discount:'50% OFF', time:'8:00 AM–12:00 PM',title:'Chest X-Ray (Digital)',            merchant:'ClearScan Imaging Centre',  priceNum:199,  wasNum:400,  price:'₹199',  was:'₹400',   dist:'1.1 km' },
+    { id:19, category:'Diagnostics', emoji:'🔬',  bg:'#F0FDF4', discount:'48% OFF', time:'8:00–11:00 AM',   title:'Thyroid Profile (T3, T4, TSH)',    merchant:'MedLab Express',            priceNum:249,  wasNum:480,  price:'₹249',  was:'₹480',   dist:'0.7 km' },
+    { id:20, category:'Diagnostics', emoji:'🧠',  bg:'#FAF5FF', discount:'40% OFF', time:'9:00 AM–1:00 PM', title:'Ultrasound Abdomen (Full)',        merchant:'Precision Scan & Diagnostics',priceNum:599, wasNum:999,  price:'₹599',  was:'₹999',   dist:'1.6 km' },
+  ];
+
+  function renderDeals(cat = 'All') {
+    const filtered = cat === 'All' ? deals : deals.filter(d => d.category === cat);
+    document.getElementById('deals-grid').innerHTML = filtered.map(d => `
+      <div class="deal-card">
+        <div class="card-thumb" style="background:${d.bg}">
+          ${d.emoji}
+          <span class="badge-discount">${d.discount}</span>
+          <span class="badge-time">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            ${d.time}
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="card-category">${d.category}</div>
+          <div class="card-title">${d.title}</div>
+          <div class="card-merchant">${d.merchant}</div>
+          <div class="card-footer">
+            <div class="price-block">
+              <span class="price-now">${d.price}</span>
+              <span class="price-was">${d.was}</span>
+            </div>
+            <div class="card-distance">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${d.dist}
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn-book" onclick="event.stopPropagation()">Book now</button>
+            <button class="btn-negotiate" onclick="event.stopPropagation(); openNegotiator(${d.id})">
+              <span class="bot-icon">🤖</span> Negotiate
+            </button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  renderDeals();
+
+  /* ── Geolocation ── */
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(() => {
+      document.getElementById('loc-input').placeholder = 'Using your current location';
+    });
+  }
+
+  /* ════════════════════════════════════
+     AI NEGOTIATOR LOGIC
+  ════════════════════════════════════ */
+  let currentDeal = null;
+  let selectedPriceTarget = null;
+  let selectedTime = null;
+  let expiryInterval = null;
+  let expirySeconds = 7187; // ~2 hours
+
+  function openNegotiator(dealId) {
+    currentDeal = deals.find(d => d.id === dealId);
+    selectedPriceTarget = null;
+    selectedTime = null;
+
+    // Populate deal summary
+    document.getElementById('modal-emoji').textContent = currentDeal.emoji;
+    document.getElementById('modal-emoji').style.background = currentDeal.bg;
+    document.getElementById('modal-deal-name').textContent = currentDeal.title;
+    document.getElementById('modal-merchant-name').textContent = currentDeal.merchant;
+    document.getElementById('modal-price-now').textContent = currentDeal.price;
+    document.getElementById('modal-price-was').textContent = currentDeal.was;
+
+    // Build price options: listed price, 10% lower, 20% lower
+    const p = currentDeal.priceNum;
+    const targets = [
+      { label: 'Listed price', val: p,                  note: 'Secure the slot' },
+      { label: '~10% more off', val: Math.round(p * 0.9), note: 'Good ask' },
+      { label: '~20% more off', val: Math.round(p * 0.8), note: 'Bold ask' },
+    ];
+    document.getElementById('price-options').innerHTML = targets.map((t, i) => `
+      <div class="price-opt ${i===1?'selected':''}" onclick="selectPrice(this, ${t.val})">
+        <div class="opt-label">${t.label}</div>
+        <div class="opt-val">₹${t.val}</div>
+        <div class="opt-label" style="margin-top:2px">${t.note}</div>
+      </div>
+    `).join('');
+    selectedPriceTarget = targets[1].val;
+
+    // Time slots
+    const timeSlots = ['Today', 'Tomorrow', 'This week', 'Flexible'];
+    document.getElementById('time-options').innerHTML = timeSlots.map((t, i) => `
+      <div class="time-opt ${i===0?'selected':''}" onclick="selectTime(this, '${t}')">${t}</div>
+    `).join('');
+    selectedTime = 'Today';
+
+    showScreen('prefs');
+    document.getElementById('neg-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function selectPrice(el, val) {
+    document.querySelectorAll('.price-opt').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedPriceTarget = val;
+  }
+
+  function selectTime(el, val) {
+    document.querySelectorAll('.time-opt').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedTime = val;
+  }
+
+  function showScreen(name) {
+    document.querySelectorAll('.modal-screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('neg-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+    if (expiryInterval) { clearInterval(expiryInterval); expiryInterval = null; }
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('neg-overlay')) closeModal();
+  }
+
+  /* ── Negotiation chat simulation ── */
+  const chatScripts = (deal, target) => {
+    const savings = deal.wasNum - target;
+    const pct = Math.round((savings / deal.wasNum) * 100);
+    return [
+      { delay: 600,  from: 'system', text: `DealBot connected to ${deal.merchant} via WhatsApp` },
+      { delay: 1400, from: 'bot',    text: `Hi! I'm DealBot from OffPeak 👋 A customer is interested in "${deal.title}" for ${selectedTime.toLowerCase()}. They're a verified OffPeak user. Could you offer a special rate for an off-peak slot?` },
+      { delay: 3200, from: 'merchant', text: `Hello! Our standard off-peak rate is ${deal.price}. That's already ${deal.discount} off our regular price.` },
+      { delay: 4800, from: 'bot',    text: `Understood! The customer is flexible on timing and ready to book immediately if the deal is right. Could you stretch it to ₹${target}? They'd commit right now for ${selectedTime.toLowerCase()}.` },
+      { delay: 7000, from: 'merchant', text: `Hmm, that's quite low... Let me check with the manager.` },
+      { delay: 9500, from: 'merchant', text: `Okay, we can do ₹${target} — but only for ${selectedTime.toLowerCase()} between ${deal.time}. Slot must be confirmed within 2 hours.` },
+      { delay: 11000, from: 'bot',   text: `That's wonderful, thank you! 🙏 Locking in the slot now. The customer will receive a booking code shortly.` },
+      { delay: 12200, from: 'system', text: `🎉 Deal secured! ${pct}% off original price` },
+    ];
+  };
+
+  let negotiationTimeouts = [];
+
+  function startNegotiation() {
+    showScreen('chat');
+    const chatEl = document.getElementById('chat-window');
+    chatEl.innerHTML = '';
+
+    // Clear any previous timeouts
+    negotiationTimeouts.forEach(t => clearTimeout(t));
+    negotiationTimeouts = [];
+
+    const script = chatScripts(currentDeal, selectedPriceTarget);
+
+    script.forEach((msg, idx) => {
+      // Show typing indicator before bot/merchant messages
+      let typingDelay = msg.delay - 900;
+      let showTyping = msg.from !== 'system' && idx > 0;
+
+      if (showTyping && typingDelay > 0) {
+        const t1 = setTimeout(() => {
+          const typingId = 'typing-' + idx;
+          const typingEl = document.createElement('div');
+          typingEl.id = typingId;
+          typingEl.className = 'chat-msg from-bot visible';
+          typingEl.innerHTML = `
+            <div class="msg-avatar ${msg.from === 'merchant' ? 'merchant' : 'bot'}">${msg.from === 'merchant' ? '🏪' : '🤖'}</div>
+            <div class="typing-indicator"><span></span><span></span><span></span></div>
+          `;
+          chatEl.appendChild(typingEl);
+          chatEl.scrollTop = chatEl.scrollHeight;
+        }, typingDelay);
+        negotiationTimeouts.push(t1);
+      }
+
+      const t2 = setTimeout(() => {
+        // Remove typing
+        const typingEl = document.getElementById('typing-' + idx);
+        if (typingEl) typingEl.remove();
+
+        // Build message
+        const msgEl = document.createElement('div');
+        msgEl.className = `chat-msg from-${msg.from}`;
+
+        if (msg.from === 'system') {
+          msgEl.innerHTML = `<div class="msg-bubble">${msg.text}</div>`;
+        } else {
+          const label = msg.from === 'bot' ? 'DEALBOT' : currentDeal.merchant.toUpperCase().split(' ').slice(0,2).join(' ');
+          const avatar = msg.from === 'bot' ? '🤖' : '🏪';
+          const avatarClass = msg.from === 'bot' ? 'bot' : 'merchant';
+          msgEl.innerHTML = `
+            <div class="msg-avatar ${avatarClass}">${avatar}</div>
+            <div class="msg-wrap">
+              <div class="msg-label">${label}</div>
+              <div class="msg-bubble">${msg.text}</div>
+            </div>
+          `;
+        }
+
+        chatEl.appendChild(msgEl);
+        chatEl.scrollTop = chatEl.scrollHeight;
+
+        // Trigger animation
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => msgEl.classList.add('visible'));
+        });
+
+        // Update status bar
+        if (idx === 0) {
+          document.getElementById('status-text').textContent = `Connected to ${currentDeal.merchant}`;
+          document.getElementById('status-dot').className = 'status-dot';
+        }
+        if (msg.from === 'merchant' && idx > 2) {
+          document.getElementById('status-text').textContent = 'Merchant is responding...';
+        }
+
+        // Last message — show result
+        if (idx === script.length - 1) {
+          document.getElementById('status-dot').className = 'status-dot green';
+          document.getElementById('status-text').textContent = 'Deal secured!';
+          document.getElementById('status-sub').textContent = 'Tap below to see your negotiated deal';
+
+          setTimeout(() => showResult(), 1200);
+        }
+      }, msg.delay);
+      negotiationTimeouts.push(t2);
+    });
+  }
+
+  function showResult() {
+    const deal = currentDeal;
+    const target = selectedPriceTarget;
+    const origSavings = deal.wasNum - deal.priceNum;
+    const extraSavings = deal.priceNum - target;
+    const totalSavings = deal.wasNum - target;
+    const totalPct = Math.round((totalSavings / deal.wasNum) * 100);
+
+    document.getElementById('result-sub').textContent =
+      `DealBot saved you an extra ₹${extraSavings} on top of the listed deal — ₹${totalSavings} total off!`;
+
+    document.getElementById('negotiated-card').innerHTML = `
+      <div class="nd-header">
+        <div class="nd-emoji" style="background:${deal.bg}">${deal.emoji}</div>
+        <div>
+          <div class="nd-name">${deal.title}</div>
+          <div class="nd-merchant">${deal.merchant} · ${deal.dist}</div>
+        </div>
+      </div>
+      <div class="nd-prices">
+        <span class="nd-new-price">₹${target}</span>
+        <span class="nd-was-price">${deal.was}</span>
+        <span class="nd-savings-badge">${totalPct}% OFF</span>
+      </div>
+    `;
+
+    // Build transcript
+    const script = chatScripts(deal, target);
+    document.getElementById('transcript-preview').innerHTML = script
+      .filter(m => m.from !== 'system')
+      .map(m => `<div class="transcript-line"><b>${m.from === 'bot' ? 'DealBot' : deal.merchant}:</b> ${m.text}</div>`)
+      .join('');
+
+    // Start expiry countdown
+    expirySeconds = 7187;
+    updateExpiry();
+    expiryInterval = setInterval(updateExpiry, 1000);
+
+    showScreen('result');
+  }
+
+  function updateExpiry() {
+    if (expirySeconds <= 0) { clearInterval(expiryInterval); return; }
+    expirySeconds--;
+    const h = Math.floor(expirySeconds / 3600);
+    const m = Math.floor((expirySeconds % 3600) / 60);
+    const s = expirySeconds % 60;
+    document.getElementById('expiry-timer').textContent =
+      `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+
+  function toggleTranscript() {
+    const el = document.getElementById('transcript-preview');
+    el.classList.toggle('open');
+    document.querySelector('.transcript-toggle').textContent =
+      el.classList.contains('open') ? '📄 Hide transcript' : '📄 See full negotiation transcript';
+  }
+
+  function confirmBook() {
+    if (expiryInterval) { clearInterval(expiryInterval); expiryInterval = null; }
+    const code = 'OP' + Math.random().toString(36).substring(2,8).toUpperCase();
+    document.getElementById('booking-code').textContent = code;
+    document.getElementById('booked-sub').textContent =
+      `Show this code at ${currentDeal.merchant} between ${currentDeal.time}. Pay ₹${selectedPriceTarget} at the counter.`;
+    showScreen('booked');
+  }
+</script>
+</body>
+</html>

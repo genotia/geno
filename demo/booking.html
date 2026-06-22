@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking — OffPeak</title>
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --green:#1D9E75; --dark-green:#085041; --text:#111827; --muted:#6B7280;
+      --border:#E5E7EB; --bg:#F9FAFB; --white:#fff; --red:#EF4444; --orange:#F59E0B;
+    }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; color:var(--text); background:var(--bg); line-height:1.5; }
+
+    /* ── NAV ── */
+    nav { position:sticky; top:0; z-index:200; background:var(--white); border-bottom:1px solid var(--border); }
+    .nav-inner { max-width:1200px; margin:0 auto; padding:0 24px; height:64px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .logo { font-size:22px; font-weight:800; letter-spacing:-.5px; color:var(--text); text-decoration:none; flex-shrink:0; }
+    .logo span { color:var(--green); }
+    .nav-links { display:flex; gap:28px; list-style:none; }
+    .nav-links a { text-decoration:none; font-size:14px; font-weight:500; color:var(--muted); transition:color .15s; }
+    .nav-links a:hover { color:var(--text); }
+    .nav-links a.active { color:var(--green); font-weight:700; }
+    .has-mega { position:relative; }
+    .mega-drop { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); background:white; border:1px solid var(--border); border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.13); z-index:300; width:580px; display:none; overflow:hidden; }
+    .has-mega:hover .mega-drop { display:grid; grid-template-columns:1fr 1px 1fr; }
+    .mega-col { padding:22px; }
+    .mega-col-head { font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+    .mega-item { display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:10px; cursor:pointer; transition:background .15s; text-decoration:none; }
+    .mega-item:hover { background:var(--bg); }
+    .mega-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+    .mega-item-name { font-size:14px; font-weight:700; color:var(--text); }
+    .mega-item-desc { font-size:12px; color:var(--muted); margin-top:2px; line-height:1.4; }
+    .mega-divider-v { background:var(--border); }
+    .mega-sub-head { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin:14px 0 7px; }
+    .mega-chips { display:flex; flex-wrap:wrap; gap:5px; }
+    .mega-chip { padding:4px 10px; border-radius:20px; background:var(--bg); font-size:11px; font-weight:500; color:var(--text); border:1px solid var(--border); }
+    .mega-cta { display:inline-flex; align-items:center; gap:5px; margin-top:14px; font-size:13px; font-weight:700; color:var(--green); text-decoration:none; }
+    .mega-cta:hover { text-decoration:underline; }
+    .nav-right { display:flex; align-items:center; gap:12px; }
+    .btn-ghost { font-size:14px; font-weight:500; color:var(--text); background:none; border:none; cursor:pointer; padding:8px 4px; }
+    .btn-primary { font-size:14px; font-weight:600; color:var(--white); background:var(--green); border:none; border-radius:8px; padding:9px 20px; cursor:pointer; transition:opacity .15s; white-space:nowrap; }
+    .btn-primary:hover { opacity:.88; }
+    .hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+    .hamburger span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; }
+    .mobile-menu { display:none; flex-direction:column; background:var(--white); border-bottom:1px solid var(--border); padding:8px 24px 16px; }
+    .mobile-menu.open { display:flex; }
+    .mobile-menu a { text-decoration:none; font-size:15px; font-weight:500; color:var(--muted); padding:10px 0; border-bottom:1px solid var(--border); }
+    .mobile-menu a:last-child { border-bottom:none; }
+
+    /* ══ VIEW: SEARCH LANDING ══ */
+    .search-hero {
+      background:linear-gradient(160deg,#071f16 0%,#0d2e22 45%,#0f3d2a 100%);
+      padding:60px 24px 100px; position:relative; overflow:hidden;
+    }
+    .search-hero::before {
+      content:''; position:absolute; top:-80px; right:-80px; width:400px; height:400px;
+      background:radial-gradient(circle,rgba(29,158,117,.25) 0%,transparent 70%); border-radius:50%;
+    }
+    .search-hero::after {
+      content:''; position:absolute; bottom:-1px; left:0; right:0; height:48px;
+      background:var(--bg); clip-path:ellipse(55% 100% at 50% 100%);
+    }
+    .search-hero-inner { max-width:740px; margin:0 auto; text-align:center; position:relative; z-index:1; }
+    .sh-eyebrow { display:inline-flex; align-items:center; gap:6px; background:rgba(74,222,171,.15); border:1px solid rgba(74,222,171,.3); color:#4ADEAB; font-size:11px; font-weight:700; padding:5px 14px; border-radius:20px; margin-bottom:18px; letter-spacing:.6px; text-transform:uppercase; }
+    .search-hero h1 { font-size:clamp(26px,5vw,52px); font-weight:800; letter-spacing:-1.5px; color:#F0FDF8; margin-bottom:14px; line-height:1.1; }
+    .search-hero h1 em { font-style:normal; color:#4ADEAB; }
+    .search-hero p { font-size:16px; color:rgba(240,253,248,.6); margin-bottom:32px; }
+
+    .search-bar-wrap { background:var(--white); border-radius:16px; padding:6px; display:flex; align-items:center; gap:0; box-shadow:0 20px 60px rgba(0,0,0,.3); margin-bottom:20px; }
+    .sb-field { display:flex; align-items:center; gap:10px; flex:1; padding:10px 16px; }
+    .sb-icon { font-size:18px; flex-shrink:0; }
+    .sb-field input { border:none; outline:none; font-size:15px; color:var(--text); width:100%; background:transparent; }
+    .sb-field input::placeholder { color:#9CA3AF; }
+    .sb-divider { width:1px; height:36px; background:var(--border); flex-shrink:0; }
+    .sb-btn { padding:12px 28px; background:var(--green); color:white; border:none; border-radius:11px; font-size:15px; font-weight:700; cursor:pointer; white-space:nowrap; transition:opacity .15s; flex-shrink:0; }
+    .sb-btn:hover { opacity:.9; }
+
+    .popular-chips { display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center; }
+    .pop-label { font-size:13px; color:rgba(240,253,248,.5); }
+    .pop-chip { padding:6px 14px; border-radius:20px; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08); color:rgba(240,253,248,.85); font-size:13px; font-weight:500; cursor:pointer; transition:all .15s; }
+    .pop-chip:hover { background:rgba(255,255,255,.15); border-color:rgba(255,255,255,.35); }
+
+    /* CATEGORIES */
+    .cat-section { max-width:1200px; margin:0 auto; padding:40px 24px 32px; }
+    .sec-title { font-size:20px; font-weight:800; color:var(--text); margin-bottom:20px; letter-spacing:-.3px; }
+    .cat-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:12px; }
+    .cat-tile { display:flex; flex-direction:column; align-items:center; gap:8px; padding:18px 10px; border-radius:14px; border:1.5px solid var(--border); background:var(--white); cursor:pointer; transition:all .2s; text-align:center; }
+    .cat-tile:hover { border-color:var(--green); transform:translateY(-2px); box-shadow:0 6px 20px rgba(29,158,117,.12); }
+    .cat-tile.active-cat { border-color:var(--green); background:rgba(29,158,117,.06); }
+    .cat-icon { width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; }
+    .cat-name { font-size:12px; font-weight:700; color:var(--text); line-height:1.3; }
+    .cat-sub { font-size:10px; color:var(--muted); line-height:1.4; }
+
+    /* FEATURED */
+    .featured-section { max-width:1200px; margin:0 auto; padding:0 24px 60px; }
+    .fs-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+    .fs-title { font-size:20px; font-weight:800; color:var(--text); letter-spacing:-.3px; }
+    .fs-see-all { font-size:13px; font-weight:600; color:var(--green); cursor:pointer; text-decoration:none; }
+    .venues-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+
+    /* ══ VENUE CARD ══ */
+    .venue-card { background:var(--white); border-radius:16px; overflow:hidden; border:1px solid var(--border); cursor:pointer; transition:transform .2s,box-shadow .2s; }
+    .venue-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.1); }
+    .vc-banner { height:140px; display:flex; align-items:center; justify-content:center; font-size:48px; position:relative; }
+    .vc-avail { position:absolute; top:10px; left:10px; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+    .avail-today { background:rgba(29,158,117,.9); color:white; }
+    .avail-tomorrow { background:rgba(245,158,11,.9); color:white; }
+    .avail-full { background:rgba(107,114,128,.85); color:white; }
+    .vc-fav { position:absolute; top:10px; right:10px; width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,.9); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; transition:transform .15s; }
+    .vc-fav:hover { transform:scale(1.1); }
+    .vc-body { padding:14px 16px 16px; }
+    .vc-name { font-size:15px; font-weight:700; color:var(--text); margin-bottom:4px; }
+    .vc-meta { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); margin-bottom:8px; flex-wrap:wrap; }
+    .vc-rating { display:flex; align-items:center; gap:3px; font-weight:600; color:var(--text); }
+    .vc-rating .star { color:#FBBF24; font-size:13px; }
+    .vc-tags { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:12px; }
+    .vc-tag { padding:3px 9px; border-radius:20px; background:var(--bg); font-size:11px; font-weight:600; color:var(--muted); }
+    .vc-footer { display:flex; align-items:center; justify-content:space-between; }
+    .vc-price { font-size:13px; color:var(--muted); }
+    .vc-price strong { font-size:15px; font-weight:700; color:var(--text); }
+    .vc-book-btn { padding:7px 16px; background:var(--green); color:white; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; transition:opacity .15s; }
+    .vc-book-btn:hover { opacity:.88; }
+
+    /* ══ VIEW: RESULTS ══ */
+    .results-header { background:var(--white); border-bottom:1px solid var(--border); padding:12px 24px; }
+    .results-header-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .breadcrumb { font-size:13px; color:var(--muted); }
+    .breadcrumb a { color:var(--green); cursor:pointer; text-decoration:none; font-weight:600; }
+    .breadcrumb span { margin:0 6px; }
+    .results-count { font-size:13px; font-weight:600; color:var(--text); margin-left:auto; }
+
+    .filter-bar { background:var(--white); border-bottom:1px solid var(--border); padding:10px 24px; }
+    .filter-bar-inner { max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:8px; overflow-x:auto; }
+    .filter-btn { display:flex; align-items:center; gap:5px; padding:7px 14px; border-radius:20px; border:1.5px solid var(--border); background:var(--white); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; white-space:nowrap; transition:all .15s; flex-shrink:0; }
+    .filter-btn:hover { border-color:var(--green); color:var(--green); }
+    .filter-btn.on { border-color:var(--green); background:rgba(29,158,117,.08); color:var(--green); }
+    .sort-select { padding:7px 10px; border-radius:20px; border:1.5px solid var(--border); background:var(--white); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; outline:none; }
+
+    .results-body { max-width:1200px; margin:28px auto 60px; padding:0 24px; }
+    .results-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+
+    /* ══ VIEW: VENUE DETAIL ══ */
+    .venue-detail-header { height:220px; display:flex; align-items:flex-end; padding:0 0 0; position:relative; overflow:hidden; }
+    .vd-back { position:absolute; top:18px; left:18px; z-index:10; display:flex; align-items:center; gap:7px; background:rgba(255,255,255,.15); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.25); color:white; padding:8px 16px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; transition:background .15s; }
+    .vd-back:hover { background:rgba(255,255,255,.25); }
+    .vd-header-info { background:linear-gradient(to top,rgba(0,0,0,.7),transparent); padding:24px 28px 20px; width:100%; }
+    .vd-name { font-size:26px; font-weight:800; color:white; letter-spacing:-.5px; }
+    .vd-meta-row { display:flex; align-items:center; gap:14px; margin-top:6px; flex-wrap:wrap; }
+    .vd-rating { display:flex; align-items:center; gap:4px; color:white; font-size:13px; font-weight:600; }
+    .vd-rating .star { color:#FBBF24; }
+    .vd-meta-row span { font-size:13px; color:rgba(255,255,255,.8); }
+    .vd-meta-row .dot { color:rgba(255,255,255,.4); }
+
+    .vd-info-bar { background:var(--white); border-bottom:1px solid var(--border); }
+    .vd-info-bar-inner { max-width:1200px; margin:0 auto; padding:14px 28px; display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+    .vd-info-item { display:flex; align-items:center; gap:7px; font-size:13px; color:var(--muted); }
+    .vd-open-badge { padding:4px 10px; border-radius:20px; background:rgba(29,158,117,.1); color:var(--green); font-size:12px; font-weight:700; }
+
+    .vd-tabs { background:var(--white); border-bottom:1px solid var(--border); padding:0 28px; }
+    .vd-tabs-inner { max-width:1200px; margin:0 auto; display:flex; gap:0; }
+    .vd-tab { padding:14px 20px; font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; border-bottom:2.5px solid transparent; transition:all .15s; }
+    .vd-tab.active { color:var(--green); border-bottom-color:var(--green); }
+
+    .vd-body { max-width:1200px; margin:0 auto; padding:28px; display:grid; grid-template-columns:1fr 400px; gap:28px; align-items:start; }
+
+    /* SERVICE LIST */
+    .svc-list { display:flex; flex-direction:column; gap:10px; }
+    .svc-group-title { font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.8px; margin:14px 0 6px; }
+    .svc-row { background:var(--white); border:1px solid var(--border); border-radius:12px; padding:16px; display:flex; align-items:center; gap:14px; transition:border-color .15s; }
+    .svc-row:hover { border-color:var(--green); }
+    .svc-row.selected-svc { border-color:var(--green); background:rgba(29,158,117,.04); }
+    .svc-dot { width:10px; height:10px; border-radius:50%; background:var(--green); flex-shrink:0; }
+    .svc-info { flex:1; }
+    .svc-name { font-size:14px; font-weight:700; color:var(--text); }
+    .svc-dur { font-size:12px; color:var(--muted); margin-top:2px; }
+    .svc-price-lbl { font-size:15px; font-weight:700; color:var(--text); margin-right:12px; }
+    .svc-select-btn { padding:7px 16px; border-radius:8px; border:1.5px solid var(--green); background:white; color:var(--green); font-size:13px; font-weight:700; cursor:pointer; transition:all .15s; white-space:nowrap; }
+    .svc-select-btn:hover, .svc-select-btn.picked { background:var(--green); color:white; }
+
+    /* BOOKING PANEL */
+    .booking-panel { position:sticky; top:76px; }
+    .bp-card { background:var(--white); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+    .bp-header { padding:18px 20px 14px; border-bottom:1px solid var(--border); }
+    .bp-title { font-size:15px; font-weight:700; color:var(--text); }
+    .bp-sub { font-size:12px; color:var(--muted); margin-top:2px; }
+
+    /* STAFF */
+    .staff-scroll { padding:14px 16px; display:flex; gap:10px; overflow-x:auto; }
+    .staff-pill { display:flex; flex-direction:column; align-items:center; gap:6px; min-width:68px; cursor:pointer; }
+    .staff-av { width:48px; height:48px; border-radius:50%; border:2.5px solid var(--border); background:linear-gradient(135deg,#1D9E75,#085041); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:700; color:white; transition:border-color .15s; flex-shrink:0; }
+    .staff-av.any { background:linear-gradient(135deg,#E5E7EB,#D1D5DB); color:var(--muted); }
+    .staff-pill:hover .staff-av, .staff-pill.sel .staff-av { border-color:var(--green); }
+    .staff-pname { font-size:11px; font-weight:600; color:var(--muted); text-align:center; white-space:nowrap; }
+    .staff-pill.sel .staff-pname { color:var(--green); }
+
+    /* MINI CALENDAR */
+    .mini-cal { padding:14px 16px; }
+    .mc-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .mc-month { font-size:13px; font-weight:700; color:var(--text); }
+    .mc-arrow { width:26px; height:26px; border-radius:6px; border:1px solid var(--border); background:none; cursor:pointer; font-size:14px; color:var(--muted); display:flex; align-items:center; justify-content:center; transition:all .15s; }
+    .mc-arrow:hover { border-color:var(--green); color:var(--green); }
+    .mc-days-header { display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:4px; }
+    .mc-dh { text-align:center; font-size:10px; font-weight:600; color:var(--muted); }
+    .mc-days { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+    .mc-day { aspect-ratio:1; border-radius:6px; border:none; background:none; font-size:12px; font-weight:500; color:var(--text); cursor:pointer; transition:all .15s; display:flex; align-items:center; justify-content:center; position:relative; }
+    .mc-day:hover:not(.mc-empty):not(.mc-past):not(.mc-full) { background:var(--bg); }
+    .mc-day.mc-avail::after { content:''; position:absolute; bottom:1px; left:50%; transform:translateX(-50%); width:3px; height:3px; background:var(--green); border-radius:50%; }
+    .mc-day.mc-sel { background:var(--green) !important; color:white !important; font-weight:700; }
+    .mc-day.mc-sel::after { background:white; }
+    .mc-day.mc-today { color:var(--green); font-weight:700; }
+    .mc-day.mc-past, .mc-day.mc-full, .mc-day.mc-empty { color:#D1D5DB; cursor:default; }
+
+    /* TIME SLOTS */
+    .slots-wrap { padding:14px 16px; border-top:1px solid var(--border); }
+    .slots-label { font-size:12px; font-weight:700; color:var(--muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:.6px; }
+    .slots-g { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+    .slot-c { padding:8px 4px; text-align:center; border-radius:7px; border:1.5px solid var(--border); background:var(--white); font-size:12px; font-weight:600; color:var(--text); cursor:pointer; transition:all .15s; }
+    .slot-c:hover:not(.slot-bk) { border-color:var(--green); color:var(--green); }
+    .slot-c.slot-sel { border-color:var(--green); background:var(--green); color:white; }
+    .slot-c.slot-bk { background:var(--bg); color:#D1D5DB; cursor:default; border-color:transparent; text-decoration:line-through; font-size:11px; }
+    .slots-empty { font-size:13px; color:var(--muted); padding:8px 0; }
+
+    /* BOOKING FORM */
+    .bp-form { padding:16px; border-top:1px solid var(--border); }
+    .bp-summary { background:var(--bg); border-radius:9px; padding:12px; margin-bottom:14px; font-size:13px; }
+    .bps-row { display:flex; justify-content:space-between; padding:3px 0; }
+    .bps-row .bk { color:var(--muted); }
+    .bps-row .bv { font-weight:600; }
+    .bps-row.tot .bv { color:var(--green); font-size:15px; }
+    .bp-form-row { margin-bottom:10px; }
+    .bp-form-row label { display:block; font-size:12px; font-weight:600; margin-bottom:4px; }
+    .bp-form-row input, .bp-form-row textarea { width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; outline:none; font-family:inherit; transition:border-color .15s; }
+    .bp-form-row input:focus, .bp-form-row textarea:focus { border-color:var(--green); }
+    .bp-2col { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .btn-confirm { width:100%; padding:13px; background:var(--green); color:white; border:none; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:opacity .15s; margin-top:4px; }
+    .btn-confirm:hover { opacity:.9; }
+    .no-sel-msg { text-align:center; padding:28px 16px; font-size:13px; color:var(--muted); }
+
+    /* ══ MY APPOINTMENTS ══ */
+    .appt-section { max-width:1200px; margin:0 auto; padding:48px 24px 40px; }
+    .sec-h { font-size:22px; font-weight:800; color:var(--text); letter-spacing:-.3px; margin-bottom:4px; }
+    .sec-sub { font-size:14px; color:var(--muted); margin-bottom:18px; }
+    .appt-tabs { display:flex; gap:6px; margin-bottom:18px; }
+    .appt-tab { padding:7px 16px; border-radius:20px; border:1.5px solid var(--border); background:var(--white); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .15s; }
+    .appt-tab.active { border-color:var(--green); background:rgba(29,158,117,.08); color:var(--green); }
+    .appt-list { display:flex; flex-direction:column; gap:10px; }
+    .appt-card { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:18px 20px; display:flex; align-items:center; gap:14px; }
+    .appt-date-box { background:rgba(29,158,117,.08); border-radius:10px; padding:10px 13px; text-align:center; min-width:52px; flex-shrink:0; }
+    .appt-date-box .day { font-size:22px; font-weight:800; color:var(--green); line-height:1; }
+    .appt-date-box .mon { font-size:10px; font-weight:700; color:var(--green); text-transform:uppercase; }
+    .appt-info { flex:1; min-width:0; }
+    .appt-svc { font-size:14px; font-weight:700; color:var(--text); }
+    .appt-meta { font-size:12px; color:var(--muted); margin-top:2px; }
+    .appt-badge { display:inline-block; padding:2px 9px; border-radius:20px; font-size:11px; font-weight:700; margin-top:5px; }
+    .badge-confirmed { background:rgba(29,158,117,.1); color:var(--green); }
+    .badge-past { background:rgba(107,114,128,.1); color:var(--muted); }
+    .badge-cancelled { background:rgba(239,68,68,.1); color:var(--red); }
+    .appt-actions { display:flex; gap:7px; flex-shrink:0; }
+    .btn-sm { padding:7px 13px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; border:1.5px solid; background:white; }
+    .btn-rs { border-color:var(--green); color:var(--green); }
+    .btn-rs:hover { background:rgba(29,158,117,.06); }
+    .btn-cn { border-color:var(--red); color:var(--red); }
+    .btn-cn:hover { background:rgba(239,68,68,.06); }
+
+    /* ══ WAITLIST ══ */
+    .waitlist-section { background:linear-gradient(135deg,#0D1F1A,#0A2E22); padding:52px 24px; }
+    .wl-inner { max-width:680px; margin:0 auto; text-align:center; }
+    .wl-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(74,222,171,.15); border:1px solid rgba(74,222,171,.3); color:#4ADEAB; font-size:11px; font-weight:700; padding:5px 14px; border-radius:20px; margin-bottom:16px; letter-spacing:.6px; text-transform:uppercase; }
+    .wl-inner h2 { font-size:clamp(22px,4vw,34px); font-weight:800; color:#F0FDF8; margin-bottom:10px; letter-spacing:-.5px; }
+    .wl-inner p { font-size:15px; color:rgba(240,253,248,.6); margin-bottom:26px; }
+    .wl-form { display:flex; gap:10px; max-width:420px; margin:0 auto; flex-wrap:wrap; }
+    .wl-input { flex:1; min-width:180px; padding:11px 15px; border:1px solid rgba(255,255,255,.15); border-radius:10px; background:rgba(255,255,255,.08); color:white; font-size:14px; outline:none; }
+    .wl-input::placeholder { color:rgba(240,253,248,.4); }
+    .wl-input:focus { border-color:#4ADEAB; }
+    .btn-wl { padding:11px 22px; background:#4ADEAB; color:#0D1F1A; border:none; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; transition:opacity .15s; white-space:nowrap; }
+    .btn-wl:hover { opacity:.9; }
+    .wl-count { margin-top:16px; font-size:13px; color:rgba(240,253,248,.5); }
+    .wl-count strong { color:#4ADEAB; }
+
+    /* ══ FOOTER ══ */
+    footer { background:#111827; color:rgba(255,255,255,.6); padding:44px 24px 28px; }
+    .footer-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:36px; margin-bottom:36px; }
+    .f-logo { font-size:20px; font-weight:800; color:white; letter-spacing:-.5px; margin-bottom:8px; }
+    .f-logo span { color:var(--green); }
+    .f-tagline { font-size:13px; line-height:1.6; }
+    .footer-col h4 { font-size:13px; font-weight:700; color:white; margin-bottom:12px; }
+    .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .footer-col ul a { text-decoration:none; font-size:13px; color:rgba(255,255,255,.55); transition:color .15s; }
+    .footer-col ul a:hover { color:white; }
+    .footer-bottom { border-top:1px solid rgba(255,255,255,.1); padding-top:20px; font-size:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+    .footer-bottom a { color:rgba(255,255,255,.5); text-decoration:none; }
+
+    /* ══ MODALS ══ */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:500; display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity .2s; }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+    .modal { background:var(--white); border-radius:18px; width:100%; max-width:420px; padding:28px; position:relative; transform:translateY(20px); transition:transform .2s; }
+    .modal-overlay.open .modal { transform:translateY(0); }
+    .modal-close { position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:7px; border:1px solid var(--border); background:none; cursor:pointer; font-size:17px; color:var(--muted); display:flex; align-items:center; justify-content:center; }
+    .modal-close:hover { background:var(--bg); }
+    .modal-title { font-size:18px; font-weight:800; color:var(--text); margin-bottom:4px; }
+    .modal-sub { font-size:13px; color:var(--muted); margin-bottom:18px; }
+    .confirm-icon { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; margin:0 auto 14px; }
+
+    /* ══ AI CHAT ══ */
+    .ai-fab { position:fixed; bottom:28px; right:28px; z-index:400; width:56px; height:56px; border-radius:50%; background:var(--green); border:none; cursor:pointer; box-shadow:0 8px 28px rgba(29,158,117,.4); display:flex; align-items:center; justify-content:center; font-size:22px; transition:transform .2s,box-shadow .2s; }
+    .ai-fab:hover { transform:scale(1.08); box-shadow:0 12px 36px rgba(29,158,117,.5); }
+    .fab-dot { position:absolute; top:-2px; right:-2px; width:16px; height:16px; background:var(--red); border-radius:50%; border:2px solid white; font-size:9px; font-weight:700; color:white; display:flex; align-items:center; justify-content:center; }
+    .chat-panel { position:fixed; bottom:96px; right:28px; z-index:400; width:330px; background:var(--white); border-radius:18px; border:1px solid var(--border); box-shadow:0 20px 60px rgba(0,0,0,.14); display:none; flex-direction:column; overflow:hidden; max-height:490px; }
+    .chat-panel.open { display:flex; }
+    .chat-hdr { background:var(--green); padding:13px 16px; display:flex; align-items:center; gap:10px; }
+    .chat-av { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-size:16px; }
+    .chat-hdr .cn { font-size:13px; font-weight:700; color:white; }
+    .chat-hdr .cs { font-size:11px; color:rgba(255,255,255,.75); }
+    .chat-x { margin-left:auto; background:none; border:none; color:rgba(255,255,255,.8); font-size:19px; cursor:pointer; }
+    .chat-msgs { flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:8px; }
+    .cmsg { max-width:88%; }
+    .cmsg.bot { align-self:flex-start; }
+    .cmsg.usr { align-self:flex-end; }
+    .cbub { padding:9px 12px; border-radius:13px; font-size:13px; line-height:1.5; }
+    .cmsg.bot .cbub { background:var(--bg); color:var(--text); border-bottom-left-radius:3px; }
+    .cmsg.usr .cbub { background:var(--green); color:white; border-bottom-right-radius:3px; }
+    .ctm { font-size:10px; color:var(--muted); margin-top:2px; padding:0 2px; }
+    .cmsg.usr .ctm { text-align:right; }
+    .chat-qbtns { padding:6px 12px; display:flex; gap:5px; flex-wrap:wrap; border-top:1px solid var(--border); }
+    .qbtn { padding:4px 9px; border-radius:13px; border:1px solid var(--border); background:var(--white); font-size:11px; font-weight:500; color:var(--text); cursor:pointer; transition:all .15s; white-space:nowrap; }
+    .qbtn:hover { border-color:var(--green); color:var(--green); }
+    .chat-inp-row { padding:10px 12px; border-top:1px solid var(--border); display:flex; gap:7px; }
+    .chat-inp { flex:1; padding:8px 11px; border:1.5px solid var(--border); border-radius:9px; font-size:13px; outline:none; font-family:inherit; }
+    .chat-inp:focus { border-color:var(--green); }
+    .chat-send { width:34px; height:34px; border-radius:9px; background:var(--green); border:none; cursor:pointer; color:white; font-size:14px; transition:opacity .15s; flex-shrink:0; }
+    .chat-send:hover { opacity:.88; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width:1100px) { .cat-grid { grid-template-columns:repeat(4,1fr); } }
+    @media (max-width:700px)  { .cat-grid { grid-template-columns:repeat(3,1fr); } }
+    @media (max-width:900px) {
+      .venues-grid, .results-grid { grid-template-columns:repeat(2,1fr); }
+      .vd-body { grid-template-columns:1fr; }
+      .booking-panel { position:static; }
+      .footer-inner { grid-template-columns:1fr 1fr; }
+    }
+    @media (max-width:640px) {
+      .nav-links { display:none; }
+      .hamburger { display:flex; }
+      .nav-right .btn-ghost { display:none; }
+      .venues-grid, .results-grid { grid-template-columns:1fr; }
+      .cat-grid { grid-template-columns:repeat(4,1fr); }
+      .search-bar-wrap { flex-direction:column; gap:0; padding:8px; }
+      .sb-divider { width:100%; height:1px; }
+      .chat-panel { width:calc(100vw - 32px); right:16px; }
+      .footer-inner { grid-template-columns:1fr; }
+      .appt-card { flex-wrap:wrap; }
+      .appt-actions { width:100%; justify-content:flex-end; margin-top:8px; }
+    }
+    .trust-bar { position:sticky; top:64px; z-index:99; background:linear-gradient(90deg,#0f172a 0%,#1e293b 100%); padding:10px 32px; display:flex; align-items:center; justify-content:center; gap:0; }
+    .trust-step { display:flex; align-items:center; gap:8px; padding:0 20px; }
+    .trust-step-icon { width:30px; height:30px; background:rgba(255,255,255,.1); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+    .trust-step-title { font-size:12px; font-weight:700; color:white; }
+    .trust-step-sub { font-size:10px; color:#94a3b8; }
+    .trust-arrow { color:#1D9E75; font-size:16px; font-weight:700; opacity:.8; padding:0 4px; }
+    .trust-badge { margin-left:28px; padding:5px 14px; background:rgba(29,158,117,.2); border:1px solid rgba(29,158,117,.4); border-radius:20px; font-size:11px; font-weight:700; color:#4ade80; white-space:nowrap; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
+      <a href="index.html" class="logo">✨ Genoti <span>AI</span></a>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover, Book here, Save more</span>
+    </div>
+    <ul class="nav-links">
+      <li>
+        <div style="display:flex;flex-direction:column;line-height:1.1">
+          <a href="index.html#deals" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280">⚡ Off-Peak Deals</a>
+          <span style="font-size:10px;color:#6B7280;margin-top:1px">Save up to 75%</span>
+        </div>
+      </li>
+      <li>
+        <div style="display:flex;flex-direction:column;line-height:1.1">
+          <a href="negotiate.html" style="color:#6B7280;font-weight:600;font-size:14px;text-decoration:none">🤝 AI Negotiator</a>
+          <span style="font-size:10px;color:#6B7280;margin-top:1px">Personal AI agent</span>
+        </div>
+      </li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+          <a href="booking.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px">🛎️ BookNow</a>
+          <span style="font-size:10px;color:#6B7280;margin-top:1px">Zero commission</span>
+        </div></li>
+      <li class="has-mega">
+        <a href="merchants.html" style="display:flex;align-items:center;gap:4px">💼 For Merchants <span style="font-size:10px">▾</span></a>
+        <div class="mega-drop">
+          <div class="mega-col">
+            <div class="mega-col-head">🏪 Merchant OS</div>
+            <a href="merchants.html" class="mega-item">
+              <div class="mega-icon" style="background:rgba(29,158,117,.1)">📊</div>
+              <div><div class="mega-item-name">Merchant OS</div><div class="mega-item-desc">Full SaaS platform for salons, spas, gyms &amp; clinics</div></div>
+            </a>
+            <div style="margin-top:12px"><div class="mega-sub-head">Includes</div>
+            <div class="mega-chips"><span class="mega-chip">📅 Bookings</span><span class="mega-chip">👥 Staff</span><span class="mega-chip">📈 Analytics</span><span class="mega-chip">💰 Payments</span></div></div>
+            <a href="merchants.html" class="mega-cta">Explore Merchant OS →</a>
+          </div>
+          <div class="mega-divider-v"></div>
+          <div class="mega-col">
+            <div class="mega-col-head">🤖 AI Agents</div>
+            <a href="ai-agents.html" class="mega-item">
+              <div class="mega-icon" style="background:rgba(139,92,246,.1)">🤖</div>
+              <div><div class="mega-item-name">AI Agents Platform</div><div class="mega-item-desc">22 AI workers that run your business 24/7</div></div>
+            </a>
+            <div class="mega-sub-head">General Agents</div>
+            <div class="mega-chips"><span class="mega-chip">💰 Revenue</span><span class="mega-chip">😊 Customer Cx</span><span class="mega-chip">⚙️ Operations</span><span class="mega-chip">📣 Marketing</span></div>
+            <div class="mega-sub-head">Vertical Agents</div>
+            <div class="mega-chips"><span class="mega-chip">💇 Salon &amp; Spa</span><span class="mega-chip">🏋️ Gym</span><span class="mega-chip">🍽️ Restaurant</span><span class="mega-chip">🏥 Clinic</span></div>
+            <a href="ai-agents.html" class="mega-cta">Explore AI Agents →</a>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-ghost">Log in</button>
+      <button class="btn-primary">Sign up free</button>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html#deals">⚡ Off-Peak Deals</a>
+    <a href="negotiate.html">🤝 AI Negotiator</a>
+    <a href="booking.html" style="color:#1D9E75;font-weight:700;">🛎️ BookNow</a>
+    <a href="merchants.html">💼 Merchant OS</a>
+    <a href="ai-agents.html">🤖 AI Agents</a>
+    <a href="#">Log in</a>
+  </div>
+</nav>
+
+<div class="trust-bar">
+  <div class="trust-step"><div class="trust-step-icon">🔍</div><div><div class="trust-step-title">Search</div><div class="trust-step-sub">Find local services</div></div></div>
+  <div class="trust-arrow">→</div>
+  <div class="trust-step"><div class="trust-step-icon">📅</div><div><div class="trust-step-title">Pick a slot</div><div class="trust-step-sub">Choose date &amp; time</div></div></div>
+  <div class="trust-arrow">→</div>
+  <div class="trust-step"><div class="trust-step-icon">✅</div><div><div class="trust-step-title">Show up &amp; enjoy</div><div class="trust-step-sub">Pay directly at the store</div></div></div>
+  <div class="trust-badge">🎉 Zero platform fees &nbsp;·&nbsp; No hidden charges &nbsp;·&nbsp; Always free to book</div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  VIEW 1: SEARCH LANDING                   -->
+<!-- ══════════════════════════════════════════ -->
+<div id="view-search">
+
+  <section class="search-hero">
+    <div class="search-hero-inner">
+      <div class="sh-eyebrow">✦ 2,400+ venues · Bengaluru</div>
+      <h1>Discover and book<br>local services <em>near you</em></h1>
+      <p>Top-rated salons, spas, gyms &amp; clinics. Instant booking, no fees.</p>
+      <div class="search-bar-wrap">
+        <div class="sb-field">
+          <span class="sb-icon">📍</span>
+          <input id="sb-loc" type="text" placeholder="Koramangala, Bengaluru" />
+        </div>
+        <div class="sb-divider"></div>
+        <div class="sb-field">
+          <span class="sb-icon">🔍</span>
+          <input id="sb-svc" type="text" placeholder="Haircut, massage, yoga..." onkeydown="if(event.key==='Enter')doSearch()" />
+        </div>
+        <button class="sb-btn" onclick="doSearch()">Search</button>
+      </div>
+      <div class="popular-chips">
+        <span class="pop-label">Popular:</span>
+        <button class="pop-chip" onclick="quickSearch('Haircut')">✂️ Haircut</button>
+        <button class="pop-chip" onclick="quickSearch('Massage')">💆 Massage</button>
+        <button class="pop-chip" onclick="quickSearch('Facial')">✨ Facial</button>
+        <button class="pop-chip" onclick="quickSearch('Yoga')">🧘 Yoga</button>
+        <button class="pop-chip" onclick="quickSearch('Nails')">💅 Nails</button>
+        <button class="pop-chip" onclick="quickSearch('MedSpa')">💉 MedSpa</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <div class="cat-section">
+    <div class="sec-title">Browse by category</div>
+    <div class="cat-grid" id="cat-grid"></div>
+  </div>
+
+  <!-- FEATURED -->
+  <div class="featured-section">
+    <div class="fs-header">
+      <div class="fs-title">Featured near you</div>
+      <a class="fs-see-all" onclick="showAllResults()">See all →</a>
+    </div>
+    <div class="venues-grid" id="featured-grid"></div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  VIEW 2: SEARCH RESULTS                   -->
+<!-- ══════════════════════════════════════════ -->
+<div id="view-results" style="display:none">
+
+  <div class="results-header">
+    <div class="results-header-inner">
+      <div class="breadcrumb"><a onclick="showView('search')">Home</a><span>›</span><span id="bread-label">Results</span></div>
+      <div class="results-count" id="results-count">0 venues found</div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-bar-inner">
+      <button class="filter-btn on" id="f-all" onclick="applyFilter('all',this)">All</button>
+      <button class="filter-btn" id="f-today" onclick="applyFilter('today',this)">⚡ Available today</button>
+      <button class="filter-btn" id="f-rating" onclick="applyFilter('rating',this)">⭐ Top rated (4.8+)</button>
+      <button class="filter-btn" id="f-nearby" onclick="applyFilter('nearby',this)">📍 Nearby (&lt;1 km)</button>
+      <select class="sort-select" onchange="applySort(this.value)">
+        <option value="rel">Sort: Relevance</option>
+        <option value="rating">Sort: Rating</option>
+        <option value="dist">Sort: Distance</option>
+        <option value="price">Sort: Price (low)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="results-body">
+    <div class="results-grid" id="results-grid"></div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  VIEW 3: VENUE DETAIL + BOOKING           -->
+<!-- ══════════════════════════════════════════ -->
+<div id="view-venue" style="display:none">
+
+  <div class="venue-detail-header" id="vd-banner">
+    <button class="vd-back" onclick="goBackFromVenue()">← Back to results</button>
+    <div class="vd-header-info">
+      <div class="vd-name" id="vd-name"></div>
+      <div class="vd-meta-row">
+        <div class="vd-rating"><span class="star">★</span><span id="vd-rating"></span></div>
+        <span class="dot">·</span>
+        <span id="vd-reviews"></span>
+        <span class="dot">·</span>
+        <span id="vd-dist"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="vd-info-bar">
+    <div class="vd-info-bar-inner">
+      <div class="vd-info-item">📍 <span id="vd-addr"></span></div>
+      <div class="vd-info-item">🕐 <span id="vd-hours"></span></div>
+      <div class="vd-open-badge" id="vd-open-badge">Open now</div>
+      <div class="vd-info-item" style="margin-left:auto">💰 From <strong id="vd-from"></strong></div>
+    </div>
+  </div>
+
+  <div class="vd-tabs">
+    <div class="vd-tabs-inner">
+      <div class="vd-tab active" onclick="switchTab('services',this)">Services</div>
+      <div class="vd-tab" onclick="switchTab('staff',this)">Staff</div>
+      <div class="vd-tab" onclick="switchTab('reviews',this)">Reviews</div>
+      <div class="vd-tab" onclick="switchTab('info',this)">Info</div>
+    </div>
+  </div>
+
+  <div class="vd-body">
+    <!-- LEFT: service list -->
+    <div>
+      <div id="tab-services">
+        <div class="svc-list" id="svc-list"></div>
+      </div>
+      <div id="tab-staff" style="display:none">
+        <div id="staff-tab-content"></div>
+      </div>
+      <div id="tab-reviews" style="display:none">
+        <div id="reviews-content"></div>
+      </div>
+      <div id="tab-info" style="display:none">
+        <div id="info-content"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: booking panel -->
+    <div class="booking-panel">
+      <div class="bp-card">
+        <div class="bp-header">
+          <div class="bp-title">Book an appointment</div>
+          <div class="bp-sub" id="bp-svc-chosen">Select a service to continue</div>
+        </div>
+
+        <!-- Staff scroll -->
+        <div style="border-bottom:1px solid var(--border)">
+          <div style="padding:12px 16px 4px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px">Staff</div>
+          <div class="staff-scroll" id="staff-scroll"></div>
+        </div>
+
+        <!-- Mini Calendar -->
+        <div class="mini-cal">
+          <div class="mc-nav">
+            <div class="mc-month" id="mc-month"></div>
+            <div style="display:flex;gap:6px">
+              <button class="mc-arrow" onclick="mcChangeMonth(-1)">‹</button>
+              <button class="mc-arrow" onclick="mcChangeMonth(1)">›</button>
+            </div>
+          </div>
+          <div class="mc-days-header">
+            <div class="mc-dh">Su</div><div class="mc-dh">Mo</div><div class="mc-dh">Tu</div>
+            <div class="mc-dh">We</div><div class="mc-dh">Th</div><div class="mc-dh">Fr</div><div class="mc-dh">Sa</div>
+          </div>
+          <div class="mc-days" id="mc-days"></div>
+        </div>
+
+        <!-- Time slots -->
+        <div class="slots-wrap" id="slots-wrap">
+          <div class="slots-empty">Select a date to see available times</div>
+        </div>
+
+        <!-- Booking form (shown after slot picked) -->
+        <div id="bp-form-area" style="display:none">
+          <div class="bp-form">
+            <div class="bp-summary" id="bp-summary"></div>
+            <div class="bp-2col">
+              <div class="bp-form-row"><label>First name</label><input id="bf-first" placeholder="Jane" /></div>
+              <div class="bp-form-row"><label>Last name</label><input id="bf-last" placeholder="Smith" /></div>
+            </div>
+            <div class="bp-form-row"><label>Email</label><input id="bf-email" type="email" placeholder="jane@email.com" /></div>
+            <div class="bp-form-row"><label>Phone</label><input id="bf-phone" type="tel" placeholder="+91 98765 43210" /></div>
+            <div class="bp-form-row"><label>Notes</label><textarea id="bf-notes" rows="2" placeholder="Any requests..."></textarea></div>
+            <button class="btn-confirm" onclick="submitBooking()">Confirm Appointment →</button>
+          </div>
+        </div>
+        <div id="bp-no-sel" class="no-sel-msg">👆 Choose a service from the list to start booking</div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ MY APPOINTMENTS ══ -->
+<div class="appt-section" id="appt-section">
+  <div class="sec-h">My Appointments</div>
+  <div class="sec-sub">Manage your upcoming and past bookings</div>
+  <div class="appt-tabs">
+    <button class="appt-tab active" onclick="filterAppts(this,'upcoming')">Upcoming</button>
+    <button class="appt-tab" onclick="filterAppts(this,'past')">Past</button>
+    <button class="appt-tab" onclick="filterAppts(this,'cancelled')">Cancelled</button>
+  </div>
+  <div class="appt-list" id="appt-list"></div>
+</div>
+
+<!-- ══ WAITLIST ══ -->
+<div class="waitlist-section">
+  <div class="wl-inner">
+    <div class="wl-badge">⏳ Smart Waitlist</div>
+    <h2>No slots available?<br>We'll notify you first.</h2>
+    <p>Our AI monitors cancellations 24/7 and books you in the moment a slot opens.</p>
+    <div class="wl-form">
+      <input class="wl-input" id="wl-phone" type="tel" placeholder="Your phone number" />
+      <button class="btn-wl" onclick="joinWaitlist()">Join Waitlist</button>
+    </div>
+    <div class="wl-count"><strong id="wl-num">12 people</strong> on waitlist · Avg wait: <strong>2 days</strong></div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="f-logo">✨ Genoti <span>AI</span></div>
+      <div class="f-tagline">Smart booking &amp; appointment platform for beauty, wellness &amp; fitness businesses.</div>
+    </div>
+    <div class="footer-col">
+      <h4>Booking</h4>
+      <ul>
+        <li><a href="#">Book appointment</a></li>
+        <li><a href="#">My bookings</a></li>
+        <li><a href="#">Waitlist</a></li>
+        <li><a href="#">Cancellation policy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Businesses</h4>
+      <ul>
+        <li><a href="merchants.html">For Merchants</a></li>
+        <li><a href="#">Staff management</a></li>
+        <li><a href="#">Analytics</a></li>
+        <li><a href="#">Pricing</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+    <div style="display:flex;gap:16px"><a href="#">Twitter</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+  </div>
+</footer>
+
+<!-- ══ AI CHAT ══ -->
+<button class="ai-fab" id="ai-fab" onclick="toggleChat()">🤖<span class="fab-dot" id="fab-dot">1</span></button>
+<div class="chat-panel" id="chat-panel">
+  <div class="chat-hdr">
+    <div class="chat-av">🤖</div>
+    <div><div class="cn">OffPeak AI Agent</div><div class="cs">● Online · Booking assistant</div></div>
+    <button class="chat-x" onclick="toggleChat()">×</button>
+  </div>
+  <div class="chat-msgs" id="chat-msgs"></div>
+  <div class="chat-qbtns">
+    <button class="qbtn" onclick="qMsg('Find salons near me')">💇 Salons</button>
+    <button class="qbtn" onclick="qMsg('Book a massage')">💆 Massage</button>
+    <button class="qbtn" onclick="qMsg('Cancel my booking')">✕ Cancel</button>
+    <button class="qbtn" onclick="qMsg('Join waitlist')">⏳ Waitlist</button>
+  </div>
+  <div class="chat-inp-row">
+    <input class="chat-inp" id="chat-inp" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')sendChat()" />
+    <button class="chat-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<!-- CANCEL MODAL -->
+<div class="modal-overlay" id="m-cancel">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m-cancel')">×</button>
+    <div style="text-align:center">
+      <div class="confirm-icon" style="background:rgba(239,68,68,.1)">❌</div>
+      <div class="modal-title">Cancel appointment?</div>
+      <div class="modal-sub" id="cancel-detail">This cannot be undone.</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn-sm btn-rs" style="flex:1;padding:12px" onclick="closeModal('m-cancel')">Keep it</button>
+      <button style="flex:1;padding:12px;border-radius:8px;border:none;background:#EF4444;color:white;font-size:13px;font-weight:700;cursor:pointer" onclick="confirmCancel()">Yes, cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESCHEDULE MODAL -->
+<div class="modal-overlay" id="m-resched">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m-resched')">×</button>
+    <div class="modal-title">Reschedule</div>
+    <div class="modal-sub" id="resched-detail">Choose a new time.</div>
+    <div class="bp-form-row" style="margin-top:14px"><label>New date</label><input type="date" id="r-date" /></div>
+    <div class="bp-form-row"><label>New time</label>
+      <select id="r-time">
+        <option>9:00 AM</option><option>9:30 AM</option><option>10:00 AM</option>
+        <option>10:30 AM</option><option>11:00 AM</option><option>11:30 AM</option>
+        <option>12:00 PM</option><option>2:00 PM</option><option>2:30 PM</option>
+        <option>3:00 PM</option><option>3:30 PM</option><option>4:00 PM</option>
+      </select>
+    </div>
+    <button class="btn-confirm" style="margin-top:8px" onclick="confirmReschedule()">Confirm Reschedule →</button>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="m-success">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m-success')">×</button>
+    <div style="text-align:center;padding:8px 0">
+      <div class="confirm-icon" style="background:rgba(29,158,117,.1)">✅</div>
+      <div class="modal-title" id="suc-title">Done!</div>
+      <div class="modal-sub" id="suc-detail" style="margin-bottom:0"></div>
+      <button class="btn-confirm" style="margin-top:18px" onclick="closeModal('m-success')">Great!</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────
+   DATA
+───────────────────────────────────────────── */
+const CATS = [
+  {id:'health',   icon:'🏥', name:'Health & Medical',  sub:'Doctors · Clinics · Dentists · Labs · Diagnostics', grad:'linear-gradient(135deg,#14B8A6,#0F766E)'},
+  {id:'beauty',   icon:'💇', name:'Beauty & Wellness',  sub:'Salons · Spa · MedSpa · Laser Clinics',            grad:'linear-gradient(135deg,#EC4899,#9D174D)'},
+  {id:'fitness',  icon:'🏋️', name:'Fitness & Sports',   sub:'Gyms · Yoga · Personal Training · Sports',         grad:'linear-gradient(135deg,#EF4444,#991B1B)'},
+  {id:'food',     icon:'🍽️', name:'Food & Cafes',        sub:'Restaurants · Cafes',                              grad:'linear-gradient(135deg,#F59E0B,#B45309)'},
+  {id:'home',     icon:'🔧', name:'Home Services',       sub:'Cleaning · Repair · Maintenance',                  grad:'linear-gradient(135deg,#3B82F6,#1D4ED8)'},
+  {id:'pets',     icon:'🐾', name:'Pet Care',            sub:'Veterinary · Grooming',                            grad:'linear-gradient(135deg,#8B5CF6,#5B21B6)'},
+  {id:'coaching', icon:'📚', name:'Coaching',            sub:'Coaching · Training',                              grad:'linear-gradient(135deg,#1D9E75,#085041)'},
+];
+
+const VENUES = [
+  {id:1,name:'Glam Studio',type:'salon',tags:['Hair','Color','Blowout'],rating:4.9,reviews:312,dist:'0.4 km',distKm:.4,area:'Koramangala',addr:'12, 5th Block, Koramangala',hours:'9 AM – 8 PM',from:'₹400',avail:'today',grad:'linear-gradient(135deg,#1D9E75,#085041)',emoji:'💇',fav:false},
+  {id:2,name:'The Zen Spa',type:'spa',tags:['Massage','Facial','Body Wrap'],rating:4.8,reviews:189,dist:'0.7 km',distKm:.7,area:'Indiranagar',addr:'45, 12th Main, Indiranagar',hours:'10 AM – 9 PM',from:'₹900',avail:'today',grad:'linear-gradient(135deg,#7C3AED,#4C1D95)',emoji:'🧖',fav:false},
+  {id:3,name:'FitLife Studio',type:'fitness',tags:['Yoga','Pilates','HIIT'],rating:4.7,reviews:241,dist:'1.1 km',distKm:1.1,area:'HSR Layout',addr:'27, Sector 4, HSR Layout',hours:'6 AM – 10 PM',from:'₹400',avail:'today',grad:'linear-gradient(135deg,#F59E0B,#B45309)',emoji:'🏃',fav:false},
+  {id:4,name:'PowerGym',type:'gym',tags:['Personal Training','Spin','CrossFit'],rating:4.9,reviews:156,dist:'0.9 km',distKm:.9,area:'Whitefield',addr:'88, ITPL Road, Whitefield',hours:'5 AM – 11 PM',from:'₹300',avail:'tomorrow',grad:'linear-gradient(135deg,#EF4444,#991B1B)',emoji:'🏋️',fav:false},
+  {id:5,name:'Glow MedSpa',type:'medspa',tags:['Botox','Laser','PRP'],rating:5.0,reviews:98,dist:'1.4 km',distKm:1.4,area:'MG Road',addr:'3, Brigade Road, MG Road',hours:'10 AM – 7 PM',from:'₹500',avail:'today',grad:'linear-gradient(135deg,#3B82F6,#1D4ED8)',emoji:'💉',fav:false},
+  {id:6,name:'CityClinic',type:'clinic',tags:['Consultation','Physio','Screening'],rating:4.8,reviews:427,dist:'0.5 km',distKm:.5,area:'JP Nagar',addr:'18, Phase 2, JP Nagar',hours:'8 AM – 8 PM',from:'₹150',avail:'today',grad:'linear-gradient(135deg,#14B8A6,#0F766E)',emoji:'🏥',fav:false},
+  {id:7,name:'Curl & Color',type:'salon',tags:['Color','Keratin','Nails'],rating:4.6,reviews:203,dist:'1.8 km',distKm:1.8,area:'Bellandur',addr:'56, Outer Ring Road, Bellandur',hours:'9 AM – 8 PM',from:'₹350',avail:'full',grad:'linear-gradient(135deg,#EC4899,#9D174D)',emoji:'💇',fav:false},
+  {id:8,name:'Serenity Spa',type:'spa',tags:['Hot Stone','Manicure','Facial'],rating:4.8,reviews:134,dist:'2.1 km',distKm:2.1,area:'Marathahalli',addr:'9, Outer Ring Road, Marathahalli',hours:'10 AM – 9 PM',from:'₹800',avail:'today',grad:'linear-gradient(135deg,#0EA5E9,#0369A1)',emoji:'🧖',fav:false},
+  {id:9,name:'YogaFlow',type:'fitness',tags:['Yoga','Meditation','Pilates'],rating:4.9,reviews:178,dist:'0.6 km',distKm:.6,area:'BTM Layout',addr:'33, 2nd Stage, BTM Layout',hours:'6 AM – 9 PM',from:'₹350',avail:'today',grad:'linear-gradient(135deg,#8B5CF6,#5B21B6)',emoji:'🧘',fav:false},
+  {id:10,name:'NailArt Studio',type:'nails',tags:['Manicure','Pedicure','Gel Nails'],rating:4.7,reviews:89,dist:'0.3 km',distKm:.3,area:'Koramangala',addr:'7, 1st Cross, Koramangala',hours:'10 AM – 8 PM',from:'₹500',avail:'tomorrow',grad:'linear-gradient(135deg,#EC4899,#9D174D)',emoji:'💅',fav:false},
+  {id:11,name:'Elite Physique',type:'gym',tags:['Strength','Boxing','Recovery'],rating:4.8,reviews:267,dist:'1.3 km',distKm:1.3,area:'Jayanagar',addr:'14, 4th Block, Jayanagar',hours:'5 AM – 10 PM',from:'₹250',avail:'today',grad:'linear-gradient(135deg,#EF4444,#7F1D1D)',emoji:'🏋️',fav:false},
+  {id:12,name:'DermaCare Clinic',type:'medspa',tags:['Chemical Peel','Microneedling','Laser'],rating:4.9,reviews:143,dist:'0.8 km',distKm:.8,area:'Jayanagar',addr:'22, 5th Main, Jayanagar',hours:'9 AM – 7 PM',from:'₹800',avail:'today',grad:'linear-gradient(135deg,#6366F1,#3730A3)',emoji:'💉',fav:false},
+
+  /* ── Health & Medical ── */
+  {id:13,name:'Dr. Smile Dental',type:'dental',tags:['Teeth Cleaning','Root Canal','Braces'],rating:4.9,reviews:203,dist:'1.5 km',distKm:1.5,area:'Koramangala',addr:'22, 4th Block, Koramangala',hours:'9 AM – 7 PM',from:'₹449',avail:'today',grad:'linear-gradient(135deg,#14B8A6,#0F766E)',emoji:'🦷',fav:false},
+  {id:14,name:'Healify Clinics',type:'clinic',tags:['General Physician','Paediatrics','Gynaecology'],rating:4.8,reviews:376,dist:'0.7 km',distKm:.7,area:'Indiranagar',addr:'8, 1st Stage, Indiranagar',hours:'8 AM – 9 PM',from:'₹199',avail:'today',grad:'linear-gradient(135deg,#10B981,#047857)',emoji:'🩺',fav:false},
+  {id:15,name:'ClearVision Eye Care',type:'eye',tags:['Eye Check-up','Lasik Consult','Contact Lens'],rating:4.7,reviews:145,dist:'1.1 km',distKm:1.1,area:'HSR Layout',addr:'5, Sector 7, HSR Layout',hours:'9 AM – 6 PM',from:'₹249',avail:'today',grad:'linear-gradient(135deg,#6366F1,#4338CA)',emoji:'👁️',fav:false},
+
+  /* ── Beauty & Wellness ── */
+  {id:16,name:'LaserZone Clinic',type:'laser',tags:['Laser Hair Removal','Skin Rejuvenation','PRP'],rating:4.9,reviews:167,dist:'0.8 km',distKm:.8,area:'Jayanagar',addr:'15, 4th Main, Jayanagar',hours:'10 AM – 7 PM',from:'₹800',avail:'today',grad:'linear-gradient(135deg,#EC4899,#BE185D)',emoji:'✨',fav:false},
+  {id:17,name:'Studio 11 Salon',type:'salon',tags:['Hair Spa','Nail Art','Threading'],rating:4.6,reviews:294,dist:'0.6 km',distKm:.6,area:'BTM Layout',addr:'44, 6th Main, BTM Layout',hours:'9 AM – 8 PM',from:'₹350',avail:'today',grad:'linear-gradient(135deg,#F472B6,#BE185D)',emoji:'💇',fav:false},
+
+  /* ── Fitness & Sports ── */
+  {id:18,name:'AquaFit Sports Club',type:'swim',tags:['Swimming','Aqua Aerobics','Diving'],rating:4.8,reviews:123,dist:'1.8 km',distKm:1.8,area:'Whitefield',addr:'12, EPIP Zone, Whitefield',hours:'6 AM – 9 PM',from:'₹149',avail:'today',grad:'linear-gradient(135deg,#0EA5E9,#0369A1)',emoji:'🏊',fav:false},
+  {id:19,name:'The Box CrossFit',type:'gym',tags:['CrossFit','Olympic Lifting','Conditioning'],rating:4.8,reviews:198,dist:'1.3 km',distKm:1.3,area:'Koramangala',addr:'67, 3rd Block, Koramangala',hours:'5:30 AM – 9 PM',from:'₹199',avail:'today',grad:'linear-gradient(135deg,#EF4444,#B91C1C)',emoji:'🥊',fav:false},
+  {id:20,name:'Iron Arena Gym',type:'gym',tags:['Personal Training','Strength','Body Transformation'],rating:4.9,reviews:315,dist:'0.6 km',distKm:.6,area:'Bannerghatta Rd',addr:'9, Bannerghatta Road, JP Nagar',hours:'5 AM – 11 PM',from:'₹149',avail:'today',grad:'linear-gradient(135deg,#EF4444,#7F1D1D)',emoji:'🏋️',fav:false},
+  {id:21,name:'Breathe Yoga Studio',type:'yoga',tags:['Hatha Yoga','Pranayama','Meditation'],rating:4.9,reviews:211,dist:'1.0 km',distKm:1.0,area:'Indiranagar',addr:'47, 12th Cross, Indiranagar',hours:'6 AM – 9 PM',from:'₹99',avail:'today',grad:'linear-gradient(135deg,#8B5CF6,#6D28D9)',emoji:'🧘',fav:false},
+
+  /* ── Food & Dining ── */
+  {id:22,name:'Copper Chimney Bistro',type:'restaurant',tags:['North Indian','Mughlai','Thali'],rating:4.8,reviews:532,dist:'0.8 km',distKm:.8,area:'Koramangala',addr:'34, 5th Block, Koramangala',hours:'12 PM – 11 PM',from:'₹349',avail:'today',grad:'linear-gradient(135deg,#F59E0B,#92400E)',emoji:'🍜',fav:false},
+  {id:23,name:'The Third Wave Café',type:'cafe',tags:['Specialty Coffee','Brunch','Working Space'],rating:4.7,reviews:287,dist:'0.3 km',distKm:.3,area:'Indiranagar',addr:'100 Feet Road, Indiranagar',hours:'8 AM – 10 PM',from:'₹149',avail:'today',grad:'linear-gradient(135deg,#92400E,#78350F)',emoji:'☕',fav:false},
+  {id:24,name:'The Grand Table',type:'restaurant',tags:['Continental','Buffet','Fine Dining'],rating:4.9,reviews:412,dist:'1.4 km',distKm:1.4,area:'MG Road',addr:'5, Brigade Road, MG Road',hours:'12 PM – 11 PM',from:'₹499',avail:'today',grad:'linear-gradient(135deg,#F59E0B,#B45309)',emoji:'🥗',fav:false},
+  {id:25,name:'Brick & Dough',type:'cafe',tags:['Pizza','Pasta','Desserts'],rating:4.6,reviews:194,dist:'0.5 km',distKm:.5,area:'HSR Layout',addr:'22, 27th Main, HSR Layout',hours:'11 AM – 11 PM',from:'₹299',avail:'today',grad:'linear-gradient(135deg,#EF4444,#DC2626)',emoji:'🍕',fav:false},
+
+  /* ── Diagnostics ── */
+  {id:26,name:'HealthFirst Diagnostics',type:'diagnostic',tags:['Blood Tests','Full Body Check','Diabetes Panel'],rating:4.9,reviews:318,dist:'0.9 km',distKm:.9,area:'Koramangala',addr:'40, 5th Cross, Koramangala',hours:'7 AM – 8 PM',from:'₹399',avail:'today',grad:'linear-gradient(135deg,#EF4444,#DC2626)',emoji:'🩸',fav:false},
+  {id:27,name:'ClearScan Imaging Centre',type:'imaging',tags:['X-Ray','Ultrasound','CT Scan','MRI'],rating:4.8,reviews:189,dist:'1.1 km',distKm:1.1,area:'HSR Layout',addr:'18, Sector 2, HSR Layout',hours:'8 AM – 8 PM',from:'₹199',avail:'today',grad:'linear-gradient(135deg,#3B82F6,#1D4ED8)',emoji:'🫁',fav:false},
+  {id:28,name:'MedLab Express',type:'diagnostic',tags:['Thyroid Profile','Lipid Panel','Urine Analysis'],rating:4.7,reviews:241,dist:'0.7 km',distKm:.7,area:'Indiranagar',addr:'28, CMH Road, Indiranagar',hours:'7 AM – 7 PM',from:'₹249',avail:'today',grad:'linear-gradient(135deg,#10B981,#059669)',emoji:'🔬',fav:false},
+  {id:29,name:'Precision Scan & Diagnostics',type:'imaging',tags:['MRI','Ultrasound Abdomen','2D Echo'],rating:4.8,reviews:176,dist:'1.6 km',distKm:1.6,area:'Jayanagar',addr:'12, 9th Block, Jayanagar',hours:'8 AM – 8 PM',from:'₹599',avail:'today',grad:'linear-gradient(135deg,#6366F1,#4338CA)',emoji:'🧠',fav:false},
+];
+
+const SERVICES_BY_TYPE = {
+  salon:[{n:'Haircut & Style',d:'45 min',p:'₹600'},{n:'Hair Color',d:'90 min',p:'₹1,800'},{n:'Blowout',d:'30 min',p:'₹400'},{n:'Keratin Treatment',d:'120 min',p:'₹3,500'},{n:'Hair Spa',d:'60 min',p:'₹900'},{n:'Beard Trim',d:'20 min',p:'₹200'}],
+  spa:[{n:'Swedish Massage',d:'60 min',p:'₹1,200'},{n:'Deep Tissue',d:'90 min',p:'₹1,800'},{n:'Hydrating Facial',d:'60 min',p:'₹1,500'},{n:'Body Wrap',d:'75 min',p:'₹2,000'},{n:'Manicure & Pedicure',d:'90 min',p:'₹800'},{n:'Hot Stone Therapy',d:'75 min',p:'₹2,200'}],
+  fitness:[{n:'Personal Training',d:'60 min',p:'₹1,500'},{n:'Yoga Class',d:'60 min',p:'₹500'},{n:'Pilates Session',d:'45 min',p:'₹700'},{n:'HIIT Class',d:'45 min',p:'₹400'},{n:'Nutrition Consult',d:'30 min',p:'₹600'}],
+  gym:[{n:'Personal Training',d:'60 min',p:'₹1,200'},{n:'Spin Class',d:'45 min',p:'₹350'},{n:'CrossFit Session',d:'60 min',p:'₹500'},{n:'Boxing Training',d:'60 min',p:'₹900'},{n:'Recovery & Stretch',d:'30 min',p:'₹300'}],
+  medspa:[{n:'Botox Consultation',d:'30 min',p:'₹500'},{n:'Filler Treatment',d:'45 min',p:'₹8,000'},{n:'Laser Hair Removal',d:'60 min',p:'₹3,000'},{n:'Chemical Peel',d:'45 min',p:'₹2,500'},{n:'Microneedling',d:'60 min',p:'₹4,000'},{n:'PRP Therapy',d:'75 min',p:'₹6,000'}],
+  clinic:[{n:'General Consultation',d:'30 min',p:'₹400'},{n:'Follow-up Visit',d:'15 min',p:'₹200'},{n:'Health Screening',d:'60 min',p:'₹1,200'},{n:'Vaccination',d:'15 min',p:'₹150'},{n:'Physiotherapy',d:'45 min',p:'₹600'}],
+  nails:[{n:'Classic Manicure',d:'45 min',p:'₹500'},{n:'Gel Manicure',d:'60 min',p:'₹800'},{n:'Pedicure',d:'60 min',p:'₹600'},{n:'Nail Art',d:'30 min',p:'₹400'},{n:'Gel Removal',d:'20 min',p:'₹200'}],
+  yoga:[{n:'Yoga Class',d:'60 min',p:'₹350'},{n:'Meditation Session',d:'45 min',p:'₹300'},{n:'Pilates',d:'60 min',p:'₹500'},{n:'Power Yoga',d:'60 min',p:'₹400'}],
+  dental:[{n:'Teeth Cleaning & Polishing',d:'60 min',p:'₹449'},{n:'Root Canal Treatment',d:'90 min',p:'₹3,500'},{n:'Dental Check-up',d:'30 min',p:'₹200'},{n:'Teeth Whitening',d:'60 min',p:'₹2,500'},{n:'Braces Consultation',d:'30 min',p:'₹300'},{n:'Tooth Extraction',d:'30 min',p:'₹600'}],
+  eye:[{n:'Eye Check-up & Prescription',d:'30 min',p:'₹249'},{n:'Contact Lens Fitting',d:'20 min',p:'₹150'},{n:'Lasik Consultation',d:'45 min',p:'₹500'},{n:'Glaucoma Screening',d:'30 min',p:'₹400'},{n:'Retina Check-up',d:'45 min',p:'₹600'}],
+  laser:[{n:'Laser Hair Removal – Full Arms',d:'45 min',p:'₹1,500'},{n:'Laser Hair Removal – Full Legs',d:'60 min',p:'₹2,000'},{n:'Skin Rejuvenation',d:'45 min',p:'₹2,500'},{n:'PRP Hair Treatment',d:'60 min',p:'₹4,000'},{n:'Carbon Laser Peel',d:'45 min',p:'₹3,000'}],
+  swim:[{n:'Swimming Day Pass',d:'60 min',p:'₹149'},{n:'Aqua Aerobics Class',d:'45 min',p:'₹200'},{n:'Swimming Lessons (1 hr)',d:'60 min',p:'₹500'},{n:'Personal Swimming Coach',d:'60 min',p:'₹800'},{n:'Diving Intro Session',d:'45 min',p:'₹600'}],
+  restaurant:[{n:'Table for Two – Lunch',d:'90 min',p:'₹349'},{n:'Table for Two – Dinner',d:'90 min',p:'₹499'},{n:'Weekend Brunch Buffet',d:'120 min',p:'₹499'},{n:'Private Dining Room',d:'120 min',p:'₹1,200'}],
+  cafe:[{n:'Café Combo (Coffee + Snack)',d:'30 min',p:'₹149'},{n:'Brunch Platter (2 pax)',d:'60 min',p:'₹349'},{n:'Working Space – Half Day',d:'4 hr',p:'₹299'},{n:'Coffee Tasting Experience',d:'45 min',p:'₹250'}],
+  diagnostic:[{n:'Full Body Blood Test (65 tests)',d:'15 min',p:'₹399'},{n:'Thyroid Profile (T3, T4, TSH)',d:'15 min',p:'₹249'},{n:'Diabetes Panel (HbA1c)',d:'10 min',p:'₹199'},{n:'Lipid Profile',d:'10 min',p:'₹149'},{n:'CBC + Urine Analysis',d:'15 min',p:'₹299'}],
+  imaging:[{n:'Chest X-Ray (Digital)',d:'20 min',p:'₹199'},{n:'Ultrasound Abdomen (Full)',d:'30 min',p:'₹599'},{n:'CT Scan – Head',d:'30 min',p:'₹2,500'},{n:'MRI Brain',d:'45 min',p:'₹4,500'},{n:'2D Echo',d:'30 min',p:'₹1,200'}],
+};
+
+const STAFF_BY_TYPE = {
+  salon:[{n:'Priya S.',r:'Senior Stylist',star:'4.9',i:'PS'},{n:'Arjun M.',r:'Colorist',star:'4.8',i:'AM'},{n:'Neha R.',r:'Stylist',star:'4.7',i:'NR'}],
+  spa:[{n:'Kavya T.',r:'Lead Therapist',star:'5.0',i:'KT'},{n:'Rohan D.',r:'Therapist',star:'4.9',i:'RD'},{n:'Meera K.',r:'Esthetician',star:'4.8',i:'MK'}],
+  fitness:[{n:'Vikram N.',r:'Head Trainer',star:'5.0',i:'VN'},{n:'Ananya P.',r:'Yoga Instructor',star:'4.9',i:'AP'},{n:'Suresh B.',r:'Coach',star:'4.7',i:'SB'}],
+  gym:[{n:'Raj K.',r:'Head Coach',star:'4.9',i:'RK'},{n:'Deepa S.',r:'Spin Instructor',star:'4.8',i:'DS'},{n:'Arun V.',r:'Strength Coach',star:'4.9',i:'AV'}],
+  medspa:[{n:'Dr. Riya M.',r:'Medical Director',star:'5.0',i:'RM'},{n:'Dr. Karan S.',r:'Dermatologist',star:'4.9',i:'KS'},{n:'Nisha P.',r:'Laser Specialist',star:'4.8',i:'NP'}],
+  clinic:[{n:'Dr. Amit R.',r:'General Physician',star:'4.9',i:'AR'},{n:'Dr. Priya L.',r:'Specialist',star:'4.8',i:'PL'},{n:'Nurse Asha',r:'Senior Nurse',star:'5.0',i:'NA'}],
+  nails:[{n:'Rashi P.',r:'Nail Artist',star:'4.9',i:'RP'},{n:'Sneha K.',r:'Nail Tech',star:'4.7',i:'SK'}],
+  yoga:[{n:'Devika R.',r:'Senior Instructor',star:'5.0',i:'DR'},{n:'Ananya P.',r:'Yoga Instructor',star:'4.9',i:'AP'}],
+  dental:[{n:'Dr. Rahul S.',r:'Senior Dentist',star:'4.9',i:'RS'},{n:'Dr. Ananya T.',r:'Orthodontist',star:'4.8',i:'AT'},{n:'Dr. Priya M.',r:'Endodontist',star:'4.9',i:'PM'}],
+  eye:[{n:'Dr. Vijay K.',r:'Senior Ophthalmologist',star:'4.9',i:'VK'},{n:'Dr. Neha R.',r:'Optometrist',star:'4.8',i:'NR'},{n:'Dr. Suresh P.',r:'Retina Specialist',star:'4.9',i:'SP'}],
+  laser:[{n:'Dr. Sana K.',r:'Laser Specialist',star:'4.9',i:'SK'},{n:'Nisha P.',r:'Skin Therapist',star:'4.8',i:'NP'},{n:'Kavita R.',r:'PRP Specialist',star:'4.7',i:'KR'}],
+  swim:[{n:'Coach Arjun',r:'Head Swimming Coach',star:'5.0',i:'AJ'},{n:'Coach Divya',r:'Aqua Aerobics Trainer',star:'4.8',i:'DJ'}],
+  restaurant:[{n:'Mr. Rajesh',r:'Table Manager',star:'5.0',i:'RJ'},{n:'Ms. Priya',r:'Guest Relations',star:'4.9',i:'PY'}],
+  cafe:[{n:'Barista Sam',r:'Head Barista',star:'4.9',i:'BS'},{n:'Chef Nisha',r:'Brunch Chef',star:'4.8',i:'CN'}],
+  diagnostic:[{n:'Lab Tech Suresh',r:'Senior Phlebotomist',star:'4.9',i:'ST'},{n:'Ms. Divya',r:'Lab Manager',star:'4.8',i:'DV'}],
+  imaging:[{n:'Dr. Kiran M.',r:'Radiologist',star:'4.9',i:'KM'},{n:'Ms. Radha',r:'Imaging Technician',star:'4.8',i:'RD'}],
+};
+
+const SLOTS_BY_DOW = {
+  0:[], 1:['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','2:00 PM','2:30 PM','3:00 PM','4:00 PM','4:30 PM'],
+  2:['9:00 AM','9:30 AM','11:00 AM','11:30 AM','2:00 PM','3:30 PM','4:00 PM','5:00 PM'],
+  3:['10:00 AM','10:30 AM','11:00 AM','2:00 PM','2:30 PM','3:00 PM','4:30 PM'],
+  4:['9:00 AM','9:30 AM','10:30 AM','11:30 AM','1:00 PM','2:00 PM','3:00 PM','4:00 PM'],
+  5:['9:00 AM','10:00 AM','10:30 AM','11:00 AM','12:00 PM','2:30 PM','3:00 PM','4:00 PM'],
+  6:['10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','1:00 PM'],
+};
+
+const BOOKED_SLOTS = ['10:30 AM','2:00 PM','11:00 AM'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_S = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+/* ─────────────────────────────────────────────
+   STATE
+───────────────────────────────────────────── */
+let curView = 'search';
+let activeVenueId = null;
+let selSvcIdx = null, selStaffIdx = 0, selDate = null, selSlot = null;
+let mcMonth = new Date().getMonth(), mcYear = new Date().getFullYear();
+let cancelId = null, reschedId = null, apptCounter = 300;
+let chatReady = false, chatIsOpen = false;
+let activeFilter = 'all', activeSort = 'rel';
+let searchQuery = '', searchType = '';
+let prevView = 'search';
+
+let appts = [
+  {id:1,svc:'Haircut & Style',venue:'Glam Studio',staff:'Priya S.',day:14,mon:'Jun',time:'10:00 AM',status:'confirmed'},
+  {id:2,svc:'Swedish Massage',venue:'The Zen Spa',staff:'Kavya T.',day:18,mon:'Jun',time:'3:00 PM',status:'confirmed'},
+  {id:3,svc:'Yoga Class',venue:'YogaFlow',staff:'Ananya P.',day:7,mon:'Jun',time:'9:00 AM',status:'past'},
+  {id:4,svc:'Laser Hair Removal',venue:'Glow MedSpa',staff:'Nisha P.',day:28,mon:'May',time:'11:00 AM',status:'cancelled'},
+];
+
+/* ─────────────────────────────────────────────
+   VIEW MANAGEMENT
+───────────────────────────────────────────── */
+function showView(v) {
+  ['search','results','venue'].forEach(n => document.getElementById('view-'+n).style.display = n===v ? '' : 'none');
+  curView = v;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ─────────────────────────────────────────────
+   CATEGORIES
+───────────────────────────────────────────── */
+function renderCats() {
+  document.getElementById('cat-grid').innerHTML = CATS.map(c =>
+    `<button class="cat-tile" onclick="filterByType('${c.id}')">
+      <div class="cat-icon" style="background:${c.grad}">${c.icon}</div>
+      <div class="cat-name">${c.name}</div>
+      <div class="cat-sub">${c.sub}</div>
+    </button>`
+  ).join('');
+}
+
+const CAT_TYPES = {
+  health:  ['clinic','dental','eye'],
+  beauty:  ['salon','spa','medspa','nails','laser'],
+  fitness: ['fitness','gym','yoga','swim'],
+  food:    ['restaurant','cafe'],
+  home:    ['home'],
+  pets:    ['pets'],
+  coaching:['coaching'],
+  diagnostic:['diagnostic','imaging'],
+};
+
+function filterByType(type) {
+  searchType = type; searchQuery = '';
+  const cat = CATS.find(c => c.id === type);
+  const types = CAT_TYPES[type] || [type];
+  showResults(VENUES.filter(v => types.includes(v.type)), cat ? cat.name : type);
+}
+
+/* ─────────────────────────────────────────────
+   FEATURED GRID
+───────────────────────────────────────────── */
+function renderFeatured() {
+  const featured = VENUES.filter(v => v.avail === 'today').slice(0,12);
+  document.getElementById('featured-grid').innerHTML = featured.map(v => venueCardHTML(v)).join('');
+}
+
+function venueCardHTML(v) {
+  const availLabel = v.avail==='today' ? 'Available today' : v.avail==='tomorrow' ? 'Tomorrow' : 'Fully booked';
+  const availClass = v.avail==='today' ? 'avail-today' : v.avail==='tomorrow' ? 'avail-tomorrow' : 'avail-full';
+  return `<div class="venue-card" onclick="openVenue(${v.id})">
+    <div class="vc-banner" style="background:${v.grad}">
+      <span class="vc-avail ${availClass}">${availLabel}</span>
+      <button class="vc-fav" onclick="toggleFav(event,${v.id})" id="fav-${v.id}">${v.fav?'❤️':'🤍'}</button>
+      <span style="font-size:52px">${v.emoji}</span>
+    </div>
+    <div class="vc-body">
+      <div class="vc-name">${v.name}</div>
+      <div class="vc-meta">
+        <div class="vc-rating"><span class="star">★</span>${v.rating} <span style="font-weight:400;color:var(--muted)">(${v.reviews})</span></div>
+        <span>·</span><span>${v.dist}</span><span>·</span><span>${v.area}</span>
+      </div>
+      <div class="vc-tags">${v.tags.map(t=>`<span class="vc-tag">${t}</span>`).join('')}</div>
+      <div class="vc-footer">
+        <div class="vc-price">From <strong>${v.from}</strong></div>
+        <button class="vc-book-btn" onclick="event.stopPropagation();openVenue(${v.id})">Book now</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleFav(e, id) {
+  e.stopPropagation();
+  const v = VENUES.find(x => x.id === id);
+  if (!v) return;
+  v.fav = !v.fav;
+  const btn = document.getElementById('fav-'+id);
+  if (btn) btn.textContent = v.fav ? '❤️' : '🤍';
+}
+
+/* ─────────────────────────────────────────────
+   SEARCH
+───────────────────────────────────────────── */
+function doSearch() {
+  const loc = document.getElementById('sb-loc').value.trim();
+  const svc = document.getElementById('sb-svc').value.trim();
+  searchQuery = svc || loc;
+  const q = searchQuery.toLowerCase();
+  const filtered = VENUES.filter(v =>
+    !q ||
+    v.name.toLowerCase().includes(q) ||
+    v.type.toLowerCase().includes(q) ||
+    v.tags.some(t => t.toLowerCase().includes(q)) ||
+    v.area.toLowerCase().includes(q)
+  );
+  showResults(filtered, searchQuery || 'All venues');
+}
+
+function quickSearch(term) {
+  document.getElementById('sb-svc').value = term;
+  doSearch();
+}
+
+function showAllResults() {
+  showResults(VENUES, 'All venues');
+}
+
+function showResults(list, label) {
+  document.getElementById('bread-label').textContent = label;
+  document.getElementById('results-count').textContent = `${list.length} venue${list.length!==1?'s':''} found`;
+  renderResultsGrid(list);
+  showView('results');
+}
+
+function renderResultsGrid(list) {
+  const grid = document.getElementById('results-grid');
+  if (!list.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);font-size:15px">😕 No venues found. Try a different search.</div>'; return; }
+  grid.innerHTML = list.map(v => venueCardHTML(v)).join('');
+}
+
+function applyFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  let base = VENUES;
+  if (searchType) base = VENUES.filter(v => v.type === searchType);
+  else if (searchQuery) { const q = searchQuery.toLowerCase(); base = VENUES.filter(v => v.name.toLowerCase().includes(q)||v.type.toLowerCase().includes(q)||v.tags.some(t=>t.toLowerCase().includes(q))); }
+  let filtered = [...base];
+  if (f==='today') filtered = filtered.filter(v => v.avail==='today');
+  if (f==='rating') filtered = filtered.filter(v => v.rating>=4.8);
+  if (f==='nearby') filtered = filtered.filter(v => v.distKm<=1.0);
+  renderResultsGrid(sortVenues(filtered));
+}
+
+function applySort(s) {
+  activeSort = s;
+  let list = [...document.querySelectorAll('.venue-card')].map(el => {
+    const id = parseInt(el.querySelector('.vc-book-btn').getAttribute('onclick').match(/\d+/)[0]);
+    return VENUES.find(v => v.id===id);
+  }).filter(Boolean);
+  renderResultsGrid(sortVenues(list));
+}
+
+function sortVenues(list) {
+  const copy = [...list];
+  if (activeSort==='rating') copy.sort((a,b) => b.rating-a.rating);
+  else if (activeSort==='dist') copy.sort((a,b) => a.distKm-b.distKm);
+  else if (activeSort==='price') copy.sort((a,b) => parseInt(a.from.replace(/[^\d]/g,''))-parseInt(b.from.replace(/[^\d]/g,'')));
+  return copy;
+}
+
+/* ─────────────────────────────────────────────
+   VENUE DETAIL
+───────────────────────────────────────────── */
+function openVenue(id) {
+  prevView = curView;
+  activeVenueId = id;
+  selSvcIdx = null; selStaffIdx = 0; selDate = null; selSlot = null;
+  const v = VENUES.find(x => x.id===id);
+  if (!v) return;
+
+  // Header
+  document.getElementById('vd-banner').style.background = v.grad;
+  document.getElementById('vd-name').textContent = v.name;
+  document.getElementById('vd-rating').textContent = v.rating;
+  document.getElementById('vd-reviews').textContent = `${v.reviews} reviews`;
+  document.getElementById('vd-dist').textContent = v.dist;
+  document.getElementById('vd-addr').textContent = v.addr;
+  document.getElementById('vd-hours').textContent = v.hours;
+  document.getElementById('vd-from').textContent = v.from;
+
+  // Services
+  const svcs = SERVICES_BY_TYPE[v.type] || [];
+  document.getElementById('svc-list').innerHTML = svcs.map((s,i) =>
+    `<div class="svc-row" id="svc-row-${i}">
+      <div class="svc-dot"></div>
+      <div class="svc-info"><div class="svc-name">${s.n}</div><div class="svc-dur">⏱ ${s.d}</div></div>
+      <span class="svc-price-lbl">${s.p}</span>
+      <button class="svc-select-btn" id="svc-btn-${i}" onclick="pickSvc(${i})" >Select</button>
+    </div>`
+  ).join('');
+
+  // Staff
+  renderVenueStaff(v.type);
+
+  // Staff tab
+  const staffArr = [{n:'Any available',r:'No preference',star:'',i:'?'}, ...(STAFF_BY_TYPE[v.type]||[])];
+  document.getElementById('staff-tab-content').innerHTML = '<div style="display:flex;flex-direction:column;gap:10px;padding-top:8px">' +
+    staffArr.map((s,i) =>
+      `<div style="display:flex;align-items:center;gap:14px;padding:16px;background:white;border:1px solid var(--border);border-radius:12px">
+        <div style="width:44px;height:44px;border-radius:50%;background:${i===0?'linear-gradient(135deg,#E5E7EB,#D1D5DB)':'linear-gradient(135deg,#1D9E75,#085041)'};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:${i===0?'#6B7280':'white'}">${s.i}</div>
+        <div><div style="font-size:14px;font-weight:700">${s.n}</div><div style="font-size:12px;color:var(--muted)">${s.r}</div></div>
+        ${s.star?`<div style="margin-left:auto;font-size:13px;color:#FBBF24;font-weight:600">★ ${s.star}</div>`:''}
+      </div>`
+    ).join('') + '</div>';
+
+  // Reviews tab
+  const REVIEWS = ['Absolutely amazing! Booked in 30 seconds and the service was top-notch. 5/5','Super convenient booking experience. Staff was professional and on time.','Great value. Will definitely be back. The AI suggested exactly what I needed.','Booking was seamless. Venue was clean and staff very friendly. Highly recommend.'];
+  const NAMES = ['Priya K.','Rahul M.','Sneha P.','Arjun T.'];
+  document.getElementById('reviews-content').innerHTML = '<div style="display:flex;flex-direction:column;gap:14px;padding-top:8px">' +
+    REVIEWS.map((r,i) =>
+      `<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <strong style="font-size:14px">${NAMES[i]}</strong>
+          <span style="color:#FBBF24;font-size:13px">★★★★★</span>
+        </div>
+        <p style="font-size:13px;color:var(--muted)">${r}</p>
+      </div>`
+    ).join('') + '</div>';
+
+  // Info tab
+  document.getElementById('info-content').innerHTML =
+    `<div style="background:white;border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:8px;display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:15px;font-weight:700">${v.name}</div>
+      <div style="font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:8px">
+        <div>📍 ${v.addr}</div>
+        <div>🕐 ${v.hours}</div>
+        <div>⭐ ${v.rating} rating · ${v.reviews} reviews</div>
+        <div>📏 ${v.dist} from Koramangala</div>
+        <div>💰 Services from ${v.from}</div>
+      </div>
+    </div>`;
+
+  resetBookingPanel();
+  renderMiniCal();
+  showView('venue');
+  // reset tabs
+  document.querySelectorAll('.vd-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.vd-tab').classList.add('active');
+  ['tab-services','tab-staff','tab-reviews','tab-info'].forEach((id,i) => document.getElementById(id).style.display = i===0?'':'none');
+}
+
+function goBackFromVenue() {
+  showView(prevView === 'search' ? 'search' : 'results');
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.vd-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  ['services','staff','reviews','info'].forEach(t => document.getElementById('tab-'+t).style.display = t===tab?'':'none');
+}
+
+/* ─────────────────────────────────────────────
+   BOOKING IN VENUE
+───────────────────────────────────────────── */
+function renderVenueStaff(type) {
+  const staffArr = [{n:'Any',r:'',star:'',i:'?'}, ...(STAFF_BY_TYPE[type]||[])];
+  document.getElementById('staff-scroll').innerHTML = staffArr.map((s,i) =>
+    `<div class="staff-pill${selStaffIdx===i?' sel':''}" onclick="pickStaffVenue(${i})">
+      <div class="staff-av${i===0?' any':''}">${s.i}</div>
+      <div class="staff-pname">${s.n}</div>
+    </div>`
+  ).join('');
+}
+
+function pickStaffVenue(i) {
+  selStaffIdx = i;
+  const v = VENUES.find(x => x.id===activeVenueId);
+  if (v) renderVenueStaff(v.type);
+}
+
+function pickSvc(i) {
+  selSvcIdx = i;
+  selSlot = null;
+  const v = VENUES.find(x => x.id===activeVenueId);
+  const svcs = SERVICES_BY_TYPE[v.type] || [];
+  const svc = svcs[i];
+  document.querySelectorAll('.svc-row').forEach((r,idx) => {
+    r.classList.toggle('selected-svc', idx===i);
+    const btn = document.getElementById('svc-btn-'+idx);
+    if (btn) { btn.textContent = idx===i ? '✓ Selected' : 'Select'; btn.classList.toggle('picked', idx===i); }
+  });
+  document.getElementById('bp-svc-chosen').textContent = `${svc.n} · ${svc.d}`;
+  document.getElementById('bp-no-sel').style.display = 'none';
+  document.getElementById('bp-form-area').style.display = 'none';
+  renderMiniCal();
+}
+
+function resetBookingPanel() {
+  document.getElementById('bp-svc-chosen').textContent = 'Select a service to continue';
+  document.getElementById('bp-no-sel').style.display = '';
+  document.getElementById('bp-form-area').style.display = 'none';
+  document.getElementById('slots-wrap').innerHTML = '<div class="slots-empty">Select a date to see available times</div>';
+}
+
+/* ── MINI CALENDAR ── */
+function renderMiniCal() {
+  document.getElementById('mc-month').textContent = `${MONTHS[mcMonth]} ${mcYear}`;
+  const today = new Date();
+  const firstDay = new Date(mcYear, mcMonth, 1).getDay();
+  const daysIn = new Date(mcYear, mcMonth+1, 0).getDate();
+  const grid = document.getElementById('mc-days');
+  grid.innerHTML = '';
+  for (let i=0; i<firstDay; i++) { const e=document.createElement('div'); e.className='mc-day mc-empty'; grid.appendChild(e); }
+  for (let d=1; d<=daysIn; d++) {
+    const date = new Date(mcYear,mcMonth,d);
+    const dow = date.getDay();
+    const isPast = date < new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const isToday = d===today.getDate()&&mcMonth===today.getMonth()&&mcYear===today.getFullYear();
+    const isSel = selDate&&selDate.getDate()===d&&selDate.getMonth()===mcMonth&&selDate.getFullYear()===mcYear;
+    const hasSlots = SLOTS_BY_DOW[dow]&&SLOTS_BY_DOW[dow].length>0;
+    const el = document.createElement('div');
+    el.textContent = d;
+    el.className = 'mc-day'+(isPast?' mc-past':hasSlots?' mc-avail':' mc-full')+(isToday?' mc-today':'')+(isSel?' mc-sel':'');
+    if (!isPast && hasSlots) el.onclick = () => pickDateVenue(new Date(mcYear,mcMonth,d));
+    grid.appendChild(el);
+  }
+}
+
+function mcChangeMonth(dir) {
+  mcMonth += dir;
+  if (mcMonth>11) { mcMonth=0; mcYear++; }
+  if (mcMonth<0) { mcMonth=11; mcYear--; }
+  renderMiniCal();
+}
+
+function pickDateVenue(date) {
+  selDate = date; selSlot = null;
+  document.getElementById('bp-form-area').style.display = 'none';
+  renderMiniCal(); renderSlots();
+}
+
+function renderSlots() {
+  if (!selDate) return;
+  const dow = selDate.getDay();
+  const slots = SLOTS_BY_DOW[dow] || [];
+  const wrap = document.getElementById('slots-wrap');
+  if (!slots.length) { wrap.innerHTML = '<div class="slots-label">Times</div><div class="slots-empty">🚫 Closed on this day</div>'; return; }
+  const dateStr = `${selDate.getDate()} ${MONTHS_S[selDate.getMonth()]}`;
+  wrap.innerHTML = `<div class="slots-label">Times for ${dateStr}</div><div class="slots-g">` +
+    slots.map(s => {
+      const bk = BOOKED_SLOTS.includes(s), sel = selSlot===s;
+      return `<button class="slot-c${bk?' slot-bk':''}${sel?' slot-sel':''}" ${bk?'disabled':`onclick="pickSlotVenue('${s}')"`}>${s}</button>`;
+    }).join('') + '</div>';
+}
+
+function pickSlotVenue(slot) {
+  if (selSvcIdx === null) { showSuccess('Select a service first','Please choose a service from the list on the left.'); return; }
+  selSlot = slot; renderSlots(); showBPForm();
+}
+
+function showBPForm() {
+  const v = VENUES.find(x => x.id===activeVenueId);
+  const svcs = SERVICES_BY_TYPE[v.type]||[];
+  const svc = svcs[selSvcIdx];
+  const staffArr = [{n:'Any available'}, ...(STAFF_BY_TYPE[v.type]||[])];
+  const staff = staffArr[selStaffIdx]||staffArr[0];
+  document.getElementById('bp-summary').innerHTML =
+    `<div class="bps-row"><span class="bk">Service</span><span class="bv">${svc.n}</span></div>
+     <div class="bps-row"><span class="bk">Date</span><span class="bv">${selDate.getDate()} ${MONTHS[selDate.getMonth()]} ${mcYear}</span></div>
+     <div class="bps-row"><span class="bk">Time</span><span class="bv">${selSlot}</span></div>
+     <div class="bps-row"><span class="bk">Duration</span><span class="bv">${svc.d}</span></div>
+     <div class="bps-row"><span class="bk">Staff</span><span class="bv">${staff.n}</span></div>
+     <div class="bps-row tot"><span class="bk" style="font-weight:700;color:#111">Total</span><span class="bv">${svc.p}</span></div>`;
+  document.getElementById('bp-form-area').style.display = '';
+  document.getElementById('bp-no-sel').style.display = 'none';
+  document.getElementById('bp-form-area').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function submitBooking() {
+  const first = document.getElementById('bf-first').value.trim();
+  const email = document.getElementById('bf-email').value.trim();
+  const phone = document.getElementById('bf-phone').value.trim();
+  if (!first||!email||!phone) { alert('Please fill in name, email, and phone.'); return; }
+  const v = VENUES.find(x => x.id===activeVenueId);
+  const svcs = SERVICES_BY_TYPE[v.type]||[];
+  const svc = svcs[selSvcIdx];
+  const staffArr = [{n:'Any available'}, ...(STAFF_BY_TYPE[v.type]||[])];
+  const staff = staffArr[selStaffIdx]||staffArr[0];
+  appts.unshift({id:++apptCounter,svc:svc.n,venue:v.name,staff:staff.n,day:selDate.getDate(),mon:MONTHS_S[selDate.getMonth()],time:selSlot,status:'confirmed'});
+  BOOKED_SLOTS.push(selSlot);
+  showSuccess('Booking confirmed! 🎉',`${svc.n} at ${v.name} on ${selDate.getDate()} ${MONTHS[selDate.getMonth()]} at ${selSlot}. Confirmation sent to ${email}.`);
+  renderAppts();
+  selSlot=null; selSvcIdx=null;
+  document.getElementById('bp-form-area').style.display='none';
+  document.getElementById('bp-no-sel').style.display='';
+  ['bf-first','bf-last','bf-email','bf-phone','bf-notes'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('.svc-row').forEach(r=>r.classList.remove('selected-svc'));
+  document.querySelectorAll('.svc-select-btn').forEach(b=>{b.textContent='Select';b.classList.remove('picked');});
+  renderSlots();
+}
+
+/* ─────────────────────────────────────────────
+   MY APPOINTMENTS
+───────────────────────────────────────────── */
+let apptFilter = 'upcoming';
+function filterAppts(btn, f) {
+  document.querySelectorAll('.appt-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active'); apptFilter=f; renderAppts();
+}
+function renderAppts() {
+  const map = {upcoming:'confirmed',past:'past',cancelled:'cancelled'};
+  const list = appts.filter(a=>a.status===map[apptFilter]);
+  const el = document.getElementById('appt-list');
+  if (!list.length) { el.innerHTML=`<div style="text-align:center;padding:36px;color:var(--muted);font-size:14px">No ${apptFilter} appointments</div>`; return; }
+  el.innerHTML = list.map(a=>`
+    <div class="appt-card" id="ac-${a.id}">
+      <div class="appt-date-box"><div class="day">${a.day}</div><div class="mon">${a.mon}</div></div>
+      <div class="appt-info">
+        <div class="appt-svc">${a.svc}</div>
+        <div class="appt-meta">${a.venue} · ${a.staff} · ${a.time}</div>
+        <span class="appt-badge badge-${a.status}">${a.status[0].toUpperCase()+a.status.slice(1)}</span>
+      </div>
+      ${a.status==='confirmed'?`
+      <div class="appt-actions">
+        <button class="btn-sm btn-rs" onclick="openResched(${a.id})">Reschedule</button>
+        <button class="btn-sm btn-cn" onclick="openCancel(${a.id})">Cancel</button>
+      </div>`:''}
+    </div>`
+  ).join('');
+}
+
+function openCancel(id) {
+  cancelId=id;
+  const a=appts.find(x=>x.id===id);
+  document.getElementById('cancel-detail').textContent=`Cancel "${a.svc}" at ${a.venue} on ${a.mon} ${a.day} at ${a.time}?`;
+  openModal('m-cancel');
+}
+function confirmCancel() {
+  const a=appts.find(x=>x.id===cancelId); if(a) a.status='cancelled';
+  closeModal('m-cancel'); renderAppts();
+  setTimeout(()=>showSuccess('Appointment cancelled','You can rebook anytime.'),150);
+}
+function openResched(id) {
+  reschedId=id;
+  const a=appts.find(x=>x.id===id);
+  document.getElementById('resched-detail').textContent=`Rescheduling: "${a.svc}" · Currently ${a.mon} ${a.day} at ${a.time}`;
+  openModal('m-resched');
+}
+function confirmReschedule() {
+  const newDate=document.getElementById('r-date').value;
+  const newTime=document.getElementById('r-time').value;
+  const a=appts.find(x=>x.id===reschedId);
+  if(a&&newDate){const d=new Date(newDate+'T12:00:00');a.day=d.getDate();a.mon=MONTHS_S[d.getMonth()];a.time=newTime;}
+  closeModal('m-resched'); renderAppts();
+  setTimeout(()=>showSuccess('Rescheduled!',a?`${a.svc} moved to ${a.mon} ${a.day} at ${newTime}.`:'Done!'),150);
+}
+
+/* ─────────────────────────────────────────────
+   WAITLIST
+───────────────────────────────────────────── */
+function joinWaitlist() {
+  const ph=document.getElementById('wl-phone').value.trim();
+  if(!ph){alert('Please enter your phone number.');return;}
+  document.getElementById('wl-phone').value='';
+  const el=document.getElementById('wl-num');
+  el.textContent=(parseInt(el.textContent)+1)+' people';
+  showSuccess("You're on the waitlist! ⏳","We'll text you the moment a slot opens. Average wait: 2 days.");
+}
+
+/* ─────────────────────────────────────────────
+   MODALS
+───────────────────────────────────────────── */
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function showSuccess(t,d){document.getElementById('suc-title').textContent=t;document.getElementById('suc-detail').textContent=d;openModal('m-success');}
+
+/* ─────────────────────────────────────────────
+   MOBILE NAV
+───────────────────────────────────────────── */
+function toggleMenu(){document.getElementById('mobile-menu').classList.toggle('open');}
+
+/* ─────────────────────────────────────────────
+   AI CHAT
+───────────────────────────────────────────── */
+const AI_R = {
+  find:["I can help you find the perfect venue! You can search by service (e.g. 'haircut') or browse by category above. What are you looking for?","Use the search bar at the top or click a category tile to discover venues near you. What type of service do you need?"],
+  book:["To book: search for a venue → click it → choose a service → pick a date → select a time slot → fill in your details. That's it!","Find a venue using the search, click 'Book now', choose your service and a free slot. Takes under 2 minutes!"],
+  avail:["Venues with 'Available today' badge have open slots today. Green dots on the calendar show open days. Click a date to see exact times.","Look for the green 'Available today' chip on venue cards. Inside the venue, click any date with a green dot to see all open slots."],
+  cancel:["To cancel, scroll down to 'My Appointments' and click Cancel next to your booking.","Find your booking in 'My Appointments' below and hit Cancel — it's instant."],
+  resched:["To reschedule, go to 'My Appointments' below and click Reschedule on your booking. You'll pick a new date and time.","Easy! Hit Reschedule in 'My Appointments', choose a new slot, and you're done."],
+  wait:["Fully booked? Join the waitlist at the bottom of this page. Our AI monitors cancellations 24/7 and notifies you instantly when a slot opens!","Scroll to the bottom and enter your phone number to join the waitlist. Average wait is just 2 days. 🎯"],
+  price:["Service prices are shown on each venue card and inside the service list. Click a venue to see all prices. Starts from as low as ₹150!","Each service shows its price and duration. Select a category or search for a venue to compare prices."],
+  dflt:["I can help with: 🔍 finding venues, 📅 booking, 🔄 rescheduling, ✕ cancelling, or ⏳ joining the waitlist. What do you need?","Try asking: 'Find a salon', 'Book a massage', 'Cancel my appointment', or 'Join waitlist'."],
+};
+
+function getAIReply(m) {
+  const l=m.toLowerCase();
+  if(/hello|hi |hey|good/.test(l)) return rand(["Hi! 👋 I'm your OffPeak AI booking agent. I can help you find venues, book appointments, check availability, reschedule, or join the waitlist. What can I help with?","Hello! Ready to find and book a great venue? Search above or ask me anything — I'm here to help! 😊"]);
+  if(/find|search|near|where|salon|spa|gym|fitness|clinic|medspa|yoga|nail/.test(l)) return rand(AI_R.find);
+  if(/book|appoint|schedul|reserv/.test(l)) return rand(AI_R.book);
+  if(/availab|open|slot|free|when/.test(l)) return rand(AI_R.avail);
+  if(/cancel|delet/.test(l)) return rand(AI_R.cancel);
+  if(/reschedul|change|move|different/.test(l)) return rand(AI_R.resched);
+  if(/waitlist|wait|full/.test(l)) return rand(AI_R.wait);
+  if(/price|cost|how much|₹|fee/.test(l)) return rand(AI_R.price);
+  return rand(AI_R.dflt);
+}
+
+function rand(a){return a[Math.floor(Math.random()*a.length)];}
+
+function toggleChat(){
+  chatIsOpen=!chatIsOpen;
+  document.getElementById('chat-panel').classList.toggle('open',chatIsOpen);
+  const dot=document.getElementById('fab-dot');
+  if(chatIsOpen&&dot) dot.remove();
+  if(chatIsOpen&&!chatReady){
+    chatReady=true;
+    addChatMsg('bot',"Hi! 👋 I'm your OffPeak AI booking agent. Search for venues above, or ask me to help you find and book an appointment!");
+  }
+}
+
+function addChatMsg(type,text){
+  const msgs=document.getElementById('chat-msgs');
+  const time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const d=document.createElement('div');
+  d.className=`cmsg ${type}`;
+  d.innerHTML=`<div class="cbub">${text}</div><div class="ctm">${time}</div>`;
+  msgs.appendChild(d);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+function sendChat(){
+  const inp=document.getElementById('chat-inp');
+  const msg=inp.value.trim(); if(!msg) return;
+  addChatMsg('usr',msg); inp.value='';
+  setTimeout(()=>addChatMsg('bot',getAIReply(msg)),600);
+}
+
+function qMsg(msg){
+  if(!chatIsOpen) toggleChat();
+  setTimeout(()=>{addChatMsg('usr',msg);setTimeout(()=>addChatMsg('bot',getAIReply(msg)),600);},chatReady?0:450);
+}
+
+/* ─────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────── */
+renderCats();
+renderFeatured();
+renderAppts();
+</script>
+</body>
+</html>

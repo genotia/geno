@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Merchants — Genoti AI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #1D9E75;
+      --dark-green: #085041;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.5;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color .15s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a.active { font-weight: 600; color: var(--green); }
+    .has-mega { position:relative; }
+    .mega-drop { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); background:white; border:1px solid var(--border); border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.13); z-index:300; width:580px; display:none; overflow:hidden; }
+    .has-mega:hover .mega-drop { display:grid; grid-template-columns:1fr 1px 1fr; }
+    .mega-col { padding:22px; }
+    .mega-col-head { font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+    .mega-item { display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:10px; cursor:pointer; transition:background .15s; text-decoration:none; }
+    .mega-item:hover { background:var(--bg); }
+    .mega-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+    .mega-item-name { font-size:14px; font-weight:700; color:var(--text); }
+    .mega-item-desc { font-size:12px; color:var(--muted); margin-top:2px; line-height:1.4; }
+    .mega-divider-v { background:var(--border); }
+    .mega-sub-head { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin:14px 0 7px; }
+    .mega-chips { display:flex; flex-wrap:wrap; gap:5px; }
+    .mega-chip { padding:4px 10px; border-radius:20px; background:var(--bg); font-size:11px; font-weight:500; color:var(--text); border:1px solid var(--border); }
+    .mega-cta { display:inline-flex; align-items:center; gap:5px; margin-top:14px; font-size:13px; font-weight:700; color:var(--green); text-decoration:none; }
+    .mega-cta:hover { text-decoration:underline; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .btn-ghost { font-size: 14px; font-weight: 500; color: var(--text); background: none; border: none; cursor: pointer; padding: 8px 4px; }
+    .btn-primary {
+      font-size: 14px; font-weight: 600; color: var(--white); background: var(--green);
+      border: none; border-radius: 8px; padding: 9px 20px; cursor: pointer; white-space: nowrap; transition: opacity .15s;
+    }
+    .btn-primary:hover { opacity: .88; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
+    .mobile-menu { display: none; flex-direction: column; background: var(--white); border-bottom: 1px solid var(--border); padding: 8px 24px 16px; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { text-decoration: none; font-size: 15px; font-weight: 500; color: var(--muted); padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(160deg, #051a12 0%, #0b2d1e 55%, #071710 100%);
+      padding: 64px 24px 56px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.1); color: rgba(255,255,255,.8);
+      font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 20px;
+      margin-bottom: 20px; letter-spacing: .6px; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 4.5vw, 52px); font-weight: 800;
+      letter-spacing: -2px; line-height: 1.07; color: #fff; margin-bottom: 16px;
+    }
+    .hero h1 em { font-style: normal; color: #4ADEAB; }
+    .hero-sub {
+      font-size: 16px; color: rgba(255,255,255,.58);
+      max-width: 500px; margin: 0 auto 36px; line-height: 1.65;
+    }
+    .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+    .btn-hero-primary {
+      background: var(--white); color: var(--dark-green);
+      font-size: 15px; font-weight: 700; border: none;
+      border-radius: 10px; padding: 13px 28px; cursor: pointer; transition: opacity .15s;
+    }
+    .btn-hero-primary:hover { opacity: .9; }
+    .btn-hero-outline {
+      background: transparent; color: var(--white);
+      font-size: 15px; font-weight: 600;
+      border: 2px solid rgba(255,255,255,.3);
+      border-radius: 10px; padding: 11px 28px; cursor: pointer;
+    }
+    .hero-stats {
+      display: flex; gap: 0; justify-content: center;
+      max-width: 640px; margin: 0 auto;
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 14px; overflow: hidden;
+    }
+    .h-stat { flex: 1; padding: 16px 10px; text-align: center; border-right: 1px solid rgba(255,255,255,.08); }
+    .h-stat:last-child { border-right: none; }
+    .h-stat-v { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -.5px; }
+    .h-stat-v em { color: #4ADEAB; font-style: normal; }
+    .h-stat-l { font-size: 11px; color: rgba(255,255,255,.42); margin-top: 2px; }
+
+    /* ── VERTICAL FILTER BAR ── */
+    .vertical-filter { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .vertical-tabs { max-width: 1200px; margin: 0 auto; display: flex; overflow-x: auto; scrollbar-width: none; }
+    .vertical-tabs::-webkit-scrollbar { display: none; }
+    .vtab-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      padding: 14px 22px; border: none; background: none;
+      font-size: 13px; font-weight: 600; color: var(--muted);
+      cursor: pointer; border-bottom: 3px solid transparent;
+      white-space: nowrap; transition: all .15s; flex-shrink: 0;
+    }
+    .vtab-btn:hover { color: var(--text); }
+    .vtab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+    .vtab-icon { font-size: 18px; }
+    .vtab-sub { font-size: 10px; font-weight: 400; color: inherit; opacity: .65; }
+    .vertical-chips-bar {
+      max-width: 1200px; margin: 0 auto; padding: 8px 0 12px;
+      display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .vertical-chips-bar.hidden { display: none; }
+    .vchip {
+      font-size: 11px; padding: 3px 10px; border-radius: 20px;
+      background: rgba(29,158,117,.08); color: var(--green);
+      border: 1px solid rgba(29,158,117,.2);
+    }
+
+    /* ── SPLIT SECTION WRAPPER ── */
+    .split-section-bg { background: #0d1f17; }
+
+    /* ── SPLIT COLUMN HEADERS ── */
+    .split-header { display: grid; grid-template-columns: 1fr 1fr; max-width: 1400px; margin: 0 auto; }
+    .split-col-header {
+      padding: 24px 32px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .split-col-header.left { background: #111827; border-right: 1px solid #1E3030; }
+    .split-col-header.right { background: #071f16; }
+    .sch-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .sch-icon.os { background: rgba(29,158,117,.15); border: 1px solid rgba(29,158,117,.25); }
+    .sch-icon.ai { background: rgba(139,92,246,.15); border: 1px solid rgba(139,92,246,.25); }
+    .sch-label { font-size: 10px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; margin-bottom: 2px; }
+    .left .sch-label { color: #4ADEAB; }
+    .right .sch-label { color: #C4B5FD; }
+    .sch-title { font-size: 18px; font-weight: 800; color: #fff; }
+    .sch-sub { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 2px; }
+    .sch-count { margin-left: auto; text-align: right; }
+    .sch-count-num { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -1px; line-height: 1; }
+    .left .sch-count-num em { color: #4ADEAB; font-style: normal; }
+    .right .sch-count-num em { color: #C4B5FD; font-style: normal; }
+    .sch-count-lbl { font-size: 11px; color: rgba(255,255,255,.35); }
+
+    /* ── SPLIT CONTENT ── */
+    .split-wrap { display: grid; grid-template-columns: 1fr 1fr; min-height: 680px; max-width: 1400px; margin: 0 auto; }
+
+    /* LEFT: MERCHANT OS */
+    .col-os { background: #111827; border-right: 1px solid #1E3030; padding: 0 28px 56px; }
+    .os-legend { display: flex; gap: 16px; flex-wrap: wrap; padding-top: 20px; margin-bottom: 4px; }
+    .os-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,.35); }
+    .os-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .os-tabs {
+      display: flex; gap: 0; border-bottom: 1px solid #2D3E3E;
+      margin-bottom: 20px; padding-top: 12px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .os-tabs::-webkit-scrollbar { display: none; }
+    .os-tab {
+      padding: 8px 16px; font-size: 12px; font-weight: 700;
+      color: rgba(255,255,255,.38); background: none; border: none;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      cursor: pointer; white-space: nowrap; transition: all .15s;
+    }
+    .os-tab:hover { color: rgba(255,255,255,.7); }
+    .os-tab.active { color: #4ADEAB; border-bottom-color: #4ADEAB; }
+    .os-list { display: flex; flex-direction: column; gap: 10px; }
+    .os-item {
+      background: #1A2633; border: 1px solid #2D3E3E; border-left: 3px solid;
+      border-radius: 10px; padding: 14px 16px; transition: background .15s;
+    }
+    .os-item:hover { background: #1F2E3E; }
+    .os-item.p1 { border-left-color: #1D9E75; }
+    .os-item.p2 { border-left-color: #3B82F6; }
+    .os-item.p3 { border-left-color: #4B5563; }
+    .os-item-head { display: flex; align-items: center; gap: 9px; margin-bottom: 5px; }
+    .os-item-icon { font-size: 18px; }
+    .os-item-name { font-size: 14px; font-weight: 700; color: #F0FDF8; }
+    .os-item-badge {
+      margin-left: auto; font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 20px; white-space: nowrap;
+    }
+    .os-item-badge.p1 { background: rgba(29,158,117,.18); color: #4ADEAB; border: 1px solid rgba(29,158,117,.3); }
+    .os-item-badge.p2 { background: rgba(59,130,246,.18); color: #93C5FD; border: 1px solid rgba(59,130,246,.3); }
+    .os-item-badge.p3 { background: rgba(107,114,128,.18); color: #9CA3AF; border: 1px solid rgba(107,114,128,.3); }
+    .os-item-desc { font-size: 12px; color: rgba(255,255,255,.42); line-height: 1.5; margin-bottom: 8px; }
+    .os-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+    .os-chip { font-size: 10px; padding: 2px 7px; border-radius: 20px; background: rgba(255,255,255,.05); color: rgba(255,255,255,.38); border: 1px solid #2D3E3E; }
+
+    /* RIGHT: AI AGENTS */
+    .col-ai { background: #071f16; padding: 0 28px 56px; }
+    .ai-tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 20px 0 16px; }
+    .ai-tab {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 20px;
+      border: 1.5px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-size: 12px; font-weight: 700; color: rgba(240,253,248,.5);
+      cursor: pointer; transition: all .15s; white-space: nowrap;
+    }
+    .ai-tab:hover { border-color: rgba(255,255,255,.28); color: #F0FDF8; }
+    .ai-tab.active { color: #fff; border-color: transparent; }
+    .ai-tab-count { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; background: rgba(255,255,255,.18); }
+    .ai-legend { display: flex; gap: 16px; flex-wrap: wrap; padding-top: 20px; margin-bottom: 4px; }
+    .ai-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,.35); }
+    .ai-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .ai-cat-group { margin-bottom: 20px; }
+    .ai-cat-group-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+      color: rgba(240,253,248,.4); margin-bottom: 10px; padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .ai-cat-group-label span { font-size: 13px; }
+    .agents-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .agent-card {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px; padding: 16px; transition: background .15s, transform .15s;
+    }
+    .agent-card:hover { background: rgba(255,255,255,.08); transform: translateY(-1px); }
+    .ac-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+    .ac-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+    .ac-live { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
+    .ac-live.live { background: rgba(29,158,117,.18); color: #4ADEAB; }
+    .ac-live.soon { background: rgba(255,255,255,.08); color: rgba(255,255,255,.4); }
+    .ac-name { font-size: 13px; font-weight: 700; color: #F0FDF8; margin-bottom: 4px; }
+    .ac-desc { font-size: 11px; color: rgba(240,253,248,.45); line-height: 1.5; }
+
+    /* ── PRICING ── */
+    .pricing-section {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 72px 24px;
+    }
+    .pricing-inner { max-width: 1200px; margin: 0 auto; }
+    .sec-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
+    .sec-title { font-size: 28px; font-weight: 800; letter-spacing: -.6px; margin-bottom: 6px; }
+    .sec-sub { font-size: 15px; color: var(--muted); margin-bottom: 36px; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .pricing-card {
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 16px; padding: 28px; position: relative;
+    }
+    .pricing-card.featured {
+      border-color: var(--green);
+      box-shadow: 0 0 0 4px rgba(29,158,117,.08);
+    }
+    .popular-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--green); color: var(--white);
+      font-size: 11px; font-weight: 700; padding: 3px 12px;
+      border-radius: 20px; white-space: nowrap; letter-spacing: .3px;
+    }
+    .plan-name { font-size: 14px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
+    .plan-price { font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 4px; }
+    .plan-price span { font-size: 16px; font-weight: 500; color: var(--muted); }
+    .plan-desc { font-size: 13px; color: var(--muted); margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .plan-sec { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin: 12px 0 7px; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 4px; }
+    .plan-features li { font-size: 13px; color: var(--text); display: flex; gap: 8px; align-items: flex-start; }
+    .plan-features li .tick { color: var(--green); font-size: 14px; flex-shrink: 0; }
+    .plan-features li .cross { color: #D1D5DB; font-size: 14px; flex-shrink: 0; }
+    .btn-plan {
+      width: 100%; border: none; border-radius: 10px;
+      padding: 12px; font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: opacity .15s; margin-top: 16px;
+    }
+    .btn-plan.primary { background: var(--green); color: var(--white); }
+    .btn-plan.primary:hover { opacity: .88; }
+    .btn-plan.outline { background: var(--white); color: var(--text); border: 1.5px solid var(--border); }
+    .btn-plan.outline:hover { border-color: var(--text); }
+
+    /* ── BOTTOM CTA ── */
+    .bottom-cta { background: var(--dark-green); padding: 72px 24px; text-align: center; }
+    .bottom-cta h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; color: var(--white); letter-spacing: -.8px; margin-bottom: 12px; }
+    .bottom-cta p { font-size: 16px; color: rgba(255,255,255,.65); max-width: 460px; margin: 0 auto 32px; }
+    .bottom-cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── FOOTER ── */
+    footer { background: #111827; color: rgba(255,255,255,.6); padding: 48px 24px 32px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px; padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .footer-brand .logo { color: var(--white); font-size: 20px; display: block; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; line-height: 1.6; max-width: 240px; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,.55); text-decoration: none; transition: color .15s; }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; font-size: 12px; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
+    .footer-socials { display: flex; gap: 16px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1000px) {
+      .split-header, .split-wrap { grid-template-columns: 1fr; }
+      .split-col-header.left { border-right: none; border-bottom: 1px solid #1E3030; }
+      .agents-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .agents-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .nav-right .btn-ghost { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="nav-inner">
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
+      <a href="index.html" class="logo">✨ Genoti <span>AI</span></a>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">AI Operating System for Local Businesses</span>
+    </div>
+    <ul class="nav-links">
+      <li>
+        <div style="display:flex;flex-direction:column;line-height:1.1">
+          <a href="index.html#deals" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">⚡ Off-Peak Deals</a>
+          <span style="font-size:10px;color:#6B7280;margin-top:1px">Save up to 75%</span>
+        </div>
+      </li>
+      <li>
+        <div style="display:flex;flex-direction:column;line-height:1.1">
+          <a href="negotiate.html" style="color:#6B7280;font-weight:600;font-size:14px;text-decoration:none;display:flex;align-items:center;gap:4px">🤝 AI Negotiator</a>
+          <span style="font-size:10px;color:#6B7280;margin-top:1px">Personal AI agent</span>
+        </div>
+      </li>
+      <li>
+        <div style="display:flex;flex-direction:column;align-items:flex-start">
+          <a href="booking.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">🛎️ BookNow</a>
+          <span style="font-size:10px;color:#6B7280;margin-top:1px">Zero commission</span>
+        </div>
+      </li>
+      <li class="has-mega">
+        <a href="merchants.html" class="active" style="display:flex;align-items:center;gap:4px">💼 For Merchants <span style="font-size:10px">▾</span></a>
+        <div class="mega-drop">
+          <div class="mega-col">
+            <div class="mega-col-head">🏪 Merchant OS</div>
+            <a href="merchants.html" class="mega-item">
+              <div class="mega-icon" style="background:rgba(29,158,117,.1)">📊</div>
+              <div><div class="mega-item-name">Merchant OS</div><div class="mega-item-desc">Full SaaS platform for salons, spas, gyms &amp; clinics</div></div>
+            </a>
+            <div style="margin-top:12px"><div class="mega-sub-head">Includes</div>
+            <div class="mega-chips"><span class="mega-chip">📅 Bookings</span><span class="mega-chip">👥 Staff</span><span class="mega-chip">📈 Analytics</span><span class="mega-chip">💰 Payments</span></div></div>
+            <a href="merchants.html" class="mega-cta">Explore Merchant OS →</a>
+          </div>
+          <div class="mega-divider-v"></div>
+          <div class="mega-col">
+            <div class="mega-col-head">🤖 AI Agents</div>
+            <a href="ai-agents.html" class="mega-item">
+              <div class="mega-icon" style="background:rgba(139,92,246,.1)">🤖</div>
+              <div><div class="mega-item-name">AI Agents Platform</div><div class="mega-item-desc">22 AI workers that run your business 24/7</div></div>
+            </a>
+            <div class="mega-sub-head">General Agents</div>
+            <div class="mega-chips"><span class="mega-chip">💰 Revenue</span><span class="mega-chip">😊 Customer Cx</span><span class="mega-chip">⚙️ Operations</span><span class="mega-chip">📣 Marketing</span></div>
+            <div class="mega-sub-head">Vertical Agents</div>
+            <div class="mega-chips"><span class="mega-chip">💇 Salon &amp; Spa</span><span class="mega-chip">🏋️ Gym</span><span class="mega-chip">🍽️ Restaurant</span><span class="mega-chip">🏥 Clinic</span></div>
+            <a href="ai-agents.html" class="mega-cta">Explore AI Agents →</a>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-ghost">Log in</button>
+      <button class="btn-primary">Get started free</button>
+      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html#deals">⚡ Off-Peak Deals</a>
+    <a href="negotiate.html">🤝 AI Negotiator</a>
+    <a href="booking.html">🛎️ BookNow</a>
+    <a href="merchants.html" style="color:#1D9E75;font-weight:700;">💼 For Merchants</a>
+    <a href="#">Log in</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-eyebrow">💼 For Merchants</div>
+  <h1>Run your business.<br><em>Grow your revenue.</em><br>Fill every slot.</h1>
+  <p class="hero-sub">One platform — a powerful SaaS OS plus a 24/7 AI workforce — built for salons, gyms, restaurants &amp; clinics.</p>
+  <div class="hero-cta">
+    <button class="btn-hero-primary">Start free — no credit card</button>
+    <button class="btn-hero-outline">Watch 2-min demo</button>
+  </div>
+  <div class="hero-stats">
+    <div class="h-stat"><div class="h-stat-v">2,400<em>+</em></div><div class="h-stat-l">Merchants on Genoti</div></div>
+    <div class="h-stat"><div class="h-stat-v">₹3.2<em>Cr</em></div><div class="h-stat-l">Revenue unlocked / month</div></div>
+    <div class="h-stat"><div class="h-stat-v">38<em>%</em></div><div class="h-stat-l">Drop in no-shows</div></div>
+    <div class="h-stat"><div class="h-stat-v">4.8<em>★</em></div><div class="h-stat-l">Merchant satisfaction</div></div>
+  </div>
+</section>
+
+<!-- ══ VERTICAL FILTER BAR ══ -->
+<div class="vertical-filter">
+  <div class="vertical-tabs">
+    <button class="vtab-btn active" onclick="setVertical('all',this)">
+      <span class="vtab-icon">📋</span> All Businesses
+      <span class="vtab-sub">All categories</span>
+    </button>
+    <button class="vtab-btn" onclick="setVertical('health',this)">
+      <span class="vtab-icon">🏥</span> Health &amp; Medical
+      <span class="vtab-sub">Doctors · Clinics · Dentists · Labs</span>
+    </button>
+    <button class="vtab-btn" onclick="setVertical('beauty',this)">
+      <span class="vtab-icon">💅</span> Beauty &amp; Wellness
+      <span class="vtab-sub">Salons · Spa · MedSpa · Laser</span>
+    </button>
+    <button class="vtab-btn" onclick="setVertical('fitness',this)">
+      <span class="vtab-icon">🏋️</span> Fitness &amp; Sports
+      <span class="vtab-sub">Gyms · Yoga · Training · Sports</span>
+    </button>
+    <button class="vtab-btn" onclick="setVertical('food',this)">
+      <span class="vtab-icon">🍽️</span> Food &amp; Dining
+      <span class="vtab-sub">Restaurants · Cafes</span>
+    </button>
+    <button class="vtab-btn" onclick="setVertical('diagnostics',this)">
+      <span class="vtab-icon">🔬</span> Diagnostics
+      <span class="vtab-sub">Blood Test · MRI · CT Scan · X-Ray</span>
+    </button>
+  </div>
+  <div class="vertical-chips-bar hidden" id="vertical-chips"></div>
+</div>
+
+<!-- ══ SPLIT COLUMN HEADERS ══ -->
+<div class="split-section-bg">
+<div class="split-header">
+  <div class="split-col-header left">
+    <div class="sch-icon os">🏪</div>
+    <div>
+      <div class="sch-label">SaaS Foundation</div>
+      <div class="sch-title">Merchant OS</div>
+      <div class="sch-sub">Everything to run your business</div>
+    </div>
+    <div class="sch-count">
+      <div class="sch-count-num">11<em>+</em></div>
+      <div class="sch-count-lbl">modules</div>
+    </div>
+  </div>
+  <div class="split-col-header right">
+    <div class="sch-icon ai">🤖</div>
+    <div>
+      <div class="sch-label">Intelligence Layer</div>
+      <div class="sch-title">AI Agents</div>
+      <div class="sch-sub">AI employees working 24/7</div>
+    </div>
+    <div class="sch-count">
+      <div class="sch-count-num">22<em>+</em></div>
+      <div class="sch-count-lbl">AI agents</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SPLIT CONTENT ══ -->
+<div class="split-wrap">
+
+  <!-- LEFT: MERCHANT OS -->
+  <div class="col-os">
+    <div class="os-legend">
+      <div class="os-legend-item"><div class="os-legend-dot" style="background:#1D9E75"></div>Revenue driver</div>
+      <div class="os-legend-item"><div class="os-legend-dot" style="background:#3B82F6"></div>Retention driver</div>
+      <div class="os-legend-item"><div class="os-legend-dot" style="background:#4B5563"></div>Completeness</div>
+    </div>
+    <div class="os-tabs">
+      <button class="os-tab active" onclick="filterOS('all',this)">All modules</button>
+      <button class="os-tab" onclick="filterOS('p1',this)">⚡ Priority 1</button>
+      <button class="os-tab" onclick="filterOS('p2',this)">🔄 Priority 2</button>
+      <button class="os-tab" onclick="filterOS('p3',this)">📦 Priority 3</button>
+    </div>
+    <div class="os-list" id="os-list"></div>
+  </div>
+
+  <!-- RIGHT: AI AGENTS -->
+  <div class="col-ai">
+    <div class="ai-legend">
+      <div class="ai-legend-item"><div class="ai-legend-dot" style="background:#4ADEAB"></div>Live now</div>
+      <div class="ai-legend-item"><div class="ai-legend-dot" style="background:#4B5563"></div>Coming soon</div>
+    </div>
+    <div class="ai-tabs" id="ai-tabs"></div>
+    <div id="agents-wrap"></div>
+  </div>
+
+</div>
+</div><!-- /split-section-bg -->
+
+<!-- ══ PRICING ══ -->
+<div class="pricing-section">
+  <div class="pricing-inner">
+    <div class="sec-label">Pricing</div>
+    <div class="sec-title">Simple, honest pricing</div>
+    <div class="sec-sub">Start free. Upgrade when you're ready. OS and AI agents bundled together.</div>
+    <div class="pricing-grid">
+
+      <div class="pricing-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">Free <span>/ forever</span></div>
+        <div class="plan-desc">For businesses just getting started with online bookings.</div>
+        <div class="plan-sec">🏪 Merchant OS</div>
+        <ul class="plan-features">
+          <li><span class="tick">✓</span> Bookings (up to 50/month)</li>
+          <li><span class="tick">✓</span> Basic staff calendar</li>
+          <li><span class="tick">✓</span> WhatsApp reminders (50/month)</li>
+          <li><span class="tick">✓</span> OffPeak deal listing (1 active)</li>
+          <li><span class="cross">✗</span> Membership &amp; packages</li>
+          <li><span class="cross">✗</span> Marketing automation</li>
+        </ul>
+        <div class="plan-sec">🤖 AI Agents</div>
+        <ul class="plan-features">
+          <li><span class="cross">✗</span> No AI agents on Starter</li>
+        </ul>
+        <button class="btn-plan outline">Get started free</button>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="popular-badge">Most popular</div>
+        <div class="plan-name">Growth</div>
+        <div class="plan-price">₹1,999 <span>/ month</span></div>
+        <div class="plan-desc">Full Merchant OS + core AI agents. Ready to scale.</div>
+        <div class="plan-sec">🏪 Merchant OS</div>
+        <ul class="plan-features">
+          <li><span class="tick">✓</span> Unlimited bookings</li>
+          <li><span class="tick">✓</span> Membership &amp; packages</li>
+          <li><span class="tick">✓</span> WhatsApp campaigns (unlimited)</li>
+          <li><span class="tick">✓</span> Loyalty &amp; referrals</li>
+          <li><span class="tick">✓</span> Analytics + reputation mgmt</li>
+        </ul>
+        <div class="plan-sec">🤖 AI Agents</div>
+        <ul class="plan-features">
+          <li><span class="tick">✓</span> AI Receptionist</li>
+          <li><span class="tick">✓</span> AI Review Agent</li>
+          <li><span class="tick">✓</span> AI Upsell Agent</li>
+          <li><span class="tick">✓</span> AI Retention Agent</li>
+          <li><span class="tick">✓</span> AI Campaign Manager</li>
+        </ul>
+        <button class="btn-plan primary">Start 14-day free trial</button>
+      </div>
+
+      <div class="pricing-card">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">₹4,999 <span>/ month</span></div>
+        <div class="plan-desc">All 11 OS modules + all 22 AI agents. Full power.</div>
+        <div class="plan-sec">🏪 Merchant OS</div>
+        <ul class="plan-features">
+          <li><span class="tick">✓</span> Everything in Growth</li>
+          <li><span class="tick">✓</span> Multi-location management</li>
+          <li><span class="tick">✓</span> Employee management</li>
+          <li><span class="tick">✓</span> Inventory management</li>
+          <li><span class="tick">✓</span> AI support suite</li>
+        </ul>
+        <div class="plan-sec">🤖 AI Agents</div>
+        <ul class="plan-features">
+          <li><span class="tick">✓</span> All 22 AI agents</li>
+          <li><span class="tick">✓</span> AI voice receptionist</li>
+          <li><span class="tick">✓</span> AI forecasting &amp; intelligence</li>
+          <li><span class="tick">✓</span> Dedicated account manager</li>
+        </ul>
+        <button class="btn-plan outline">Talk to sales</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOTTOM CTA ══ -->
+<div class="bottom-cta">
+  <h2>Ready to fill every slot<br>and grow faster?</h2>
+  <p>Join 2,400+ merchants across India who use Genoti AI to run a smarter business.</p>
+  <div class="bottom-cta-btns">
+    <button class="btn-hero-primary">List your business free →</button>
+    <button class="btn-hero-outline">Talk to our team</button>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">✨ Genoti <span>AI</span></a>
+        <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Browse deals</a></li>
+          <li><a href="#">How it works</a></li>
+          <li><a href="#">Cities</a></li>
+          <li><a href="#">Download app</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Merchants</h4>
+        <ul>
+          <li><a href="#">List your business</a></li>
+          <li><a href="#">Merchant dashboard</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Success stories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+      <div class="footer-socials">
+        <a href="#">Twitter</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('mobile-menu').classList.toggle('open');
+  }
+
+  /* ── VERTICAL CONFIG ── */
+  const VERTICALS = {
+    health:  { label:'Health & Medical',   icon:'🏥', chips:['Doctors','Clinics','Dentists','Labs','Diagnostics'] },
+    beauty:  { label:'Beauty & Wellness',  icon:'💅', chips:['Salons','Spa','MedSpa','Laser Clinics'] },
+    fitness: { label:'Fitness & Sports',   icon:'🏋️', chips:['Gyms','Yoga','Personal Training','Sports Facilities'] },
+    food:        { label:'Food & Dining',  icon:'🍽️', chips:['Restaurants','Cafes'] },
+    diagnostics: { label:'Diagnostics',   icon:'🔬', chips:['Blood Test','MRI','CT Scan','X-Ray','Ultrasound'] },
+  };
+  let activeVertical = 'all';
+  let activePriority = 'all';
+
+  /* ── MERCHANT OS ── */
+  const OS_MODULES = [
+    { p:'p1', v:['health','beauty','fitness','food','diagnostics'], icon:'📅', name:'Booking Management',    badge:'Priority 1', desc:'Core engine — online slot booking, table reservations, staff calendar, WhatsApp reminders, no-show handling.', chips:['Web + app booking','Table reservations','Staff calendar','WhatsApp reminders','Walk-in queue'] },
+    { p:'p1', v:['beauty','fitness'],                              icon:'🎟️', name:'Membership & Packages', badge:'Priority 1', desc:'Recurring revenue — monthly/annual plans, session packs, auto-renewal, package tracking.', chips:['Monthly / annual','Session packs','Auto-renewal','Expired nudges'] },
+    { p:'p1', v:['health','beauty','fitness','food','diagnostics'], icon:'⭐', name:'Reputation Management',  badge:'Priority 1', desc:'Automate Google review collection, monitor ratings, draft AI responses to feedback.', chips:['Review automation','AI responses','Rating trends','Negative alerts'] },
+    { p:'p2', v:['beauty','fitness','food'],                        icon:'📣', name:'Marketing Management',   badge:'Priority 2', desc:'Fill seats — hyperlocal deals, WhatsApp campaigns, AI offer generator, re-engagement.', chips:['WhatsApp campaigns','AI offer generator','Segmentation','Re-engagement'] },
+    { p:'p2', v:['beauty','fitness','food'],                        icon:'🎁', name:'Loyalty & Referrals',    badge:'Priority 2', desc:'Keep customers coming back — points, gift cards, referral rewards, birthday offers.', chips:['Points loyalty','Gift cards','Referral rewards','Birthday offers'] },
+    { p:'p2', v:['health','beauty','fitness','food','diagnostics'], icon:'📊', name:'Analytics Dashboard',    badge:'Priority 2', desc:'Revenue, bookings, LTV, staff utilisation and effort sizing — all in one view.', chips:['Revenue dashboard','Peak vs off-peak','Customer LTV','Staff utilisation'] },
+    { p:'p2', v:['health','beauty','fitness','food','diagnostics'], icon:'🌐', name:'Presence Management',    badge:'Priority 2', desc:'Google Business sync, near-me SEO, keyword rank tracking, social media posting.', chips:['Google Business sync','Near-me SEO','Keyword tracking','Social posting'] },
+    { p:'p3', v:['health','beauty','food','diagnostics'],           icon:'💬', name:'Support Suite',           badge:'Priority 3', desc:'AI chat widget, AI voice receptionist, ticketing, FAQ auto-responder and escalation.', chips:['AI chat','AI voice','Ticketing','FAQ auto-responder'] },
+    { p:'p3', v:['health','beauty','fitness','food','diagnostics'], icon:'👥', name:'Employee Management',    badge:'Priority 3', desc:'Shift scheduling, commission tracking, performance reports, leave management.', chips:['Shift scheduling','Commission tracking','Performance','Leave mgmt'] },
+    { p:'p3', v:['beauty'],                                         icon:'📦', name:'Inventory Management',   badge:'Priority 3', desc:'Product stock tracking, low-stock alerts, supplier management, retail POS integration.', chips:['Stock tracking','Low-stock alerts','Supplier mgmt','Retail POS'] },
+    { p:'p3', v:['health','beauty','food','diagnostics'],           icon:'🎙️', name:'AI Voice Receptionist',  badge:'Priority 3', desc:'Answers inbound calls 24/7, books appointments and reservations via voice, sends missed-call SMS.', chips:['24/7 call handling','Voice booking','Call transcripts','Multilingual'] },
+  ];
+
+  function renderOS() {
+    let modules = activeVertical === 'all'
+      ? OS_MODULES
+      : OS_MODULES.filter(m => m.v.includes(activeVertical));
+    if (activePriority !== 'all') modules = modules.filter(m => m.p === activePriority);
+    document.getElementById('os-list').innerHTML = modules.length ? modules.map(m => `
+      <div class="os-item ${m.p}">
+        <div class="os-item-head">
+          <span class="os-item-icon">${m.icon}</span>
+          <span class="os-item-name">${m.name}</span>
+          <span class="os-item-badge ${m.p}">${m.badge}</span>
+        </div>
+        <div class="os-item-desc">${m.desc}</div>
+        <div class="os-chips">${m.chips.map(c=>`<span class="os-chip">${c}</span>`).join('')}</div>
+      </div>
+    `).join('') : '<div style="color:rgba(255,255,255,.3);font-size:13px;padding:16px 0">No modules for this filter combination.</div>';
+  }
+
+  function filterOS(p, btn) {
+    document.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    activePriority = p;
+    renderOS();
+  }
+
+  renderOS();
+
+  /* ── AI AGENTS ── */
+  const CATS = [
+    { id:'revenue',   label:'Revenue',      icon:'💰', color:'#1D9E75', bg:'rgba(29,158,117,.18)',  count:5 },
+    { id:'cx',        label:'Customer Cx',  icon:'😊', color:'#8B5CF6', bg:'rgba(139,92,246,.18)',  count:5 },
+    { id:'ops',       label:'Operations',   icon:'⚙️', color:'#3B82F6', bg:'rgba(59,130,246,.18)',  count:5 },
+    { id:'marketing', label:'Marketing',    icon:'📣', color:'#F59E0B', bg:'rgba(245,158,11,.18)',  count:4 },
+    { id:'data',      label:'Intelligence', icon:'📊', color:'#14B8A6', bg:'rgba(20,184,166,.18)',  count:4 },
+  ];
+
+  const AGENTS = {
+    revenue: [
+      { v:['beauty','fitness','food'],                        icon:'💼', name:'AI Sales Agent',             desc:'Converts inquiries into confirmed bookings and table reservations via chat and voice, 24/7.' },
+      { v:['beauty','fitness','food'],                        icon:'⬆️', name:'AI Upsell Agent',            desc:'Recommends premium add-ons and upgrades at the right moment in the customer journey.' },
+      { v:['beauty','fitness','food'],                        icon:'💱', name:'AI Dynamic Pricing Agent',   desc:'Adjusts prices in real-time based on demand, time of day, and slot occupancy.' },
+      { v:['health','beauty','fitness','food','diagnostics'], icon:'📈', name:'AI Yield Management Agent',  desc:'Fills appointment and table gaps intelligently to maximise revenue per slot.' },
+      { v:['beauty','fitness'],                               icon:'🎟️', name:'AI Membership Agent',        desc:'Sells, manages, and auto-renews subscription plans effortlessly.' },
+    ],
+    cx: [
+      { v:['health','beauty','fitness','food','diagnostics'], icon:'📞', name:'AI Receptionist',            desc:'Handles calls, messages, and walk-ins 24/7 — never miss a customer or booking.' },
+      { v:['health','beauty','food','diagnostics'],           icon:'🛎️', name:'AI Concierge Agent',         desc:'Guides patients or customers to the right service based on their needs and history.' },
+      { v:['health','beauty','fitness','food','diagnostics'], icon:'⭐', name:'AI Review Agent',             desc:'Collects and responds to reviews across Google, Zomato, and all platforms automatically.' },
+      { v:['beauty','fitness','food'],                        icon:'🎁', name:'AI Loyalty Agent',            desc:'Manages points, rewards, and repeat-visit incentives automatically.' },
+      { v:['beauty','fitness','food','diagnostics'],          icon:'🔄', name:'AI Retention Agent',          desc:'Re-engages lapsed customers or patients with timely reminders and offers.' },
+    ],
+    ops: [
+      { v:['health','beauty','fitness','food','diagnostics'], icon:'📅', name:'AI Scheduler',               desc:'Optimises staff rosters, test slots, and resource allocation automatically.' },
+      { v:['health','fitness','food','diagnostics'],          icon:'👥', name:'AI Workforce Manager',        desc:'Tracks attendance, performance, and team productivity in one view.' },
+      { v:['beauty'],                                         icon:'📦', name:'AI Inventory Agent',          desc:'Monitors stock and triggers automatic reorders before you run out.' },
+      { v:['beauty'],                                         icon:'🛒', name:'AI Procurement Agent',        desc:'Automates supplier orders with cost-optimised recommendations.' },
+      { v:['health','beauty','fitness','food','diagnostics'], icon:'🔍', name:'AI Expense Auditor',          desc:'Flags anomalies and generates expense reports in real time.' },
+    ],
+    marketing: [
+      { v:['beauty','fitness','food'],                        icon:'📣', name:'AI Campaign Manager',         desc:'Plans and executes targeted promotions across WhatsApp, SMS, email, and social.' },
+      { v:['beauty','fitness','food'],                        icon:'📱', name:'AI Social Media Agent',       desc:'Creates and publishes branded content to Instagram, Google, and Facebook.' },
+      { v:['health','beauty','fitness','food','diagnostics'], icon:'📍', name:'AI Local SEO Agent',          desc:'Boosts Google Maps ranking and local search visibility without paid ads.' },
+      { v:['health','beauty','fitness','food','diagnostics'], icon:'🤝', name:'AI Referral Agent',           desc:'Automates doctor and customer referral programs that consistently drive new bookings.' },
+    ],
+    data: [
+      { v:['health','beauty','fitness','food','diagnostics'], icon:'🗄️', name:'AI Customer Data Platform',  desc:'Unifies data from bookings, payments, and reviews into one patient or customer profile.' },
+      { v:['health','beauty','fitness','food','diagnostics'], icon:'📊', name:'AI Business Analyst',         desc:'Delivers daily KPIs and insights — no spreadsheets needed.' },
+      { v:['health','fitness','food','diagnostics'],          icon:'🔮', name:'AI Forecasting Agent',        desc:'Predicts appointment demand, test volumes, and revenue trends weeks in advance.' },
+      { v:['beauty','fitness','food','diagnostics'],          icon:'🕵️', name:'AI Competitive Intelligence', desc:'Monitors competitor pricing and promotions in your local area.' },
+    ],
+  };
+
+  let activeCat = 'all';
+
+  const TOTAL_AGENTS = CATS.reduce((s,c) => s + c.count, 0);
+
+  function agentCard(a, i, cat) {
+    return `
+      <div class="agent-card">
+        <div class="ac-head">
+          <div class="ac-icon" style="background:${cat.bg}">${a.icon}</div>
+          <span class="ac-live ${i<2?'live':'soon'}">${i<2?'● Live':'Soon'}</span>
+        </div>
+        <div class="ac-name">${a.name}</div>
+        <div class="ac-desc">${a.desc}</div>
+      </div>`;
+  }
+
+  function renderAiTabs() {
+    const allActive = activeCat === 'all';
+    document.getElementById('ai-tabs').innerHTML =
+      `<button class="ai-tab${allActive?' active':''}"
+        style="${allActive?'background:#475569;border-color:#475569':''}"
+        onclick="switchCat('all')">
+        🤖 All agents <span class="ai-tab-count">${TOTAL_AGENTS}</span>
+      </button>` +
+      CATS.map(c => `
+        <button class="ai-tab${c.id===activeCat?' active':''}"
+          style="${c.id===activeCat?`background:${c.color};border-color:${c.color}`:''}"
+          onclick="switchCat('${c.id}')">
+          ${c.icon} ${c.label} <span class="ai-tab-count">${c.count}</span>
+        </button>
+      `).join('');
+  }
+
+  function filterAgents(list) {
+    return activeVertical === 'all' ? list : list.filter(a => a.v.includes(activeVertical));
+  }
+
+  function renderAgents() {
+    const wrap = document.getElementById('agents-wrap');
+    if (activeCat === 'all') {
+      wrap.innerHTML = CATS.map(cat => {
+        const agents = filterAgents(AGENTS[cat.id] || []);
+        if (!agents.length) return '';
+        return `<div class="ai-cat-group">
+          <div class="ai-cat-group-label"><span>${cat.icon}</span> ${cat.label}</div>
+          <div class="agents-grid">${agents.map((a,i) => agentCard(a,i,cat)).join('')}</div>
+        </div>`;
+      }).join('') || '<div style="color:rgba(255,255,255,.3);font-size:13px;padding:16px 0">No agents for this filter combination.</div>';
+    } else {
+      const cat = CATS.find(c => c.id === activeCat);
+      const agents = filterAgents(AGENTS[activeCat] || []);
+      wrap.innerHTML = agents.length
+        ? `<div class="agents-grid">${agents.map((a,i) => agentCard(a,i,cat)).join('')}</div>`
+        : '<div style="color:rgba(255,255,255,.3);font-size:13px;padding:16px 0">No agents for this filter combination.</div>';
+    }
+  }
+
+  function switchCat(id) { activeCat = id; renderAiTabs(); renderAgents(); }
+
+  function setVertical(v, btn) {
+    activeVertical = v;
+    document.querySelectorAll('.vtab-btn').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const chipsBar = document.getElementById('vertical-chips');
+    if (v === 'all') {
+      chipsBar.classList.add('hidden');
+    } else {
+      chipsBar.classList.remove('hidden');
+      chipsBar.innerHTML = VERTICALS[v].chips.map(c => `<span class="vchip">${c}</span>`).join('');
+    }
+    renderOS();
+    renderAgents();
+  }
+
+  renderAiTabs();
+  renderAgents();
+</script>
+</body>
+</html>
