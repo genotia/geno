@@ -821,23 +821,7 @@
   <!-- ── SETUP TAB ── -->
   <div class="tab-panel" id="tab-setup">
     <div class="setup-grid">
-      <!-- Staff -->
-      <div class="setup-card">
-        <div class="setup-card-header">
-          <span class="setup-card-title">👩‍⚕️ Therapists</span>
-          <span class="setup-count" id="staff-count"></span>
-        </div>
-        <div class="setup-inline-form">
-          <input type="text" id="sf-name" placeholder="Therapist name…" class="setup-input"
-            onkeydown="if(event.key==='Enter')quickAddStaff()" />
-          <input type="text" id="sf-role" placeholder="Role" class="setup-input setup-input-sm"
-            onkeydown="if(event.key==='Enter')quickAddStaff()" />
-          <button class="btn-sm-add" id="staff-add-btn" onclick="quickAddStaff()">Add →</button>
-        </div>
-        <div class="form-err" id="staff-err" style="padding:4px 16px;font-size:12px"></div>
-        <ul class="setup-list" id="staff-list"><li class="setup-item" style="color:var(--muted)">Loading…</li></ul>
-      </div>
-      <!-- Rooms -->
+      <!-- Rooms only -->
       <div class="setup-card">
         <div class="setup-card-header">
           <span class="setup-card-title">🚪 Rooms</span>
@@ -937,7 +921,7 @@
   <!-- ══════════════════ ADD TEAM MEMBER OVERLAY ══════════════════ -->
   <div class="am-overlay" id="am-overlay">
     <div class="am-topbar">
-      <div class="am-topbar-title">Add team member</div>
+      <div class="am-topbar-title" id="am-topbar-title">Add team member</div>
       <div class="am-topbar-actions">
         <button class="am-close-btn" onclick="closeAddMember()">Close</button>
         <button class="am-add-btn" id="am-add-btn" onclick="saveNewMember()">Add</button>
@@ -2703,15 +2687,62 @@
   let amSelectedColor = '#1D9E75';
   let amSelectedServices = new Set();
 
+  let amEditingId = null; // null = add mode, staff id = edit mode
+
   function openAddMember() {
+    amEditingId = null;
     resetAddMemberForm();
     document.getElementById('am-overlay').classList.add('open');
+    document.getElementById('am-topbar-title').textContent = 'Add team member';
+    document.getElementById('am-add-btn').textContent = 'Add';
     document.body.style.overflow = 'hidden';
     loadAmServices();
   }
+
+  function openEditMember(id) {
+    const s = allTeamMembers.find(x => x.id === id) || currentStaff.find(x => x.id === id);
+    if (!s) return;
+    amEditingId = id;
+    resetAddMemberForm();
+
+    // Pre-fill profile
+    const parts = (s.name || '').split(' ');
+    document.getElementById('am-first-name').value = parts[0] || '';
+    document.getElementById('am-last-name').value  = parts.slice(1).join(' ');
+    document.getElementById('am-email').value       = s.email || '';
+    document.getElementById('am-role').value        = s.role  || 'Therapist';
+    // Phone: strip country code prefix if present
+    const rawPhone = s.phone || '';
+    const codeMatch = rawPhone.match(/^(\+\d{1,4})\s?(.*)/);
+    if (codeMatch) {
+      const sel = document.getElementById('am-phone-code');
+      const opt = [...sel.options].find(o => o.value === codeMatch[1]);
+      if (opt) sel.value = codeMatch[1];
+      document.getElementById('am-phone').value = codeMatch[2];
+    } else {
+      document.getElementById('am-phone').value = rawPhone;
+    }
+    document.getElementById('am-commission').value = s.commission_pct || '';
+
+    // Avatar colour
+    amSelectedColor = s.color || '#1D9E75';
+    document.getElementById('am-avatar').style.background = amSelectedColor;
+    document.querySelectorAll('.am-swatch').forEach(sw => {
+      sw.classList.toggle('selected', sw.style.background === amSelectedColor || sw.style.backgroundColor.replace(/\s/g,'') === amSelectedColor);
+    });
+    updateAvatar();
+
+    document.getElementById('am-overlay').classList.add('open');
+    document.getElementById('am-topbar-title').textContent = 'Edit team member';
+    document.getElementById('am-add-btn').textContent = 'Save';
+    document.body.style.overflow = 'hidden';
+    loadAmServices();
+  }
+
   function closeAddMember() {
     document.getElementById('am-overlay').classList.remove('open');
     document.body.style.overflow = '';
+    amEditingId = null;
   }
 
   function resetAddMemberForm() {
@@ -2831,19 +2862,23 @@
     const btn = document.getElementById('am-add-btn');
     btn.disabled = true; btn.textContent = 'Saving…';
 
-    const color = amSelectedColor;
-    const { data: staffRow, error } = await db.from('staff').insert({
-      merchant_id: currentMerchant.id,
+    const payload = {
       name: fullName,
-      role: role,
-      email: email,
+      role,
+      email,
       phone: phone ? phoneCode + ' ' + phone : null,
-      color: color,
-      active: true,
+      color: amSelectedColor,
       commission_pct: commission,
-    }).select().single();
+    };
 
-    btn.disabled = false; btn.textContent = 'Add';
+    let error;
+    if (amEditingId) {
+      ({ error } = await db.from('staff').update(payload).eq('id', amEditingId));
+    } else {
+      ({ error } = await db.from('staff').insert({ ...payload, merchant_id: currentMerchant.id, active: true }));
+    }
+
+    btn.disabled = false; btn.textContent = amEditingId ? 'Save' : 'Add';
 
     if (error) {
       errEl.textContent = error.message;
@@ -2851,10 +2886,11 @@
       return;
     }
 
-    // Reload team and close
+    // Reload caches and close
+    currentStaff = [];
     allTeamMembers = [];
     tabLoaded['team-members'] = false;
-    await loadTeamMembers();
+    await Promise.all([loadStaff(), loadTeamMembers()]);
     closeAddMember();
   }
 
@@ -2894,7 +2930,7 @@
       tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--muted)">
         <div style="font-size:32px;margin-bottom:10px">👤</div>
         <div style="font-weight:700;font-size:15px;color:var(--text)">No team members yet</div>
-        <div style="font-size:13px;margin-top:4px">Add therapists in Setup first</div>
+        <div style="font-size:13px;margin-top:4px">Click ＋ Add member to get started</div>
       </td></tr>`;
       return;
     }
@@ -2921,7 +2957,7 @@
         <td><span class="status-badge ${s.active ? 'status-confirmed' : 'status-cancelled'}">${s.active ? 'Active' : 'Inactive'}</span></td>
         <td>
           <div style="display:flex;gap:6px">
-            <button class="actions-btn" onclick="openEditStaff('${s.id}');switchPage('setup',document.getElementById('nav-setup'))">Actions ▾</button>
+            <button class="actions-btn" onclick="openEditMember('${s.id}')">Edit</button>
           </div>
         </td>
       </tr>`;
@@ -3239,7 +3275,7 @@
     _origSwitchPage(page, btn);
     if (tabLoaded[page]) return;
     tabLoaded[page] = true;
-    if (page === 'setup')         { loadStaff(); loadRooms(); }
+    if (page === 'setup')         { loadRooms(); }
     if (page === 'roster')        { Promise.all([loadStaff(), loadRooms()]).then(loadRoster); }
     if (page === 'schedule')      { Promise.all([loadStaff(), loadRooms(), loadRosterData()]).then(loadSchedule); }
     if (page === 'productivity')  { loadProductivity(); }
