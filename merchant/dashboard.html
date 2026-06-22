@@ -386,6 +386,60 @@
     .tier-rule { font-size:12px; font-weight:600; color:var(--muted); margin-bottom:6px; }
     .tier-perks { font-size:13px; color:var(--text); }
 
+    /* ── CATALOG ── */
+    /* Service menu two-column layout */
+    .svc-layout { display:flex; gap:16px; height:calc(100vh - 180px); min-height:400px; }
+    .svc-categories { width:220px; flex-shrink:0; background:var(--white); border:1.5px solid var(--border); border-radius:14px; display:flex; flex-direction:column; overflow:hidden; }
+    .svc-cat-header { padding:14px 16px; font-size:13px; font-weight:700; border-bottom:1px solid var(--border); }
+    .svc-cat-list { flex:1; overflow-y:auto; }
+    .svc-cat-item { display:flex; align-items:center; justify-content:space-between; padding:11px 16px; cursor:pointer; font-size:13px; font-weight:500; border-left:3px solid transparent; transition:all .12s; }
+    .svc-cat-item:hover { background:var(--bg); }
+    .svc-cat-item.active { background:rgba(29,158,117,.08); color:var(--green); font-weight:700; border-left-color:var(--green); }
+    .svc-cat-count { font-size:11px; background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:1px 7px; color:var(--muted); font-weight:700; }
+    .svc-cat-add { padding:12px 16px; border-top:1px solid var(--border); }
+    .svc-cat-add-btn { width:100%; padding:9px; border:1.5px dashed var(--border); border-radius:8px; background:transparent; font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .12s; font-family:inherit; }
+    .svc-cat-add-btn:hover { border-color:var(--green); color:var(--green); }
+    .svc-main { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:0; }
+    .svc-group { margin-bottom:20px; }
+    .svc-group-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .svc-group-title { font-size:17px; font-weight:800; letter-spacing:-.3px; }
+    .svc-group-actions { padding:7px 14px; border-radius:20px; border:1.5px solid var(--border); background:var(--white); font-size:12px; font-weight:600; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:5px; transition:all .12s; }
+    .svc-group-actions:hover { border-color:var(--green); color:var(--green); }
+    .svc-card { background:var(--white); border:1.5px solid var(--border); border-radius:12px; padding:16px 18px; display:flex; align-items:center; margin-bottom:8px; transition:box-shadow .12s; cursor:pointer; }
+    .svc-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.06); }
+    .svc-card-info { flex:1; }
+    .svc-card-name { font-size:14px; font-weight:700; }
+    .svc-card-meta { font-size:12px; color:var(--muted); margin-top:2px; }
+    .svc-card-price { font-size:15px; font-weight:800; margin-right:12px; }
+    .svc-card-menu { background:none; border:none; font-size:18px; cursor:pointer; color:var(--muted); padding:4px 6px; border-radius:6px; transition:background .12s; }
+    .svc-card-menu:hover { background:var(--bg); }
+    .svc-toolbar { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    /* Memberships */
+    .mb-list { display:flex; flex-direction:column; gap:10px; }
+    .mb-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:18px 20px; display:flex; align-items:center; gap:16px; transition:box-shadow .12s; }
+    .mb-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.07); }
+    .mb-icon { width:48px; height:48px; border-radius:12px; background:linear-gradient(135deg,var(--green),var(--dark-green)); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+    .mb-body { flex:1; }
+    .mb-name { font-size:15px; font-weight:700; }
+    .mb-meta { font-size:12px; color:var(--muted); margin-top:3px; display:flex; gap:10px; flex-wrap:wrap; }
+    .mb-meta-chip { background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:2px 8px; }
+    .mb-price { font-size:16px; font-weight:800; color:var(--green); margin-right:12px; }
+    /* Products */
+    .prod-toolbar { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    .prod-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+    .prod-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; overflow:hidden; transition:box-shadow .12s; cursor:pointer; }
+    .prod-card:hover { box-shadow:0 6px 20px rgba(0,0,0,.08); }
+    .prod-img { width:100%; height:140px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:48px; }
+    .prod-body { padding:12px 14px; }
+    .prod-name { font-size:13px; font-weight:700; margin-bottom:2px; }
+    .prod-brand { font-size:11px; color:var(--muted); }
+    .prod-footer { display:flex; align-items:center; justify-content:space-between; margin-top:8px; }
+    .prod-price { font-size:15px; font-weight:800; }
+    .stock-chip { font-size:10px; font-weight:700; border-radius:20px; padding:2px 8px; }
+    .stock-chip.in { background:#D1FAE5; color:#065F46; }
+    .stock-chip.low { background:#FEF3C7; color:#92400E; }
+    .stock-chip.out { background:#FEE2E2; color:#991B1B; }
+
     /* ── ADD TEAM MEMBER OVERLAY ── */
     .am-overlay { position: fixed; inset: 0; z-index: 500; background: var(--bg); display: none; flex-direction: column; }
     .am-overlay.open { display: flex; }
@@ -635,6 +689,15 @@
       <button class="nav-item nav-sub" id="nav-clients-list"     onclick="switchPage('clients-list',this)"><span class="nav-icon">📋</span> Clients list</button>
       <button class="nav-item nav-sub" id="nav-client-segments"  onclick="switchPage('client-segments',this)"><span class="nav-icon">🏷️</span> Client segments</button>
       <button class="nav-item nav-sub" id="nav-client-loyalty"   onclick="switchPage('client-loyalty',this)"><span class="nav-icon">⭐</span> Rewards & Loyalty</button>
+    </div>
+    <div class="sb-section-label">Catalog</div>
+    <button class="nav-item nav-group-toggle" id="nav-catalog-toggle" onclick="toggleCatalogNav(this)">
+      <span class="nav-icon">📚</span> Catalog <span class="nav-chevron">›</span>
+    </button>
+    <div class="nav-sub-group" id="catalog-sub-group">
+      <button class="nav-item nav-sub" id="nav-service-menu"    onclick="switchPage('service-menu',this)"><span class="nav-icon">💆</span> Service menu</button>
+      <button class="nav-item nav-sub" id="nav-memberships"     onclick="switchPage('memberships',this)"><span class="nav-icon">🎫</span> Memberships</button>
+      <button class="nav-item nav-sub" id="nav-product-list"    onclick="switchPage('product-list',this)"><span class="nav-icon">🛍️</span> Products</button>
     </div>
   </nav>
   <div class="sb-foot">
@@ -1147,6 +1210,202 @@
       </div>
     </div>
   </div><!-- /cl-overlay -->
+
+  <!-- ══════════════════ SERVICE MENU ══════════════════ -->
+  <div class="tab-panel" id="tab-service-menu">
+    <div class="cl-topbar">
+      <div>
+        <div class="cl-page-title">Service menu</div>
+        <div class="cl-page-sub">View and manage the services offered by your business</div>
+      </div>
+      <div class="cl-topbar-actions">
+        <button class="am-close-btn" onclick="openAddService()">＋ Add service</button>
+      </div>
+    </div>
+    <div class="svc-toolbar">
+      <div class="team-search" style="max-width:300px">
+        <span class="team-search-icon">🔍</span>
+        <input type="text" id="svc-search" placeholder="Search service name…" oninput="filterServices()" />
+      </div>
+    </div>
+    <div class="svc-layout">
+      <div class="svc-categories">
+        <div class="svc-cat-header">Categories</div>
+        <div class="svc-cat-list" id="svc-cat-list"></div>
+        <div class="svc-cat-add">
+          <button class="svc-cat-add-btn" onclick="addServiceCategory()">＋ Add category</button>
+        </div>
+      </div>
+      <div class="svc-main" id="svc-main"></div>
+    </div>
+  </div><!-- /tab-service-menu -->
+
+  <!-- ══════════════════ MEMBERSHIPS ══════════════════ -->
+  <div class="tab-panel" id="tab-memberships">
+    <div class="cl-topbar">
+      <div>
+        <div class="cl-page-title">Memberships <span class="cl-count-badge" id="mb-count-badge">0</span></div>
+        <div class="cl-page-sub">Create multi-session plans and recurring memberships for your clients</div>
+      </div>
+      <div class="cl-topbar-actions">
+        <button class="am-close-btn" onclick="openAddMembership()">＋ Add plan</button>
+      </div>
+    </div>
+    <div class="mb-list" id="mb-list">
+      <div style="text-align:center;padding:48px;color:var(--muted)">Loading…</div>
+    </div>
+  </div><!-- /tab-memberships -->
+
+  <!-- ══════════════════ PRODUCT LIST ══════════════════ -->
+  <div class="tab-panel" id="tab-product-list">
+    <div class="cl-topbar">
+      <div>
+        <div class="cl-page-title">Products <span class="cl-count-badge" id="prod-count-badge">0</span></div>
+        <div class="cl-page-sub">Manage your product inventory, stock levels and pricing</div>
+      </div>
+      <div class="cl-topbar-actions">
+        <button class="am-close-btn" onclick="openAddProduct()">＋ Add product</button>
+      </div>
+    </div>
+    <div class="prod-toolbar">
+      <div class="team-search" style="max-width:300px">
+        <span class="team-search-icon">🔍</span>
+        <input type="text" id="prod-search" placeholder="Search products…" oninput="filterProducts()" />
+      </div>
+      <select class="am-input" id="prod-cat-filter" onchange="filterProducts()" style="width:auto;padding:8px 12px;font-size:13px">
+        <option value="">All categories</option>
+        <option>Hair care</option>
+        <option>Skin care</option>
+        <option>Nail care</option>
+        <option>Body care</option>
+        <option>Equipment</option>
+        <option>Other</option>
+      </select>
+      <select class="am-input" id="prod-stock-filter" onchange="filterProducts()" style="width:auto;padding:8px 12px;font-size:13px">
+        <option value="">All stock</option>
+        <option value="in">In stock</option>
+        <option value="low">Low stock</option>
+        <option value="out">Out of stock</option>
+      </select>
+    </div>
+    <div class="prod-grid" id="prod-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted)">Loading…</div>
+    </div>
+  </div><!-- /tab-product-list -->
+
+  <!-- ══════════════════ ADD/EDIT SERVICE OVERLAY ══════════════════ -->
+  <div class="am-overlay" id="svc-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title" id="svc-overlay-title">Add service</div>
+      <div class="am-topbar-actions">
+        <button class="am-close-btn" onclick="closeSvcOverlay()">Close</button>
+        <button class="am-add-btn" id="svc-save-btn" onclick="saveService()">Add</button>
+      </div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:620px">
+      <div class="am-err" id="svc-err"></div>
+      <div class="am-section-title">Service details</div>
+      <div class="am-section-sub">Add a service to your menu with pricing and duration</div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Service name <span class="req">*</span></label><input class="am-input" id="svc-name" type="text" placeholder="e.g. Classic Massage" /></div>
+        <div class="am-field"><label>Category <span class="req">*</span></label>
+          <input class="am-input" id="svc-category" type="text" placeholder="e.g. Massage, Hair & styling" list="svc-cat-datalist" />
+          <datalist id="svc-cat-datalist"></datalist>
+        </div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Duration (minutes) <span class="req">*</span></label><input class="am-input" id="svc-duration" type="number" placeholder="60" min="5" step="5" /></div>
+        <div class="am-field"><label>Price (₹) <span class="req">*</span></label><input class="am-input" id="svc-price" type="number" placeholder="0.00" min="0" step="0.01" /></div>
+      </div>
+      <div class="am-form-row single">
+        <div class="am-field"><label>Description</label><textarea class="am-input" id="svc-desc" rows="3" placeholder="Brief description of this service…" style="resize:vertical"></textarea></div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Status</label>
+          <select class="am-input" id="svc-active">
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div></div>
+  </div><!-- /svc-overlay -->
+
+  <!-- ══════════════════ ADD/EDIT MEMBERSHIP OVERLAY ══════════════════ -->
+  <div class="am-overlay" id="mb-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title" id="mb-overlay-title">Add membership plan</div>
+      <div class="am-topbar-actions">
+        <button class="am-close-btn" onclick="closeMbOverlay()">Close</button>
+        <button class="am-add-btn" id="mb-save-btn" onclick="saveMembership()">Add</button>
+      </div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:620px">
+      <div class="am-err" id="mb-err"></div>
+      <div class="am-section-title">Membership plan details</div>
+      <div class="am-section-sub">Create a plan clients can purchase for recurring or bundled sessions</div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Plan name <span class="req">*</span></label><input class="am-input" id="mb-name" type="text" placeholder="e.g. Monthly Massage Plan" /></div>
+        <div class="am-field"><label>Type</label>
+          <select class="am-input" id="mb-type">
+            <option value="sessions">Session bundle</option>
+            <option value="monthly">Monthly plan</option>
+          </select>
+        </div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Number of sessions</label><input class="am-input" id="mb-sessions" type="number" placeholder="e.g. 6" min="1" /></div>
+        <div class="am-field"><label>Price (₹) <span class="req">*</span></label><input class="am-input" id="mb-price" type="number" placeholder="0.00" min="0" step="0.01" /></div>
+      </div>
+      <div class="am-form-row single">
+        <div class="am-field"><label>Description</label><textarea class="am-input" id="mb-desc" rows="3" placeholder="What's included in this plan…" style="resize:vertical"></textarea></div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Valid for (months)</label><input class="am-input" id="mb-validity" type="number" placeholder="e.g. 12" min="1" /></div>
+        <div class="am-field"><label>Status</label>
+          <select class="am-input" id="mb-active"><option value="true">Active</option><option value="false">Inactive</option></select>
+        </div>
+      </div>
+    </div></div>
+  </div><!-- /mb-overlay -->
+
+  <!-- ══════════════════ ADD/EDIT PRODUCT OVERLAY ══════════════════ -->
+  <div class="am-overlay" id="prod-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title" id="prod-overlay-title">Add product</div>
+      <div class="am-topbar-actions">
+        <button class="am-close-btn" onclick="closeProdOverlay()">Close</button>
+        <button class="am-add-btn" id="prod-save-btn" onclick="saveProduct()">Add</button>
+      </div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:620px">
+      <div class="am-err" id="prod-err"></div>
+      <div class="am-section-title">Product details</div>
+      <div class="am-section-sub">Add a product to your inventory</div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Product name <span class="req">*</span></label><input class="am-input" id="prod-name" type="text" placeholder="e.g. Argan Oil Shampoo" /></div>
+        <div class="am-field"><label>Brand</label><input class="am-input" id="prod-brand" type="text" placeholder="e.g. L'Oréal" /></div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Category</label>
+          <select class="am-input" id="prod-category">
+            <option value="">Select category</option>
+            <option>Hair care</option><option>Skin care</option>
+            <option>Nail care</option><option>Body care</option>
+            <option>Equipment</option><option>Other</option>
+          </select>
+        </div>
+        <div class="am-field"><label>Price (₹) <span class="req">*</span></label><input class="am-input" id="prod-price" type="number" placeholder="0.00" min="0" step="0.01" /></div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Stock quantity</label><input class="am-input" id="prod-stock" type="number" placeholder="0" min="0" /></div>
+        <div class="am-field"><label>Low stock alert at</label><input class="am-input" id="prod-low-stock" type="number" placeholder="5" min="0" /></div>
+      </div>
+      <div class="am-form-row single">
+        <div class="am-field"><label>Description</label><textarea class="am-input" id="prod-desc" rows="2" placeholder="Brief product description…" style="resize:vertical"></textarea></div>
+      </div>
+    </div></div>
+  </div><!-- /prod-overlay -->
 
   <!-- ══════════════════ ADD TEAM MEMBER OVERLAY ══════════════════ -->
   <div class="am-overlay" id="am-overlay">
@@ -3144,6 +3403,9 @@
   PAGE_TITLES['clients-list']    = 'Clients list';
   PAGE_TITLES['client-segments'] = 'Client segments';
   PAGE_TITLES['client-loyalty']  = 'Rewards & Loyalty';
+  PAGE_TITLES['service-menu']    = 'Service menu';
+  PAGE_TITLES['memberships']     = 'Memberships';
+  PAGE_TITLES['product-list']    = 'Products';
 
   /* ════════════════════════════════════════════
      TEAM MEMBERS
@@ -3519,6 +3781,9 @@
     if (page === 'clients-list')    { openClientNav(); loadClientsList(); }
     if (page === 'client-segments') { openClientNav(); loadClientSegments(); }
     if (page === 'client-loyalty')  { openClientNav(); loadClientLoyalty(); }
+    if (page === 'service-menu')    { openCatalogNav(); loadServiceMenu(); }
+    if (page === 'memberships')     { openCatalogNav(); loadMemberships(); }
+    if (page === 'product-list')    { openCatalogNav(); loadProducts(); }
   };
   async function loadRosterData() {
     const { data } = await db.from('roster').select('*').eq('merchant_id', currentMerchant.id);
@@ -3820,6 +4085,418 @@
         <td><span class="status-badge ${c.points > 0 ? 'status-confirmed' : 'status-pending'}">${c.points > 0 ? 'Active' : 'Not enrolled'}</span></td>
       </tr>`;
     }).join('');
+  }
+
+  /* ════════════════════════════════════════════
+     CATALOG NAV TOGGLE
+  ════════════════════════════════════════════ */
+  function toggleCatalogNav(btn) {
+    btn.classList.toggle('open');
+    document.getElementById('catalog-sub-group').classList.toggle('open');
+  }
+  function openCatalogNav() {
+    document.getElementById('nav-catalog-toggle').classList.add('open');
+    document.getElementById('catalog-sub-group').classList.add('open');
+  }
+
+  /* ════════════════════════════════════════════
+     SERVICE MENU
+  ════════════════════════════════════════════ */
+  let allServices     = [];
+  let svcEditingId    = null;
+  let activeSvcCat    = 'all';
+
+  const SVC_EMOJIS = { 'Massage':'💆', 'Hair & styling':'💇', 'Nail care':'💅', 'Skin care':'🧖', 'Body care':'🛁', 'Makeup':'💄', 'Waxing':'🪒', 'Other':'✨' };
+
+  async function loadServiceMenu() {
+    const { data, error } = await db.from('services')
+      .select('*').eq('merchant_id', currentMerchant.id).order('category').order('name');
+    if (error && error.code === '42P01') {
+      document.getElementById('svc-main').innerHTML = `<div style="text-align:center;padding:60px;color:var(--muted)">
+        <div style="font-size:32px;margin-bottom:10px">🔧</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text)">Services table not set up</div>
+        <div style="font-size:13px;margin-top:4px">Run the SQL in Supabase to create the services table</div>
+      </div>`;
+      document.getElementById('svc-cat-list').innerHTML = '';
+      return;
+    }
+    allServices = data || [];
+    renderServiceCategories();
+    renderServiceMain(allServices);
+  }
+
+  function renderServiceCategories() {
+    const cats = [...new Set(allServices.map(s => s.category).filter(Boolean))];
+    const all  = allServices.length;
+    document.getElementById('svc-cat-list').innerHTML =
+      `<div class="svc-cat-item ${activeSvcCat==='all'?'active':''}" onclick="filterByCategory('all')">
+        All categories <span class="svc-cat-count">${all}</span>
+      </div>` +
+      cats.map(c => {
+        const cnt = allServices.filter(s => s.category === c).length;
+        return `<div class="svc-cat-item ${activeSvcCat===c?'active':''}" onclick="filterByCategory('${c}')">
+          ${c} <span class="svc-cat-count">${cnt}</span>
+        </div>`;
+      }).join('');
+    // populate datalist
+    const dl = document.getElementById('svc-cat-datalist');
+    if (dl) dl.innerHTML = cats.map(c => `<option value="${c}">`).join('');
+  }
+
+  function filterByCategory(cat) {
+    activeSvcCat = cat;
+    renderServiceCategories();
+    const list = cat === 'all' ? allServices : allServices.filter(s => s.category === cat);
+    renderServiceMain(list);
+  }
+
+  function filterServices() {
+    const q = document.getElementById('svc-search').value.toLowerCase();
+    const list = allServices.filter(s =>
+      s.name.toLowerCase().includes(q) || (s.category||'').toLowerCase().includes(q)
+    );
+    activeSvcCat = 'all';
+    renderServiceCategories();
+    renderServiceMain(list);
+  }
+
+  function renderServiceMain(list) {
+    const wrap = document.getElementById('svc-main');
+    if (!list.length) {
+      wrap.innerHTML = `<div style="text-align:center;padding:60px;color:var(--muted)">
+        <div style="font-size:32px;margin-bottom:10px">💆</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text)">No services yet</div>
+        <div style="font-size:13px;margin-top:4px">Click ＋ Add service to get started</div>
+      </div>`;
+      return;
+    }
+    const byCategory = {};
+    list.forEach(s => {
+      const cat = s.category || 'Uncategorised';
+      if (!byCategory[cat]) byCategory[cat] = [];
+      byCategory[cat].push(s);
+    });
+    wrap.innerHTML = Object.entries(byCategory).map(([cat, svcs]) => {
+      const emoji = SVC_EMOJIS[cat] || '✨';
+      return `<div class="svc-group">
+        <div class="svc-group-header">
+          <div class="svc-group-title">${emoji} ${cat}</div>
+          <button class="svc-group-actions" onclick="openAddService('${cat}')">Actions ▾</button>
+        </div>
+        ${svcs.map(s => {
+          const hrs  = Math.floor(s.duration_mins / 60);
+          const mins = s.duration_mins % 60;
+          const dur  = (hrs ? hrs + ' hr' : '') + (mins ? (hrs?' ':'') + mins + ' min' : '');
+          return `<div class="svc-card" onclick="openEditService('${s.id}')">
+            <div class="svc-card-info">
+              <div class="svc-card-name">${s.name}</div>
+              <div class="svc-card-meta">${dur}${s.description ? ' · ' + s.description : ''}</div>
+            </div>
+            <div class="svc-card-price">₹${Number(s.price).toLocaleString('en-IN')}</div>
+            <button class="svc-card-menu" onclick="event.stopPropagation();openEditService('${s.id}')">⋮</button>
+          </div>`;
+        }).join('')}
+      </div>`;
+    }).join('');
+  }
+
+  function openAddService(defaultCat) {
+    svcEditingId = null;
+    document.getElementById('svc-overlay-title').textContent = 'Add service';
+    document.getElementById('svc-save-btn').textContent      = 'Add';
+    document.getElementById('svc-name').value     = '';
+    document.getElementById('svc-category').value = defaultCat || '';
+    document.getElementById('svc-duration').value = '';
+    document.getElementById('svc-price').value    = '';
+    document.getElementById('svc-desc').value     = '';
+    document.getElementById('svc-active').value   = 'true';
+    document.getElementById('svc-err').classList.remove('show');
+    document.getElementById('svc-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openEditService(id) {
+    const s = allServices.find(x => x.id === id);
+    if (!s) return;
+    svcEditingId = id;
+    document.getElementById('svc-overlay-title').textContent = 'Edit service';
+    document.getElementById('svc-save-btn').textContent      = 'Save';
+    document.getElementById('svc-name').value     = s.name || '';
+    document.getElementById('svc-category').value = s.category || '';
+    document.getElementById('svc-duration').value = s.duration_mins || '';
+    document.getElementById('svc-price').value    = s.price || '';
+    document.getElementById('svc-desc').value     = s.description || '';
+    document.getElementById('svc-active').value   = String(s.active !== false);
+    document.getElementById('svc-err').classList.remove('show');
+    document.getElementById('svc-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSvcOverlay() {
+    document.getElementById('svc-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  async function saveService() {
+    const errEl = document.getElementById('svc-err');
+    errEl.classList.remove('show');
+    const name     = document.getElementById('svc-name').value.trim();
+    const category = document.getElementById('svc-category').value.trim();
+    const duration = parseInt(document.getElementById('svc-duration').value);
+    const price    = parseFloat(document.getElementById('svc-price').value);
+    if (!name)          { errEl.textContent='Service name is required.'; errEl.classList.add('show'); return; }
+    if (!category)      { errEl.textContent='Category is required.';     errEl.classList.add('show'); return; }
+    if (!duration || duration < 5) { errEl.textContent='Enter a valid duration (min 5 mins).'; errEl.classList.add('show'); return; }
+    if (isNaN(price))   { errEl.textContent='Enter a valid price.';      errEl.classList.add('show'); return; }
+    const btn = document.getElementById('svc-save-btn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    const payload = { name, category, duration_mins: duration, price, description: document.getElementById('svc-desc').value.trim() || null, active: document.getElementById('svc-active').value === 'true' };
+    let error;
+    if (svcEditingId) { ({ error } = await db.from('services').update(payload).eq('id', svcEditingId)); }
+    else              { ({ error } = await db.from('services').insert({ ...payload, merchant_id: currentMerchant.id })); }
+    btn.disabled = false; btn.textContent = svcEditingId ? 'Save' : 'Add';
+    if (error) { errEl.textContent = error.message; errEl.classList.add('show'); return; }
+    tabLoaded['service-menu'] = false;
+    await loadServiceMenu();
+    closeSvcOverlay();
+  }
+
+  function addServiceCategory() {
+    const name = prompt('New category name:');
+    if (!name?.trim()) return;
+    document.getElementById('svc-category').value = name.trim();
+    openAddService(name.trim());
+  }
+
+  /* ════════════════════════════════════════════
+     MEMBERSHIPS
+  ════════════════════════════════════════════ */
+  let allMemberships = [];
+  let mbEditingId    = null;
+
+  async function loadMemberships() {
+    const { data, error } = await db.from('memberships')
+      .select('*').eq('merchant_id', currentMerchant.id).order('name');
+    if (error && error.code === '42P01') {
+      document.getElementById('mb-list').innerHTML = `<div style="text-align:center;padding:60px;color:var(--muted)">
+        <div style="font-size:32px;margin-bottom:10px">🔧</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text)">Memberships table not set up</div>
+        <div style="font-size:13px;margin-top:4px">Run the SQL in Supabase to create the memberships table</div>
+      </div>`;
+      return;
+    }
+    allMemberships = data || [];
+    document.getElementById('mb-count-badge').textContent = allMemberships.length;
+    renderMemberships(allMemberships);
+  }
+
+  function renderMemberships(list) {
+    const wrap = document.getElementById('mb-list');
+    if (!list.length) {
+      wrap.innerHTML = `<div style="text-align:center;padding:60px;color:var(--muted)">
+        <div style="font-size:32px;margin-bottom:10px">🎫</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text)">No membership plans yet</div>
+        <div style="font-size:13px;margin-top:4px">Click ＋ Add plan to create your first membership</div>
+      </div>`;
+      return;
+    }
+    wrap.innerHTML = list.map(m => {
+      const typeLabel = m.type === 'monthly' ? 'Monthly plan' : `${m.sessions || '?'} sessions`;
+      const validStr  = m.validity_months ? `Valid ${m.validity_months} month${m.validity_months>1?'s':''}` : '';
+      return `<div class="mb-card">
+        <div class="mb-icon">🎫</div>
+        <div class="mb-body">
+          <div class="mb-name">${m.name}</div>
+          <div class="mb-meta">
+            <span class="mb-meta-chip">${typeLabel}</span>
+            ${validStr ? `<span class="mb-meta-chip">${validStr}</span>` : ''}
+            ${m.description ? `<span style="color:var(--muted)">${m.description}</span>` : ''}
+          </div>
+        </div>
+        <div class="mb-price">₹${Number(m.price).toLocaleString('en-IN')}</div>
+        <button class="actions-btn" onclick="openEditMembership('${m.id}')">Edit</button>
+      </div>`;
+    }).join('');
+  }
+
+  function openAddMembership() {
+    mbEditingId = null;
+    document.getElementById('mb-overlay-title').textContent = 'Add membership plan';
+    document.getElementById('mb-save-btn').textContent      = 'Add';
+    ['mb-name','mb-sessions','mb-price','mb-desc','mb-validity'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('mb-type').value   = 'sessions';
+    document.getElementById('mb-active').value = 'true';
+    document.getElementById('mb-err').classList.remove('show');
+    document.getElementById('mb-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openEditMembership(id) {
+    const m = allMemberships.find(x => x.id === id);
+    if (!m) return;
+    mbEditingId = id;
+    document.getElementById('mb-overlay-title').textContent = 'Edit membership plan';
+    document.getElementById('mb-save-btn').textContent      = 'Save';
+    document.getElementById('mb-name').value     = m.name || '';
+    document.getElementById('mb-type').value     = m.type || 'sessions';
+    document.getElementById('mb-sessions').value = m.sessions || '';
+    document.getElementById('mb-price').value    = m.price || '';
+    document.getElementById('mb-desc').value     = m.description || '';
+    document.getElementById('mb-validity').value = m.validity_months || '';
+    document.getElementById('mb-active').value   = String(m.active !== false);
+    document.getElementById('mb-err').classList.remove('show');
+    document.getElementById('mb-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMbOverlay() {
+    document.getElementById('mb-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  async function saveMembership() {
+    const errEl = document.getElementById('mb-err');
+    errEl.classList.remove('show');
+    const name  = document.getElementById('mb-name').value.trim();
+    const price = parseFloat(document.getElementById('mb-price').value);
+    if (!name)        { errEl.textContent='Plan name is required.'; errEl.classList.add('show'); return; }
+    if (isNaN(price)) { errEl.textContent='Enter a valid price.';   errEl.classList.add('show'); return; }
+    const btn = document.getElementById('mb-save-btn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    const payload = { name, type: document.getElementById('mb-type').value, sessions: parseInt(document.getElementById('mb-sessions').value)||null, price, description: document.getElementById('mb-desc').value.trim()||null, validity_months: parseInt(document.getElementById('mb-validity').value)||null, active: document.getElementById('mb-active').value==='true' };
+    let error;
+    if (mbEditingId) { ({ error } = await db.from('memberships').update(payload).eq('id', mbEditingId)); }
+    else             { ({ error } = await db.from('memberships').insert({ ...payload, merchant_id: currentMerchant.id })); }
+    btn.disabled = false; btn.textContent = mbEditingId ? 'Save' : 'Add';
+    if (error) { errEl.textContent = error.message; errEl.classList.add('show'); return; }
+    tabLoaded['memberships'] = false;
+    await loadMemberships();
+    closeMbOverlay();
+  }
+
+  /* ════════════════════════════════════════════
+     PRODUCTS
+  ════════════════════════════════════════════ */
+  let allProducts  = [];
+  let prodEditingId = null;
+
+  const PROD_EMOJIS = { 'Hair care':'🧴', 'Skin care':'🧖', 'Nail care':'💅', 'Body care':'🛁', 'Equipment':'🔧', 'Other':'📦' };
+
+  async function loadProducts() {
+    const { data, error } = await db.from('products')
+      .select('*').eq('merchant_id', currentMerchant.id).order('name');
+    if (error && error.code === '42P01') {
+      document.getElementById('prod-grid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted)">
+        <div style="font-size:32px;margin-bottom:10px">🔧</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text)">Products table not set up</div>
+        <div style="font-size:13px;margin-top:4px">Run the SQL in Supabase to create the products table</div>
+      </div>`;
+      return;
+    }
+    allProducts = data || [];
+    document.getElementById('prod-count-badge').textContent = allProducts.length;
+    filterProducts();
+  }
+
+  function filterProducts() {
+    const q       = (document.getElementById('prod-search')?.value || '').toLowerCase();
+    const catF    = document.getElementById('prod-cat-filter')?.value  || '';
+    const stockF  = document.getElementById('prod-stock-filter')?.value || '';
+    let list = allProducts.filter(p => {
+      const matchQ   = p.name.toLowerCase().includes(q) || (p.brand||'').toLowerCase().includes(q);
+      const matchCat = !catF || p.category === catF;
+      const qty      = p.stock_qty || 0;
+      const low      = p.low_stock_alert || 5;
+      const stockState = qty === 0 ? 'out' : qty <= low ? 'low' : 'in';
+      const matchStk = !stockF || stockState === stockF;
+      return matchQ && matchCat && matchStk;
+    });
+    renderProducts(list);
+  }
+
+  function renderProducts(list) {
+    const grid = document.getElementById('prod-grid');
+    if (!list.length) {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted)">
+        <div style="font-size:32px;margin-bottom:10px">🛍️</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text)">No products found</div>
+        <div style="font-size:13px;margin-top:4px">Click ＋ Add product to add inventory</div>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = list.map(p => {
+      const qty   = p.stock_qty || 0;
+      const low   = p.low_stock_alert || 5;
+      const state = qty === 0 ? 'out' : qty <= low ? 'low' : 'in';
+      const label = qty === 0 ? 'Out of stock' : qty <= low ? 'Low stock' : 'In stock';
+      const emoji = PROD_EMOJIS[p.category] || '📦';
+      return `<div class="prod-card" onclick="openEditProduct('${p.id}')">
+        <div class="prod-img">${emoji}</div>
+        <div class="prod-body">
+          <div class="prod-name">${p.name}</div>
+          <div class="prod-brand">${p.brand || p.category || ''}</div>
+          <div class="prod-footer">
+            <div class="prod-price">₹${Number(p.price).toLocaleString('en-IN')}</div>
+            <span class="stock-chip ${state}">${label}</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">Qty: ${qty}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function openAddProduct() {
+    prodEditingId = null;
+    document.getElementById('prod-overlay-title').textContent = 'Add product';
+    document.getElementById('prod-save-btn').textContent      = 'Add';
+    ['prod-name','prod-brand','prod-price','prod-stock','prod-low-stock','prod-desc'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('prod-category').value = '';
+    document.getElementById('prod-err').classList.remove('show');
+    document.getElementById('prod-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openEditProduct(id) {
+    const p = allProducts.find(x => x.id === id);
+    if (!p) return;
+    prodEditingId = id;
+    document.getElementById('prod-overlay-title').textContent = 'Edit product';
+    document.getElementById('prod-save-btn').textContent      = 'Save';
+    document.getElementById('prod-name').value      = p.name || '';
+    document.getElementById('prod-brand').value     = p.brand || '';
+    document.getElementById('prod-category').value  = p.category || '';
+    document.getElementById('prod-price').value     = p.price || '';
+    document.getElementById('prod-stock').value     = p.stock_qty || '';
+    document.getElementById('prod-low-stock').value = p.low_stock_alert || '';
+    document.getElementById('prod-desc').value      = p.description || '';
+    document.getElementById('prod-err').classList.remove('show');
+    document.getElementById('prod-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeProdOverlay() {
+    document.getElementById('prod-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  async function saveProduct() {
+    const errEl = document.getElementById('prod-err');
+    errEl.classList.remove('show');
+    const name  = document.getElementById('prod-name').value.trim();
+    const price = parseFloat(document.getElementById('prod-price').value);
+    if (!name)        { errEl.textContent='Product name is required.'; errEl.classList.add('show'); return; }
+    if (isNaN(price)) { errEl.textContent='Enter a valid price.';      errEl.classList.add('show'); return; }
+    const btn = document.getElementById('prod-save-btn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    const payload = { name, brand: document.getElementById('prod-brand').value.trim()||null, category: document.getElementById('prod-category').value||null, price, stock_qty: parseInt(document.getElementById('prod-stock').value)||0, low_stock_alert: parseInt(document.getElementById('prod-low-stock').value)||5, description: document.getElementById('prod-desc').value.trim()||null };
+    let error;
+    if (prodEditingId) { ({ error } = await db.from('products').update(payload).eq('id', prodEditingId)); }
+    else               { ({ error } = await db.from('products').insert({ ...payload, merchant_id: currentMerchant.id })); }
+    btn.disabled = false; btn.textContent = prodEditingId ? 'Save' : 'Add';
+    if (error) { errEl.textContent = error.message; errEl.classList.add('show'); return; }
+    tabLoaded['product-list'] = false;
+    await loadProducts();
+    closeProdOverlay();
   }
 
   init();
