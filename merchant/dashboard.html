@@ -121,6 +121,19 @@
     .form-err { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #DC2626; display: none; }
     .form-err.show { display: block; }
 
+    input[type=time], input[type=date] {
+      padding: 10px 13px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 14px; color: var(--text);
+      background: var(--white); outline: none; transition: border-color .15s;
+      font-family: inherit; width: 100%;
+    }
+    input[type=time]:focus, input[type=date]:focus { border-color: var(--green); }
+    .expiry-tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
+    .exp-ok    { background: #D1FAE5; color: var(--dark-green); }
+    .exp-soon  { background: #FEF3C7; color: #92400E; }
+    .exp-today { background: #FED7AA; color: #92400E; }
+    .exp-past  { background: #FEE2E2; color: #DC2626; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
       .stats-row { grid-template-columns: 1fr; }
@@ -232,9 +245,21 @@
           </div>
         </div>
 
+        <div class="field-row">
+          <div class="field-group">
+            <label>Start time *</label>
+            <input type="time" id="f-start-time" required />
+          </div>
+          <div class="field-group">
+            <label>End time *</label>
+            <input type="time" id="f-end-time" required />
+          </div>
+        </div>
+
         <div class="field-group">
-          <label>Time slot *</label>
-          <input type="text" id="f-timeslot" placeholder="e.g. 10:00 AM – 12:00 PM" required />
+          <label>Deal expires on *</label>
+          <input type="date" id="f-expires" required />
+          <span class="hint">Deal auto-pauses after this date</span>
         </div>
 
         <div class="field-group">
@@ -270,6 +295,27 @@
   let currentMerchant = null;
   let currentRole = null;
   let selectedColor = '#FDF4FF';
+
+  function fmt12(t) {
+    if (!t) return '';
+    const [h, m] = t.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    return (h % 12 || 12) + ':' + String(m).padStart(2, '0') + ' ' + ampm;
+  }
+
+  function fmtExpiry(dateStr) {
+    if (!dateStr) return { label: '—', cls: '' };
+    const today = new Date(); today.setHours(0,0,0,0);
+    const exp   = new Date(dateStr + 'T00:00:00');
+    const diff  = Math.round((exp - today) / 86400000);
+    if (diff < 0)  return { label: 'Expired',       cls: 'exp-past' };
+    if (diff === 0) return { label: 'Expires today', cls: 'exp-today' };
+    if (diff <= 3)  return { label: `${diff}d left`, cls: 'exp-soon' };
+    return {
+      label: exp.toLocaleDateString('en-IN', { day:'numeric', month:'short' }),
+      cls: 'exp-ok'
+    };
+  }
 
   const CATEGORY_COLORS = {
     'Beauty & Wellness': '#FDF4FF',
@@ -354,12 +400,14 @@
       return;
     }
 
-    const adminCols = currentRole === 'admin'
-      ? '<th>Actions</th>'
-      : '';
+    const adminCols = currentRole === 'admin' ? '<th>Actions</th>' : '';
 
     const rows = deals.map(d => {
       const discPrice = Math.round(d.original_price * (1 - d.discount_pct / 100));
+      const timeLabel = d.start_time && d.end_time
+        ? fmt12(d.start_time) + ' – ' + fmt12(d.end_time)
+        : (d.time_slot || '—');
+      const exp = fmtExpiry(d.expires_at);
       const adminCells = currentRole === 'admin' ? `
         <td>
           <div class="action-btns">
@@ -375,7 +423,7 @@
           <td class="deal-emoji">${d.emoji}</td>
           <td>
             <div class="deal-title">${d.title}</div>
-            <div class="deal-time">${d.time_slot}</div>
+            <div class="deal-time">${timeLabel}</div>
           </td>
           <td class="hide-mobile"><span class="cat-tag">${d.category}</span></td>
           <td>
@@ -383,6 +431,7 @@
             <div class="price-was">₹${Number(d.original_price).toLocaleString('en-IN')}</div>
           </td>
           <td class="hide-mobile"><span class="disc-badge">${d.discount_pct}% OFF</span></td>
+          <td class="hide-mobile"><span class="expiry-tag ${exp.cls}">${exp.label}</span></td>
           <td>
             <span class="status-pill ${d.active ? 'live' : 'paused'}">
               ${d.active ? '● Live' : '○ Paused'}
@@ -401,6 +450,7 @@
             <th class="hide-mobile">Category</th>
             <th>Price</th>
             <th class="hide-mobile">Discount</th>
+            <th class="hide-mobile">Expires</th>
             <th>Status</th>
             ${adminCols}
           </tr>
@@ -431,6 +481,8 @@
     btn.textContent = 'Adding…';
     errEl.classList.remove('show');
 
+    const startTime = document.getElementById('f-start-time').value;
+    const endTime   = document.getElementById('f-end-time').value;
     const deal = {
       merchant_id:    currentMerchant.id,
       merchant_name:  currentMerchant.name,
@@ -440,7 +492,10 @@
       bg_color:       selectedColor,
       original_price: parseFloat(document.getElementById('f-orig-price').value),
       discount_pct:   parseInt(document.getElementById('f-discount').value),
-      time_slot:      document.getElementById('f-timeslot').value.trim(),
+      start_time:     startTime,
+      end_time:       endTime,
+      time_slot:      fmt12(startTime) + ' – ' + fmt12(endTime),
+      expires_at:     document.getElementById('f-expires').value,
       active:         true,
     };
 
@@ -465,6 +520,11 @@
 
   /* ── MODAL ── */
   function openModal() {
+    // Default expiry = 7 days from today
+    const d = new Date();
+    d.setDate(d.getDate() + 7);
+    document.getElementById('f-expires').value = d.toISOString().split('T')[0];
+    document.getElementById('f-expires').min   = new Date().toISOString().split('T')[0];
     document.getElementById('modal-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
