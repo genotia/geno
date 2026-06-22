@@ -287,26 +287,6 @@
         </div>
 
         <div class="field-group">
-          <label>Days available *</label>
-          <div class="day-picker">
-            <div class="day-quick">
-              <button type="button" class="day-quick-btn" onclick="selectQuickDays('weekdays')">Weekdays</button>
-              <button type="button" class="day-quick-btn" onclick="selectQuickDays('weekends')">Weekends</button>
-              <button type="button" class="day-quick-btn" onclick="selectQuickDays('all')">Every day</button>
-            </div>
-            <div class="day-chips">
-              <div class="day-chip selected" data-day="Mon" onclick="toggleDay(this)">Mon</div>
-              <div class="day-chip selected" data-day="Tue" onclick="toggleDay(this)">Tue</div>
-              <div class="day-chip selected" data-day="Wed" onclick="toggleDay(this)">Wed</div>
-              <div class="day-chip selected" data-day="Thu" onclick="toggleDay(this)">Thu</div>
-              <div class="day-chip selected" data-day="Fri" onclick="toggleDay(this)">Fri</div>
-              <div class="day-chip weekend" data-day="Sat" onclick="toggleDay(this)">Sat</div>
-              <div class="day-chip weekend" data-day="Sun" onclick="toggleDay(this)">Sun</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="field-group">
           <label>Time slot *</label>
           <div class="custom-time-row" id="custom-time-row">
             <div class="time-sel-wrap">
@@ -330,6 +310,26 @@
             </div>
           </div>
           <div class="slot-hint" id="slot-hint"></div>
+        </div>
+
+        <div class="field-group">
+          <label>Days available *</label>
+          <div class="day-picker">
+            <div class="day-quick">
+              <button type="button" class="day-quick-btn" onclick="selectQuickDays('weekdays')">Weekdays</button>
+              <button type="button" class="day-quick-btn" onclick="selectQuickDays('weekends')">Weekends</button>
+              <button type="button" class="day-quick-btn" onclick="selectQuickDays('all')">Every day</button>
+            </div>
+            <div class="day-chips">
+              <div class="day-chip selected" data-day="Mon" onclick="toggleDay(this)">Mon</div>
+              <div class="day-chip selected" data-day="Tue" onclick="toggleDay(this)">Tue</div>
+              <div class="day-chip selected" data-day="Wed" onclick="toggleDay(this)">Wed</div>
+              <div class="day-chip selected" data-day="Thu" onclick="toggleDay(this)">Thu</div>
+              <div class="day-chip selected" data-day="Fri" onclick="toggleDay(this)">Fri</div>
+              <div class="day-chip weekend" data-day="Sat" onclick="toggleDay(this)">Sat</div>
+              <div class="day-chip weekend" data-day="Sun" onclick="toggleDay(this)">Sun</div>
+            </div>
+          </div>
         </div>
 
         <div class="field-group">
