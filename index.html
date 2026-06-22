@@ -1067,6 +1067,7 @@
       .btn-book, .btn-negotiate { min-height: 44px; padding: 12px; font-size: 14px; }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -1180,12 +1181,12 @@
   </div>
 
   <div class="categories">
-    <button class="pill active" onclick="setActive(this, 'All')">🏷️ All</button>
-    <button class="pill" onclick="setActive(this, 'Health & Medical')">🏥 Health & Medical</button>
-    <button class="pill" onclick="setActive(this, 'Beauty & Wellness')">💇 Beauty & Wellness</button>
-    <button class="pill" onclick="setActive(this, 'Fitness & Sports')">🏋️ Fitness & Sports</button>
-    <button class="pill" onclick="setActive(this, 'Food & Dining')">🍽️ Food & Dining</button>
-    <button class="pill" onclick="setActive(this, 'Diagnostics')">🔬 Diagnostics</button>
+    <button class="pill active" data-cat="All" onclick="setActive(this, 'All')">🏷️ All</button>
+    <button class="pill" data-cat="Health &amp; Medical" onclick="setActive(this, 'Health &amp; Medical')">🏥 Health &amp; Medical</button>
+    <button class="pill" data-cat="Beauty &amp; Wellness" onclick="setActive(this, 'Beauty &amp; Wellness')">💇 Beauty &amp; Wellness</button>
+    <button class="pill" data-cat="Fitness &amp; Sports" onclick="setActive(this, 'Fitness &amp; Sports')">🏋️ Fitness &amp; Sports</button>
+    <button class="pill" data-cat="Food &amp; Dining" onclick="setActive(this, 'Food &amp; Dining')">🍽️ Food &amp; Dining</button>
+    <button class="pill" data-cat="Diagnostics" onclick="setActive(this, 'Diagnostics')">🔬 Diagnostics</button>
   </div>
 </section>
 
@@ -1427,8 +1428,42 @@
     document.getElementById('deal-count').textContent = dealBase.toLocaleString('en-IN');
   }, 4000);
 
+  /* ── Supabase live deals ── */
+  const SUPABASE_URL = 'https://ijsxmgkzwvamwctbkgjo.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ';
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  async function loadLiveDeals() {
+    const { data } = await db.from('deals').select('*').eq('active', true).order('created_at', { ascending: false });
+    if (!data || data.length === 0) return;
+    const live = data.map(d => {
+      const priceNum = Math.round(d.original_price * (1 - d.discount_pct / 100));
+      return {
+        id:       d.id,
+        category: d.category,
+        emoji:    d.emoji,
+        bg:       d.bg_color,
+        discount: d.discount_pct + '% OFF',
+        time:     d.time_slot,
+        title:    d.title,
+        merchant: d.merchant_name,
+        priceNum,
+        wasNum:   d.original_price,
+        price:    '₹' + priceNum.toLocaleString('en-IN'),
+        was:      '₹' + Number(d.original_price).toLocaleString('en-IN'),
+        dist:     'Nearby',
+        live:     true,
+      };
+    });
+    allDeals = [...live, ...staticDeals];
+    const activeCategory = document.querySelector('.pill.active');
+    const cat = activeCategory ? activeCategory.getAttribute('data-cat') : 'All';
+    renderDeals(cat);
+  }
+
   /* ── Deal data ── */
-  const deals = [
+  const staticDeals = [
     // Health & Medical
     { id:1,  category:'Health & Medical', emoji:'🦷',  bg:'#ECFDF5', discount:'45% OFF', time:'9:00–11:00 AM',    title:'Teeth Cleaning & Polishing',      merchant:'Smile Studio Dental',       priceNum:449,  wasNum:820,  price:'₹449',  was:'₹820',   dist:'1.5 km' },
     { id:2,  category:'Health & Medical', emoji:'🩺',  bg:'#F0FDF4', discount:'60% OFF', time:'10:00 AM–12:00 PM',title:'General Physician Consultation',  merchant:'Healify Clinics',           priceNum:199,  wasNum:500,  price:'₹199',  was:'₹500',   dist:'0.7 km' },
@@ -1460,8 +1495,10 @@
     { id:20, category:'Diagnostics', emoji:'🧠',  bg:'#FAF5FF', discount:'40% OFF', time:'9:00 AM–1:00 PM', title:'Ultrasound Abdomen (Full)',        merchant:'Precision Scan & Diagnostics',priceNum:599, wasNum:999,  price:'₹599',  was:'₹999',   dist:'1.6 km' },
   ];
 
+  let allDeals = [...staticDeals];
+
   function renderDeals(cat = 'All') {
-    const filtered = cat === 'All' ? deals : deals.filter(d => d.category === cat);
+    const filtered = cat === 'All' ? allDeals : allDeals.filter(d => d.category === cat);
     document.getElementById('deals-grid').innerHTML = filtered.map(d => `
       <div class="deal-card">
         <div class="card-thumb" style="background:${d.bg}">
@@ -1488,7 +1525,7 @@
           </div>
           <div class="card-actions">
             <button class="btn-book" onclick="event.stopPropagation()">Book now</button>
-            <button class="btn-negotiate" onclick="event.stopPropagation(); openNegotiator(${d.id})">
+            <button class="btn-negotiate" onclick="event.stopPropagation(); openNegotiator('${d.id}')">
               <span class="bot-icon">🤖</span> Negotiate
             </button>
           </div>
@@ -1498,6 +1535,7 @@
   }
 
   renderDeals();
+  loadLiveDeals();
 
   /* ── Geolocation ── */
   if (navigator.geolocation) {
@@ -1516,7 +1554,7 @@
   let expirySeconds = 7187; // ~2 hours
 
   function openNegotiator(dealId) {
-    currentDeal = deals.find(d => d.id === dealId);
+    currentDeal = allDeals.find(d => String(d.id) === String(dealId));
     selectedPriceTarget = null;
     selectedTime = null;
 
