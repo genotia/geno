@@ -192,6 +192,8 @@
     .status-confirmed { background: #D1FAE5; color: var(--dark-green); }
     .status-cancelled { background: #F3F4F6; color: var(--muted); }
     .btn-confirm { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 7px; cursor: pointer; border: 1.5px solid var(--green); background: #F0FDF8; color: var(--green); margin-right: 4px; transition: all .12s; }
+    .btn-assign-inline { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 7px; cursor: pointer; border: 1.5px dashed var(--muted); background: var(--white); color: var(--muted); transition: all .12s; white-space: nowrap; }
+    .btn-assign-inline:hover { border-color: var(--green); color: var(--green); background: #F0FDF8; }
     .btn-cancel  { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 7px; cursor: pointer; border: 1.5px solid var(--border); background: var(--white); color: var(--muted); transition: all .12s; }
     .btn-confirm:hover { background: #D1FAE5; }
     .btn-cancel:hover  { border-color: #DC2626; color: #DC2626; }
@@ -391,6 +393,10 @@
       <div class="stat-card">
         <div class="stat-value" id="bk-stat-total">—</div>
         <div class="stat-label">Total bookings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:#DC2626" id="bk-stat-unassigned">—</div>
+        <div class="stat-label">Unassigned</div>
       </div>
     </div>
 
@@ -777,7 +783,7 @@
     document.getElementById('bk-table-wrap').innerHTML = '<div class="loading-state">Loading bookings…</div>';
     const { data, error } = await db
       .from('bookings')
-      .select('*')
+      .select('*, assigned_staff:staff_id(id,name,color), assigned_room:room_id(id,name)')
       .eq('merchant_id', currentMerchant.id)
       .order('booking_date', { ascending: true });
     if (error) { document.getElementById('bk-table-wrap').innerHTML = `<div class="empty-state">${error.message}</div>`; return; }
@@ -788,11 +794,14 @@
   }
 
   function updateBookingStats() {
-    const pending   = allBookings.filter(b => b.status === 'pending').length;
-    const confirmed = allBookings.filter(b => b.status === 'confirmed').length;
-    document.getElementById('bk-stat-pending').textContent   = pending;
-    document.getElementById('bk-stat-confirmed').textContent = confirmed;
-    document.getElementById('bk-stat-total').textContent     = allBookings.length;
+    const active     = allBookings.filter(b => b.status !== 'cancelled');
+    const pending    = allBookings.filter(b => b.status === 'pending').length;
+    const confirmed  = allBookings.filter(b => b.status === 'confirmed').length;
+    const unassigned = active.filter(b => !b.staff_id).length;
+    document.getElementById('bk-stat-pending').textContent    = pending;
+    document.getElementById('bk-stat-confirmed').textContent  = confirmed;
+    document.getElementById('bk-stat-total').textContent      = allBookings.length;
+    document.getElementById('bk-stat-unassigned').textContent = unassigned;
   }
 
   function filterBookings(btn) {
@@ -817,22 +826,33 @@
           <th>Date</th>
           <th>Deal</th>
           <th>Customer</th>
-          <th class="hide-mobile">Phone</th>
+          <th>Therapist / Room</th>
           <th>Status</th>
           <th class="hide-mobile">Actions</th>
         </tr></thead>
         <tbody>${list.map(b => {
           const dateLabel = new Date(b.booking_date + 'T00:00:00')
             .toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'short' });
+
+          const therapistCell = b.assigned_staff
+            ? `<div style="display:flex;align-items:center;gap:6px">
+                 <div style="width:8px;height:8px;border-radius:50%;background:${b.assigned_staff.color};flex-shrink:0"></div>
+                 <span style="font-size:13px;font-weight:600">${b.assigned_staff.name}</span>
+               </div>
+               <div style="font-size:11px;color:var(--muted);margin-top:2px">${b.assigned_room?.name || '—'}</div>`
+            : `<button class="btn-assign-inline" onclick="openAssignModal('${b.id}')">＋ Assign</button>`;
+
           const actionBtns = b.status !== 'cancelled' ? `
             ${b.status === 'pending' ? `<button class="btn-confirm" onclick="updateBookingStatus('${b.id}','confirmed')">✓ Confirm</button>` : ''}
+            ${b.assigned_staff ? `<button class="btn-confirm" style="background:#EFF6FF;color:#2563EB;border-color:#2563EB" onclick="openAssignModal('${b.id}')">↺ Reassign</button>` : ''}
             <button class="btn-cancel" onclick="updateBookingStatus('${b.id}','cancelled')">✗ Cancel</button>
           ` : '<span style="font-size:12px;color:var(--muted)">—</span>';
+
           return `<tr>
             <td><strong>${dateLabel}</strong><br><span style="font-size:11px;color:var(--muted)">${b.time_slot}</span></td>
             <td>${b.deal_title}</td>
-            <td><strong>${b.customer_name}</strong><br><span style="font-size:12px;color:var(--muted)">${b.customer_email}</span></td>
-            <td class="hide-mobile">${b.customer_phone || '—'}</td>
+            <td><strong>${b.customer_name}</strong><br><span style="font-size:12px;color:var(--muted)">${b.customer_email || b.customer_phone || ''}</span></td>
+            <td>${therapistCell}</td>
             <td><span class="status-badge status-${b.status}">${b.status}</span></td>
             <td class="hide-mobile">${actionBtns}</td>
           </tr>`;
@@ -1674,12 +1694,21 @@
 
   /* ── ASSIGN MODAL ── */
   function openAssignModal(bookingId) {
+    // Look up from either the schedule pending queue or the full bookings list
+    const bk = pendingBookings.find(b => b.id === bookingId)
+            || allBookings.find(b => b.id === bookingId);
+    if (!bk) return;
     assigningBookingId = bookingId;
-    const bk = pendingBookings.find(b => b.id === bookingId);
+
+    const therapistLine = bk.assigned_staff
+      ? `<div style="margin-top:4px;font-size:12px;color:var(--muted)">Currently: ${bk.assigned_staff.name}${bk.assigned_room ? ' · ' + bk.assigned_room.name : ''}</div>`
+      : '';
     document.getElementById('assign-booking-summary').innerHTML =
       `<strong>${bk.customer_name}</strong> · ${bk.deal_title}<br>
-       🕐 ${bk.time_slot} · ${bk.booking_ref}`;
-    populateAssignDropdowns();
+       🕐 ${bk.time_slot} · ${bk.booking_ref}${therapistLine}`;
+
+    // Pre-fill existing assignment if any
+    populateAssignDropdowns(bk);
     document.getElementById('assign-err').textContent = '';
     document.getElementById('assign-modal-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -1687,23 +1716,30 @@
   function openAssignModalForSlot(roomId, hour) {
     if (!pendingBookings.length) return;
     openAssignModal(pendingBookings[0].id);
-    // Pre-select room
     setTimeout(() => { document.getElementById('assign-room').value = roomId; }, 50);
   }
   function closeAssignModal() {
     document.getElementById('assign-modal-overlay').classList.remove('open');
     document.body.style.overflow = '';
   }
-  function populateAssignDropdowns() {
+  function populateAssignDropdowns(bk) {
     const staffSel = document.getElementById('assign-staff');
     const roomSel  = document.getElementById('assign-room');
-    const dow = schDate.toLocaleDateString('en-IN', { weekday:'short' });
+
+    // Use booking date if available, else schDate
+    const bkDate = bk?.booking_date ? new Date(bk.booking_date + 'T00:00:00') : schDate;
+    const dow = bkDate.toLocaleDateString('en-IN', { weekday:'short' });
     const rosterDay = currentRoster.filter(r => r.day_of_week === dow).map(r => r.staff_id);
     const onDuty = currentStaff.filter(s => s.active && (rosterDay.includes(s.id) || !rosterDay.length));
+
     staffSel.innerHTML = '<option value="">— select therapist —</option>' +
-      onDuty.map(s => `<option value="${s.id}">${s.name} · ${s.role}</option>`).join('');
+      onDuty.map(s => `<option value="${s.id}">${s.name}${s.role ? ' · ' + s.role : ''}</option>`).join('');
     roomSel.innerHTML = '<option value="">— select room —</option>' +
       currentRooms.filter(r => r.active).map(r => `<option value="${r.id}">${r.name} (${r.room_type})</option>`).join('');
+
+    // Pre-select existing assignment
+    if (bk?.staff_id) staffSel.value = bk.staff_id;
+    if (bk?.room_id)  roomSel.value  = bk.room_id;
   }
   async function confirmAssign() {
     const staffId = document.getElementById('assign-staff').value;
@@ -1715,7 +1751,10 @@
       .eq('id', assigningBookingId);
     if (error) { errEl.textContent = error.message; return; }
     closeAssignModal();
-    await loadSchedule();
+    // Refresh open/loaded tabs
+    if (tabLoaded['schedule'])  loadSchedule();
+    if (allBookings.length > 0 || document.getElementById('tab-bookings').classList.contains('active')) loadBookings();
+    tabLoaded['productivity'] = false;
   }
 
   /* ════════════════════════════════════════════
