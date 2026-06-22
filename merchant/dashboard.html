@@ -388,6 +388,69 @@
     .tier-rule { font-size:12px; font-weight:600; color:var(--muted); margin-bottom:6px; }
     .tier-perks { font-size:13px; color:var(--text); }
 
+    /* ── INVENTORY MANAGEMENT ── */
+    .inv-kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+    @media(max-width:800px){ .inv-kpi-grid { grid-template-columns:1fr 1fr; } }
+    .inv-kpi { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:18px 20px; display:flex; align-items:center; gap:14px; }
+    .inv-kpi-icon { width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+    .inv-kpi-body {}
+    .inv-kpi-num { font-size:26px; font-weight:900; letter-spacing:-.5px; line-height:1; }
+    .inv-kpi-label { font-size:12px; color:var(--muted); font-weight:600; margin-top:3px; }
+    .inv-two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media(max-width:700px){ .inv-two-col { grid-template-columns:1fr; } }
+    .inv-panel-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; overflow:hidden; }
+    .inv-panel-card-head { padding:14px 18px; font-size:14px; font-weight:800; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .inv-alert-row { display:flex; align-items:center; justify-content:space-between; padding:10px 18px; border-bottom:1px solid var(--border); font-size:13px; }
+    .inv-alert-row:last-child { border-bottom:none; }
+    .inv-alert-name { font-weight:600; }
+    .inv-alert-qty { font-size:12px; }
+    .inv-tx-row { display:flex; align-items:center; gap:10px; padding:10px 18px; border-bottom:1px solid var(--border); font-size:13px; }
+    .inv-tx-row:last-child { border-bottom:none; }
+    .inv-tx-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .inv-tx-name { flex:1; font-weight:600; }
+    .inv-tx-qty { font-weight:700; }
+    .inv-tx-type { font-size:11px; color:var(--muted); }
+    /* Stock items table */
+    .inv-toolbar { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+    .inv-type-pill { display:inline-block; padding:2px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+    .inv-type-pill.pro { background:#EDE9FE; color:#5B21B6; }
+    .inv-type-pill.retail { background:#DBEAFE; color:#1D4ED8; }
+    .inv-stock-badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+    .inv-stock-badge.in  { background:#D1FAE5; color:#065F46; }
+    .inv-stock-badge.low { background:#FEF3C7; color:#92400E; }
+    .inv-stock-badge.out { background:#FEE2E2; color:#991B1B; }
+    /* Intake / Usage history cards */
+    .inv-history-list { display:flex; flex-direction:column; gap:10px; }
+    .inv-history-card { background:var(--white); border:1.5px solid var(--border); border-radius:12px; overflow:hidden; }
+    .inv-history-head { display:flex; align-items:center; gap:12px; padding:14px 18px; cursor:pointer; transition:background .12s; }
+    .inv-history-head:hover { background:var(--bg); }
+    .inv-history-badge { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+    .inv-history-meta { flex:1; }
+    .inv-history-title { font-size:14px; font-weight:700; }
+    .inv-history-sub { font-size:12px; color:var(--muted); margin-top:2px; }
+    .inv-history-right { text-align:right; }
+    .inv-history-amt { font-size:15px; font-weight:800; }
+    .inv-history-date { font-size:11px; color:var(--muted); margin-top:2px; }
+    .inv-history-body { padding:12px 18px; border-top:1px solid var(--border); background:var(--bg); display:none; }
+    .inv-history-body.open { display:block; }
+    .inv-history-item-row { display:flex; justify-content:space-between; font-size:13px; padding:5px 0; border-bottom:1px solid var(--border); }
+    .inv-history-item-row:last-child { border-bottom:none; }
+    /* Overlay line items */
+    .inv-line-header { display:grid; gap:8px; padding:6px 10px; background:var(--bg); border-radius:8px 8px 0 0; border:1.5px solid var(--border); border-bottom:none; font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; }
+    .inv-line-row { display:grid; gap:8px; padding:8px 10px; border:1.5px solid var(--border); border-top:none; align-items:center; background:var(--white); }
+    .inv-line-row:last-child { border-radius:0 0 8px 8px; }
+    .inv-line-sel, .inv-line-in { width:100%; padding:8px 10px; border:1.5px solid var(--border); border-radius:8px; font-size:13px; font-family:inherit; outline:none; background:var(--white); transition:border-color .15s; }
+    .inv-line-sel:focus, .inv-line-in:focus { border-color:var(--green); }
+    .inv-line-del { background:none; border:none; cursor:pointer; font-size:15px; color:var(--muted); padding:4px; border-radius:6px; transition:all .12s; }
+    .inv-line-del:hover { background:#FEE2E2; color:#DC2626; }
+    .inv-add-line-btn { width:100%; padding:10px; border:1.5px dashed var(--border); border-radius:8px; background:transparent; font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; margin-top:8px; transition:all .12s; font-family:inherit; }
+    .inv-add-line-btn:hover { border-color:var(--green); color:var(--green); }
+    /* Adjustments */
+    .adj-type-pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+    .adj-type-pill.add { background:#D1FAE5; color:#065F46; }
+    .adj-type-pill.remove { background:#FEE2E2; color:#991B1B; }
+    .adj-type-pill.writeoff { background:#FEF3C7; color:#92400E; }
+
     /* ── GENERATE BILL ── */
     .bill-container { max-width: 1100px; }
     .bill-title { font-size: 22px; font-weight: 800; letter-spacing: -.4px; margin-bottom: 18px; }
@@ -798,6 +861,18 @@
     <button class="nav-item" id="nav-generate-bill" onclick="switchPage('generate-bill',this)">
       <span class="nav-icon">🧾</span> Generate Bill
     </button>
+    <div class="sb-section-label">Inventory</div>
+    <button class="nav-item nav-group-toggle" id="nav-inv-toggle" onclick="toggleInvNav(this)">
+      <span class="nav-icon">📦</span> Inventory <span class="nav-chevron">›</span>
+    </button>
+    <div class="nav-sub-group" id="inv-sub-group">
+      <button class="nav-item nav-sub" id="nav-inv-overview"    onclick="switchPage('inv-overview',this)"><span class="nav-icon">📊</span> Overview</button>
+      <button class="nav-item nav-sub" id="nav-inv-items"       onclick="switchPage('inv-items',this)"><span class="nav-icon">🗂️</span> Stock items</button>
+      <button class="nav-item nav-sub" id="nav-inv-intake"      onclick="switchPage('inv-intake',this)"><span class="nav-icon">📥</span> Stock intake</button>
+      <button class="nav-item nav-sub" id="nav-inv-usage"       onclick="switchPage('inv-usage',this)"><span class="nav-icon">📤</span> Stock usage</button>
+      <button class="nav-item nav-sub" id="nav-inv-adjustments" onclick="switchPage('inv-adjustments',this)"><span class="nav-icon">🔧</span> Adjustments</button>
+      <button class="nav-item nav-sub" id="nav-inv-suppliers"   onclick="switchPage('inv-suppliers',this)"><span class="nav-icon">🏭</span> Suppliers</button>
+    </div>
   </nav>
   <div class="sb-foot">
     <div class="sb-merchant-name" id="sb-merchant-name">—</div>
@@ -1642,6 +1717,293 @@
 
   <!-- Hidden print area -->
   <div id="bill-print-area" style="display:none"></div>
+
+  <!-- ══════════════════ INVENTORY OVERVIEW ══════════════════ -->
+  <div class="tab-panel" id="tab-inv-overview">
+    <div class="cl-topbar"><div><div class="cl-page-title">Inventory Overview</div><div class="cl-page-sub">Real-time stock summary for your spa</div></div></div>
+    <div class="inv-kpi-grid">
+      <div class="inv-kpi"><div class="inv-kpi-icon" style="background:#EDE9FE">🗂️</div><div class="inv-kpi-body"><div class="inv-kpi-num" id="kpi-skus">—</div><div class="inv-kpi-label">Total SKUs</div></div></div>
+      <div class="inv-kpi"><div class="inv-kpi-icon" style="background:#D1FAE5">💰</div><div class="inv-kpi-body"><div class="inv-kpi-num" id="kpi-value">—</div><div class="inv-kpi-label">Stock Value (₹)</div></div></div>
+      <div class="inv-kpi"><div class="inv-kpi-icon" style="background:#FEF3C7">⚠️</div><div class="inv-kpi-body"><div class="inv-kpi-num" id="kpi-low">—</div><div class="inv-kpi-label">Low Stock Items</div></div></div>
+      <div class="inv-kpi"><div class="inv-kpi-icon" style="background:#FEE2E2">🚫</div><div class="inv-kpi-body"><div class="inv-kpi-num" id="kpi-out">—</div><div class="inv-kpi-label">Out of Stock</div></div></div>
+    </div>
+    <div class="inv-two-col">
+      <div class="inv-panel-card">
+        <div class="inv-panel-card-head">⚠️ Low stock alerts <span id="low-stock-count" class="cl-count-badge">0</span></div>
+        <div id="inv-low-stock-list"><div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">Loading…</div></div>
+      </div>
+      <div class="inv-panel-card">
+        <div class="inv-panel-card-head">🕐 Recent activity</div>
+        <div id="inv-recent-activity"><div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">Loading…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ STOCK ITEMS ══════════════════ -->
+  <div class="tab-panel" id="tab-inv-items">
+    <div class="cl-topbar">
+      <div><div class="cl-page-title">Stock items <span class="cl-count-badge" id="inv-items-count">0</span></div><div class="cl-page-sub">Master list of all products and consumables</div></div>
+      <button class="am-close-btn" onclick="openInvItemOverlay()">＋ Add item</button>
+    </div>
+    <div class="inv-toolbar">
+      <div class="team-search" style="max-width:280px"><span class="team-search-icon">🔍</span><input type="text" id="inv-items-search" placeholder="Search items…" oninput="filterInvItems()" /></div>
+      <select class="am-input" id="inv-cat-filter" onchange="filterInvItems()" style="width:auto;padding:8px 12px;font-size:13px">
+        <option value="">All categories</option>
+        <option>Hair care</option><option>Skin care</option><option>Nail care</option>
+        <option>Body care</option><option>Wax & Threading</option>
+        <option>Consumables</option><option>Equipment</option><option>Other</option>
+      </select>
+      <select class="am-input" id="inv-type-filter" onchange="filterInvItems()" style="width:auto;padding:8px 12px;font-size:13px">
+        <option value="">All types</option>
+        <option value="professional">Professional</option>
+        <option value="retail">Retail</option>
+      </select>
+      <select class="am-input" id="inv-stock-filter" onchange="filterInvItems()" style="width:auto;padding:8px 12px;font-size:13px">
+        <option value="">All stock</option>
+        <option value="in">In stock</option><option value="low">Low stock</option><option value="out">Out of stock</option>
+      </select>
+    </div>
+    <div class="team-table">
+      <table>
+        <thead><tr>
+          <th>Item</th><th>Category</th><th>Type</th>
+          <th>Buy (₹)</th><th>Sell (₹)</th>
+          <th>Stock</th><th>Min</th><th>Status</th><th></th>
+        </tr></thead>
+        <tbody id="inv-items-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════ STOCK INTAKE ══════════════════ -->
+  <div class="tab-panel" id="tab-inv-intake">
+    <div class="cl-topbar">
+      <div><div class="cl-page-title">Stock intake</div><div class="cl-page-sub">Record stock received from suppliers</div></div>
+      <button class="am-close-btn" onclick="openIntakeOverlay()">＋ Record intake</button>
+    </div>
+    <div class="inv-history-list" id="intake-history-list"><div style="padding:40px;text-align:center;color:var(--muted)">Loading…</div></div>
+  </div>
+
+  <!-- ══════════════════ STOCK USAGE ══════════════════ -->
+  <div class="tab-panel" id="tab-inv-usage">
+    <div class="cl-topbar">
+      <div><div class="cl-page-title">Stock usage</div><div class="cl-page-sub">Track professional products consumed during services</div></div>
+      <button class="am-close-btn" onclick="openUsageOverlay()">＋ Record usage</button>
+    </div>
+    <div class="inv-history-list" id="usage-history-list"><div style="padding:40px;text-align:center;color:var(--muted)">Loading…</div></div>
+  </div>
+
+  <!-- ══════════════════ ADJUSTMENTS ══════════════════ -->
+  <div class="tab-panel" id="tab-inv-adjustments">
+    <div class="cl-topbar">
+      <div><div class="cl-page-title">Stock adjustments</div><div class="cl-page-sub">Correct stock for damage, expiry, theft or miscounts</div></div>
+      <button class="am-close-btn" onclick="openAdjOverlay()">＋ Add adjustment</button>
+    </div>
+    <div class="team-table">
+      <table>
+        <thead><tr><th>Date</th><th>Item</th><th>Type</th><th>Qty</th><th>Reason</th><th>Notes</th></tr></thead>
+        <tbody id="adj-tbody"><tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════ SUPPLIERS ══════════════════ -->
+  <div class="tab-panel" id="tab-inv-suppliers">
+    <div class="cl-topbar">
+      <div><div class="cl-page-title">Suppliers <span class="cl-count-badge" id="supplier-count">0</span></div><div class="cl-page-sub">Manage your product suppliers and vendors</div></div>
+      <button class="am-close-btn" onclick="openSupplierOverlay()">＋ Add supplier</button>
+    </div>
+    <div class="team-table">
+      <table>
+        <thead><tr><th>Supplier</th><th>Contact</th><th>Phone</th><th>Email</th><th></th></tr></thead>
+        <tbody id="supplier-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════ STOCK ITEM OVERLAY ══════════════════ -->
+  <div class="am-overlay" id="inv-item-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title" id="inv-item-title">Add stock item</div>
+      <div class="am-topbar-actions"><button class="am-close-btn" onclick="closeInvItemOverlay()">Close</button><button class="am-add-btn" id="inv-item-save-btn" onclick="saveInvItem()">Add</button></div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:680px">
+      <div class="am-err" id="inv-item-err"></div>
+      <div class="am-section-title">Product details</div>
+      <div class="am-section-sub">Add a product or consumable to your inventory</div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Item name <span class="req">*</span></label><input class="am-input" id="ii-name" type="text" placeholder="e.g. Lavender Massage Oil" /></div>
+        <div class="am-field"><label>Brand</label><input class="am-input" id="ii-brand" type="text" placeholder="e.g. OPI, Wella" /></div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Category</label>
+          <select class="am-input" id="ii-category">
+            <option value="">Select category</option>
+            <option>Hair care</option><option>Skin care</option><option>Nail care</option>
+            <option>Body care</option><option>Wax & Threading</option>
+            <option>Consumables</option><option>Equipment</option><option>Other</option>
+          </select>
+        </div>
+        <div class="am-field"><label>Type</label>
+          <select class="am-input" id="ii-type">
+            <option value="professional">Professional (used in services)</option>
+            <option value="retail">Retail (sold to clients)</option>
+          </select>
+        </div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Unit</label>
+          <select class="am-input" id="ii-unit">
+            <option>piece</option><option>bottle</option><option>pack</option>
+            <option>ml</option><option>g</option><option>kg</option><option>L</option>
+            <option>box</option><option>tube</option>
+          </select>
+        </div>
+        <div class="am-field"><label>SKU / Barcode</label><input class="am-input" id="ii-sku" type="text" placeholder="Optional" /></div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Buy price (₹)</label><input class="am-input" id="ii-buy-price" type="number" placeholder="0.00" min="0" step="0.01" /></div>
+        <div class="am-field"><label>Sell price (₹)</label><input class="am-input" id="ii-sell-price" type="number" placeholder="0.00" min="0" step="0.01" /></div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Current stock qty</label><input class="am-input" id="ii-stock-qty" type="number" placeholder="0" min="0" /></div>
+        <div class="am-field"><label>Min stock (reorder point)</label><input class="am-input" id="ii-min-qty" type="number" placeholder="5" min="0" /></div>
+      </div>
+      <div class="am-form-row single">
+        <div class="am-field"><label>Storage location</label><input class="am-input" id="ii-location" type="text" placeholder="e.g. Shelf A, Back room, Treatment room 1" /></div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ══════════════════ STOCK INTAKE OVERLAY ══════════════════ -->
+  <div class="am-overlay" id="intake-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title">Record stock intake</div>
+      <div class="am-topbar-actions"><button class="am-close-btn" onclick="closeIntakeOverlay()">Close</button><button class="am-add-btn" id="intake-save-btn" onclick="saveIntake()">Save</button></div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:760px">
+      <div class="am-err" id="intake-err"></div>
+      <div class="am-section-title">Intake details</div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Date <span class="req">*</span></label><input class="am-input" id="intake-date" type="date" /></div>
+        <div class="am-field"><label>Supplier</label>
+          <select class="am-input" id="intake-supplier">
+            <option value="">Select supplier (optional)</option>
+          </select>
+        </div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Invoice / Bill number</label><input class="am-input" id="intake-invoice" type="text" placeholder="e.g. INV-1234" /></div>
+        <div class="am-field"><label>Notes</label><input class="am-input" id="intake-notes" type="text" placeholder="Optional notes" /></div>
+      </div>
+      <hr class="am-divider" />
+      <div class="am-section-title" style="font-size:15px;margin-bottom:12px">Items received</div>
+      <div class="inv-line-header" style="grid-template-columns:2fr 80px 100px 120px 32px">
+        <div>Product</div><div>Qty</div><div>Cost/unit (₹)</div><div>Expiry date</div><div></div>
+      </div>
+      <div id="intake-lines-wrap"></div>
+      <button class="inv-add-line-btn" onclick="addIntakeLine()">＋ Add product</button>
+      <div style="margin-top:16px;text-align:right;font-size:14px;font-weight:700;color:var(--green)">
+        Total cost: ₹<span id="intake-total">0.00</span>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ══════════════════ STOCK USAGE OVERLAY ══════════════════ -->
+  <div class="am-overlay" id="usage-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title">Record stock usage</div>
+      <div class="am-topbar-actions"><button class="am-close-btn" onclick="closeUsageOverlay()">Close</button><button class="am-add-btn" id="usage-save-btn" onclick="saveUsage()">Save</button></div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:680px">
+      <div class="am-err" id="usage-err"></div>
+      <div class="am-section-title">Usage details</div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Date <span class="req">*</span></label><input class="am-input" id="usage-date" type="date" /></div>
+        <div class="am-field"><label>Staff member</label>
+          <select class="am-input" id="usage-staff">
+            <option value="">Select staff (optional)</option>
+          </select>
+        </div>
+      </div>
+      <div class="am-form-row single">
+        <div class="am-field"><label>Booking / Service reference</label><input class="am-input" id="usage-ref" type="text" placeholder="e.g. Booking #123 or service name" /></div>
+      </div>
+      <hr class="am-divider" />
+      <div class="am-section-title" style="font-size:15px;margin-bottom:12px">Products used</div>
+      <div class="inv-line-header" style="grid-template-columns:2fr 100px 32px">
+        <div>Product</div><div>Qty used</div><div></div>
+      </div>
+      <div id="usage-lines-wrap"></div>
+      <button class="inv-add-line-btn" onclick="addUsageLine()">＋ Add product</button>
+    </div></div>
+  </div>
+
+  <!-- ══════════════════ ADJUSTMENT OVERLAY ══════════════════ -->
+  <div class="am-overlay" id="adj-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title">Add stock adjustment</div>
+      <div class="am-topbar-actions"><button class="am-close-btn" onclick="closeAdjOverlay()">Close</button><button class="am-add-btn" id="adj-save-btn" onclick="saveAdj()">Save</button></div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:580px">
+      <div class="am-err" id="adj-err"></div>
+      <div class="am-section-title">Adjustment details</div>
+      <div class="am-section-sub">Use this to correct stock after a stocktake, write off damaged or expired goods</div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Date</label><input class="am-input" id="adj-date" type="date" /></div>
+        <div class="am-field"><label>Adjustment type</label>
+          <select class="am-input" id="adj-type">
+            <option value="add">Add stock (found / returned)</option>
+            <option value="remove">Remove stock (stocktake correction)</option>
+            <option value="writeoff">Write-off (damaged / expired / stolen)</option>
+          </select>
+        </div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Product <span class="req">*</span></label>
+          <select class="am-input" id="adj-item">
+            <option value="">Select product</option>
+          </select>
+        </div>
+        <div class="am-field"><label>Quantity <span class="req">*</span></label><input class="am-input" id="adj-qty" type="number" placeholder="0" min="0.01" step="0.01" /></div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Reason</label>
+          <select class="am-input" id="adj-reason">
+            <option>Stocktake correction</option><option>Damaged</option>
+            <option>Expired</option><option>Stolen / lost</option>
+            <option>Returned to supplier</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="am-form-row single">
+        <div class="am-field"><label>Notes</label><textarea class="am-input" id="adj-notes" rows="2" placeholder="Any additional notes…" style="resize:vertical"></textarea></div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ══════════════════ SUPPLIER OVERLAY ══════════════════ -->
+  <div class="am-overlay" id="supplier-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title" id="supplier-overlay-title">Add supplier</div>
+      <div class="am-topbar-actions"><button class="am-close-btn" onclick="closeSupplierOverlay()">Close</button><button class="am-add-btn" id="supplier-save-btn" onclick="saveSupplier()">Add</button></div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:580px">
+      <div class="am-err" id="supplier-err"></div>
+      <div class="am-section-title">Supplier details</div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Supplier name <span class="req">*</span></label><input class="am-input" id="sup-name" type="text" placeholder="e.g. Beauty Wholesale Co." /></div>
+        <div class="am-field"><label>Contact person</label><input class="am-input" id="sup-contact" type="text" placeholder="Name of your rep" /></div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Phone</label><input class="am-input" id="sup-phone" type="tel" placeholder="+91 00000 00000" /></div>
+        <div class="am-field"><label>Email</label><input class="am-input" id="sup-email" type="email" placeholder="supplier@example.com" /></div>
+      </div>
+      <div class="am-form-row single">
+        <div class="am-field"><label>Address</label><textarea class="am-input" id="sup-address" rows="2" placeholder="Supplier address" style="resize:vertical"></textarea></div>
+      </div>
+    </div></div>
+  </div>
 
   <!-- ══════════════════ ADD TEAM MEMBER OVERLAY ══════════════════ -->
   <div class="am-overlay" id="am-overlay">
@@ -3639,7 +4001,13 @@
   PAGE_TITLES['clients-list']    = 'Clients list';
   PAGE_TITLES['client-segments'] = 'Client segments';
   PAGE_TITLES['client-loyalty']  = 'Rewards & Loyalty';
-  PAGE_TITLES['generate-bill']   = 'Generate Bill';
+  PAGE_TITLES['generate-bill']     = 'Generate Bill';
+  PAGE_TITLES['inv-overview']      = 'Inventory Overview';
+  PAGE_TITLES['inv-items']         = 'Stock Items';
+  PAGE_TITLES['inv-intake']        = 'Stock Intake';
+  PAGE_TITLES['inv-usage']         = 'Stock Usage';
+  PAGE_TITLES['inv-adjustments']   = 'Adjustments';
+  PAGE_TITLES['inv-suppliers']     = 'Suppliers';
   PAGE_TITLES['service-menu']    = 'Service menu';
   PAGE_TITLES['memberships']     = 'Memberships';
   PAGE_TITLES['product-list']    = 'Products';
@@ -4018,7 +4386,13 @@
     if (page === 'clients-list')    { openClientNav(); loadClientsList(); }
     if (page === 'client-segments') { openClientNav(); loadClientSegments(); }
     if (page === 'client-loyalty')  { openClientNav(); loadClientLoyalty(); }
-    if (page === 'generate-bill')   { initBillPage(); }
+    if (page === 'generate-bill')    { initBillPage(); }
+    if (page === 'inv-overview')     { openInvNav(); loadInvOverview(); }
+    if (page === 'inv-items')        { openInvNav(); loadInvItems(); }
+    if (page === 'inv-intake')       { openInvNav(); loadIntakes(); }
+    if (page === 'inv-usage')        { openInvNav(); loadUsageLogs(); }
+    if (page === 'inv-adjustments')  { openInvNav(); loadAdjustments(); }
+    if (page === 'inv-suppliers')    { openInvNav(); loadSuppliers(); }
     if (page === 'service-menu')    { openCatalogNav(); loadServiceMenu(); }
     if (page === 'memberships')     { openCatalogNav(); loadMemberships(); }
     if (page === 'product-list')    { openCatalogNav(); loadProducts(); }
@@ -4729,6 +5103,537 @@
       }).join('\n') +
       `\n\nGrand Total: Rs.${Number(inv.grand_total).toFixed(2)}\nPayment: ${(inv.payment_method||'cash').toUpperCase()}\n\nPowered by Genoti AI`;
     window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
+
+  /* ════════════════════════════════════════════
+     INVENTORY MANAGEMENT
+  ════════════════════════════════════════════ */
+  let allInvItems    = [];
+  let allSuppliers   = [];
+  let allIntakes     = [];
+  let allUsageLogs   = [];
+  let allAdjustments = [];
+  let invItemEditId  = null;
+  let supplierEditId = null;
+  let intakeLines    = []; let intakeLineId = 0;
+  let usageLines     = []; let usageLineId  = 0;
+
+  /* ── Nav helpers ── */
+  function toggleInvNav(btn) { btn.classList.toggle('open'); document.getElementById('inv-sub-group').classList.toggle('open'); }
+  function openInvNav() { document.getElementById('nav-inv-toggle').classList.add('open'); document.getElementById('inv-sub-group').classList.add('open'); }
+
+  /* ── Shared helpers ── */
+  function invFmt(n) { return Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function invStockState(item) {
+    if ((item.stock_qty||0) <= 0) return 'out';
+    if ((item.stock_qty||0) <= (item.min_qty||5)) return 'low';
+    return 'in';
+  }
+  function invStockLabel(state) { return state==='out'?'Out of stock':state==='low'?'Low stock':'In stock'; }
+
+  async function fetchInvItems() {
+    if (allInvItems.length) return;
+    const { data } = await db.from('inventory_items').select('*').eq('merchant_id', currentMerchant.id).order('name');
+    allInvItems = data || [];
+  }
+  async function fetchSuppliers() {
+    if (allSuppliers.length) return;
+    const { data } = await db.from('suppliers').select('*').eq('merchant_id', currentMerchant.id).order('name');
+    allSuppliers = data || [];
+  }
+  function populateSupplierSelect(selId) {
+    const sel = document.getElementById(selId);
+    if (!sel) return;
+    const base = `<option value="">Select supplier (optional)</option>`;
+    sel.innerHTML = base + allSuppliers.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+  }
+  function populateItemSelect(selId, selectedId) {
+    const sel = document.getElementById(selId);
+    if (!sel) return;
+    sel.innerHTML = `<option value="">Select product</option>` +
+      allInvItems.map(i => `<option value="${i.id}" ${i.id===selectedId?'selected':''}>${i.name} (${i.unit})</option>`).join('');
+  }
+  function populateStaffSelect(selId) {
+    const sel = document.getElementById(selId);
+    if (!sel) return;
+    sel.innerHTML = `<option value="">Select staff (optional)</option>` +
+      currentStaff.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+  }
+
+  /* ════════════════════════════════════════════
+     1. OVERVIEW
+  ════════════════════════════════════════════ */
+  async function loadInvOverview() {
+    await fetchInvItems();
+    const low     = allInvItems.filter(i => invStockState(i) === 'low');
+    const out     = allInvItems.filter(i => invStockState(i) === 'out');
+    const value   = allInvItems.reduce((s,i) => s + (i.stock_qty||0)*(i.buy_price||0), 0);
+
+    document.getElementById('kpi-skus').textContent  = allInvItems.length;
+    document.getElementById('kpi-value').textContent = '₹' + invFmt(value);
+    document.getElementById('kpi-low').textContent   = low.length;
+    document.getElementById('kpi-out').textContent   = out.length;
+    document.getElementById('low-stock-count').textContent = low.length + out.length;
+
+    // Low stock list
+    const alertItems = [...out, ...low];
+    document.getElementById('inv-low-stock-list').innerHTML = alertItems.length
+      ? alertItems.map(i => {
+          const state = invStockState(i);
+          return `<div class="inv-alert-row">
+            <div><div class="inv-alert-name">${i.name}</div><div style="font-size:11px;color:var(--muted)">${i.category||''} · ${i.brand||''}</div></div>
+            <div class="inv-alert-qty"><span class="inv-stock-badge ${state}">${i.stock_qty||0} ${i.unit}</span></div>
+          </div>`;
+        }).join('')
+      : '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">✅ All items are well stocked</div>';
+
+    // Recent activity — pull last 8 from each source, merge, sort
+    const [{ data: intk }, { data: usg }, { data: adj }] = await Promise.all([
+      db.from('inventory_intakes').select('*').eq('merchant_id', currentMerchant.id).order('created_at',{ascending:false}).limit(5),
+      db.from('inventory_usage').select('*').eq('merchant_id', currentMerchant.id).order('created_at',{ascending:false}).limit(5),
+      db.from('inventory_adjustments').select('*').eq('merchant_id', currentMerchant.id).order('created_at',{ascending:false}).limit(5),
+    ]);
+    const activity = [
+      ...(intk||[]).map(r => ({ type:'intake', color:'#059669', label:'Intake', desc:`${(r.items||[]).length} item(s) received`, date:r.intake_date, created:r.created_at })),
+      ...(usg||[]).map(r  => ({ type:'usage',  color:'#2563EB', label:'Usage',  desc:`${(r.items||[]).length} item(s) consumed`,  date:r.usage_date,  created:r.created_at })),
+      ...(adj||[]).map(r  => ({ type:'adj',    color:r.adj_type==='add'?'#1D9E75':'#DC2626', label:r.adj_type==='add'?'Added':'Removed', desc:`${r.item_name} × ${r.qty}`, date:r.adj_date, created:r.created_at })),
+    ].sort((a,b) => new Date(b.created)-new Date(a.created)).slice(0,10);
+
+    document.getElementById('inv-recent-activity').innerHTML = activity.length
+      ? activity.map(a => `<div class="inv-tx-row">
+          <div class="inv-tx-dot" style="background:${a.color}"></div>
+          <div class="inv-tx-name">${a.desc}</div>
+          <div><div class="inv-tx-type">${a.label}</div><div style="font-size:11px;color:var(--muted)">${a.date||''}</div></div>
+        </div>`).join('')
+      : '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">No activity yet</div>';
+  }
+
+  /* ════════════════════════════════════════════
+     2. STOCK ITEMS
+  ════════════════════════════════════════════ */
+  async function loadInvItems() {
+    allInvItems = [];
+    await fetchInvItems();
+    document.getElementById('inv-items-count').textContent = allInvItems.length;
+    filterInvItems();
+  }
+
+  function filterInvItems() {
+    const q     = (document.getElementById('inv-items-search')?.value||'').toLowerCase();
+    const cat   = document.getElementById('inv-cat-filter')?.value||'';
+    const type  = document.getElementById('inv-type-filter')?.value||'';
+    const stock = document.getElementById('inv-stock-filter')?.value||'';
+    const list  = allInvItems.filter(i => {
+      const mq = i.name.toLowerCase().includes(q)||(i.brand||'').toLowerCase().includes(q)||(i.sku||'').toLowerCase().includes(q);
+      const mc = !cat   || i.category === cat;
+      const mt = !type  || i.item_type === type;
+      const ms = !stock || invStockState(i) === stock;
+      return mq && mc && mt && ms;
+    });
+    renderInvItems(list);
+  }
+
+  function renderInvItems(list) {
+    const tbody = document.getElementById('inv-items-tbody');
+    if (!list.length) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:48px;color:var(--muted)">
+        <div style="font-size:28px;margin-bottom:8px">📦</div>
+        <div style="font-weight:700">No items found</div>
+        <div style="font-size:12px;margin-top:4px">Click ＋ Add item to add your first product</div>
+      </td></tr>`;
+      return;
+    }
+    tbody.innerHTML = list.map(i => {
+      const state = invStockState(i);
+      const typeClass = i.item_type === 'retail' ? 'retail' : 'pro';
+      const typeLabel = i.item_type === 'retail' ? 'Retail' : 'Professional';
+      return `<tr>
+        <td>
+          <div style="font-weight:700;font-size:13px">${i.name}</div>
+          <div style="font-size:11px;color:var(--muted)">${i.brand||''} ${i.sku?'· SKU: '+i.sku:''}</div>
+        </td>
+        <td style="font-size:13px">${i.category||'—'}</td>
+        <td><span class="inv-type-pill ${typeClass}">${typeLabel}</span></td>
+        <td style="font-size:13px;font-weight:600">₹${invFmt(i.buy_price)}</td>
+        <td style="font-size:13px;font-weight:600">₹${invFmt(i.sell_price)}</td>
+        <td style="font-size:14px;font-weight:800">${i.stock_qty||0} <span style="font-size:11px;font-weight:500;color:var(--muted)">${i.unit}</span></td>
+        <td style="font-size:13px;color:var(--muted)">${i.min_qty||5}</td>
+        <td><span class="inv-stock-badge ${state}">${invStockLabel(state)}</span></td>
+        <td><button class="actions-btn" onclick="openInvItemOverlay('${i.id}')">Edit</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  function openInvItemOverlay(id) {
+    invItemEditId = id || null;
+    const overlay = document.getElementById('inv-item-overlay');
+    document.getElementById('inv-item-title').textContent = id ? 'Edit stock item' : 'Add stock item';
+    document.getElementById('inv-item-save-btn').textContent = id ? 'Save' : 'Add';
+    document.getElementById('inv-item-err').classList.remove('show');
+    if (id) {
+      const item = allInvItems.find(x => x.id === id);
+      if (!item) return;
+      document.getElementById('ii-name').value       = item.name||'';
+      document.getElementById('ii-brand').value      = item.brand||'';
+      document.getElementById('ii-category').value   = item.category||'';
+      document.getElementById('ii-type').value       = item.item_type||'professional';
+      document.getElementById('ii-unit').value       = item.unit||'piece';
+      document.getElementById('ii-sku').value        = item.sku||'';
+      document.getElementById('ii-buy-price').value  = item.buy_price||'';
+      document.getElementById('ii-sell-price').value = item.sell_price||'';
+      document.getElementById('ii-stock-qty').value  = item.stock_qty||'';
+      document.getElementById('ii-min-qty').value    = item.min_qty||'';
+      document.getElementById('ii-location').value   = item.location||'';
+    } else {
+      ['ii-name','ii-brand','ii-sku','ii-buy-price','ii-sell-price','ii-stock-qty','ii-min-qty','ii-location'].forEach(id => { document.getElementById(id).value=''; });
+      document.getElementById('ii-category').value=''; document.getElementById('ii-type').value='professional'; document.getElementById('ii-unit').value='piece';
+    }
+    overlay.classList.add('open'); document.body.style.overflow='hidden';
+  }
+
+  function closeInvItemOverlay() { document.getElementById('inv-item-overlay').classList.remove('open'); document.body.style.overflow=''; }
+
+  async function saveInvItem() {
+    const errEl = document.getElementById('inv-item-err'); errEl.classList.remove('show');
+    const name  = document.getElementById('ii-name').value.trim();
+    if (!name) { errEl.textContent='Item name is required.'; errEl.classList.add('show'); return; }
+    const btn   = document.getElementById('inv-item-save-btn');
+    btn.disabled=true; btn.textContent='Saving…';
+    const payload = {
+      name, brand: document.getElementById('ii-brand').value.trim()||null,
+      category: document.getElementById('ii-category').value||null,
+      item_type: document.getElementById('ii-type').value,
+      unit: document.getElementById('ii-unit').value,
+      sku: document.getElementById('ii-sku').value.trim()||null,
+      buy_price: parseFloat(document.getElementById('ii-buy-price').value)||0,
+      sell_price: parseFloat(document.getElementById('ii-sell-price').value)||0,
+      stock_qty: parseFloat(document.getElementById('ii-stock-qty').value)||0,
+      min_qty: parseFloat(document.getElementById('ii-min-qty').value)||5,
+      location: document.getElementById('ii-location').value.trim()||null,
+    };
+    let error;
+    if (invItemEditId) { ({error} = await db.from('inventory_items').update(payload).eq('id',invItemEditId)); }
+    else               { ({error} = await db.from('inventory_items').insert({...payload, merchant_id: currentMerchant.id})); }
+    btn.disabled=false; btn.textContent=invItemEditId?'Save':'Add';
+    if (error) { errEl.textContent=error.message; errEl.classList.add('show'); return; }
+    allInvItems=[]; tabLoaded['inv-items']=false; tabLoaded['inv-overview']=false;
+    await loadInvItems(); closeInvItemOverlay();
+  }
+
+  /* ════════════════════════════════════════════
+     3. STOCK INTAKE
+  ════════════════════════════════════════════ */
+  async function loadIntakes() {
+    const {data, error} = await db.from('inventory_intakes').select('*').eq('merchant_id', currentMerchant.id).order('intake_date',{ascending:false});
+    if (error && error.code==='42P01') { renderMissingTable('intake-history-list','inventory_intakes'); return; }
+    allIntakes = data||[];
+    renderIntakes(allIntakes);
+  }
+
+  function renderIntakes(list) {
+    const wrap = document.getElementById('intake-history-list');
+    if (!list.length) {
+      wrap.innerHTML=`<div style="text-align:center;padding:60px;color:var(--muted)"><div style="font-size:32px;margin-bottom:10px">📥</div><div style="font-weight:700;font-size:15px;color:var(--text)">No intakes recorded yet</div><div style="font-size:13px;margin-top:4px">Click ＋ Record intake to log your first delivery</div></div>`;
+      return;
+    }
+    wrap.innerHTML = list.map((r,idx) => {
+      const supplierName = allSuppliers.find(s=>s.id===r.supplier_id)?.name || r.supplier_id || 'No supplier';
+      const items = r.items||[];
+      return `<div class="inv-history-card">
+        <div class="inv-history-head" onclick="toggleHistoryBody('intake-body-${idx}')">
+          <div class="inv-history-badge" style="background:#D1FAE5">📥</div>
+          <div class="inv-history-meta">
+            <div class="inv-history-title">${supplierName} ${r.invoice_no?'· '+r.invoice_no:''}</div>
+            <div class="inv-history-sub">${items.length} item(s) received${r.notes?' · '+r.notes:''}</div>
+          </div>
+          <div class="inv-history-right">
+            <div class="inv-history-amt" style="color:var(--green)">₹${invFmt(r.total_cost)}</div>
+            <div class="inv-history-date">${r.intake_date||''}</div>
+          </div>
+        </div>
+        <div class="inv-history-body" id="intake-body-${idx}">
+          ${items.map(it=>`<div class="inv-history-item-row"><span>${it.item_name||it.item_id}</span><span>${it.qty} unit${it.qty!==1?'s':''} · ₹${invFmt(it.cost_per_unit)}/unit${it.expiry_date?' · exp '+it.expiry_date:''}</span></div>`).join('')}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function openIntakeOverlay() {
+    await fetchInvItems(); await fetchSuppliers();
+    intakeLines=[]; intakeLineId=0;
+    document.getElementById('intake-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('intake-invoice').value=''; document.getElementById('intake-notes').value='';
+    document.getElementById('intake-err').classList.remove('show');
+    populateSupplierSelect('intake-supplier');
+    addIntakeLine();
+    document.getElementById('intake-overlay').classList.add('open'); document.body.style.overflow='hidden';
+  }
+  function closeIntakeOverlay() { document.getElementById('intake-overlay').classList.remove('open'); document.body.style.overflow=''; }
+
+  function addIntakeLine() {
+    const id=++intakeLineId; intakeLines.push({id, itemId:'', qty:1, cost:0, expiry:''});
+    renderIntakeLines();
+  }
+  function removeIntakeLine(id) { intakeLines=intakeLines.filter(l=>l.id!==id); renderIntakeLines(); calcIntakeTotal(); }
+
+  function renderIntakeLines() {
+    document.getElementById('intake-lines-wrap').innerHTML = intakeLines.map(l=>`
+      <div class="inv-line-row" style="grid-template-columns:2fr 80px 100px 120px 32px" id="iline-${l.id}">
+        <select class="inv-line-sel" onchange="onIntakeItemChange(${l.id},this)">
+          <option value="">Select product</option>
+          ${allInvItems.map(i=>`<option value="${i.id}" ${i.id===l.itemId?'selected':''}>${i.name} (${i.unit})</option>`).join('')}
+        </select>
+        <input class="inv-line-in" type="number" value="${l.qty}" min="0.01" step="0.01" placeholder="Qty"
+          onchange="onIntakeLineField(${l.id},'qty',parseFloat(this.value)||0);calcIntakeTotal()" />
+        <input class="inv-line-in" type="number" value="${l.cost||''}" min="0" step="0.01" placeholder="₹ cost"
+          onchange="onIntakeLineField(${l.id},'cost',parseFloat(this.value)||0);calcIntakeTotal()" />
+        <input class="inv-line-in" type="date" value="${l.expiry||''}"
+          onchange="onIntakeLineField(${l.id},'expiry',this.value)" />
+        <button class="inv-line-del" onclick="removeIntakeLine(${l.id})">✕</button>
+      </div>`).join('');
+  }
+  function onIntakeItemChange(id, sel) { onIntakeLineField(id,'itemId',sel.value); }
+  function onIntakeLineField(id, field, val) { const l=intakeLines.find(x=>x.id===id); if(l) l[field]=val; }
+  function calcIntakeTotal() {
+    const total = intakeLines.reduce((s,l)=>s+(l.qty||0)*(l.cost||0),0);
+    document.getElementById('intake-total').textContent = invFmt(total);
+  }
+
+  async function saveIntake() {
+    const errEl=document.getElementById('intake-err'); errEl.classList.remove('show');
+    const date = document.getElementById('intake-date').value;
+    if (!date) { errEl.textContent='Please select a date.'; errEl.classList.add('show'); return; }
+    const validLines = intakeLines.filter(l=>l.itemId && l.qty>0);
+    if (!validLines.length) { errEl.textContent='Add at least one product with quantity.'; errEl.classList.add('show'); return; }
+    const btn=document.getElementById('intake-save-btn'); btn.disabled=true; btn.textContent='Saving…';
+    const suppId = document.getElementById('intake-supplier').value||null;
+    const items  = validLines.map(l=>({ item_id:l.itemId, item_name: allInvItems.find(i=>i.id===l.itemId)?.name||l.itemId, qty:l.qty, cost_per_unit:l.cost, expiry_date:l.expiry||null }));
+    const total  = items.reduce((s,i)=>s+i.qty*i.cost_per_unit,0);
+    const {error} = await db.from('inventory_intakes').insert({
+      merchant_id: currentMerchant.id, supplier_id: suppId, invoice_no: document.getElementById('intake-invoice').value.trim()||null,
+      intake_date: date, items, total_cost: total, notes: document.getElementById('intake-notes').value.trim()||null,
+    });
+    if (error) { btn.disabled=false; btn.textContent='Save'; errEl.textContent=error.message; errEl.classList.add('show'); return; }
+    // Update stock quantities
+    await Promise.all(validLines.map(async l=>{
+      const cur = allInvItems.find(i=>i.id===l.itemId);
+      if (cur) await db.from('inventory_items').update({stock_qty:(cur.stock_qty||0)+l.qty}).eq('id',l.itemId);
+    }));
+    allInvItems=[]; btn.disabled=false; btn.textContent='Save';
+    tabLoaded['inv-intake']=false; tabLoaded['inv-overview']=false; tabLoaded['inv-items']=false;
+    await loadIntakes(); closeIntakeOverlay();
+  }
+
+  /* ════════════════════════════════════════════
+     4. STOCK USAGE
+  ════════════════════════════════════════════ */
+  async function loadUsageLogs() {
+    const {data, error} = await db.from('inventory_usage').select('*').eq('merchant_id', currentMerchant.id).order('usage_date',{ascending:false});
+    if (error && error.code==='42P01') { renderMissingTable('usage-history-list','inventory_usage'); return; }
+    allUsageLogs = data||[];
+    renderUsageLogs(allUsageLogs);
+  }
+
+  function renderUsageLogs(list) {
+    const wrap = document.getElementById('usage-history-list');
+    if (!list.length) {
+      wrap.innerHTML=`<div style="text-align:center;padding:60px;color:var(--muted)"><div style="font-size:32px;margin-bottom:10px">📤</div><div style="font-weight:700;font-size:15px;color:var(--text)">No usage recorded yet</div><div style="font-size:13px;margin-top:4px">Click ＋ Record usage to log products consumed during services</div></div>`;
+      return;
+    }
+    wrap.innerHTML = list.map((r,idx)=>{
+      const staffName = currentStaff.find(s=>s.id===r.staff_id)?.name||'';
+      const items = r.items||[];
+      return `<div class="inv-history-card">
+        <div class="inv-history-head" onclick="toggleHistoryBody('usage-body-${idx}')">
+          <div class="inv-history-badge" style="background:#DBEAFE">📤</div>
+          <div class="inv-history-meta">
+            <div class="inv-history-title">${r.booking_ref||'Service usage'} ${staffName?'· '+staffName:''}</div>
+            <div class="inv-history-sub">${items.length} product(s) consumed${r.notes?' · '+r.notes:''}</div>
+          </div>
+          <div class="inv-history-right">
+            <div class="inv-history-amt" style="color:#2563EB">${items.reduce((s,i)=>s+i.qty_used,0)} units</div>
+            <div class="inv-history-date">${r.usage_date||''}</div>
+          </div>
+        </div>
+        <div class="inv-history-body" id="usage-body-${idx}">
+          ${items.map(it=>`<div class="inv-history-item-row"><span>${it.item_name||it.item_id}</span><span>${it.qty_used} used</span></div>`).join('')}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function openUsageOverlay() {
+    await fetchInvItems();
+    if (!currentStaff.length) await loadStaff();
+    usageLines=[]; usageLineId=0;
+    document.getElementById('usage-date').value=new Date().toISOString().split('T')[0];
+    document.getElementById('usage-ref').value=''; document.getElementById('usage-err').classList.remove('show');
+    populateStaffSelect('usage-staff');
+    addUsageLine();
+    document.getElementById('usage-overlay').classList.add('open'); document.body.style.overflow='hidden';
+  }
+  function closeUsageOverlay() { document.getElementById('usage-overlay').classList.remove('open'); document.body.style.overflow=''; }
+
+  function addUsageLine() {
+    const id=++usageLineId; usageLines.push({id, itemId:'', qty:1});
+    renderUsageLines();
+  }
+  function removeUsageLine(id) { usageLines=usageLines.filter(l=>l.id!==id); renderUsageLines(); }
+
+  function renderUsageLines() {
+    document.getElementById('usage-lines-wrap').innerHTML = usageLines.map(l=>`
+      <div class="inv-line-row" style="grid-template-columns:2fr 100px 32px">
+        <select class="inv-line-sel" onchange="onUsageLineField(${l.id},'itemId',this.value)">
+          <option value="">Select product</option>
+          ${allInvItems.filter(i=>i.item_type==='professional').map(i=>`<option value="${i.id}" ${i.id===l.itemId?'selected':''}>${i.name} (${i.stock_qty||0} ${i.unit} left)</option>`).join('')}
+          ${allInvItems.filter(i=>i.item_type!=='professional').length?`<optgroup label="Retail"></optgroup>`:'' }
+        </select>
+        <input class="inv-line-in" type="number" value="${l.qty}" min="0.01" step="0.01" placeholder="Qty used"
+          onchange="onUsageLineField(${l.id},'qty',parseFloat(this.value)||0)" />
+        <button class="inv-line-del" onclick="removeUsageLine(${l.id})">✕</button>
+      </div>`).join('');
+  }
+  function onUsageLineField(id, field, val) { const l=usageLines.find(x=>x.id===id); if(l) l[field]=val; }
+
+  async function saveUsage() {
+    const errEl=document.getElementById('usage-err'); errEl.classList.remove('show');
+    const date = document.getElementById('usage-date').value;
+    if (!date) { errEl.textContent='Please select a date.'; errEl.classList.add('show'); return; }
+    const validLines = usageLines.filter(l=>l.itemId && l.qty>0);
+    if (!validLines.length) { errEl.textContent='Add at least one product.'; errEl.classList.add('show'); return; }
+    const btn=document.getElementById('usage-save-btn'); btn.disabled=true; btn.textContent='Saving…';
+    const items = validLines.map(l=>({ item_id:l.itemId, item_name: allInvItems.find(i=>i.id===l.itemId)?.name||l.itemId, qty_used:l.qty }));
+    const {error} = await db.from('inventory_usage').insert({
+      merchant_id: currentMerchant.id, staff_id: document.getElementById('usage-staff').value||null,
+      usage_date: date, booking_ref: document.getElementById('usage-ref').value.trim()||null, items,
+      notes: null,
+    });
+    if (error) { btn.disabled=false; btn.textContent='Save'; errEl.textContent=error.message; errEl.classList.add('show'); return; }
+    await Promise.all(validLines.map(async l=>{
+      const cur = allInvItems.find(i=>i.id===l.itemId);
+      if (cur) await db.from('inventory_items').update({stock_qty:Math.max(0,(cur.stock_qty||0)-l.qty)}).eq('id',l.itemId);
+    }));
+    allInvItems=[]; btn.disabled=false; btn.textContent='Save';
+    tabLoaded['inv-usage']=false; tabLoaded['inv-overview']=false; tabLoaded['inv-items']=false;
+    await loadUsageLogs(); closeUsageOverlay();
+  }
+
+  /* ════════════════════════════════════════════
+     5. ADJUSTMENTS
+  ════════════════════════════════════════════ */
+  async function loadAdjustments() {
+    const {data, error} = await db.from('inventory_adjustments').select('*').eq('merchant_id', currentMerchant.id).order('created_at',{ascending:false});
+    if (error && error.code==='42P01') { renderMissingTable('adj-tbody','inventory_adjustments',6); return; }
+    allAdjustments=data||[];
+    const tbody=document.getElementById('adj-tbody');
+    if (!allAdjustments.length) {
+      tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--muted)"><div style="font-size:28px;margin-bottom:8px">🔧</div><div style="font-weight:700">No adjustments yet</div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = allAdjustments.map(r=>`<tr>
+      <td style="font-size:13px">${r.adj_date||r.created_at?.split('T')[0]||''}</td>
+      <td style="font-weight:600;font-size:13px">${r.item_name||'—'}</td>
+      <td><span class="adj-type-pill ${r.adj_type}">${r.adj_type==='add'?'Added':r.adj_type==='remove'?'Removed':'Write-off'}</span></td>
+      <td style="font-weight:700;font-size:13px;color:${r.adj_type==='add'?'var(--green)':'#DC2626'}">${r.adj_type==='add'?'+':'−'}${r.qty}</td>
+      <td style="font-size:13px;color:var(--muted)">${r.reason||'—'}</td>
+      <td style="font-size:13px;color:var(--muted)">${r.notes||'—'}</td>
+    </tr>`).join('');
+  }
+
+  async function openAdjOverlay() {
+    await fetchInvItems();
+    document.getElementById('adj-date').value=new Date().toISOString().split('T')[0];
+    document.getElementById('adj-qty').value='';
+    document.getElementById('adj-notes').value='';
+    document.getElementById('adj-err').classList.remove('show');
+    populateItemSelect('adj-item');
+    document.getElementById('adj-overlay').classList.add('open'); document.body.style.overflow='hidden';
+  }
+  function closeAdjOverlay() { document.getElementById('adj-overlay').classList.remove('open'); document.body.style.overflow=''; }
+
+  async function saveAdj() {
+    const errEl=document.getElementById('adj-err'); errEl.classList.remove('show');
+    const itemId=document.getElementById('adj-item').value;
+    const qty   =parseFloat(document.getElementById('adj-qty').value)||0;
+    if (!itemId) { errEl.textContent='Please select a product.'; errEl.classList.add('show'); return; }
+    if (!qty)    { errEl.textContent='Please enter a quantity.';  errEl.classList.add('show'); return; }
+    const btn=document.getElementById('adj-save-btn'); btn.disabled=true; btn.textContent='Saving…';
+    const adjType=document.getElementById('adj-type').value;
+    const item = allInvItems.find(i=>i.id===itemId);
+    const delta = adjType==='add' ? qty : -qty;
+    const {error} = await db.from('inventory_adjustments').insert({
+      merchant_id: currentMerchant.id, item_id: itemId, item_name: item?.name||itemId,
+      adj_type: adjType, reason: document.getElementById('adj-reason').value,
+      qty, notes: document.getElementById('adj-notes').value.trim()||null,
+      adj_date: document.getElementById('adj-date').value,
+    });
+    if (error) { btn.disabled=false; btn.textContent='Save'; errEl.textContent=error.message; errEl.classList.add('show'); return; }
+    if (item) await db.from('inventory_items').update({stock_qty:Math.max(0,(item.stock_qty||0)+delta)}).eq('id',itemId);
+    allInvItems=[]; btn.disabled=false; btn.textContent='Save';
+    tabLoaded['inv-adjustments']=false; tabLoaded['inv-overview']=false; tabLoaded['inv-items']=false;
+    await loadAdjustments(); closeAdjOverlay();
+  }
+
+  /* ════════════════════════════════════════════
+     6. SUPPLIERS
+  ════════════════════════════════════════════ */
+  async function loadSuppliers() {
+    allSuppliers=[];
+    await fetchSuppliers();
+    document.getElementById('supplier-count').textContent=allSuppliers.length;
+    const tbody=document.getElementById('supplier-tbody');
+    if (!allSuppliers.length) {
+      tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:48px;color:var(--muted)"><div style="font-size:28px;margin-bottom:8px">🏭</div><div style="font-weight:700">No suppliers yet</div><div style="font-size:12px;margin-top:4px">Click ＋ Add supplier to add your first vendor</div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML=allSuppliers.map(s=>`<tr>
+      <td><div style="font-weight:700;font-size:13px">${s.name}</div><div style="font-size:11px;color:var(--muted)">${s.address||''}</div></td>
+      <td style="font-size:13px">${s.contact_name||'—'}</td>
+      <td style="font-size:13px">${s.phone||'—'}</td>
+      <td style="font-size:13px">${s.email||'—'}</td>
+      <td><button class="actions-btn" onclick="openSupplierOverlay('${s.id}')">Edit</button></td>
+    </tr>`).join('');
+  }
+
+  function openSupplierOverlay(id) {
+    supplierEditId=id||null;
+    document.getElementById('supplier-overlay-title').textContent=id?'Edit supplier':'Add supplier';
+    document.getElementById('supplier-save-btn').textContent=id?'Save':'Add';
+    document.getElementById('supplier-err').classList.remove('show');
+    if (id) {
+      const s=allSuppliers.find(x=>x.id===id); if(!s) return;
+      document.getElementById('sup-name').value=s.name||''; document.getElementById('sup-contact').value=s.contact_name||'';
+      document.getElementById('sup-phone').value=s.phone||''; document.getElementById('sup-email').value=s.email||'';
+      document.getElementById('sup-address').value=s.address||'';
+    } else {
+      ['sup-name','sup-contact','sup-phone','sup-email','sup-address'].forEach(id=>{document.getElementById(id).value='';});
+    }
+    document.getElementById('supplier-overlay').classList.add('open'); document.body.style.overflow='hidden';
+  }
+  function closeSupplierOverlay() { document.getElementById('supplier-overlay').classList.remove('open'); document.body.style.overflow=''; }
+
+  async function saveSupplier() {
+    const errEl=document.getElementById('supplier-err'); errEl.classList.remove('show');
+    const name=document.getElementById('sup-name').value.trim();
+    if (!name) { errEl.textContent='Supplier name is required.'; errEl.classList.add('show'); return; }
+    const btn=document.getElementById('supplier-save-btn'); btn.disabled=true; btn.textContent='Saving…';
+    const payload={name, contact_name:document.getElementById('sup-contact').value.trim()||null, phone:document.getElementById('sup-phone').value.trim()||null, email:document.getElementById('sup-email').value.trim()||null, address:document.getElementById('sup-address').value.trim()||null};
+    let error;
+    if (supplierEditId) { ({error}=await db.from('suppliers').update(payload).eq('id',supplierEditId)); }
+    else                { ({error}=await db.from('suppliers').insert({...payload, merchant_id:currentMerchant.id})); }
+    btn.disabled=false; btn.textContent=supplierEditId?'Save':'Add';
+    if (error) { errEl.textContent=error.message; errEl.classList.add('show'); return; }
+    allSuppliers=[]; tabLoaded['inv-suppliers']=false;
+    await loadSuppliers(); closeSupplierOverlay();
+  }
+
+  /* ── Shared util ── */
+  function toggleHistoryBody(id) { document.getElementById(id)?.classList.toggle('open'); }
+  function renderMissingTable(wrapperId, tableName, cols) {
+    const el=document.getElementById(wrapperId);
+    if (!el) return;
+    const inner=`<div style="text-align:center;padding:60px;color:var(--muted)"><div style="font-size:28px;margin-bottom:8px">🔧</div><div style="font-weight:700;font-size:15px;color:var(--text)">Table not set up yet</div><div style="font-size:12px;margin-top:4px">Run the SQL to create <code>${tableName}</code></div></div>`;
+    el.innerHTML = cols ? `<tr><td colspan="${cols}">${inner}</td></tr>` : inner;
   }
 
   /* ════════════════════════════════════════════
