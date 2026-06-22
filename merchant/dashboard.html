@@ -146,9 +146,37 @@
     }
     .ts-chip:hover { border-color: var(--green); color: var(--green); background: #F0FDF8; }
     .ts-chip.selected { border-color: var(--green); color: var(--green); background: #F0FDF8; font-weight: 700; }
-    .custom-time-row { display: none; align-items: center; gap: 8px; margin-top: 4px; }
-    .custom-time-row span { font-size: 13px; color: var(--muted); flex-shrink: 0; }
-    .slot-hint { font-size: 12px; color: var(--green); font-weight: 600; margin-top: 2px; min-height: 16px; }
+    .slot-hint { font-size: 12px; color: var(--green); font-weight: 600; margin-top: 6px; min-height: 16px; }
+    /* ── Stepper card time picker ── */
+    .custom-time-row { display: none; gap: 12px; margin-top: 8px; align-items: center; }
+    .time-card {
+      flex: 1; border: 1.5px solid var(--border); border-radius: 14px;
+      padding: 14px 12px 12px; background: var(--white); display: flex;
+      flex-direction: column; align-items: center; gap: 10px;
+    }
+    .time-card-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+    .time-display { font-size: 28px; font-weight: 800; letter-spacing: -1px; color: var(--text); line-height: 1; }
+    .time-display span { font-size: 14px; font-weight: 600; color: var(--muted); margin-left: 2px; }
+    .stepper-row { display: flex; gap: 8px; }
+    .stepper-unit { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .stepper-unit-label { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .3px; }
+    .stepper-btns { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .s-btn {
+      width: 32px; height: 28px; border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--bg); font-size: 14px; font-weight: 700; cursor: pointer;
+      color: var(--text); display: flex; align-items: center; justify-content: center;
+      transition: all .12s; line-height: 1;
+    }
+    .s-btn:hover { border-color: var(--green); color: var(--green); background: #F0FDF8; }
+    .s-btn:active { transform: scale(.93); }
+    .s-val { font-size: 20px; font-weight: 800; color: var(--text); min-width: 32px; text-align: center; }
+    .ampm-toggle { display: flex; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .ampm-btn {
+      padding: 5px 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+      background: var(--bg); color: var(--muted); border: none; transition: all .12s;
+    }
+    .ampm-btn.active { background: var(--green); color: var(--white); }
+    .time-arrow { font-size: 18px; color: var(--muted); flex-shrink: 0; margin-top: 8px; }
     .expiry-tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
     .exp-ok    { background: #D1FAE5; color: var(--dark-green); }
     .exp-soon  { background: #FEF3C7; color: #92400E; }
@@ -307,9 +335,67 @@
             </div>
           </div>
           <div class="custom-time-row" id="custom-time-row">
-            <input type="time" id="f-start-time" />
-            <span>to</span>
-            <input type="time" id="f-end-time" />
+            <!-- Start card -->
+            <div class="time-card">
+              <div class="time-card-label">Start</div>
+              <div class="time-display" id="start-display">9<span id="start-min-disp">:00</span> <span id="start-ampm-disp">AM</span></div>
+              <div class="stepper-row">
+                <div class="stepper-unit">
+                  <div class="stepper-unit-label">Hr</div>
+                  <div class="stepper-btns">
+                    <button type="button" class="s-btn" onclick="stepTime('start','h',1)">+</button>
+                    <div class="s-val" id="start-h">9</div>
+                    <button type="button" class="s-btn" onclick="stepTime('start','h',-1)">−</button>
+                  </div>
+                </div>
+                <div class="stepper-unit">
+                  <div class="stepper-unit-label">Min</div>
+                  <div class="stepper-btns">
+                    <button type="button" class="s-btn" onclick="stepTime('start','m',1)">+</button>
+                    <div class="s-val" id="start-m">00</div>
+                    <button type="button" class="s-btn" onclick="stepTime('start','m',-1)">−</button>
+                  </div>
+                </div>
+              </div>
+              <div class="ampm-toggle">
+                <button type="button" class="ampm-btn active" id="start-am" onclick="setAmPm('start','AM')">AM</button>
+                <button type="button" class="ampm-btn"        id="start-pm" onclick="setAmPm('start','PM')">PM</button>
+              </div>
+            </div>
+
+            <div class="time-arrow">→</div>
+
+            <!-- End card -->
+            <div class="time-card">
+              <div class="time-card-label">End</div>
+              <div class="time-display" id="end-display">11<span id="end-min-disp">:00</span> <span id="end-ampm-disp">AM</span></div>
+              <div class="stepper-row">
+                <div class="stepper-unit">
+                  <div class="stepper-unit-label">Hr</div>
+                  <div class="stepper-btns">
+                    <button type="button" class="s-btn" onclick="stepTime('end','h',1)">+</button>
+                    <div class="s-val" id="end-h">11</div>
+                    <button type="button" class="s-btn" onclick="stepTime('end','h',-1)">−</button>
+                  </div>
+                </div>
+                <div class="stepper-unit">
+                  <div class="stepper-unit-label">Min</div>
+                  <div class="stepper-btns">
+                    <button type="button" class="s-btn" onclick="stepTime('end','m',1)">+</button>
+                    <div class="s-val" id="end-m">00</div>
+                    <button type="button" class="s-btn" onclick="stepTime('end','m',-1)">−</button>
+                  </div>
+                </div>
+              </div>
+              <div class="ampm-toggle">
+                <button type="button" class="ampm-btn active" id="end-am" onclick="setAmPm('end','AM')">AM</button>
+                <button type="button" class="ampm-btn"        id="end-pm" onclick="setAmPm('end','PM')">PM</button>
+              </div>
+            </div>
+
+            <!-- Hidden inputs read by saveDeal() -->
+            <input type="hidden" id="f-start-time" />
+            <input type="hidden" id="f-end-time" />
           </div>
           <div class="slot-hint" id="slot-hint"></div>
         </div>
@@ -551,6 +637,62 @@
     if (!error) await loadDeals();
   }
 
+  /* ── STEPPER STATE ── */
+  const stepperState = {
+    start: { h: 9,  m: 0,  ampm: 'AM' },
+    end:   { h: 11, m: 0,  ampm: 'AM' },
+  };
+
+  function updateStepperDisplay(side) {
+    const s = stepperState[side];
+    document.getElementById(side + '-h').textContent      = s.h;
+    document.getElementById(side + '-m').textContent      = String(s.m).padStart(2, '0');
+    document.getElementById(side + '-min-disp').textContent = ':' + String(s.m).padStart(2, '0');
+    document.getElementById(side + '-display').childNodes[0].textContent = s.h;
+    document.getElementById(side + '-ampm-disp').textContent = s.ampm;
+    document.getElementById(side + '-am').className = 'ampm-btn' + (s.ampm === 'AM' ? ' active' : '');
+    document.getElementById(side + '-pm').className = 'ampm-btn' + (s.ampm === 'PM' ? ' active' : '');
+    // Write hidden input (24h for storage)
+    let h24 = s.h % 12 + (s.ampm === 'PM' ? 12 : 0);
+    if (h24 === 24) h24 = 12;
+    if (h24 === 12 && s.ampm === 'AM') h24 = 0;
+    document.getElementById('f-' + side + '-time').value = String(h24).padStart(2,'0') + ':' + String(s.m).padStart(2,'0');
+    updateSlotHint();
+  }
+
+  function stepTime(side, unit, delta) {
+    const s = stepperState[side];
+    if (unit === 'h') {
+      s.h = (s.h - 1 + delta + 12) % 12 + 1;
+    } else {
+      s.m = (s.m + delta * 15 + 60) % 60;
+    }
+    updateStepperDisplay(side);
+  }
+
+  function setAmPm(side, val) {
+    stepperState[side].ampm = val;
+    updateStepperDisplay(side);
+  }
+
+  function updateSlotHint() {
+    const sv = document.getElementById('f-start-time').value;
+    const ev = document.getElementById('f-end-time').value;
+    const hint = document.getElementById('slot-hint');
+    if (sv && ev) {
+      hint.textContent = '✓ ' + fmt12(sv) + ' – ' + fmt12(ev);
+    }
+  }
+
+  function loadStepperFrom24h(side, time24) {
+    if (!time24) return;
+    const [hh, mm] = time24.split(':').map(Number);
+    const ampm = hh >= 12 ? 'PM' : 'AM';
+    const h12  = hh % 12 || 12;
+    stepperState[side] = { h: h12, m: mm, ampm };
+    updateStepperDisplay(side);
+  }
+
   /* ── TIME SLOT PICKER ── */
   function selectSlot(el, isCustom = false) {
     document.querySelectorAll('.ts-chip').forEach(c => c.classList.remove('selected'));
@@ -559,9 +701,7 @@
     const hint      = document.getElementById('slot-hint');
     if (isCustom) {
       customRow.style.display = 'flex';
-      document.getElementById('f-start-time').value = '';
-      document.getElementById('f-end-time').value   = '';
-      hint.textContent = '';
+      updateSlotHint();
     } else {
       customRow.style.display = 'none';
       document.getElementById('f-start-time').value = el.dataset.start;
@@ -577,9 +717,9 @@
       selectSlot(chip);
     } else {
       const customChip = document.querySelector('.ts-chip-custom');
+      loadStepperFrom24h('start', startTime);
+      loadStepperFrom24h('end',   endTime);
       selectSlot(customChip, true);
-      document.getElementById('f-start-time').value = startTime || '';
-      document.getElementById('f-end-time').value   = endTime   || '';
     }
   }
 
@@ -652,6 +792,10 @@
     document.getElementById('slot-hint').textContent = '';
     document.getElementById('custom-time-row').style.display = 'none';
     document.querySelectorAll('.ts-chip').forEach(c => c.classList.remove('selected'));
+    stepperState.start = { h: 9,  m: 0, ampm: 'AM' };
+    stepperState.end   = { h: 11, m: 0, ampm: 'AM' };
+    updateStepperDisplay('start');
+    updateStepperDisplay('end');
     document.getElementById('f-start-time').value = '';
     document.getElementById('f-end-time').value   = '';
     selectedColor = '#FDF4FF';
