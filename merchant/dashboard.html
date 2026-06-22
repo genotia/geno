@@ -133,6 +133,12 @@
     .exp-soon  { background: #FEF3C7; color: #92400E; }
     .exp-today { background: #FED7AA; color: #92400E; }
     .exp-past  { background: #FEE2E2; color: #DC2626; }
+    .btn-edit { font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 7px; cursor: pointer; border: 1.5px solid var(--green); background: #F0FDF8; color: var(--green); transition: all .15s; white-space: nowrap; }
+    .btn-edit:hover { background: #D1FAE5; }
+    .slots-tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+    .slots-ok   { background: #D1FAE5; color: var(--dark-green); }
+    .slots-low  { background: #FEF3C7; color: #92400E; }
+    .slots-full { background: #FEE2E2; color: #DC2626; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
@@ -203,10 +209,10 @@
 <div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
   <div class="modal">
     <div class="modal-head">
-      <h2>Add Off-Peak Deal</h2>
+      <h2 id="modal-title">Add Off-Peak Deal</h2>
       <button class="btn-close" onclick="closeModal()">✕</button>
     </div>
-    <form id="deal-form" onsubmit="addDeal(event)">
+    <form id="deal-form" onsubmit="saveDeal(event)">
       <div class="modal-body">
         <div class="form-err" id="form-err"></div>
 
@@ -263,6 +269,12 @@
         </div>
 
         <div class="field-group">
+          <label>Available slots *</label>
+          <input type="number" id="f-capacity" placeholder="e.g. 5" min="1" step="1" required />
+          <span class="hint">Max number of bookings you can accommodate in this slot</span>
+        </div>
+
+        <div class="field-group">
           <label>Card background colour</label>
           <div class="color-swatches" id="color-swatches">
             <div class="swatch selected" style="background:#FDF4FF" data-color="#FDF4FF" onclick="selectColor(this)"></div>
@@ -280,6 +292,7 @@
       <div class="modal-foot">
         <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
         <button type="submit" class="btn-submit" id="btn-submit">Add Deal →</button>
+
       </div>
     </form>
   </div>
@@ -295,6 +308,8 @@
   let currentMerchant = null;
   let currentRole = null;
   let selectedColor = '#FDF4FF';
+  let editingId = null;
+  let currentDeals = [];
 
   function fmt12(t) {
     if (!t) return '';
@@ -379,6 +394,7 @@
 
   /* ── RENDER TABLE ── */
   function renderTable(deals) {
+    currentDeals = deals;
     const total  = deals.length;
     const active = deals.filter(d => d.active).length;
     const paused = total - active;
@@ -403,14 +419,23 @@
     const adminCols = currentRole === 'admin' ? '<th>Actions</th>' : '';
 
     const rows = deals.map(d => {
-      const discPrice = Math.round(d.original_price * (1 - d.discount_pct / 100));
-      const timeLabel = d.start_time && d.end_time
+      const discPrice  = Math.round(d.original_price * (1 - d.discount_pct / 100));
+      const timeLabel  = d.start_time && d.end_time
         ? fmt12(d.start_time) + ' – ' + fmt12(d.end_time)
         : (d.time_slot || '—');
-      const exp = fmtExpiry(d.expires_at);
+      const exp        = fmtExpiry(d.expires_at);
+      const cap        = d.capacity || 0;
+      const booked     = d.booked   || 0;
+      const left       = cap - booked;
+      const slotsCls   = left <= 0 ? 'slots-full' : left <= 2 ? 'slots-low' : 'slots-ok';
+      const slotsLabel = cap === 0 ? '—'
+        : left <= 0 ? `Full · ${booked}/${cap}`
+        : `${left} left · ${booked}/${cap}`;
+
       const adminCells = currentRole === 'admin' ? `
         <td>
           <div class="action-btns">
+            <button class="btn-edit" onclick="editDeal('${d.id}')">Edit</button>
             <button class="btn-toggle" onclick="toggleDeal('${d.id}', ${!d.active})">
               ${d.active ? 'Pause' : 'Activate'}
             </button>
@@ -431,6 +456,7 @@
             <div class="price-was">₹${Number(d.original_price).toLocaleString('en-IN')}</div>
           </td>
           <td class="hide-mobile"><span class="disc-badge">${d.discount_pct}% OFF</span></td>
+          <td class="hide-mobile"><span class="slots-tag ${slotsCls}">${slotsLabel}</span></td>
           <td class="hide-mobile"><span class="expiry-tag ${exp.cls}">${exp.label}</span></td>
           <td>
             <span class="status-pill ${d.active ? 'live' : 'paused'}">
@@ -450,6 +476,7 @@
             <th class="hide-mobile">Category</th>
             <th>Price</th>
             <th class="hide-mobile">Discount</th>
+            <th class="hide-mobile">Slots</th>
             <th class="hide-mobile">Expires</th>
             <th>Status</th>
             ${adminCols}
@@ -472,18 +499,18 @@
     if (!error) await loadDeals();
   }
 
-  /* ── ADD DEAL ── */
-  async function addDeal(e) {
+  /* ── SAVE DEAL (add or edit) ── */
+  async function saveDeal(e) {
     e.preventDefault();
-    const btn = document.getElementById('btn-submit');
+    const btn   = document.getElementById('btn-submit');
     const errEl = document.getElementById('form-err');
     btn.disabled = true;
-    btn.textContent = 'Adding…';
+    btn.textContent = editingId ? 'Saving…' : 'Adding…';
     errEl.classList.remove('show');
 
     const startTime = document.getElementById('f-start-time').value;
     const endTime   = document.getElementById('f-end-time').value;
-    const deal = {
+    const payload = {
       merchant_id:    currentMerchant.id,
       merchant_name:  currentMerchant.name,
       title:          document.getElementById('f-title').value.trim(),
@@ -496,42 +523,79 @@
       end_time:       endTime,
       time_slot:      fmt12(startTime) + ' – ' + fmt12(endTime),
       expires_at:     document.getElementById('f-expires').value,
-      active:         true,
+      capacity:       parseInt(document.getElementById('f-capacity').value) || 0,
     };
 
-    const { error } = await db.from('deals').insert(deal);
+    let error;
+    if (editingId) {
+      const { merchant_id, merchant_name, ...updatePayload } = payload;
+      ({ error } = await db.from('deals').update(updatePayload).eq('id', editingId));
+    } else {
+      payload.active = true;
+      payload.booked = 0;
+      ({ error } = await db.from('deals').insert(payload));
+    }
 
     if (error) {
       errEl.textContent = 'Error: ' + error.message;
       errEl.classList.add('show');
       btn.disabled = false;
-      btn.textContent = 'Add Deal →';
+      btn.textContent = editingId ? 'Save Changes →' : 'Add Deal →';
     } else {
       closeModal();
-      document.getElementById('deal-form').reset();
-      document.getElementById('price-preview').textContent = '';
-      selectedColor = '#FDF4FF';
-      document.querySelectorAll('.swatch').forEach((s, i) => s.classList.toggle('selected', i === 0));
-      btn.disabled = false;
-      btn.textContent = 'Add Deal →';
       await loadDeals();
     }
   }
 
+  /* ── EDIT DEAL ── */
+  function editDeal(id) {
+    const deal = currentDeals.find(d => d.id === id);
+    if (deal) openModal(deal);
+  }
+
   /* ── MODAL ── */
-  function openModal() {
-    // Default expiry = 7 days from today
-    const d = new Date();
-    d.setDate(d.getDate() + 7);
-    document.getElementById('f-expires').value = d.toISOString().split('T')[0];
-    document.getElementById('f-expires').min   = new Date().toISOString().split('T')[0];
+  function resetForm() {
+    document.getElementById('deal-form').reset();
+    document.getElementById('price-preview').textContent = '';
+    selectedColor = '#FDF4FF';
+    document.querySelectorAll('.swatch').forEach((s, i) => s.classList.toggle('selected', i === 0));
+    document.getElementById('btn-submit').textContent = 'Add Deal →';
+    editingId = null;
+  }
+
+  function openModal(deal = null) {
+    editingId = deal ? deal.id : null;
+    document.getElementById('modal-title').textContent   = deal ? 'Edit Deal' : 'Add Off-Peak Deal';
+    document.getElementById('btn-submit').textContent    = deal ? 'Save Changes →' : 'Add Deal →';
+    document.getElementById('form-err').classList.remove('show');
+
+    if (deal) {
+      document.getElementById('f-title').value      = deal.title;
+      document.getElementById('f-category').value   = deal.category;
+      document.getElementById('f-emoji').value      = deal.emoji;
+      document.getElementById('f-orig-price').value = deal.original_price;
+      document.getElementById('f-discount').value   = deal.discount_pct;
+      document.getElementById('f-start-time').value = deal.start_time || '';
+      document.getElementById('f-end-time').value   = deal.end_time   || '';
+      document.getElementById('f-expires').value    = deal.expires_at || '';
+      document.getElementById('f-capacity').value   = deal.capacity   || '';
+      const swatch = document.querySelector(`.swatch[data-color="${deal.bg_color}"]`);
+      if (swatch) selectColor(swatch); else selectedColor = deal.bg_color;
+      updatePricePreview();
+    } else {
+      resetForm();
+      const d = new Date(); d.setDate(d.getDate() + 7);
+      document.getElementById('f-expires').value = d.toISOString().split('T')[0];
+    }
+    document.getElementById('f-expires').min = new Date().toISOString().split('T')[0];
     document.getElementById('modal-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
+
   function closeModal() {
     document.getElementById('modal-overlay').classList.remove('open');
     document.body.style.overflow = '';
-    document.getElementById('form-err').classList.remove('show');
+    resetForm();
   }
   function handleOverlayClick(e) {
     if (e.target === document.getElementById('modal-overlay')) closeModal();
@@ -555,21 +619,19 @@
   }
 
   /* ── PRICE PREVIEW ── */
-  document.addEventListener('DOMContentLoaded', () => {
-    const updatePreview = () => {
-      const orig = parseFloat(document.getElementById('f-orig-price').value);
-      const disc = parseInt(document.getElementById('f-discount').value);
-      const el = document.getElementById('price-preview');
-      if (orig > 0 && disc > 0 && disc < 100) {
-        const final = Math.round(orig * (1 - disc / 100));
-        el.textContent = `→ ₹${final.toLocaleString('en-IN')} after discount`;
-      } else {
-        el.textContent = '';
-      }
-    };
-    document.getElementById('f-orig-price').addEventListener('input', updatePreview);
-    document.getElementById('f-discount').addEventListener('input', updatePreview);
-  });
+  function updatePricePreview() {
+    const orig = parseFloat(document.getElementById('f-orig-price').value);
+    const disc = parseInt(document.getElementById('f-discount').value);
+    const el   = document.getElementById('price-preview');
+    if (orig > 0 && disc > 0 && disc < 100) {
+      const final = Math.round(orig * (1 - disc / 100));
+      el.textContent = `→ ₹${final.toLocaleString('en-IN')} after discount`;
+    } else {
+      el.textContent = '';
+    }
+  }
+  document.getElementById('f-orig-price').addEventListener('input', updatePricePreview);
+  document.getElementById('f-discount').addEventListener('input', updatePricePreview);
 
   /* ── LOGOUT ── */
   async function logout() {
