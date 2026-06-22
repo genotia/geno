@@ -450,6 +450,28 @@
     .adj-type-pill.add { background:#D1FAE5; color:#065F46; }
     .adj-type-pill.remove { background:#FEE2E2; color:#991B1B; }
     .adj-type-pill.writeoff { background:#FEF3C7; color:#92400E; }
+    /* ── Marketing ── */
+    .mktg-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+    @media(max-width:800px){ .mktg-stats { grid-template-columns:1fr 1fr; } }
+    .mktg-stat { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:18px 20px; }
+    .mktg-stat-num { font-size:26px; font-weight:800; letter-spacing:-.5px; }
+    .mktg-stat-label { font-size:12px; color:var(--muted); margin-top:4px; }
+    .mktg-campaign-card { background:var(--white); border:1.5px solid var(--border); border-radius:12px; padding:16px 20px; margin-bottom:10px; display:flex; align-items:center; gap:16px; }
+    .mktg-campaign-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+    .mktg-campaign-body { flex:1; }
+    .mktg-campaign-title { font-size:14px; font-weight:700; }
+    .mktg-campaign-meta { font-size:12px; color:var(--muted); margin-top:3px; }
+    .mktg-campaign-right { text-align:right; flex-shrink:0; }
+    .mktg-status-pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+    .mktg-status-pill.sent     { background:#D1FAE5; color:#065F46; }
+    .mktg-status-pill.scheduled{ background:#DBEAFE; color:#1D4ED8; }
+    .mktg-status-pill.draft    { background:#F3F4F6; color:#374151; }
+    .mktg-status-pill.failed   { background:#FEE2E2; color:#991B1B; }
+    .mktg-channel-bar { display:flex; align-items:center; gap:8px; margin-bottom:18px; }
+    .mktg-channel-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:700; }
+    .mktg-char-count { font-size:12px; color:var(--muted); text-align:right; margin-top:4px; }
+    .mktg-char-count.warn { color:#D97706; }
+    .mktg-char-count.over { color:#DC2626; font-weight:700; }
 
     /* ── GENERATE BILL ── */
     .bill-container { max-width: 1100px; }
@@ -865,6 +887,14 @@
       <button class="nav-item nav-sub" id="nav-inv-usage"       onclick="switchPage('inv-usage',this)"><span class="nav-icon">📤</span> Stock usage</button>
       <button class="nav-item nav-sub" id="nav-inv-adjustments" onclick="switchPage('inv-adjustments',this)"><span class="nav-icon">🔧</span> Adjustments</button>
       <button class="nav-item nav-sub" id="nav-inv-suppliers"   onclick="switchPage('inv-suppliers',this)"><span class="nav-icon">🏭</span> Suppliers</button>
+    </div>
+    <button class="nav-item nav-group-toggle" id="nav-mktg-toggle" onclick="toggleMarketingNav(this)">
+      <span class="nav-icon">📣</span> Marketing <span class="nav-chevron">›</span>
+    </button>
+    <div class="nav-sub-group" id="mktg-sub-group">
+      <button class="nav-item nav-sub" id="nav-mktg-whatsapp" onclick="switchPage('mktg-whatsapp',this)"><span class="nav-icon">💬</span> WhatsApp</button>
+      <button class="nav-item nav-sub" id="nav-mktg-email"    onclick="switchPage('mktg-email',this)"><span class="nav-icon">📧</span> Email</button>
+      <button class="nav-item nav-sub" id="nav-mktg-sms"      onclick="switchPage('mktg-sms',this)"><span class="nav-icon">📱</span> SMS</button>
     </div>
   </nav>
   <div class="sb-foot">
@@ -1812,6 +1842,157 @@
         <tbody id="supplier-tbody"></tbody>
       </table>
     </div>
+  </div>
+
+  <!-- ══════════════════ WHATSAPP NOTIFICATIONS ══════════════════ -->
+  <div class="tab-panel" id="tab-mktg-whatsapp">
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
+      <button class="am-close-btn" onclick="openComposeOverlay('whatsapp')">＋ New campaign</button>
+    </div>
+    <div class="mktg-stats">
+      <div class="mktg-stat"><div class="mktg-stat-num" id="wa-stat-total">—</div><div class="mktg-stat-label">Campaigns sent</div></div>
+      <div class="mktg-stat"><div class="mktg-stat-num" id="wa-stat-recipients">—</div><div class="mktg-stat-label">Total recipients</div></div>
+      <div class="mktg-stat"><div class="mktg-stat-num" id="wa-stat-this-month">—</div><div class="mktg-stat-label">This month</div></div>
+      <div class="mktg-stat"><div class="mktg-stat-num" id="wa-stat-scheduled">—</div><div class="mktg-stat-label">Scheduled</div></div>
+    </div>
+    <div id="wa-campaign-list"><div style="text-align:center;padding:40px;color:var(--muted)">Loading…</div></div>
+  </div>
+
+  <!-- ══════════════════ EMAIL NOTIFICATIONS ══════════════════ -->
+  <div class="tab-panel" id="tab-mktg-email">
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
+      <button class="am-close-btn" onclick="openComposeOverlay('email')">＋ New campaign</button>
+    </div>
+    <div class="mktg-stats">
+      <div class="mktg-stat"><div class="mktg-stat-num" id="em-stat-total">—</div><div class="mktg-stat-label">Campaigns sent</div></div>
+      <div class="mktg-stat"><div class="mktg-stat-num" id="em-stat-recipients">—</div><div class="mktg-stat-label">Total recipients</div></div>
+      <div class="mktg-stat"><div class="mktg-stat-num" id="em-stat-this-month">—</div><div class="mktg-stat-label">This month</div></div>
+      <div class="mktg-stat"><div class="mktg-stat-num" id="em-stat-scheduled">—</div><div class="mktg-stat-label">Scheduled</div></div>
+    </div>
+    <div id="em-campaign-list"><div style="text-align:center;padding:40px;color:var(--muted)">Loading…</div></div>
+  </div>
+
+  <!-- ══════════════════ SMS NOTIFICATIONS ══════════════════ -->
+  <div class="tab-panel" id="tab-mktg-sms">
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
+      <button class="am-close-btn" onclick="openComposeOverlay('sms')">＋ New campaign</button>
+    </div>
+    <div class="mktg-stats">
+      <div class="mktg-stat"><div class="mktg-stat-num" id="sms-stat-total">—</div><div class="mktg-stat-label">Campaigns sent</div></div>
+      <div class="mktg-stat"><div class="mktg-stat-num" id="sms-stat-recipients">—</div><div class="mktg-stat-label">Total recipients</div></div>
+      <div class="mktg-stat"><div class="mktg-stat-num" id="sms-stat-this-month">—</div><div class="mktg-stat-label">This month</div></div>
+      <div class="mktg-stat"><div class="mktg-stat-num" id="sms-stat-scheduled">—</div><div class="mktg-stat-label">Scheduled</div></div>
+    </div>
+    <div id="sms-campaign-list"><div style="text-align:center;padding:40px;color:var(--muted)">Loading…</div></div>
+  </div>
+
+  <!-- ══════════════════ COMPOSE CAMPAIGN OVERLAY (shared) ══════════════════ -->
+  <div class="am-overlay" id="compose-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title" id="compose-title">New campaign</div>
+      <div class="am-topbar-actions">
+        <button class="am-close-btn" onclick="closeComposeOverlay()">Close</button>
+        <button class="am-add-btn" id="compose-draft-btn" onclick="saveCampaign('draft')" style="background:#6B7280">Save draft</button>
+        <button class="am-add-btn" id="compose-send-btn" onclick="saveCampaign('sent')">Send now</button>
+      </div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:680px">
+      <div class="am-err" id="compose-err"></div>
+
+      <!-- Channel badge -->
+      <div class="mktg-channel-bar">
+        <div class="mktg-channel-badge" id="compose-channel-badge">💬 WhatsApp</div>
+      </div>
+
+      <div class="am-section-title">Campaign details</div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Campaign name <span class="req">*</span></label>
+          <input class="am-input" id="compose-name" type="text" placeholder="e.g. Diwali offer, Weekend promo" />
+        </div>
+        <div class="am-field"><label>Schedule</label>
+          <select class="am-input" id="compose-schedule-type" onchange="toggleScheduleDate()">
+            <option value="now">Send immediately</option>
+            <option value="later">Schedule for later</option>
+          </select>
+        </div>
+      </div>
+      <div class="am-form-row" id="compose-schedule-row" style="display:none">
+        <div class="am-field"><label>Send date &amp; time</label>
+          <input class="am-input" id="compose-scheduled-at" type="datetime-local" />
+        </div>
+      </div>
+
+      <hr class="am-divider" />
+      <div class="am-section-title">Recipients</div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Send to</label>
+          <select class="am-input" id="compose-recipient-type" onchange="onRecipientTypeChange()">
+            <option value="all">All clients</option>
+            <option value="segment">By segment</option>
+            <option value="tag">By tag</option>
+          </select>
+        </div>
+        <div class="am-field" id="compose-segment-field" style="display:none"><label>Segment</label>
+          <select class="am-input" id="compose-segment">
+            <option value="vip">VIP clients</option>
+            <option value="new">New clients (last 30 days)</option>
+            <option value="lapsed">Lapsed (90+ days)</option>
+            <option value="birthday">Birthday this month</option>
+            <option value="frequent">Frequent visitors</option>
+          </select>
+        </div>
+        <div class="am-field" id="compose-tag-field" style="display:none"><label>Tag</label>
+          <input class="am-input" id="compose-tag" type="text" placeholder="e.g. hair-care, facial" />
+        </div>
+      </div>
+
+      <hr class="am-divider" />
+      <div class="am-section-title">Message</div>
+
+      <!-- Email-only: subject -->
+      <div class="am-form-row single" id="compose-subject-row" style="display:none">
+        <div class="am-field"><label>Subject line <span class="req">*</span></label>
+          <input class="am-input" id="compose-subject" type="text" placeholder="e.g. Exclusive offer just for you 🎉" />
+        </div>
+      </div>
+
+      <!-- WhatsApp: message type -->
+      <div class="am-form-row" id="compose-wa-type-row" style="display:none">
+        <div class="am-field"><label>Message type</label>
+          <select class="am-input" id="compose-wa-type">
+            <option value="promotional">Promotional</option>
+            <option value="reminder">Appointment reminder</option>
+            <option value="offer">Special offer</option>
+            <option value="feedback">Feedback request</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="am-form-row single">
+        <div class="am-field">
+          <label>Message body <span class="req">*</span></label>
+          <textarea class="am-input" id="compose-body" rows="6"
+            style="resize:vertical;font-size:14px;line-height:1.6"
+            placeholder="Write your message here… Use {name} to personalise with client name."
+            oninput="updateCharCount()"></textarea>
+          <div class="mktg-char-count" id="compose-char-count">0 characters</div>
+        </div>
+      </div>
+
+      <!-- Variable helpers -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:-8px;margin-bottom:16px">
+        <span style="font-size:11px;color:var(--muted);align-self:center">Insert:</span>
+        <button type="button" onclick="insertVar('{name}')"     style="font-size:11px;padding:3px 9px;border:1.5px solid var(--border);border-radius:20px;background:var(--white);cursor:pointer">{name}</button>
+        <button type="button" onclick="insertVar('{business}')" style="font-size:11px;padding:3px 9px;border:1.5px solid var(--border);border-radius:20px;background:var(--white);cursor:pointer">{business}</button>
+        <button type="button" onclick="insertVar('{date}')"     style="font-size:11px;padding:3px 9px;border:1.5px solid var(--border);border-radius:20px;background:var(--white);cursor:pointer">{date}</button>
+        <button type="button" onclick="insertVar('{offer}')"    style="font-size:11px;padding:3px 9px;border:1.5px solid var(--border);border-radius:20px;background:var(--white);cursor:pointer">{offer}</button>
+      </div>
+
+      <!-- SMS: character info -->
+      <div id="compose-sms-info" style="display:none;background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:10px;padding:12px 16px;font-size:12px;color:#92400E;margin-bottom:16px">
+        📱 <strong>SMS limits:</strong> 1 SMS = 160 chars (standard) or 70 chars (if using special characters). Longer messages split into multiple SMS and cost more.
+      </div>
+    </div></div>
   </div>
 
   <!-- ══════════════════ STOCK ITEM OVERLAY ══════════════════ -->
@@ -4001,6 +4182,9 @@
   PAGE_TITLES['inv-usage']         = 'Stock Usage';
   PAGE_TITLES['inv-adjustments']   = 'Adjustments';
   PAGE_TITLES['inv-suppliers']     = 'Suppliers';
+  PAGE_TITLES['mktg-whatsapp']     = 'WhatsApp Notifications';
+  PAGE_TITLES['mktg-email']        = 'Email Notifications';
+  PAGE_TITLES['mktg-sms']          = 'SMS Notifications';
   PAGE_TITLES['service-menu']    = 'Service menu';
   PAGE_TITLES['memberships']     = 'Memberships';
   PAGE_TITLES['product-list']    = 'Products';
@@ -4386,6 +4570,9 @@
     if (page === 'inv-usage')        { openInvNav(); loadUsageLogs(); }
     if (page === 'inv-adjustments')  { openInvNav(); loadAdjustments(); }
     if (page === 'inv-suppliers')    { openInvNav(); loadSuppliers(); }
+    if (page === 'mktg-whatsapp')    { openMarketingNav(); loadCampaigns('whatsapp'); }
+    if (page === 'mktg-email')       { openMarketingNav(); loadCampaigns('email'); }
+    if (page === 'mktg-sms')         { openMarketingNav(); loadCampaigns('sms'); }
     if (page === 'service-menu')    { openCatalogNav(); loadServiceMenu(); }
     if (page === 'memberships')     { openCatalogNav(); loadMemberships(); }
     if (page === 'product-list')    { openCatalogNav(); loadProducts(); }
@@ -5627,6 +5814,177 @@
     if (!el) return;
     const inner=`<div style="text-align:center;padding:60px;color:var(--muted)"><div style="font-size:28px;margin-bottom:8px">🔧</div><div style="font-weight:700;font-size:15px;color:var(--text)">Table not set up yet</div><div style="font-size:12px;margin-top:4px">Run the SQL to create <code>${tableName}</code></div></div>`;
     el.innerHTML = cols ? `<tr><td colspan="${cols}">${inner}</td></tr>` : inner;
+  }
+
+  /* ════════════════════════════════════════════
+     MARKETING & NOTIFICATIONS
+  ════════════════════════════════════════════ */
+  let allCampaigns = [];
+  let composeChannel = 'whatsapp';
+
+  function toggleMarketingNav(btn) { btn.classList.toggle('open'); document.getElementById('mktg-sub-group').classList.toggle('open'); }
+  function openMarketingNav()      { document.getElementById('nav-mktg-toggle').classList.add('open'); document.getElementById('mktg-sub-group').classList.add('open'); }
+
+  /* ── Channel config ── */
+  const CHANNEL_CONFIG = {
+    whatsapp: { label:'💬 WhatsApp', color:'#D1FAE5', textColor:'#065F46', listId:'wa-campaign-list',  statPrefix:'wa-',  smsChar:false, showSubject:false, showWaType:true  },
+    email:    { label:'📧 Email',     color:'#DBEAFE', textColor:'#1D4ED8', listId:'em-campaign-list',  statPrefix:'em-',  smsChar:false, showSubject:true,  showWaType:false },
+    sms:      { label:'📱 SMS',       color:'#F3E8FF', textColor:'#6D28D9', listId:'sms-campaign-list', statPrefix:'sms-', smsChar:true,  showSubject:false, showWaType:false },
+  };
+  const CHANNEL_ICON = { whatsapp:'💬', email:'📧', sms:'📱' };
+
+  /* ── Load campaigns ── */
+  async function loadCampaigns(channel) {
+    const cfg = CHANNEL_CONFIG[channel];
+    const listEl = document.getElementById(cfg.listId);
+    listEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Loading…</div>';
+
+    const { data, error } = await db.from('marketing_campaigns')
+      .select('*').eq('merchant_id', currentMerchant.id).eq('channel', channel)
+      .order('created_at', { ascending: false });
+
+    if (error && error.code === '42P01') {
+      listEl.innerHTML = '<div style="text-align:center;padding:60px;color:var(--muted)"><div style="font-size:28px;margin-bottom:8px">🔧</div><div style="font-weight:700">Table not set up yet</div><div style="font-size:12px;margin-top:4px">Run the SQL to create <code>marketing_campaigns</code></div></div>';
+      updateMktgStats(channel, [], cfg);
+      return;
+    }
+    const campaigns = data || [];
+    allCampaigns = campaigns;
+    updateMktgStats(channel, campaigns, cfg);
+    renderCampaigns(campaigns, cfg);
+  }
+
+  function updateMktgStats(channel, campaigns, cfg) {
+    const p = cfg.statPrefix;
+    const now = new Date(); const m = now.getMonth(); const y = now.getFullYear();
+    const sent      = campaigns.filter(c => c.status === 'sent');
+    const scheduled = campaigns.filter(c => c.status === 'scheduled');
+    const thisMonth = sent.filter(c => { const d = new Date(c.created_at); return d.getMonth()===m && d.getFullYear()===y; });
+    const totalRcpt = sent.reduce((s,c)=>s+(c.recipient_count||0),0);
+    document.getElementById(p+'stat-total').textContent      = sent.length;
+    document.getElementById(p+'stat-recipients').textContent  = totalRcpt;
+    document.getElementById(p+'stat-this-month').textContent  = thisMonth.length;
+    document.getElementById(p+'stat-scheduled').textContent   = scheduled.length;
+  }
+
+  function renderCampaigns(list, cfg) {
+    const listEl = document.getElementById(cfg.listId);
+    if (!list.length) {
+      listEl.innerHTML = `<div style="text-align:center;padding:60px;color:var(--muted)">
+        <div style="font-size:36px;margin-bottom:10px">${CHANNEL_ICON[composeChannel]}</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text)">No campaigns yet</div>
+        <div style="font-size:13px;margin-top:4px">Click ＋ New campaign to send your first message</div>
+      </div>`;
+      return;
+    }
+    listEl.innerHTML = list.map(c => {
+      const statusClass = c.status === 'sent' ? 'sent' : c.status === 'scheduled' ? 'scheduled' : c.status === 'failed' ? 'failed' : 'draft';
+      const dateStr = c.status === 'sent' ? (c.sent_at||c.created_at||'').split('T')[0] : c.scheduled_at ? c.scheduled_at.replace('T',' ').slice(0,16) : (c.created_at||'').split('T')[0];
+      return `<div class="mktg-campaign-card">
+        <div class="mktg-campaign-icon" style="background:${cfg.color}">${CHANNEL_ICON[c.channel]}</div>
+        <div class="mktg-campaign-body">
+          <div class="mktg-campaign-title">${c.name}</div>
+          <div class="mktg-campaign-meta">${c.recipient_type==='all'?'All clients':c.recipient_type==='segment'?(c.segment_value||'Segment'):'Tag: '+(c.tag_value||'')} · ${c.status==='sent'?(c.recipient_count||0)+' sent':'–'}</div>
+          <div class="mktg-campaign-meta" style="margin-top:4px;font-style:italic;color:#374151">${(c.message_body||'').slice(0,80)}${(c.message_body||'').length>80?'…':''}</div>
+        </div>
+        <div class="mktg-campaign-right">
+          <div><span class="mktg-status-pill ${statusClass}">${c.status}</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">${dateStr}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  /* ── Compose overlay ── */
+  function openComposeOverlay(channel) {
+    composeChannel = channel;
+    const cfg = CHANNEL_CONFIG[channel];
+    // Reset form
+    document.getElementById('compose-err').classList.remove('show');
+    document.getElementById('compose-name').value = '';
+    document.getElementById('compose-body').value = '';
+    document.getElementById('compose-schedule-type').value = 'now';
+    document.getElementById('compose-schedule-row').style.display = 'none';
+    document.getElementById('compose-recipient-type').value = 'all';
+    document.getElementById('compose-segment-field').style.display = 'none';
+    document.getElementById('compose-tag-field').style.display = 'none';
+    document.getElementById('compose-char-count').textContent = '0 characters';
+    document.getElementById('compose-char-count').className = 'mktg-char-count';
+    if (document.getElementById('compose-subject')) document.getElementById('compose-subject').value = '';
+    // Channel-specific fields
+    document.getElementById('compose-title').textContent = `New ${cfg.label} campaign`;
+    document.getElementById('compose-channel-badge').textContent = cfg.label;
+    document.getElementById('compose-channel-badge').style.background = cfg.color;
+    document.getElementById('compose-channel-badge').style.color = cfg.textColor;
+    document.getElementById('compose-subject-row').style.display  = cfg.showSubject  ? '' : 'none';
+    document.getElementById('compose-wa-type-row').style.display  = cfg.showWaType   ? '' : 'none';
+    document.getElementById('compose-sms-info').style.display     = cfg.smsChar      ? '' : 'none';
+    document.getElementById('compose-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeComposeOverlay() { document.getElementById('compose-overlay').classList.remove('open'); document.body.style.overflow = ''; }
+
+  function toggleScheduleDate() {
+    const isLater = document.getElementById('compose-schedule-type').value === 'later';
+    document.getElementById('compose-schedule-row').style.display = isLater ? '' : 'none';
+    document.getElementById('compose-send-btn').textContent = isLater ? 'Schedule' : 'Send now';
+  }
+  function onRecipientTypeChange() {
+    const val = document.getElementById('compose-recipient-type').value;
+    document.getElementById('compose-segment-field').style.display = val === 'segment' ? '' : 'none';
+    document.getElementById('compose-tag-field').style.display     = val === 'tag'     ? '' : 'none';
+  }
+  function updateCharCount() {
+    const len = document.getElementById('compose-body').value.length;
+    const el  = document.getElementById('compose-char-count');
+    const isSms = composeChannel === 'sms';
+    el.textContent = isSms ? `${len} characters (${Math.ceil(len/160)} SMS)` : `${len} characters`;
+    el.className = 'mktg-char-count' + (isSms && len > 320 ? ' over' : isSms && len > 160 ? ' warn' : '');
+  }
+  function insertVar(variable) {
+    const ta = document.getElementById('compose-body');
+    const s = ta.selectionStart, e = ta.selectionEnd;
+    ta.value = ta.value.slice(0,s) + variable + ta.value.slice(e);
+    ta.selectionStart = ta.selectionEnd = s + variable.length;
+    ta.focus(); updateCharCount();
+  }
+
+  async function saveCampaign(status) {
+    const errEl = document.getElementById('compose-err'); errEl.classList.remove('show');
+    const name  = document.getElementById('compose-name').value.trim();
+    const body  = document.getElementById('compose-body').value.trim();
+    if (!name) { errEl.textContent = 'Campaign name is required.'; errEl.classList.add('show'); return; }
+    if (!body) { errEl.textContent = 'Message body is required.';  errEl.classList.add('show'); return; }
+    const cfg = CHANNEL_CONFIG[composeChannel];
+    const isLater = document.getElementById('compose-schedule-type').value === 'later';
+    const scheduledAt = isLater ? document.getElementById('compose-scheduled-at').value || null : null;
+    const finalStatus = status === 'sent' && isLater ? 'scheduled' : status;
+    const recipType = document.getElementById('compose-recipient-type').value;
+    const saveBtn = document.getElementById('compose-' + (status==='draft'?'draft':'send') + '-btn');
+    saveBtn.disabled = true; saveBtn.textContent = 'Saving…';
+    const payload = {
+      merchant_id: currentMerchant.id,
+      channel: composeChannel,
+      name,
+      subject: composeChannel === 'email' ? (document.getElementById('compose-subject').value.trim()||null) : null,
+      wa_message_type: composeChannel === 'whatsapp' ? document.getElementById('compose-wa-type').value : null,
+      message_body: body,
+      recipient_type: recipType,
+      segment_value: recipType === 'segment' ? document.getElementById('compose-segment').value : null,
+      tag_value:     recipType === 'tag'     ? document.getElementById('compose-tag').value.trim() : null,
+      status: finalStatus,
+      scheduled_at: scheduledAt || null,
+      sent_at: finalStatus === 'sent' ? new Date().toISOString() : null,
+      recipient_count: 0,
+    };
+    const { error } = await db.from('marketing_campaigns').insert(payload);
+    saveBtn.disabled = false;
+    saveBtn.textContent = status === 'draft' ? 'Save draft' : (isLater ? 'Schedule' : 'Send now');
+    if (error) { errEl.textContent = error.message; errEl.classList.add('show'); return; }
+    // Reset tab loaded so it reloads
+    tabLoaded['mktg-' + composeChannel] = false;
+    closeComposeOverlay();
+    loadCampaigns(composeChannel);
   }
 
   /* ════════════════════════════════════════════
