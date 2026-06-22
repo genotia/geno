@@ -1066,6 +1066,18 @@
       /* Card action buttons: meet 44px touch target minimum */
       .btn-book, .btn-negotiate { min-height: 44px; padding: 12px; font-size: 14px; }
     }
+    /* ── SLOT COUNTER ── */
+    .slot-counter { display: flex; align-items: center; gap: 8px; margin: 8px 0 10px; }
+    .slot-bar { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .slot-fill { height: 100%; border-radius: 3px; transition: width .4s; }
+    .slot-fill.plenty { background: var(--green); }
+    .slot-fill.low    { background: #D97706; }
+    .slot-fill.full   { background: #DC2626; }
+    .slot-label { font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .slot-label.plenty { color: var(--green); }
+    .slot-label.low    { color: #D97706; }
+    .slot-label.full   { color: #DC2626; }
+    .btn-book:disabled { opacity: .5; cursor: not-allowed; }
     /* ── BOOKING MODAL ── */
     .bk-deal-summary {
       display: flex; align-items: center; gap: 14px;
@@ -1577,6 +1589,8 @@
         days:        d.days,
         title:       d.title,
         merchant:    d.merchant_name,
+        capacity:    d.capacity || 0,
+        booked:      d.booked   || 0,
         priceNum,
         wasNum:      d.original_price,
         price:       '₹' + priceNum.toLocaleString('en-IN'),
@@ -1626,9 +1640,28 @@
 
   let allDeals = [...staticDeals];
 
+  function slotCounter(d) {
+    if (!d.live || !d.capacity) return '';
+    const left  = Math.max(0, d.capacity - d.booked);
+    const pct   = Math.round((left / d.capacity) * 100);
+    const cls   = left === 0 ? 'full' : left <= 3 ? 'low' : 'plenty';
+    const label = left === 0 ? 'Fully booked'
+                : left === 1 ? '1 slot left · ' + d.booked + ' booked'
+                : left + ' slots left · ' + d.booked + ' booked';
+    return `<div class="slot-counter">
+      <div class="slot-bar"><div class="slot-fill ${cls}" style="width:${pct}%"></div></div>
+      <span class="slot-label ${cls}">${label}</span>
+    </div>`;
+  }
+
   function renderDeals(cat = 'All') {
     const filtered = cat === 'All' ? allDeals : allDeals.filter(d => d.category === cat);
-    document.getElementById('deals-grid').innerHTML = filtered.map(d => `
+    document.getElementById('deals-grid').innerHTML = filtered.map(d => {
+      const full        = d.live && d.capacity > 0 && (d.capacity - d.booked) <= 0;
+      const bookBtn     = full
+        ? `<button class="btn-book" disabled>Fully booked</button>`
+        : `<button class="btn-book" onclick="event.stopPropagation(); openBooking('${d.id}')">Book now</button>`;
+      return `
       <div class="deal-card">
         <div class="card-thumb" style="background:${d.bg}">
           ${d.emoji}
@@ -1652,15 +1685,16 @@
               ${d.dist}
             </div>
           </div>
+          ${slotCounter(d)}
           <div class="card-actions">
-            <button class="btn-book" onclick="event.stopPropagation(); openBooking('${d.id}')">Book now</button>
+            ${bookBtn}
             <button class="btn-negotiate" onclick="event.stopPropagation(); openNegotiator('${d.id}')">
               <span class="bot-icon">🤖</span> Negotiate
             </button>
           </div>
         </div>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
   }
 
   renderDeals();
@@ -1761,6 +1795,11 @@
       errEl.textContent = 'Something went wrong — ' + error.message;
       btn.disabled = false; btn.textContent = 'Confirm Booking →';
       return;
+    }
+
+    // Increment booked counter and refresh cards
+    if (isDealUUID) {
+      db.rpc('increment_deal_booked', { p_deal_id: d.id }).then(() => loadLiveDeals());
     }
 
     // Show confirmation
