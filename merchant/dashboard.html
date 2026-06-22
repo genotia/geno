@@ -121,13 +121,34 @@
     .form-err { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #DC2626; display: none; }
     .form-err.show { display: block; }
 
-    input[type=time], input[type=date] {
+    input[type=date] {
       padding: 10px 13px; border: 1.5px solid var(--border);
       border-radius: 10px; font-size: 14px; color: var(--text);
       background: var(--white); outline: none; transition: border-color .15s;
       font-family: inherit; width: 100%;
     }
-    input[type=time]:focus, input[type=date]:focus { border-color: var(--green); }
+    input[type=date]:focus { border-color: var(--green); }
+    input[type=time] {
+      padding: 10px 13px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 14px; color: var(--text);
+      background: var(--white); outline: none; transition: border-color .15s;
+      font-family: inherit; flex: 1;
+    }
+    input[type=time]:focus { border-color: var(--green); }
+    .ts-group { display: flex; flex-direction: column; gap: 10px; }
+    .ts-section { display: flex; flex-direction: column; gap: 6px; }
+    .ts-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+    .ts-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ts-chip {
+      padding: 7px 13px; border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--white); font-size: 13px; font-weight: 500; color: var(--muted);
+      cursor: pointer; transition: all .15s; white-space: nowrap; user-select: none;
+    }
+    .ts-chip:hover { border-color: var(--green); color: var(--green); background: #F0FDF8; }
+    .ts-chip.selected { border-color: var(--green); color: var(--green); background: #F0FDF8; font-weight: 700; }
+    .custom-time-row { display: none; align-items: center; gap: 8px; margin-top: 4px; }
+    .custom-time-row span { font-size: 13px; color: var(--muted); flex-shrink: 0; }
+    .slot-hint { font-size: 12px; color: var(--green); font-weight: 600; margin-top: 2px; min-height: 16px; }
     .expiry-tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; }
     .exp-ok    { background: #D1FAE5; color: var(--dark-green); }
     .exp-soon  { background: #FEF3C7; color: #92400E; }
@@ -251,15 +272,46 @@
           </div>
         </div>
 
-        <div class="field-row">
-          <div class="field-group">
-            <label>Start time *</label>
-            <input type="time" id="f-start-time" required />
+        <div class="field-group">
+          <label>Time slot *</label>
+          <div class="ts-group">
+            <div class="ts-section">
+              <div class="ts-label">🌅 Morning</div>
+              <div class="ts-chips">
+                <div class="ts-chip" data-start="06:00" data-end="08:00" onclick="selectSlot(this)">6–8 AM</div>
+                <div class="ts-chip" data-start="07:00" data-end="09:00" onclick="selectSlot(this)">7–9 AM</div>
+                <div class="ts-chip" data-start="08:00" data-end="10:00" onclick="selectSlot(this)">8–10 AM</div>
+                <div class="ts-chip" data-start="09:00" data-end="11:00" onclick="selectSlot(this)">9–11 AM</div>
+                <div class="ts-chip" data-start="10:00" data-end="12:00" onclick="selectSlot(this)">10 AM–12 PM</div>
+              </div>
+            </div>
+            <div class="ts-section">
+              <div class="ts-label">☀️ Afternoon</div>
+              <div class="ts-chips">
+                <div class="ts-chip" data-start="12:00" data-end="14:00" onclick="selectSlot(this)">12–2 PM</div>
+                <div class="ts-chip" data-start="13:00" data-end="15:00" onclick="selectSlot(this)">1–3 PM</div>
+                <div class="ts-chip" data-start="14:00" data-end="16:00" onclick="selectSlot(this)">2–4 PM</div>
+                <div class="ts-chip" data-start="15:00" data-end="17:00" onclick="selectSlot(this)">3–5 PM</div>
+              </div>
+            </div>
+            <div class="ts-section">
+              <div class="ts-label">🌆 Evening</div>
+              <div class="ts-chips">
+                <div class="ts-chip" data-start="16:00" data-end="18:00" onclick="selectSlot(this)">4–6 PM</div>
+                <div class="ts-chip" data-start="17:00" data-end="19:00" onclick="selectSlot(this)">5–7 PM</div>
+                <div class="ts-chip" data-start="18:00" data-end="20:00" onclick="selectSlot(this)">6–8 PM</div>
+              </div>
+            </div>
+            <div class="ts-chips">
+              <div class="ts-chip ts-chip-custom" onclick="selectSlot(this, true)">⚙ Custom</div>
+            </div>
           </div>
-          <div class="field-group">
-            <label>End time *</label>
-            <input type="time" id="f-end-time" required />
+          <div class="custom-time-row" id="custom-time-row">
+            <input type="time" id="f-start-time" />
+            <span>to</span>
+            <input type="time" id="f-end-time" />
           </div>
+          <div class="slot-hint" id="slot-hint"></div>
         </div>
 
         <div class="field-group">
@@ -499,6 +551,38 @@
     if (!error) await loadDeals();
   }
 
+  /* ── TIME SLOT PICKER ── */
+  function selectSlot(el, isCustom = false) {
+    document.querySelectorAll('.ts-chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    const customRow = document.getElementById('custom-time-row');
+    const hint      = document.getElementById('slot-hint');
+    if (isCustom) {
+      customRow.style.display = 'flex';
+      document.getElementById('f-start-time').value = '';
+      document.getElementById('f-end-time').value   = '';
+      hint.textContent = '';
+    } else {
+      customRow.style.display = 'none';
+      document.getElementById('f-start-time').value = el.dataset.start;
+      document.getElementById('f-end-time').value   = el.dataset.end;
+      hint.textContent = '✓ ' + fmt12(el.dataset.start) + ' – ' + fmt12(el.dataset.end);
+    }
+  }
+
+  function preselectTimeSlot(startTime, endTime) {
+    if (!startTime && !endTime) return;
+    const chip = document.querySelector(`.ts-chip[data-start="${startTime}"][data-end="${endTime}"]`);
+    if (chip) {
+      selectSlot(chip);
+    } else {
+      const customChip = document.querySelector('.ts-chip-custom');
+      selectSlot(customChip, true);
+      document.getElementById('f-start-time').value = startTime || '';
+      document.getElementById('f-end-time').value   = endTime   || '';
+    }
+  }
+
   /* ── SAVE DEAL (add or edit) ── */
   async function saveDeal(e) {
     e.preventDefault();
@@ -510,6 +594,14 @@
 
     const startTime = document.getElementById('f-start-time').value;
     const endTime   = document.getElementById('f-end-time').value;
+
+    if (!startTime || !endTime) {
+      errEl.textContent = 'Please select a time slot.';
+      errEl.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = editingId ? 'Save Changes →' : 'Add Deal →';
+      return;
+    }
     const payload = {
       merchant_id:    currentMerchant.id,
       merchant_name:  currentMerchant.name,
@@ -557,6 +649,11 @@
   function resetForm() {
     document.getElementById('deal-form').reset();
     document.getElementById('price-preview').textContent = '';
+    document.getElementById('slot-hint').textContent = '';
+    document.getElementById('custom-time-row').style.display = 'none';
+    document.querySelectorAll('.ts-chip').forEach(c => c.classList.remove('selected'));
+    document.getElementById('f-start-time').value = '';
+    document.getElementById('f-end-time').value   = '';
     selectedColor = '#FDF4FF';
     document.querySelectorAll('.swatch').forEach((s, i) => s.classList.toggle('selected', i === 0));
     document.getElementById('btn-submit').textContent = 'Add Deal →';
@@ -575,8 +672,7 @@
       document.getElementById('f-emoji').value      = deal.emoji;
       document.getElementById('f-orig-price').value = deal.original_price;
       document.getElementById('f-discount').value   = deal.discount_pct;
-      document.getElementById('f-start-time').value = deal.start_time || '';
-      document.getElementById('f-end-time').value   = deal.end_time   || '';
+      preselectTimeSlot(deal.start_time || '', deal.end_time || '');
       document.getElementById('f-expires').value    = deal.expires_at || '';
       document.getElementById('f-capacity').value   = deal.capacity   || '';
       const swatch = document.querySelector(`.swatch[data-color="${deal.bg_color}"]`);
