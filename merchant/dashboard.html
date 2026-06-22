@@ -514,6 +514,54 @@
 
 </main>
 
+<!-- ── EDIT STAFF MODAL ── -->
+<div class="modal-overlay" id="edit-staff-overlay" onclick="if(event.target===this)closeEditStaff()">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div id="edit-staff-dot" style="width:14px;height:14px;border-radius:50%;flex-shrink:0"></div>
+        <div class="modal-title">Edit Therapist</div>
+      </div>
+      <button class="modal-close" onclick="closeEditStaff()">✕</button>
+    </div>
+    <div class="form-body">
+      <div class="field-group"><label>Name *</label><input type="text" id="edit-sf-name" class="setup-input" style="width:100%" placeholder="Therapist name" /></div>
+      <div class="field-group"><label>Role</label><input type="text" id="edit-sf-role" class="setup-input" style="width:100%" placeholder="Therapist" /></div>
+      <div class="field-row">
+        <div class="field-group"><label>Phone <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="tel" id="edit-sf-phone" class="setup-input" style="width:100%" placeholder="+91 98765 43210" /></div>
+        <div class="field-group"><label>Email <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="email" id="edit-sf-email" class="setup-input" style="width:100%" placeholder="name@example.com" /></div>
+      </div>
+      <div class="form-err" id="edit-staff-err"></div>
+      <button class="btn-submit" id="edit-staff-btn" onclick="saveEditStaff()">Save Changes →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── EDIT ROOM MODAL ── -->
+<div class="modal-overlay" id="edit-room-overlay" onclick="if(event.target===this)closeEditRoom()">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <div class="modal-header-left"><span style="font-size:20px">🚪</span><div class="modal-title">Edit Room</div></div>
+      <button class="modal-close" onclick="closeEditRoom()">✕</button>
+    </div>
+    <div class="form-body">
+      <div class="field-group"><label>Room name *</label><input type="text" id="edit-rm-name" class="setup-input" style="width:100%" placeholder="e.g. Room 1" /></div>
+      <div class="field-group">
+        <label>Type</label>
+        <select id="edit-rm-type" class="assign-select" style="width:100%">
+          <option>Treatment Room</option>
+          <option>Couple Suite</option>
+          <option>VIP Room</option>
+          <option>Dry Room</option>
+          <option>Steam Room</option>
+        </select>
+      </div>
+      <div class="form-err" id="edit-room-err"></div>
+      <button class="btn-submit" id="edit-room-btn" onclick="saveEditRoom()">Save Changes →</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── ASSIGN MODAL ── -->
 <div class="modal-overlay" id="assign-modal-overlay" onclick="if(event.target===this)closeAssignModal()">
   <div class="modal" style="max-width:420px">
@@ -1310,6 +1358,7 @@
           <div class="setup-item-sub">${s.role || 'Therapist'}</div>
         </div>
         <div class="setup-item-actions">
+          <button class="btn-icon" title="Edit" onclick="openEditStaff('${s.id}')">✏️</button>
           <button class="btn-icon" title="${s.active ? 'Deactivate' : 'Activate'}" onclick="toggleStaff('${s.id}',${!s.active})">${s.active ? '⏸' : '▶️'}</button>
         </div>
       </li>`).join('');
@@ -1335,6 +1384,43 @@
     if (error) { errEl.textContent = error.message; return; }
     nameEl.value = ''; roleEl.value = '';
     nameEl.focus();
+    await loadStaff();
+  }
+
+  let editingStaffId = null;
+  function openEditStaff(id) {
+    const s = currentStaff.find(x => x.id === id);
+    if (!s) return;
+    editingStaffId = s.id;
+    document.getElementById('edit-staff-dot').style.background = s.color;
+    document.getElementById('edit-sf-name').value  = s.name  || '';
+    document.getElementById('edit-sf-role').value  = s.role  || '';
+    document.getElementById('edit-sf-phone').value = s.phone || '';
+    document.getElementById('edit-sf-email').value = s.email || '';
+    document.getElementById('edit-staff-err').textContent = '';
+    document.getElementById('edit-staff-btn').disabled = false;
+    document.getElementById('edit-staff-btn').textContent = 'Save Changes →';
+    document.getElementById('edit-staff-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeEditStaff() {
+    document.getElementById('edit-staff-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  async function saveEditStaff() {
+    const btn  = document.getElementById('edit-staff-btn');
+    const errEl = document.getElementById('edit-staff-err');
+    const name = document.getElementById('edit-sf-name').value.trim();
+    if (!name) { errEl.textContent = 'Name is required.'; return; }
+    btn.disabled = true; btn.textContent = 'Saving…';
+    const { error } = await db.from('staff').update({
+      name,
+      role:  document.getElementById('edit-sf-role').value.trim()  || 'Therapist',
+      phone: document.getElementById('edit-sf-phone').value.trim() || null,
+      email: document.getElementById('edit-sf-email').value.trim() || null,
+    }).eq('id', editingStaffId);
+    if (error) { errEl.textContent = error.message; btn.disabled = false; btn.textContent = 'Save Changes →'; return; }
+    closeEditStaff();
     await loadStaff();
   }
 
@@ -1364,6 +1450,7 @@
           <div class="setup-item-sub">${r.room_type}</div>
         </div>
         <div class="setup-item-actions">
+          <button class="btn-icon" title="Edit" onclick="openEditRoom('${r.id}')">✏️</button>
           <button class="btn-icon" title="${r.active ? 'Deactivate' : 'Activate'}" onclick="toggleRoom('${r.id}',${!r.active})">${r.active ? '⏸' : '▶️'}</button>
         </div>
       </li>`).join('');
@@ -1387,6 +1474,38 @@
     if (error) { errEl.textContent = error.message; return; }
     nameEl.value = '';
     nameEl.focus();
+    await loadRooms();
+  }
+
+  let editingRoomId = null;
+  function openEditRoom(id) {
+    const r = currentRooms.find(x => x.id === id);
+    if (!r) return;
+    editingRoomId = r.id;
+    document.getElementById('edit-rm-name').value = r.name      || '';
+    document.getElementById('edit-rm-type').value = r.room_type || 'Treatment Room';
+    document.getElementById('edit-room-err').textContent = '';
+    document.getElementById('edit-room-btn').disabled = false;
+    document.getElementById('edit-room-btn').textContent = 'Save Changes →';
+    document.getElementById('edit-room-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeEditRoom() {
+    document.getElementById('edit-room-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  async function saveEditRoom() {
+    const btn  = document.getElementById('edit-room-btn');
+    const errEl = document.getElementById('edit-room-err');
+    const name = document.getElementById('edit-rm-name').value.trim();
+    if (!name) { errEl.textContent = 'Room name is required.'; return; }
+    btn.disabled = true; btn.textContent = 'Saving…';
+    const { error } = await db.from('rooms').update({
+      name,
+      room_type: document.getElementById('edit-rm-type').value,
+    }).eq('id', editingRoomId);
+    if (error) { errEl.textContent = error.message; btn.disabled = false; btn.textContent = 'Save Changes →'; return; }
+    closeEditRoom();
     await loadRooms();
   }
 
