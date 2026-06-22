@@ -226,7 +226,13 @@
     .setup-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
     .setup-card-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
     .setup-card-title { font-size: 15px; font-weight: 700; }
-    .btn-sm-add { padding: 6px 14px; border-radius: 8px; border: none; background: var(--green); color: var(--white); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+    .btn-sm-add { padding: 8px 16px; border-radius: 8px; border: none; background: var(--green); color: var(--white); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+    .btn-sm-add:disabled { opacity: .5; cursor: not-allowed; }
+    .setup-inline-form { display: flex; gap: 8px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg); }
+    .setup-input { flex: 1; padding: 8px 11px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; font-family: inherit; color: var(--text); outline: none; background: var(--white); min-width: 0; }
+    .setup-input:focus { border-color: var(--green); }
+    .setup-input-sm { flex: 0 0 130px; }
+    .setup-count { font-size: 12px; font-weight: 600; color: var(--muted); background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 2px 10px; }
     .setup-list { list-style: none; }
     .setup-item { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-bottom: 1px solid var(--border); font-size: 14px; }
     .setup-item:last-child { border-bottom: none; }
@@ -470,84 +476,43 @@
       <div class="setup-card">
         <div class="setup-card-header">
           <span class="setup-card-title">👩‍⚕️ Therapists</span>
-          <button class="btn-sm-add" onclick="openStaffModal()">＋ Add</button>
+          <span class="setup-count" id="staff-count"></span>
         </div>
+        <div class="setup-inline-form">
+          <input type="text" id="sf-name" placeholder="Therapist name…" class="setup-input"
+            onkeydown="if(event.key==='Enter')quickAddStaff()" />
+          <input type="text" id="sf-role" placeholder="Role" class="setup-input setup-input-sm"
+            onkeydown="if(event.key==='Enter')quickAddStaff()" />
+          <button class="btn-sm-add" id="staff-add-btn" onclick="quickAddStaff()">Add →</button>
+        </div>
+        <div class="form-err" id="staff-err" style="padding:4px 16px;font-size:12px"></div>
         <ul class="setup-list" id="staff-list"><li class="setup-item" style="color:var(--muted)">Loading…</li></ul>
       </div>
       <!-- Rooms -->
       <div class="setup-card">
         <div class="setup-card-header">
           <span class="setup-card-title">🚪 Rooms</span>
-          <button class="btn-sm-add" onclick="openRoomModal()">＋ Add</button>
+          <span class="setup-count" id="room-count"></span>
         </div>
-        <ul class="setup-list" id="room-list"><li class="setup-item" style="color:var(--muted)">Loading…</li></ul>
-      </div>
-    </div>
-  </div><!-- /tab-setup -->
-
-</main>
-
-<!-- ── STAFF MODAL ── -->
-<div class="modal-overlay" id="staff-modal-overlay" onclick="if(event.target===this)closeStaffModal()">
-  <div class="modal" style="max-width:420px">
-    <div class="modal-header">
-      <div class="modal-header-left"><div style="font-size:22px">👩‍⚕️</div><div class="modal-title" id="staff-modal-title">Add Therapist</div></div>
-      <button class="modal-close" onclick="closeStaffModal()">✕</button>
-    </div>
-    <form id="staff-form" onsubmit="saveStaff(event)">
-      <div class="form-body">
-        <div class="field-group"><label>Name *</label><input type="text" id="sf-name" required placeholder="e.g. Anita Sharma" /></div>
-        <div class="field-group"><label>Role</label><input type="text" id="sf-role" placeholder="Therapist" /></div>
-        <div class="field-row">
-          <div class="field-group"><label>Phone</label><input type="tel" id="sf-phone" placeholder="+91 98765 43210" /></div>
-          <div class="field-group"><label>Email</label><input type="email" id="sf-email" placeholder="anita@spa.com" /></div>
-        </div>
-        <div class="field-group">
-          <label>Colour tag</label>
-          <div style="display:flex;gap:8px;flex-wrap:wrap" id="staff-color-picker">
-            <div class="swatch selected" style="background:#1D9E75" data-color="#1D9E75" onclick="pickStaffColor(this)"></div>
-            <div class="swatch" style="background:#7C3AED" data-color="#7C3AED" onclick="pickStaffColor(this)"></div>
-            <div class="swatch" style="background:#2563EB" data-color="#2563EB" onclick="pickStaffColor(this)"></div>
-            <div class="swatch" style="background:#DC2626" data-color="#DC2626" onclick="pickStaffColor(this)"></div>
-            <div class="swatch" style="background:#D97706" data-color="#D97706" onclick="pickStaffColor(this)"></div>
-            <div class="swatch" style="background:#DB2777" data-color="#DB2777" onclick="pickStaffColor(this)"></div>
-            <div class="swatch" style="background:#0891B2" data-color="#0891B2" onclick="pickStaffColor(this)"></div>
-            <div class="swatch" style="background:#059669" data-color="#059669" onclick="pickStaffColor(this)"></div>
-          </div>
-        </div>
-        <div class="form-err" id="staff-err"></div>
-        <button type="submit" class="btn-submit" id="staff-submit-btn">Add Therapist →</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- ── ROOM MODAL ── -->
-<div class="modal-overlay" id="room-modal-overlay" onclick="if(event.target===this)closeRoomModal()">
-  <div class="modal" style="max-width:420px">
-    <div class="modal-header">
-      <div class="modal-header-left"><div style="font-size:22px">🚪</div><div class="modal-title" id="room-modal-title">Add Room</div></div>
-      <button class="modal-close" onclick="closeRoomModal()">✕</button>
-    </div>
-    <form id="room-form" onsubmit="saveRoom(event)">
-      <div class="form-body">
-        <div class="field-group"><label>Room name *</label><input type="text" id="rm-name" required placeholder="e.g. Room 1" /></div>
-        <div class="field-group">
-          <label>Type</label>
-          <select id="rm-type" class="assign-select">
+        <div class="setup-inline-form">
+          <input type="text" id="rm-name" placeholder="Room name…" class="setup-input"
+            onkeydown="if(event.key==='Enter')quickAddRoom()" />
+          <select id="rm-type" class="setup-input setup-input-sm">
             <option>Treatment Room</option>
             <option>Couple Suite</option>
             <option>VIP Room</option>
             <option>Dry Room</option>
             <option>Steam Room</option>
           </select>
+          <button class="btn-sm-add" id="room-add-btn" onclick="quickAddRoom()">Add →</button>
         </div>
-        <div class="form-err" id="room-err"></div>
-        <button type="submit" class="btn-submit" id="room-submit-btn">Add Room →</button>
+        <div class="form-err" id="room-err" style="padding:4px 16px;font-size:12px"></div>
+        <ul class="setup-list" id="room-list"><li class="setup-item" style="color:var(--muted)">Loading…</li></ul>
       </div>
-    </form>
-  </div>
-</div>
+    </div>
+  </div><!-- /tab-setup -->
+
+</main>
 
 <!-- ── ASSIGN MODAL ── -->
 <div class="modal-overlay" id="assign-modal-overlay" onclick="if(event.target===this)closeAssignModal()">
@@ -1321,11 +1286,9 @@
   /* ════════════════════════════════════════════
      SETUP — STAFF
   ════════════════════════════════════════════ */
-  let currentStaff  = [];
-  let currentRooms  = [];
-  let editingStaffId = null;
-  let editingRoomId  = null;
-  let selectedStaffColor = '#1D9E75';
+  const STAFF_COLORS = ['#1D9E75','#7C3AED','#2563EB','#DC2626','#D97706','#DB2777','#0891B2','#059669','#EA580C','#65A30D'];
+  let currentStaff = [];
+  let currentRooms = [];
 
   async function loadStaff() {
     const { data } = await db.from('staff').select('*')
@@ -1335,67 +1298,46 @@
   }
 
   function renderStaffList() {
+    const count = currentStaff.filter(s => s.active).length;
+    document.getElementById('staff-count').textContent = count + ' active';
     const ul = document.getElementById('staff-list');
-    if (!currentStaff.length) { ul.innerHTML = '<li class="setup-item" style="color:var(--muted)">No therapists yet. Add one!</li>'; return; }
+    if (!currentStaff.length) { ul.innerHTML = '<li class="setup-item" style="color:var(--muted);padding:14px 16px">No therapists yet — add your first one above.</li>'; return; }
     ul.innerHTML = currentStaff.map(s => `
       <li class="setup-item ${s.active ? '' : 'inactive-row'}">
         <div class="staff-dot" style="background:${s.color}"></div>
-        <div>
+        <div style="flex:1;min-width:0">
           <div class="setup-item-name">${s.name}</div>
-          <div class="setup-item-sub">${s.role}${s.phone ? ' · ' + s.phone : ''}</div>
+          <div class="setup-item-sub">${s.role || 'Therapist'}</div>
         </div>
         <div class="setup-item-actions">
-          <button class="btn-icon" title="Edit" onclick="openStaffModal(${JSON.stringify(s).replace(/"/g,'&quot;')})">✏️</button>
           <button class="btn-icon" title="${s.active ? 'Deactivate' : 'Activate'}" onclick="toggleStaff('${s.id}',${!s.active})">${s.active ? '⏸' : '▶️'}</button>
         </div>
       </li>`).join('');
   }
 
-  function openStaffModal(staff = null) {
-    editingStaffId = staff ? staff.id : null;
-    selectedStaffColor = staff ? staff.color : '#1D9E75';
-    document.getElementById('staff-modal-title').textContent = staff ? 'Edit Therapist' : 'Add Therapist';
-    const btn = document.getElementById('staff-submit-btn');
-    btn.textContent = staff ? 'Save Changes →' : 'Add Therapist →';
-    btn.disabled = false;
-    document.getElementById('sf-name').value  = staff ? staff.name  : '';
-    document.getElementById('sf-role').value  = staff ? staff.role  : '';
-    document.getElementById('sf-phone').value = staff ? (staff.phone || '') : '';
-    document.getElementById('sf-email').value = staff ? (staff.email || '') : '';
-    document.getElementById('staff-err').textContent = '';
-    document.querySelectorAll('#staff-color-picker .swatch').forEach(s =>
-      s.classList.toggle('selected', s.dataset.color === selectedStaffColor));
-    document.getElementById('staff-modal-overlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeStaffModal() {
-    document.getElementById('staff-modal-overlay').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-  function pickStaffColor(el) {
-    document.querySelectorAll('#staff-color-picker .swatch').forEach(s => s.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedStaffColor = el.dataset.color;
-  }
-  async function saveStaff(e) {
-    e.preventDefault();
-    const btn = document.getElementById('staff-submit-btn');
-    btn.disabled = true; btn.textContent = 'Saving…';
-    const payload = {
+  async function quickAddStaff() {
+    const nameEl = document.getElementById('sf-name');
+    const roleEl = document.getElementById('sf-role');
+    const errEl  = document.getElementById('staff-err');
+    const btn    = document.getElementById('staff-add-btn');
+    const name   = nameEl.value.trim();
+    if (!name) { errEl.textContent = 'Please enter a name.'; nameEl.focus(); return; }
+    errEl.textContent = '';
+    btn.disabled = true; btn.textContent = 'Adding…';
+    const color = STAFF_COLORS[currentStaff.length % STAFF_COLORS.length];
+    const { error } = await db.from('staff').insert({
       merchant_id: currentMerchant.id,
-      name:  document.getElementById('sf-name').value.trim(),
-      role:  document.getElementById('sf-role').value.trim() || 'Therapist',
-      phone: document.getElementById('sf-phone').value.trim(),
-      email: document.getElementById('sf-email').value.trim(),
-      color: selectedStaffColor,
-    };
-    const { error } = editingStaffId
-      ? await db.from('staff').update(payload).eq('id', editingStaffId)
-      : await db.from('staff').insert(payload);
-    if (error) { document.getElementById('staff-err').textContent = error.message; btn.disabled = false; btn.textContent = editingStaffId ? 'Save Changes →' : 'Add Therapist →'; return; }
-    closeStaffModal();
+      name,
+      role:  roleEl.value.trim() || 'Therapist',
+      color,
+    });
+    btn.disabled = false; btn.textContent = 'Add →';
+    if (error) { errEl.textContent = error.message; return; }
+    nameEl.value = ''; roleEl.value = '';
+    nameEl.focus();
     await loadStaff();
   }
+
   async function toggleStaff(id, active) {
     await db.from('staff').update({ active }).eq('id', id);
     await loadStaff();
@@ -1410,54 +1352,44 @@
   }
 
   function renderRoomList() {
+    const count = currentRooms.filter(r => r.active).length;
+    document.getElementById('room-count').textContent = count + ' active';
     const ul = document.getElementById('room-list');
-    if (!currentRooms.length) { ul.innerHTML = '<li class="setup-item" style="color:var(--muted)">No rooms yet. Add one!</li>'; return; }
+    if (!currentRooms.length) { ul.innerHTML = '<li class="setup-item" style="color:var(--muted);padding:14px 16px">No rooms yet — add your first one above.</li>'; return; }
     ul.innerHTML = currentRooms.map(r => `
       <li class="setup-item ${r.active ? '' : 'inactive-row'}">
-        <span style="font-size:20px">🚪</span>
-        <div>
+        <span style="font-size:18px">🚪</span>
+        <div style="flex:1;min-width:0">
           <div class="setup-item-name">${r.name}</div>
           <div class="setup-item-sub">${r.room_type}</div>
         </div>
         <div class="setup-item-actions">
-          <button class="btn-icon" title="Edit" onclick="openRoomModal(${JSON.stringify(r).replace(/"/g,'&quot;')})">✏️</button>
           <button class="btn-icon" title="${r.active ? 'Deactivate' : 'Activate'}" onclick="toggleRoom('${r.id}',${!r.active})">${r.active ? '⏸' : '▶️'}</button>
         </div>
       </li>`).join('');
   }
 
-  function openRoomModal(room = null) {
-    editingRoomId = room ? room.id : null;
-    document.getElementById('room-modal-title').textContent = room ? 'Edit Room' : 'Add Room';
-    const btn = document.getElementById('room-submit-btn');
-    btn.textContent = room ? 'Save Changes →' : 'Add Room →';
-    btn.disabled = false;
-    document.getElementById('rm-name').value = room ? room.name : '';
-    document.getElementById('rm-type').value = room ? room.room_type : 'Treatment Room';
-    document.getElementById('room-err').textContent = '';
-    document.getElementById('room-modal-overlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeRoomModal() {
-    document.getElementById('room-modal-overlay').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-  async function saveRoom(e) {
-    e.preventDefault();
-    const btn = document.getElementById('room-submit-btn');
-    btn.disabled = true; btn.textContent = 'Saving…';
-    const payload = {
+  async function quickAddRoom() {
+    const nameEl = document.getElementById('rm-name');
+    const typeEl = document.getElementById('rm-type');
+    const errEl  = document.getElementById('room-err');
+    const btn    = document.getElementById('room-add-btn');
+    const name   = nameEl.value.trim();
+    if (!name) { errEl.textContent = 'Please enter a room name.'; nameEl.focus(); return; }
+    errEl.textContent = '';
+    btn.disabled = true; btn.textContent = 'Adding…';
+    const { error } = await db.from('rooms').insert({
       merchant_id: currentMerchant.id,
-      name:      document.getElementById('rm-name').value.trim(),
-      room_type: document.getElementById('rm-type').value,
-    };
-    const { error } = editingRoomId
-      ? await db.from('rooms').update(payload).eq('id', editingRoomId)
-      : await db.from('rooms').insert(payload);
-    if (error) { document.getElementById('room-err').textContent = error.message; btn.disabled = false; btn.textContent = editingRoomId ? 'Save Changes →' : 'Add Room →'; return; }
-    closeRoomModal();
+      name,
+      room_type: typeEl.value,
+    });
+    btn.disabled = false; btn.textContent = 'Add →';
+    if (error) { errEl.textContent = error.message; return; }
+    nameEl.value = '';
+    nameEl.focus();
     await loadRooms();
   }
+
   async function toggleRoom(id, active) {
     await db.from('rooms').update({ active }).eq('id', id);
     await loadRooms();
