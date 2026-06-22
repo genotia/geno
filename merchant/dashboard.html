@@ -1207,14 +1207,9 @@
 
   <!-- ══════════════════ CLIENTS LIST ══════════════════ -->
   <div class="tab-panel" id="tab-clients-list">
-    <div class="cl-topbar">
-      <div>
-        <div class="cl-page-title">Clients list <span class="cl-count-badge" id="cl-count-badge">0</span></div>
-        <div class="cl-page-sub">View, add, edit and delete your client's details</div>
-      </div>
-      <div class="cl-topbar-actions">
-        <button class="am-close-btn" onclick="openAddClient()">＋ Add</button>
-      </div>
+    <span id="cl-count-badge" style="display:none">0</span>
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
+      <button class="am-close-btn" onclick="openAddClient()">＋ Add</button>
     </div>
     <div class="cl-toolbar">
       <div class="team-search" style="max-width:320px">
@@ -1249,12 +1244,7 @@
 
   <!-- ══════════════════ CLIENT SEGMENTS ══════════════════ -->
   <div class="tab-panel" id="tab-client-segments">
-    <div class="cl-topbar">
-      <div>
-        <div class="cl-page-title">Client segments <span class="cl-count-badge" id="seg-count-badge">7</span></div>
-        <div class="cl-page-sub">Auto-computed segments based on booking behaviour</div>
-      </div>
-    </div>
+    <span id="seg-count-badge" style="display:none">7</span>
     <div style="display:flex;gap:10px;margin-bottom:20px">
       <button class="seg-tab-btn active" id="seg-tab-std" onclick="segTabSwitch('standard',this)">Standard</button>
       <button class="seg-tab-btn" id="seg-tab-cust" onclick="segTabSwitch('custom',this)">Custom</button>
@@ -1275,12 +1265,6 @@
 
   <!-- ══════════════════ CLIENT LOYALTY ══════════════════ -->
   <div class="tab-panel" id="tab-client-loyalty">
-    <div class="cl-topbar">
-      <div>
-        <div class="cl-page-title">Rewards & Loyalty</div>
-        <div class="cl-page-sub">Reward your regulars and turn new clients into loyal ones</div>
-      </div>
-    </div>
     <!-- Loyalty summary cards -->
     <div class="loyalty-cards" id="loyalty-cards">
       <div class="loyalty-card">
@@ -1387,14 +1371,8 @@
 
   <!-- ══════════════════ SERVICE MENU ══════════════════ -->
   <div class="tab-panel" id="tab-service-menu">
-    <div class="cl-topbar">
-      <div>
-        <div class="cl-page-title">Service menu</div>
-        <div class="cl-page-sub">View and manage the services offered by your business</div>
-      </div>
-      <div class="cl-topbar-actions">
-        <button class="am-close-btn" onclick="openAddService()">＋ Add service</button>
-      </div>
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
+      <button class="am-close-btn" onclick="openAddService()">＋ Add service</button>
     </div>
     <div class="svc-toolbar">
       <div class="team-search" style="max-width:300px">
@@ -1416,14 +1394,9 @@
 
   <!-- ══════════════════ MEMBERSHIPS ══════════════════ -->
   <div class="tab-panel" id="tab-memberships">
-    <div class="cl-topbar">
-      <div>
-        <div class="cl-page-title">Memberships <span class="cl-count-badge" id="mb-count-badge">0</span></div>
-        <div class="cl-page-sub">Create multi-session plans and recurring memberships for your clients</div>
-      </div>
-      <div class="cl-topbar-actions">
-        <button class="am-close-btn" onclick="openAddMembership()">＋ Add plan</button>
-      </div>
+    <span id="mb-count-badge" style="display:none">0</span>
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
+      <button class="am-close-btn" onclick="openAddMembership()">＋ Add plan</button>
     </div>
     <div class="mb-list" id="mb-list">
       <div style="text-align:center;padding:48px;color:var(--muted)">Loading…</div>
@@ -1432,14 +1405,9 @@
 
   <!-- ══════════════════ PRODUCT LIST ══════════════════ -->
   <div class="tab-panel" id="tab-product-list">
-    <div class="cl-topbar">
-      <div>
-        <div class="cl-page-title">Products <span class="cl-count-badge" id="prod-count-badge">0</span></div>
-        <div class="cl-page-sub">Manage your product inventory, stock levels and pricing</div>
-      </div>
-      <div class="cl-topbar-actions">
-        <button class="am-close-btn" onclick="openAddProduct()">＋ Add product</button>
-      </div>
+    <span id="prod-count-badge" style="display:none">0</span>
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
+      <button class="am-close-btn" onclick="openAddProduct()">＋ Add product</button>
     </div>
     <div class="prod-toolbar">
       <div class="team-search" style="max-width:300px">
@@ -1720,7 +1688,6 @@
 
   <!-- ══════════════════ INVENTORY OVERVIEW ══════════════════ -->
   <div class="tab-panel" id="tab-inv-overview">
-    <div class="cl-topbar"><div><div class="cl-page-title">Inventory Overview</div><div class="cl-page-sub">Real-time stock summary for your spa</div></div></div>
     <div class="inv-kpi-grid">
       <div class="inv-kpi"><div class="inv-kpi-icon" style="background:#EDE9FE">🗂️</div><div class="inv-kpi-body"><div class="inv-kpi-num" id="kpi-skus">—</div><div class="inv-kpi-label">Total SKUs</div></div></div>
       <div class="inv-kpi"><div class="inv-kpi-icon" style="background:#D1FAE5">💰</div><div class="inv-kpi-body"><div class="inv-kpi-num" id="kpi-value">—</div><div class="inv-kpi-label">Stock Value (₹)</div></div></div>
@@ -1741,8 +1708,8 @@
 
   <!-- ══════════════════ STOCK ITEMS ══════════════════ -->
   <div class="tab-panel" id="tab-inv-items">
-    <div class="cl-topbar">
-      <div><div class="cl-page-title">Stock items <span class="cl-count-badge" id="inv-items-count">0</span></div><div class="cl-page-sub">Master list of all products and consumables</div></div>
+    <span id="inv-items-count" style="display:none">0</span>
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
       <button class="am-close-btn" onclick="openInvItemOverlay()">＋ Add item</button>
     </div>
     <div class="inv-toolbar">
@@ -1777,8 +1744,7 @@
 
   <!-- ══════════════════ STOCK INTAKE ══════════════════ -->
   <div class="tab-panel" id="tab-inv-intake">
-    <div class="cl-topbar">
-      <div><div class="cl-page-title">Stock intake</div><div class="cl-page-sub">Record stock received from suppliers</div></div>
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
       <button class="am-close-btn" onclick="openIntakeOverlay()">＋ Record intake</button>
     </div>
     <div class="inv-history-list" id="intake-history-list"><div style="padding:40px;text-align:center;color:var(--muted)">Loading…</div></div>
@@ -1786,8 +1752,7 @@
 
   <!-- ══════════════════ STOCK USAGE ══════════════════ -->
   <div class="tab-panel" id="tab-inv-usage">
-    <div class="cl-topbar">
-      <div><div class="cl-page-title">Stock usage</div><div class="cl-page-sub">Track professional products consumed during services</div></div>
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
       <button class="am-close-btn" onclick="openUsageOverlay()">＋ Record usage</button>
     </div>
     <div class="inv-history-list" id="usage-history-list"><div style="padding:40px;text-align:center;color:var(--muted)">Loading…</div></div>
@@ -1795,8 +1760,7 @@
 
   <!-- ══════════════════ ADJUSTMENTS ══════════════════ -->
   <div class="tab-panel" id="tab-inv-adjustments">
-    <div class="cl-topbar">
-      <div><div class="cl-page-title">Stock adjustments</div><div class="cl-page-sub">Correct stock for damage, expiry, theft or miscounts</div></div>
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
       <button class="am-close-btn" onclick="openAdjOverlay()">＋ Add adjustment</button>
     </div>
     <div class="team-table">
@@ -1809,8 +1773,8 @@
 
   <!-- ══════════════════ SUPPLIERS ══════════════════ -->
   <div class="tab-panel" id="tab-inv-suppliers">
-    <div class="cl-topbar">
-      <div><div class="cl-page-title">Suppliers <span class="cl-count-badge" id="supplier-count">0</span></div><div class="cl-page-sub">Manage your product suppliers and vendors</div></div>
+    <span id="supplier-count" style="display:none">0</span>
+    <div class="cl-topbar-actions" style="margin-bottom:16px">
       <button class="am-close-btn" onclick="openSupplierOverlay()">＋ Add supplier</button>
     </div>
     <div class="team-table">
