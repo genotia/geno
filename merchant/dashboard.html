@@ -891,9 +891,6 @@
     <button class="nav-item active" id="nav-home"         onclick="switchPage('home',this)"><span class="nav-icon">🏠</span> Home</button>
     <button class="nav-item"        id="nav-deals"        onclick="switchPage('deals',this)"><span class="nav-icon">📋</span> Deals</button>
     <button class="nav-item"        id="nav-bookings"     onclick="switchPage('bookings',this)"><span class="nav-icon">🛎️</span> Bookings</button>
-    <button class="nav-item"        id="nav-schedule"     onclick="switchPage('schedule',this)"><span class="nav-icon">📅</span> Schedule</button>
-    <button class="nav-item"        id="nav-roster"       onclick="switchPage('roster',this)"><span class="nav-icon">👥</span> Roster</button>
-    <button class="nav-item"        id="nav-productivity" onclick="switchPage('productivity',this)"><span class="nav-icon">📊</span> Insights</button>
     <div class="nav-group">
       <button class="nav-item nav-group-toggle" id="nav-team-toggle" onclick="toggleTeamNav(this)">
         <span class="nav-icon">👥</span> Team <span class="nav-chevron">▾</span>
@@ -903,6 +900,9 @@
         <button class="nav-item nav-sub" id="nav-shifts"       onclick="switchPage('shifts',this)"><span class="nav-icon">📆</span> Scheduled shifts</button>
         <button class="nav-item nav-sub" id="nav-timesheets"   onclick="switchPage('timesheets',this)"><span class="nav-icon">⏱️</span> Timesheets</button>
         <button class="nav-item nav-sub" id="nav-sales"        onclick="switchPage('sales',this)"><span class="nav-icon">💰</span> Sales</button>
+        <button class="nav-item nav-sub" id="nav-schedule"     onclick="switchPage('schedule',this)"><span class="nav-icon">📅</span> Schedule</button>
+        <button class="nav-item nav-sub" id="nav-roster"       onclick="switchPage('roster',this)"><span class="nav-icon">👥</span> Roster</button>
+        <button class="nav-item nav-sub" id="nav-productivity" onclick="switchPage('productivity',this)"><span class="nav-icon">📊</span> Insights</button>
       </div>
     </div>
     <div class="nav-group">
@@ -4609,9 +4609,9 @@
     if (tabLoaded[page]) return;
     tabLoaded[page] = true;
     if (page === 'setup')         { loadRooms(); }
-    if (page === 'roster')        { Promise.all([loadStaff(), loadRooms()]).then(loadRoster); }
-    if (page === 'schedule')      { Promise.all([loadStaff(), loadRooms(), loadRosterData()]).then(loadSchedule); }
-    if (page === 'productivity')  { loadProductivity(); }
+    if (page === 'roster')        { openTeamNav(); Promise.all([loadStaff(), loadRooms()]).then(loadRoster); }
+    if (page === 'schedule')      { openTeamNav(); Promise.all([loadStaff(), loadRooms(), loadRosterData()]).then(loadSchedule); }
+    if (page === 'productivity')  { openTeamNav(); loadProductivity(); }
     if (page === 'team-members')  { openTeamNav(); loadTeamMembers(); }
     if (page === 'shifts')        { openTeamNav(); loadShifts(); }
     if (page === 'timesheets')    { openTeamNav(); loadTimesheets(); }
