@@ -1066,6 +1066,65 @@
       /* Card action buttons: meet 44px touch target minimum */
       .btn-book, .btn-negotiate { min-height: 44px; padding: 12px; font-size: 14px; }
     }
+    /* ── BOOKING MODAL ── */
+    .bk-deal-summary {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--bg); border-radius: 14px; padding: 14px 16px; margin-bottom: 20px;
+    }
+    .bk-deal-emoji { font-size: 28px; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .bk-deal-title { font-size: 15px; font-weight: 700; }
+    .bk-deal-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .bk-deal-prices { display: flex; align-items: baseline; gap: 8px; margin-top: 4px; }
+    .bk-price-now { font-size: 17px; font-weight: 800; color: var(--green); }
+    .bk-price-was { font-size: 13px; color: #9CA3AF; text-decoration: line-through; }
+    .bk-section-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+    .bk-date-grid { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 20px; scrollbar-width: none; }
+    .bk-date-grid::-webkit-scrollbar { display: none; }
+    .bk-date-chip {
+      flex-shrink: 0; width: 60px; border-radius: 12px; padding: 10px 0;
+      border: 1.5px solid var(--border); background: var(--white);
+      display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer;
+      transition: all .12s; user-select: none;
+    }
+    .bk-date-chip:hover:not(.disabled) { border-color: var(--green); background: #F0FDF8; }
+    .bk-date-chip.selected { border-color: var(--green); background: var(--green); }
+    .bk-date-chip.disabled { opacity: .35; cursor: not-allowed; }
+    .bk-date-dow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; color: var(--muted); }
+    .bk-date-chip.selected .bk-date-dow { color: rgba(255,255,255,.75); }
+    .bk-date-num { font-size: 20px; font-weight: 800; color: var(--text); line-height: 1; }
+    .bk-date-chip.selected .bk-date-num { color: var(--white); }
+    .bk-date-mon { font-size: 10px; color: var(--muted); font-weight: 600; }
+    .bk-date-chip.selected .bk-date-mon { color: rgba(255,255,255,.75); }
+    .bk-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+    .bk-field label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .bk-field input, .bk-field textarea {
+      padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 10px;
+      font-size: 14px; color: var(--text); outline: none; font-family: inherit;
+      background: var(--white); transition: border-color .15s; resize: none;
+    }
+    .bk-field input:focus, .bk-field textarea:focus { border-color: var(--green); }
+    .bk-error { font-size: 13px; color: #DC2626; min-height: 18px; margin-bottom: 4px; }
+    .bk-submit {
+      width: 100%; background: var(--green); color: var(--white); border: none;
+      border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: opacity .15s; font-family: inherit;
+    }
+    .bk-submit:hover { opacity: .88; }
+    .bk-submit:disabled { opacity: .5; cursor: not-allowed; }
+    .bk-screen-confirm { text-align: center; padding: 12px 0 8px; }
+    .bk-success-icon { font-size: 48px; margin-bottom: 10px; }
+    .bk-success-title { font-size: 22px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 4px; }
+    .bk-success-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .bk-code-box { background: #F0FDF8; border: 2px dashed var(--green); border-radius: 14px; padding: 18px 24px; display: inline-block; margin-bottom: 18px; }
+    .bk-code { font-size: 32px; font-weight: 800; letter-spacing: 6px; color: var(--dark-green); font-family: monospace; }
+    .bk-confirm-summary { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+    .bk-confirm-summary strong { color: var(--text); font-weight: 600; }
+    .bk-done-btn {
+      width: 100%; background: var(--white); color: var(--text); border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: border-color .15s; font-family: inherit;
+    }
+    .bk-done-btn:hover { border-color: var(--muted); }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -1311,6 +1370,74 @@
 <!-- ══════════════════════════════════════
      AI NEGOTIATOR MODAL
 ══════════════════════════════════════ -->
+<!-- ══ BOOKING MODAL ══ -->
+<div class="modal-overlay" id="booking-overlay" onclick="handleBookingOverlayClick(event)">
+  <div class="modal" id="booking-modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="bot-avatar">🛎️</div>
+        <div>
+          <div class="modal-title">Book this deal</div>
+          <div class="modal-subtitle" id="bk-merchant-subtitle"></div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeBookingModal()">✕</button>
+    </div>
+
+    <!-- Deal summary -->
+    <div class="bk-deal-summary">
+      <div class="bk-deal-emoji" id="bk-emoji"></div>
+      <div>
+        <div class="bk-deal-title" id="bk-deal-title"></div>
+        <div class="bk-deal-meta" id="bk-deal-meta"></div>
+        <div class="bk-deal-prices">
+          <span class="bk-price-now" id="bk-price-now"></span>
+          <span class="bk-price-was" id="bk-price-was"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 1: form -->
+    <div id="bk-screen-form">
+      <div class="bk-section-label">Pick a date</div>
+      <div class="bk-date-grid" id="bk-date-grid"></div>
+
+      <form id="bk-form" onsubmit="submitBooking(event)">
+        <div class="bk-field">
+          <label>Your name *</label>
+          <input type="text" id="bk-name" placeholder="Full name" required />
+        </div>
+        <div class="bk-field">
+          <label>Email *</label>
+          <input type="email" id="bk-email" placeholder="you@example.com" required />
+        </div>
+        <div class="bk-field">
+          <label>Phone</label>
+          <input type="tel" id="bk-phone" placeholder="+91 98765 43210" />
+        </div>
+        <div class="bk-field">
+          <label>Note <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
+          <textarea id="bk-note" rows="2" placeholder="Any special request…"></textarea>
+        </div>
+        <div class="bk-error" id="bk-error"></div>
+        <button type="submit" class="bk-submit" id="bk-submit-btn">Confirm Booking →</button>
+      </form>
+    </div>
+
+    <!-- Screen 2: confirmation -->
+    <div id="bk-screen-confirm" class="bk-screen-confirm" style="display:none">
+      <div class="bk-success-icon">✅</div>
+      <div class="bk-success-title">You're booked!</div>
+      <div class="bk-success-sub">Show this code at the venue</div>
+      <div class="bk-code-box">
+        <div class="bk-code" id="bk-code"></div>
+      </div>
+      <div class="bk-confirm-summary" id="bk-confirm-summary"></div>
+      <button class="bk-done-btn" onclick="closeBookingModal()">Done →</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="neg-overlay" onclick="handleOverlayClick(event)">
   <div class="modal" id="neg-modal">
 
@@ -1524,7 +1651,7 @@
             </div>
           </div>
           <div class="card-actions">
-            <button class="btn-book" onclick="event.stopPropagation()">Book now</button>
+            <button class="btn-book" onclick="event.stopPropagation(); openBooking('${d.id}')">Book now</button>
             <button class="btn-negotiate" onclick="event.stopPropagation(); openNegotiator('${d.id}')">
               <span class="bot-icon">🤖</span> Negotiate
             </button>
@@ -1536,6 +1663,121 @@
 
   renderDeals();
   loadLiveDeals();
+
+  /* ══════════════════════════════════════
+     BOOKING FLOW
+  ══════════════════════════════════════ */
+  let currentBookingDeal  = null;
+  let selectedBookingDate = null;
+  const DAY_IDX = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
+
+  function openBooking(dealId) {
+    currentBookingDeal = allDeals.find(d => String(d.id) === String(dealId));
+    if (!currentBookingDeal) return;
+    const d = currentBookingDeal;
+
+    document.getElementById('bk-emoji').textContent           = d.emoji  || '✨';
+    document.getElementById('bk-emoji').style.background      = d.bg     || '#ECFDF5';
+    document.getElementById('bk-deal-title').textContent      = d.title;
+    document.getElementById('bk-merchant-subtitle').textContent = d.merchant || '';
+    document.getElementById('bk-deal-meta').textContent       = d.time   || '';
+    document.getElementById('bk-price-now').textContent       = d.price  || '';
+    document.getElementById('bk-price-was').textContent       = d.was    || '';
+
+    selectedBookingDate = null;
+    buildDateGrid(d.days);
+
+    document.getElementById('bk-form').reset();
+    document.getElementById('bk-error').textContent = '';
+    document.getElementById('bk-submit-btn').disabled = false;
+    document.getElementById('bk-submit-btn').textContent = 'Confirm Booking →';
+    document.getElementById('bk-screen-form').style.display    = '';
+    document.getElementById('bk-screen-confirm').style.display = 'none';
+
+    document.getElementById('booking-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function buildDateGrid(daysStr) {
+    const allowed = daysStr
+      ? daysStr.split(',').map(s => DAY_IDX[s.trim()]).filter(n => n !== undefined)
+      : [0,1,2,3,4,5,6];
+    const grid  = document.getElementById('bk-date-grid');
+    grid.innerHTML = '';
+    const today = new Date();
+    for (let i = 0; i < 30; i++) {
+      const dt  = new Date(today); dt.setDate(today.getDate() + i);
+      const dow = dt.getDay();
+      const ok  = allowed.includes(dow);
+      const val = dt.toISOString().split('T')[0];
+      const el  = document.createElement('div');
+      el.className = 'bk-date-chip' + (ok ? '' : ' disabled');
+      el.innerHTML = `
+        <span class="bk-date-dow">${dt.toLocaleDateString('en-IN',{weekday:'short'})}</span>
+        <span class="bk-date-num">${dt.getDate()}</span>
+        <span class="bk-date-mon">${dt.toLocaleDateString('en-IN',{month:'short'})}</span>`;
+      if (ok) { el.dataset.date = val; el.onclick = () => selectBookingDate(el, val); }
+      grid.appendChild(el);
+    }
+  }
+
+  function selectBookingDate(el, val) {
+    document.querySelectorAll('.bk-date-chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedBookingDate = val;
+  }
+
+  async function submitBooking(e) {
+    e.preventDefault();
+    const errEl = document.getElementById('bk-error');
+    const btn   = document.getElementById('bk-submit-btn');
+    if (!selectedBookingDate) { errEl.textContent = 'Please pick a date first.'; return; }
+    errEl.textContent = '';
+    btn.disabled = true; btn.textContent = 'Booking…';
+
+    const ref = 'BK-' + Math.random().toString(36).substr(2,5).toUpperCase();
+    const d   = currentBookingDeal;
+    const isDealUUID = typeof d.id === 'string' && d.id.includes('-');
+
+    const payload = {
+      booking_ref:    ref,
+      deal_id:        isDealUUID ? d.id : null,
+      merchant_id:    d.merchant_id || null,
+      deal_title:     d.title,
+      merchant_name:  d.merchant || '',
+      time_slot:      d.time    || '',
+      customer_name:  document.getElementById('bk-name').value.trim(),
+      customer_email: document.getElementById('bk-email').value.trim(),
+      customer_phone: document.getElementById('bk-phone').value.trim(),
+      booking_date:   selectedBookingDate,
+      notes:          document.getElementById('bk-note').value.trim(),
+      status:         'pending',
+    };
+
+    const { error } = await db.from('bookings').insert(payload);
+    if (error) {
+      errEl.textContent = 'Something went wrong — ' + error.message;
+      btn.disabled = false; btn.textContent = 'Confirm Booking →';
+      return;
+    }
+
+    // Show confirmation
+    document.getElementById('bk-code').textContent = ref;
+    const dateLabel = new Date(selectedBookingDate + 'T00:00:00')
+      .toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long' });
+    document.getElementById('bk-confirm-summary').innerHTML =
+      `<strong>${d.title}</strong><br>${d.merchant || ''} · ${d.time || ''}<br>${dateLabel}`;
+    document.getElementById('bk-screen-form').style.display    = 'none';
+    document.getElementById('bk-screen-confirm').style.display = '';
+  }
+
+  function closeBookingModal() {
+    document.getElementById('booking-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function handleBookingOverlayClick(e) {
+    if (e.target === document.getElementById('booking-overlay')) closeBookingModal();
+  }
 
   /* ── Geolocation ── */
   if (navigator.geolocation) {

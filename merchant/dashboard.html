@@ -175,6 +175,52 @@
     .slots-low  { background: #FEF3C7; color: #92400E; }
     .slots-full { background: #FEE2E2; color: #DC2626; }
 
+    /* ── TABS ── */
+    .tab-bar { display: flex; gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 4px; margin-bottom: 24px; width: fit-content; }
+    .tab-btn { padding: 8px 20px; border-radius: 9px; border: none; background: transparent; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .15s; font-family: inherit; }
+    .tab-btn.active { background: var(--white); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    /* ── BOOKINGS ── */
+    .bk-filter-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+    .bk-filter-btn { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .12s; }
+    .bk-filter-btn.active { border-color: var(--green); background: #F0FDF8; color: var(--green); }
+    .bk-view-btn { margin-left: auto; padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .12s; }
+    .bk-view-btn.active { border-color: var(--dark-green); background: #F0FDF8; color: var(--dark-green); }
+    .status-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; text-transform: capitalize; }
+    .status-pending   { background: #FEF3C7; color: #92400E; }
+    .status-confirmed { background: #D1FAE5; color: var(--dark-green); }
+    .status-cancelled { background: #F3F4F6; color: var(--muted); }
+    .btn-confirm { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 7px; cursor: pointer; border: 1.5px solid var(--green); background: #F0FDF8; color: var(--green); margin-right: 4px; transition: all .12s; }
+    .btn-cancel  { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 7px; cursor: pointer; border: 1.5px solid var(--border); background: var(--white); color: var(--muted); transition: all .12s; }
+    .btn-confirm:hover { background: #D1FAE5; }
+    .btn-cancel:hover  { border-color: #DC2626; color: #DC2626; }
+    /* ── CALENDAR ── */
+    .cal-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .cal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 22px; border-bottom: 1px solid var(--border); }
+    .cal-nav-btn { width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--white); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .12s; }
+    .cal-nav-btn:hover { border-color: var(--green); color: var(--green); }
+    .cal-month-label { font-size: 16px; font-weight: 700; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); }
+    .cal-dow { font-size: 11px; font-weight: 700; color: var(--muted); text-align: center; padding: 10px 0 8px; background: var(--bg); border-bottom: 1px solid var(--border); }
+    .cal-day { min-height: 70px; padding: 8px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); cursor: pointer; transition: background .12s; position: relative; }
+    .cal-day:nth-child(7n) { border-right: none; }
+    .cal-day:hover { background: var(--bg); }
+    .cal-day.other-month { opacity: .3; }
+    .cal-day.today { background: #F0FDF8; }
+    .cal-day.selected { background: #D1FAE5; }
+    .cal-day-num { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .cal-dot-wrap { display: flex; flex-wrap: wrap; gap: 3px; }
+    .cal-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .cal-dot.pending   { background: #D97706; }
+    .cal-dot.confirmed { background: var(--green); }
+    .cal-dot.cancelled { background: var(--border); }
+    .cal-day-detail { padding: 16px 22px; border-top: 1px solid var(--border); display: none; }
+    .cal-day-detail.open { display: block; }
+    .cal-day-detail-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+    .cal-booking-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .cal-booking-row:last-child { border-bottom: none; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
       .stats-row { grid-template-columns: 1fr; }
@@ -206,38 +252,102 @@
 <main>
   <div class="page-header">
     <div>
-      <div class="page-title">Off-Peak Deals</div>
-      <div class="page-sub" id="page-sub">Loading your deals…</div>
+      <div class="page-title" id="page-title">Off-Peak Deals</div>
+      <div class="page-sub" id="page-sub">Loading…</div>
     </div>
-    <button class="btn-add admin-only" style="display:none" onclick="openModal()">＋ Add Deal</button>
+    <button class="btn-add admin-only" style="display:none" id="btn-add-deal" onclick="openModal()">＋ Add Deal</button>
   </div>
 
-  <!-- Stats -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-value" id="stat-total">—</div>
-      <div class="stat-label">Total deals</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value green" id="stat-active">—</div>
-      <div class="stat-label">Live now</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value orange" id="stat-paused">—</div>
-      <div class="stat-label">Paused</div>
-    </div>
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('deals', this)">📋 Deals</button>
+    <button class="tab-btn"        onclick="switchTab('bookings', this)">🛎️ Bookings</button>
   </div>
 
-  <!-- Deals table -->
-  <div class="table-card">
-    <div class="table-header">
-      <span class="table-title">Your listings</span>
-      <span class="table-count" id="table-count">0 deals</span>
+  <!-- ── DEALS TAB ── -->
+  <div class="tab-panel active" id="tab-deals">
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-label">Total deals</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green" id="stat-active">—</div>
+        <div class="stat-label">Live now</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange" id="stat-paused">—</div>
+        <div class="stat-label">Paused</div>
+      </div>
     </div>
-    <div id="table-wrap">
-      <div class="loading-state">Loading deals…</div>
+
+    <!-- Deals table -->
+    <div class="table-card">
+      <div class="table-header">
+        <span class="table-title">Your listings</span>
+        <span class="table-count" id="table-count">0 deals</span>
+      </div>
+      <div id="table-wrap">
+        <div class="loading-state">Loading deals…</div>
+      </div>
+    </div><!-- /table-card -->
+  </div><!-- /tab-deals -->
+
+  <!-- ── BOOKINGS TAB ── -->
+  <div class="tab-panel" id="tab-bookings">
+    <!-- Booking stats -->
+    <div class="stats-row" style="margin-bottom:20px">
+      <div class="stat-card">
+        <div class="stat-value orange" id="bk-stat-pending">—</div>
+        <div class="stat-label">Pending</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green" id="bk-stat-confirmed">—</div>
+        <div class="stat-label">Confirmed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="bk-stat-total">—</div>
+        <div class="stat-label">Total bookings</div>
+      </div>
     </div>
-  </div>
+
+    <!-- Filter + view toggle -->
+    <div class="bk-filter-bar">
+      <button class="bk-filter-btn active" data-status="all"       onclick="filterBookings(this)">All</button>
+      <button class="bk-filter-btn"        data-status="pending"   onclick="filterBookings(this)">Pending</button>
+      <button class="bk-filter-btn"        data-status="confirmed" onclick="filterBookings(this)">Confirmed</button>
+      <button class="bk-filter-btn"        data-status="cancelled" onclick="filterBookings(this)">Cancelled</button>
+      <button class="bk-view-btn" id="bk-view-toggle" onclick="toggleCalendarView()">📅 Calendar</button>
+    </div>
+
+    <!-- List view -->
+    <div id="bk-list-view">
+      <div class="table-card">
+        <div class="table-header">
+          <span class="table-title">Bookings</span>
+          <span class="table-count" id="bk-table-count">0</span>
+        </div>
+        <div id="bk-table-wrap">
+          <div class="loading-state">Loading bookings…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar view (hidden by default) -->
+    <div id="bk-cal-view" style="display:none">
+      <div class="cal-wrap">
+        <div class="cal-header">
+          <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
+          <span class="cal-month-label" id="cal-month-label"></span>
+          <button class="cal-nav-btn" onclick="calNav(1)">›</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="cal-day-detail" id="cal-day-detail"></div>
+      </div>
+    </div>
+  </div><!-- /tab-bookings -->
+
 </main>
 
 <!-- ── ADD DEAL MODAL ── -->
@@ -409,6 +519,185 @@
     'Food & Dining':     '#FEF3C7',
     'Diagnostics':       '#FFF1F2',
   };
+
+  /* ── TAB SWITCHING ── */
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('btn-add-deal').style.display = tab === 'deals' && currentRole === 'admin' ? '' : 'none';
+    if (tab === 'bookings') loadBookings();
+  }
+
+  /* ── BOOKINGS ── */
+  let allBookings       = [];
+  let bookingFilter     = 'all';
+  let calViewActive     = false;
+  let calYear           = new Date().getFullYear();
+  let calMonth          = new Date().getMonth();
+  let selectedCalDate   = null;
+
+  async function loadBookings() {
+    document.getElementById('bk-table-wrap').innerHTML = '<div class="loading-state">Loading bookings…</div>';
+    const { data, error } = await db
+      .from('bookings')
+      .select('*')
+      .eq('merchant_id', currentMerchant.id)
+      .order('booking_date', { ascending: true });
+    if (error) { document.getElementById('bk-table-wrap').innerHTML = `<div class="empty-state">${error.message}</div>`; return; }
+    allBookings = data || [];
+    updateBookingStats();
+    renderBookingsList();
+    if (calViewActive) renderCalendar();
+  }
+
+  function updateBookingStats() {
+    const pending   = allBookings.filter(b => b.status === 'pending').length;
+    const confirmed = allBookings.filter(b => b.status === 'confirmed').length;
+    document.getElementById('bk-stat-pending').textContent   = pending;
+    document.getElementById('bk-stat-confirmed').textContent = confirmed;
+    document.getElementById('bk-stat-total').textContent     = allBookings.length;
+  }
+
+  function filterBookings(btn) {
+    document.querySelectorAll('.bk-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    bookingFilter = btn.dataset.status;
+    renderBookingsList();
+  }
+
+  function renderBookingsList() {
+    const list = bookingFilter === 'all'
+      ? allBookings
+      : allBookings.filter(b => b.status === bookingFilter);
+    document.getElementById('bk-table-count').textContent = list.length + (list.length === 1 ? ' booking' : ' bookings');
+    if (!list.length) {
+      document.getElementById('bk-table-wrap').innerHTML = '<div class="empty-state">No bookings yet.</div>';
+      return;
+    }
+    document.getElementById('bk-table-wrap').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Date</th>
+          <th>Deal</th>
+          <th>Customer</th>
+          <th class="hide-mobile">Phone</th>
+          <th>Status</th>
+          <th class="hide-mobile">Actions</th>
+        </tr></thead>
+        <tbody>${list.map(b => {
+          const dateLabel = new Date(b.booking_date + 'T00:00:00')
+            .toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'short' });
+          const actionBtns = b.status !== 'cancelled' ? `
+            ${b.status === 'pending' ? `<button class="btn-confirm" onclick="updateBookingStatus('${b.id}','confirmed')">✓ Confirm</button>` : ''}
+            <button class="btn-cancel" onclick="updateBookingStatus('${b.id}','cancelled')">✗ Cancel</button>
+          ` : '<span style="font-size:12px;color:var(--muted)">—</span>';
+          return `<tr>
+            <td><strong>${dateLabel}</strong><br><span style="font-size:11px;color:var(--muted)">${b.time_slot}</span></td>
+            <td>${b.deal_title}</td>
+            <td><strong>${b.customer_name}</strong><br><span style="font-size:12px;color:var(--muted)">${b.customer_email}</span></td>
+            <td class="hide-mobile">${b.customer_phone || '—'}</td>
+            <td><span class="status-badge status-${b.status}">${b.status}</span></td>
+            <td class="hide-mobile">${actionBtns}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>`;
+  }
+
+  async function updateBookingStatus(id, status) {
+    const { error } = await db.from('bookings').update({ status }).eq('id', id);
+    if (!error) await loadBookings();
+  }
+
+  /* ── CALENDAR ── */
+  function toggleCalendarView() {
+    calViewActive = !calViewActive;
+    const btn = document.getElementById('bk-view-toggle');
+    document.getElementById('bk-list-view').style.display  = calViewActive ? 'none' : '';
+    document.getElementById('bk-cal-view').style.display   = calViewActive ? '' : 'none';
+    btn.classList.toggle('active', calViewActive);
+    btn.textContent = calViewActive ? '📋 List' : '📅 Calendar';
+    if (calViewActive) renderCalendar();
+  }
+
+  function calNav(dir) {
+    calMonth += dir;
+    if (calMonth > 11) { calMonth = 0; calYear++; }
+    if (calMonth < 0)  { calMonth = 11; calYear--; }
+    selectedCalDate = null;
+    document.getElementById('cal-day-detail').classList.remove('open');
+    renderCalendar();
+  }
+
+  function renderCalendar() {
+    const monthLabel = new Date(calYear, calMonth, 1)
+      .toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+    document.getElementById('cal-month-label').textContent = monthLabel;
+
+    const grid = document.getElementById('cal-grid');
+    grid.innerHTML = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+      .map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+    const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+    const todayStr    = new Date().toISOString().split('T')[0];
+
+    // Group bookings by date
+    const byDate = {};
+    allBookings.forEach(b => {
+      (byDate[b.booking_date] = byDate[b.booking_date] || []).push(b);
+    });
+
+    // Pad previous month
+    for (let i = firstDay - 1; i >= 0; i--) {
+      grid.innerHTML += `<div class="cal-day other-month"><div class="cal-day-num">${daysInPrev - i}</div></div>`;
+    }
+
+    // Current month days
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const bks     = byDate[dateStr] || [];
+      const isToday = dateStr === todayStr;
+      const isSel   = dateStr === selectedCalDate;
+      const dots    = bks.map(b => `<div class="cal-dot ${b.status}"></div>`).join('');
+      grid.innerHTML += `
+        <div class="cal-day${isToday ? ' today' : ''}${isSel ? ' selected' : ''}" onclick="selectCalDay('${dateStr}')">
+          <div class="cal-day-num">${d}</div>
+          <div class="cal-dot-wrap">${dots}</div>
+        </div>`;
+    }
+
+    // Pad next month
+    const total = firstDay + daysInMonth;
+    const tail  = total % 7 === 0 ? 0 : 7 - (total % 7);
+    for (let i = 1; i <= tail; i++) {
+      grid.innerHTML += `<div class="cal-day other-month"><div class="cal-day-num">${i}</div></div>`;
+    }
+  }
+
+  function selectCalDay(dateStr) {
+    selectedCalDate = dateStr;
+    renderCalendar();
+    const bks    = allBookings.filter(b => b.booking_date === dateStr);
+    const detail = document.getElementById('cal-day-detail');
+    if (!bks.length) { detail.classList.remove('open'); return; }
+    const dateLabel = new Date(dateStr + 'T00:00:00')
+      .toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long' });
+    detail.innerHTML = `<div class="cal-day-detail-title">Bookings on ${dateLabel}</div>` +
+      bks.map(b => `
+        <div class="cal-booking-row">
+          <span class="status-badge status-${b.status}">${b.status}</span>
+          <span><strong>${b.customer_name}</strong> · ${b.time_slot}</span>
+          <span style="color:var(--muted);font-size:12px">${b.customer_email}</span>
+          <span style="margin-left:auto">
+            ${b.status === 'pending' ? `<button class="btn-confirm" onclick="updateBookingStatus('${b.id}','confirmed')">✓</button>` : ''}
+            ${b.status !== 'cancelled' ? `<button class="btn-cancel" onclick="updateBookingStatus('${b.id}','cancelled')">✗</button>` : ''}
+          </span>
+        </div>`).join('');
+    detail.classList.add('open');
+  }
 
   /* ── INIT ── */
   async function init() {
