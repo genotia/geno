@@ -1567,20 +1567,22 @@
     const live = data.map(d => {
       const priceNum = Math.round(d.original_price * (1 - d.discount_pct / 100));
       return {
-        id:       d.id,
-        category: d.category,
-        emoji:    d.emoji,
-        bg:       d.bg_color,
-        discount: d.discount_pct + '% OFF',
-        time:     d.time_slot,
-        title:    d.title,
-        merchant: d.merchant_name,
+        id:          d.id,
+        merchant_id: d.merchant_id,
+        category:    d.category,
+        emoji:       d.emoji,
+        bg:          d.bg_color,
+        discount:    d.discount_pct + '% OFF',
+        time:        d.time_slot,
+        days:        d.days,
+        title:       d.title,
+        merchant:    d.merchant_name,
         priceNum,
-        wasNum:   d.original_price,
-        price:    '₹' + priceNum.toLocaleString('en-IN'),
-        was:      '₹' + Number(d.original_price).toLocaleString('en-IN'),
-        dist:     'Nearby',
-        live:     true,
+        wasNum:      d.original_price,
+        price:       '₹' + priceNum.toLocaleString('en-IN'),
+        was:         '₹' + Number(d.original_price).toLocaleString('en-IN'),
+        dist:        'Nearby',
+        live:        true,
       };
     });
     allDeals = [...live, ...staticDeals];
