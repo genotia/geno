@@ -5239,9 +5239,19 @@
     if (id && !id.startsWith('__')) { ({error} = await db.from('loyalty_tiers').update(payload).eq('id',id)); }
     else                            { ({error} = await db.from('loyalty_tiers').insert(payload)); }
     if (error) { errEl.textContent=error.message; errEl.classList.add('show'); return; }
-    loyaltyTiers=[];
+
+    // Keep unsaved in-memory defaults (those still with __ IDs) so they don't disappear
+    const stillDefaults = loyaltyTiers.filter(t => (t.id||'').startsWith('__') && t.id !== id);
+
     const {data:tiers} = await db.from('loyalty_tiers').select('*').eq('merchant_id',currentMerchant.id).order('sort_order');
-    if (tiers&&tiers.length) loyaltyTiers=tiers;
+    const dbTiers = tiers || [];
+
+    // Merge: DB tiers first, then remaining in-memory defaults not yet saved
+    loyaltyTiers = [
+      ...dbTiers,
+      ...stillDefaults.filter(d => !dbTiers.some(t => t.name === d.name)),
+    ].sort((a,b) => (a.sort_order??a.min_points) - (b.sort_order??b.min_points));
+
     renderTiers(); closeTierOverlay();
   }
 
