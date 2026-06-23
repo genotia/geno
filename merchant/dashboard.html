@@ -732,6 +732,112 @@
     .nana-best-name  { font-size:15px; font-weight:800; margin-bottom:4px; }
     .nana-best-meta  { font-size:12px; opacity:.8; }
     .nana-best-num   { font-size:30px; font-weight:900; margin-top:8px; }
+    /* ── Advertising page ── */
+    .adv-ptabs { display:flex; gap:4px; margin-bottom:24px; background:var(--bg); border:1.5px solid var(--border); border-radius:12px; padding:4px; width:fit-content; }
+    .adv-ptab  { background:none; border:none; padding:9px 20px; font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; border-radius:9px; font-family:inherit; transition:all .18s; white-space:nowrap; }
+    .adv-ptab:hover { color:var(--text); background:rgba(255,255,255,.7); }
+    .adv-ptab.active { background:var(--white); color:var(--text); box-shadow:0 1px 6px rgba(0,0,0,.10); }
+    .adv-page { display:none; }
+    .adv-page.show { display:block; }
+    /* FB Connect banner */
+    .fb-connect-banner { background:linear-gradient(135deg,#1877F2,#42A5F5); border-radius:16px; padding:28px 32px; color:#fff; display:flex; align-items:center; gap:24px; margin-bottom:24px; }
+    .fb-connect-logo { font-size:48px; flex-shrink:0; }
+    .fb-connect-body { flex:1; }
+    .fb-connect-title { font-size:18px; font-weight:900; margin-bottom:4px; }
+    .fb-connect-sub   { font-size:13px; opacity:.85; margin-bottom:14px; }
+    .fb-connect-btn   { background:#fff; color:#1877F2; border:none; border-radius:10px; padding:11px 22px; font-size:14px; font-weight:800; cursor:pointer; font-family:inherit; transition:opacity .15s; }
+    .fb-connect-btn:hover { opacity:.9; }
+    .fb-connected-bar { background:#D1FAE5; border:1.5px solid #6EE7B7; border-radius:12px; padding:12px 18px; display:flex; align-items:center; gap:12px; margin-bottom:20px; font-size:13px; font-weight:700; color:#065F46; }
+    /* Ad KPI cards */
+    .adv-kpis { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; margin-bottom:24px; }
+    .adv-kpi  { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:18px 16px; }
+    .adv-kpi-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+    .adv-kpi-value { font-size:26px; font-weight:900; color:var(--text); }
+    .adv-kpi-sub   { font-size:11px; color:var(--muted); margin-top:3px; }
+    /* Wizard */
+    .adv-wizard { display:flex; flex-direction:column; gap:0; }
+    .adv-steps  { display:flex; align-items:center; gap:0; margin-bottom:28px; }
+    .adv-step-item { display:flex; align-items:center; gap:0; flex:1; }
+    .adv-step-circle { width:32px; height:32px; border-radius:50%; border:2px solid var(--border); background:var(--white); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; color:var(--muted); flex-shrink:0; transition:all .2s; }
+    .adv-step-circle.active { border-color:var(--green); background:var(--green); color:#fff; }
+    .adv-step-circle.done   { border-color:var(--green); background:var(--green); color:#fff; }
+    .adv-step-label { font-size:11px; font-weight:700; color:var(--muted); margin-left:6px; white-space:nowrap; }
+    .adv-step-label.active { color:var(--text); }
+    .adv-step-line  { flex:1; height:2px; background:var(--border); margin:0 8px; }
+    .adv-step-line.done { background:var(--green); }
+    .adv-step-body  { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:24px; margin-bottom:16px; }
+    .adv-step-title { font-size:16px; font-weight:800; color:var(--text); margin-bottom:4px; }
+    .adv-step-sub   { font-size:13px; color:var(--muted); margin-bottom:20px; }
+    /* Objective cards */
+    .adv-obj-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+    .adv-obj-card { border:2px solid var(--border); border-radius:12px; padding:18px; cursor:pointer; transition:all .18s; }
+    .adv-obj-card:hover   { border-color:var(--green); background:#F0FDF9; }
+    .adv-obj-card.selected{ border-color:var(--green); background:#F0FDF9; box-shadow:0 0 0 3px rgba(29,158,117,.12); }
+    .adv-obj-icon  { font-size:28px; margin-bottom:8px; }
+    .adv-obj-name  { font-size:14px; font-weight:800; color:var(--text); margin-bottom:3px; }
+    .adv-obj-desc  { font-size:12px; color:var(--muted); line-height:1.5; }
+    /* Platform cards */
+    .adv-platform-grid { display:flex; gap:12px; }
+    .adv-platform-card { flex:1; border:2px solid var(--border); border-radius:12px; padding:16px; text-align:center; cursor:pointer; transition:all .18s; }
+    .adv-platform-card:hover    { border-color:#1877F2; background:#EFF6FF; }
+    .adv-platform-card.selected { border-color:#1877F2; background:#EFF6FF; box-shadow:0 0 0 3px rgba(24,119,242,.12); }
+    .adv-platform-icon { font-size:28px; margin-bottom:6px; }
+    .adv-platform-name { font-size:13px; font-weight:800; color:var(--text); }
+    /* Format pills */
+    .adv-format-pills { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+    .adv-format-pill  { background:var(--bg); border:1.5px solid var(--border); border-radius:20px; padding:6px 14px; font-size:12px; font-weight:700; color:var(--muted); cursor:pointer; transition:all .15s; }
+    .adv-format-pill:hover    { border-color:var(--green); color:var(--text); }
+    .adv-format-pill.selected { background:var(--text); color:#fff; border-color:var(--text); }
+    /* Creative step — two panel */
+    .adv-creative-panels { display:grid; grid-template-columns:1fr 280px; gap:20px; align-items:start; }
+    .adv-tmpl-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+    .adv-tmpl-chip  { background:#EDE9FE; color:#6D28D9; font-size:11px; font-weight:700; padding:4px 10px; border-radius:6px; cursor:pointer; white-space:nowrap; }
+    .adv-tmpl-chip:hover { background:#DDD6FE; }
+    /* Phone preview */
+    .adv-phone { width:260px; flex-shrink:0; }
+    .adv-phone-frame { background:#1a1a1a; border-radius:36px; padding:12px; box-shadow:0 20px 60px rgba(0,0,0,.35); }
+    .adv-phone-screen { background:#fff; border-radius:26px; overflow:hidden; min-height:420px; }
+    .adv-phone-status { background:#f0f0f0; padding:8px 14px; display:flex; justify-content:space-between; font-size:9px; color:#666; font-weight:600; }
+    .adv-feed-header { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid #eee; }
+    .adv-feed-avatar { width:32px; height:32px; border-radius:50%; background:var(--green); display:flex; align-items:center; justify-content:center; font-size:13px; color:#fff; font-weight:800; flex-shrink:0; }
+    .adv-feed-name   { font-size:11px; font-weight:700; color:#111; }
+    .adv-feed-sponsored { font-size:9px; color:#888; }
+    .adv-feed-img    { width:100%; background:linear-gradient(135deg,#1D9E75,#085041); height:160px; display:flex; align-items:center; justify-content:center; font-size:40px; }
+    .adv-feed-body   { padding:10px 12px; }
+    .adv-feed-primary { font-size:11px; color:#333; line-height:1.4; margin-bottom:8px; }
+    .adv-feed-cta    { background:#1877F2; color:#fff; border:none; border-radius:6px; padding:7px 12px; font-size:11px; font-weight:700; width:100%; cursor:default; font-family:inherit; }
+    /* Audience step */
+    .adv-interest-chips { display:flex; gap:8px; flex-wrap:wrap; }
+    .adv-interest-chip  { background:var(--bg); border:1.5px solid var(--border); border-radius:20px; padding:6px 12px; font-size:12px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .15s; }
+    .adv-interest-chip.selected { background:#EDE9FE; border-color:#7C3AED; color:#6D28D9; }
+    /* Budget step */
+    .adv-budget-suggestions { display:flex; gap:10px; margin-top:10px; }
+    .adv-budget-pill { border:1.5px solid var(--border); border-radius:8px; padding:8px 14px; font-size:12px; font-weight:700; color:var(--muted); cursor:pointer; transition:all .15s; background:var(--white); font-family:inherit; }
+    .adv-budget-pill:hover { border-color:var(--green); color:var(--text); }
+    .adv-budget-pill.active { background:var(--text); color:#fff; border-color:var(--text); }
+    .adv-reach-est { background:#F0FDF9; border:1.5px solid #A7F3D0; border-radius:10px; padding:14px 18px; margin-top:16px; display:flex; justify-content:space-between; align-items:center; }
+    /* Review step */
+    .adv-review-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .adv-review-card { background:var(--bg); border-radius:10px; padding:14px 16px; }
+    .adv-review-card-title { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+    .adv-review-row { display:flex; justify-content:space-between; font-size:13px; padding:4px 0; border-bottom:1px solid var(--border); }
+    .adv-review-row:last-child { border-bottom:none; }
+    .adv-review-val { font-weight:700; color:var(--text); }
+    /* Wizard nav buttons */
+    .adv-wizard-nav { display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
+    /* Ad library */
+    .adv-lib-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+    .adv-lib-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; overflow:hidden; }
+    .adv-lib-img  { width:100%; height:120px; background:linear-gradient(135deg,#1D9E75,#085041); display:flex; align-items:center; justify-content:center; font-size:36px; }
+    .adv-lib-body { padding:14px; }
+    .adv-lib-name { font-size:14px; font-weight:800; color:var(--text); margin-bottom:4px; }
+    .adv-lib-meta { font-size:11px; color:var(--muted); margin-bottom:10px; }
+    .adv-lib-actions { display:flex; gap:8px; }
+    /* Audiences */
+    .adv-aud-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
+    .adv-aud-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:18px; }
+    .adv-aud-name { font-size:15px; font-weight:800; color:var(--text); margin-bottom:6px; }
+    .adv-aud-tag  { display:inline-flex; align-items:center; gap:4px; background:var(--bg); border-radius:6px; padding:3px 8px; font-size:11px; color:var(--muted); font-weight:600; margin:2px; }
     /* Tab action bar (New Template / New Segment buttons) */
     .notif-tab-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
     .notif-tab-bar-title { font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
@@ -1106,6 +1212,7 @@
       </button>
       <div class="nav-sub-group" id="mktg-sub-group">
         <button class="nav-item nav-sub" id="nav-mktg-notifications" onclick="switchPage('mktg-notifications',this)">Notifications</button>
+        <button class="nav-item nav-sub" id="nav-mktg-advertising" onclick="switchPage('mktg-advertising',this)">Advertising</button>
       </div>
     </div>
     <div class="nav-group">
@@ -2420,6 +2527,90 @@
           </tr></thead>
           <tbody id="nana-tbody"><tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
         </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ ADVERTISING PAGE ══════════════════ -->
+  <div class="tab-panel" id="tab-mktg-advertising">
+    <div class="cl-topbar">
+      <div>
+        <div class="cl-page-title">Advertising</div>
+        <div class="cl-page-sub">Create and manage Facebook &amp; Instagram ad campaigns</div>
+      </div>
+    </div>
+
+    <!-- FB connection status (shown/hidden by JS) -->
+    <div id="adv-connect-banner">
+      <div class="fb-connect-banner">
+        <div class="fb-connect-logo">📘</div>
+        <div class="fb-connect-body">
+          <div class="fb-connect-title">Connect your Facebook Business account</div>
+          <div class="fb-connect-sub">Link your Meta Ads account to create campaigns, track performance and manage budgets — all from this dashboard.</div>
+          <button class="fb-connect-btn" onclick="connectFacebook()">Connect Facebook →</button>
+        </div>
+      </div>
+    </div>
+    <div id="adv-connected-bar" style="display:none">
+      <div class="fb-connected-bar">
+        <span style="font-size:20px">✅</span>
+        <span>Connected as <strong id="adv-fb-name">—</strong> · Ad Account: <strong id="adv-fb-account">—</strong></span>
+        <button onclick="disconnectFacebook()" style="margin-left:auto;background:none;border:1.5px solid #6EE7B7;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:#065F46;cursor:pointer;font-family:inherit">Disconnect</button>
+      </div>
+    </div>
+
+    <!-- Page tabs -->
+    <div class="adv-ptabs">
+      <button class="adv-ptab active" id="advtab-dashboard"  onclick="switchAdvPage('dashboard',this)">📊 Dashboard</button>
+      <button class="adv-ptab"        id="advtab-campaign"   onclick="switchAdvPage('campaign',this)">➕ Create Campaign</button>
+      <button class="adv-ptab"        id="advtab-library"    onclick="switchAdvPage('library',this)">🖼️ Ad Library</button>
+      <button class="adv-ptab"        id="advtab-audiences"  onclick="switchAdvPage('audiences',this)">👥 Audiences</button>
+    </div>
+
+    <!-- ── DASHBOARD ── -->
+    <div class="adv-page show" id="adv-page-dashboard">
+      <div class="adv-kpis" id="adv-kpis">
+        <div class="adv-kpi"><div class="adv-kpi-label">Active campaigns</div><div class="adv-kpi-value" id="adv-k-active">—</div><div class="adv-kpi-sub">running now</div></div>
+        <div class="adv-kpi"><div class="adv-kpi-label">Total spend</div><div class="adv-kpi-value" id="adv-k-spend">—</div><div class="adv-kpi-sub">all time ₹</div></div>
+        <div class="adv-kpi"><div class="adv-kpi-label">Impressions</div><div class="adv-kpi-value" id="adv-k-impr">—</div><div class="adv-kpi-sub">last 30 days</div></div>
+        <div class="adv-kpi"><div class="adv-kpi-label">Reach</div><div class="adv-kpi-value" id="adv-k-reach">—</div><div class="adv-kpi-sub">unique people</div></div>
+        <div class="adv-kpi"><div class="adv-kpi-label">Clicks</div><div class="adv-kpi-value" id="adv-k-clicks">—</div><div class="adv-kpi-sub">last 30 days</div></div>
+        <div class="adv-kpi"><div class="adv-kpi-label">Avg. CPR</div><div class="adv-kpi-value" id="adv-k-cpr">—</div><div class="adv-kpi-sub">cost per reach ₹</div></div>
+      </div>
+      <div class="team-table">
+        <table>
+          <thead><tr><th>Campaign</th><th>Platform</th><th>Objective</th><th>Budget</th><th>Duration</th><th>Impressions</th><th>Clicks</th><th>Status</th><th></th></tr></thead>
+          <tbody id="adv-camp-tbody"><tr><td colspan="9" style="text-align:center;padding:40px;color:var(--muted)">Connect Facebook to see your campaigns</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── CREATE CAMPAIGN WIZARD ── -->
+    <div class="adv-page" id="adv-page-campaign">
+      <!-- Step indicator -->
+      <div class="adv-steps" id="adv-steps"></div>
+      <div id="adv-wizard-body"></div>
+    </div>
+
+    <!-- ── AD LIBRARY ── -->
+    <div class="adv-page" id="adv-page-library">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <div style="font-size:13px;color:var(--muted)">Reusable ad creatives saved from your campaigns</div>
+        <button class="ntab-new-btn" onclick="openSaveCreativeOverlay()">+ Save creative</button>
+      </div>
+      <div class="adv-lib-grid" id="adv-lib-grid">
+        <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No saved creatives yet. Launch a campaign to populate your library.</div>
+      </div>
+    </div>
+
+    <!-- ── AUDIENCES ── -->
+    <div class="adv-page" id="adv-page-audiences">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+        <div style="font-size:13px;color:var(--muted)">Saved targeting audiences — reuse in any campaign</div>
+        <button class="ntab-new-btn" onclick="openSaveAudienceOverlay()">+ Save audience</button>
+      </div>
+      <div class="adv-aud-grid" id="adv-aud-grid">
+        <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No saved audiences yet.</div>
       </div>
     </div>
   </div>
@@ -4840,6 +5031,7 @@
   PAGE_TITLES['inv-adjustments']   = 'Adjustments';
   PAGE_TITLES['inv-suppliers']     = 'Suppliers';
   PAGE_TITLES['mktg-notifications'] = 'Notifications';
+  PAGE_TITLES['mktg-advertising']  = 'Advertising';
   PAGE_TITLES['service-menu']    = 'Service menu';
   PAGE_TITLES['memberships']     = 'Memberships';
   PAGE_TITLES['product-list']    = 'Products';
@@ -5226,6 +5418,7 @@
     if (page === 'inv-adjustments')  { openInvNav(); loadAdjustments(); }
     if (page === 'inv-suppliers')    { openInvNav(); loadSuppliers(); }
     if (page === 'mktg-notifications') { openMarketingNav(); loadNotifications(); }
+    if (page === 'mktg-advertising')  { openMarketingNav(); loadAdvertising(); }
     if (page === 'service-menu')    { openCatalogNav(); loadServiceMenu(); }
     if (page === 'memberships')     { openCatalogNav(); loadMemberships(); }
     if (page === 'product-list')    { openCatalogNav(); loadProducts(); }
@@ -7916,6 +8109,810 @@
         <td><span class="status-badge ${statusCls}">${c.status}</span></td>
       </tr>`;
     }).join('');
+  }
+
+  /* ════════════════════════════════════════════════════════
+     ADVERTISING — Facebook & Instagram Campaign Manager
+  ════════════════════════════════════════════════════════ */
+
+  const FB_APP_ID  = 'YOUR_FB_APP_ID';   // ← replace before go-live
+  const FB_API_VER = 'v21.0';
+  const FB_GRAPH   = `https://graph.facebook.com/${FB_API_VER}`;
+
+  let advFbToken     = null;   // current access token
+  let advFbAccountId = null;   // selected ad account id (act_XXXXXX)
+  let advFbPageId    = null;   // Facebook Page id for creatives
+  let advFbUserName  = '';
+  let advCampaigns   = [];
+  let advSavedAudiences = [];
+  let advStep        = 1;      // wizard current step (1–6)
+  let advData        = {};     // wizard form data accumulator
+
+  // Spa/salon ad copy templates
+  const ADV_TEMPLATES = [
+    { id:'wknd',    name:'Weekend Special',  headline:'Relax this weekend 🌿',         body:'Book your spa session this weekend and enjoy 30% off. Limited slots available!' },
+    { id:'new-cl',  name:'New Client Offer', headline:"First visit? You're in for a treat 🎉", body:'Enjoy 20% off your first booking. Use code WELCOME20.' },
+    { id:'offpeak', name:'Off-Peak Deal',    headline:'Weekday booking? Save 40% 💆',   body:'Same premium service, lower price. Book any weekday slot and save big.' },
+    { id:'gift',    name:'Gift a Spa Day',   headline:'Gift someone a day of bliss 🎁', body:'Buy a gift voucher for someone special and give the gift of relaxation.' },
+    { id:'monsoon', name:'Monsoon Wellness', headline:'Monsoon glow-up awaits ☔',       body:'Our special monsoon wellness package is here. Rejuvenate with seasonal treatments.' },
+    { id:'loyalty', name:'Loyalty Reward',   headline:'Exclusive offer for members 👑', body:'As a valued member, you get first access to our premium packages.' },
+    { id:'new-svc', name:'New Treatment',    headline:'Introducing our new treatment ✨', body:'Experience our latest addition. Slots filling fast — book yours now!' },
+    { id:'summer',  name:'Summer Glow',      headline:'Summer-ready skin starts here ☀️', body:'Our summer glow treatment leaves you radiant. Book before slots fill up!' },
+  ];
+
+  const ADV_INTERESTS = [
+    '💆 Spa','💅 Beauty','🧖 Wellness','🧘 Yoga','✂️ Hair care',
+    '🧴 Skincare','💎 Luxury','🌿 Self-care','👗 Fashion','🏋️ Fitness',
+  ];
+
+  const ADV_OBJECTIVES = [
+    { id:'bookings',  icon:'🎯', name:'Get Bookings',    desc:'Drive direct appointment bookings via a link',        fbGoal:'OUTCOME_TRAFFIC'    },
+    { id:'awareness', icon:'📣', name:'Brand Awareness', desc:'Reach new people in your local area',                 fbGoal:'OUTCOME_AWARENESS'  },
+    { id:'offer',     icon:'🎁', name:'Promote an Offer',desc:'Advertise a specific deal, discount, or package',     fbGoal:'OUTCOME_TRAFFIC'    },
+    { id:'retarget',  icon:'🔄', name:'Re-engage Clients',desc:'Win back clients who haven\'t visited recently',     fbGoal:'OUTCOME_ENGAGEMENT' },
+  ];
+
+  const ADV_CTA_LABELS = {
+    BOOK_TRAVEL:'Book Now', GET_OFFER:'Get Offer', LEARN_MORE:'Learn More', CONTACT_US:'Contact Us',
+  };
+
+  /* ─── FB SDK & Auth ─── */
+  function loadFbSdk() {
+    if (window.FB) return Promise.resolve();
+    return new Promise(resolve => {
+      window.fbAsyncInit = function() {
+        FB.init({ appId: FB_APP_ID, cookie: true, xfbml: false, version: FB_API_VER });
+        resolve();
+      };
+      const s = document.createElement('script');
+      s.src = 'https://connect.facebook.net/en_US/sdk.js';
+      s.async = true; s.defer = true;
+      document.head.appendChild(s);
+    });
+  }
+
+  async function connectFacebook() {
+    await loadFbSdk();
+    FB.login(async response => {
+      if (!response.authResponse) return;
+      const shortToken = response.authResponse.accessToken;
+      // Exchange for long-lived token via Supabase Edge Function
+      const { data: { session } } = await db.auth.getSession();
+      const res = await fetch(
+        `${db.supabaseUrl}/functions/v1/fb-auth/exchange`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type':'application/json', 'Authorization': `Bearer ${session.access_token}` },
+          body: JSON.stringify({ short_token: shortToken, merchant_id: currentMerchant.id }),
+        }
+      );
+      const result = await res.json();
+      if (!res.ok) { alert('FB connection failed: ' + (result.error || 'Unknown error')); return; }
+      advFbToken  = result.access_token;
+      advFbUserName = result.name || 'Connected';
+      await selectFbAdAccount();
+    }, { scope: 'ads_management,ads_read,pages_read_engagement' });
+  }
+
+  async function selectFbAdAccount() {
+    const r = await fbGet('/me/adaccounts', { fields: 'id,name,account_status,currency' });
+    if (!r.data?.length) { alert('No ad accounts found on this Facebook account. Please create one in Meta Business Suite.'); return; }
+    if (r.data.length === 1) {
+      await onAdAccountSelected(r.data[0]);
+    } else {
+      // Multiple accounts — let user pick
+      const opts = r.data.map(a => `• ${a.name} (${a.id})`).join('\n');
+      const choice = prompt(`You have ${r.data.length} ad accounts. Enter the account ID to use:\n\n${opts}`);
+      const picked = r.data.find(a => a.id === choice || a.id === 'act_' + choice);
+      if (picked) await onAdAccountSelected(picked);
+    }
+  }
+
+  async function onAdAccountSelected(account) {
+    advFbAccountId = account.id.startsWith('act_') ? account.id : 'act_' + account.id;
+    // Get FB Page for creative object
+    const pages = await fbGet('/me/accounts', { fields: 'id,name' });
+    advFbPageId = pages.data?.[0]?.id || null;
+    // Save to DB
+    await db.from('merchant_fb_connections').upsert({
+      merchant_id: currentMerchant.id,
+      fb_ad_account_id: advFbAccountId,
+      access_token: advFbToken,
+      fb_page_id: advFbPageId,
+      fb_user_name: advFbUserName,
+      token_expires_at: new Date(Date.now() + 60*24*60*60*1000).toISOString(),
+    }, { onConflict: 'merchant_id' });
+    showFbConnected();
+    loadAdvDashboard();
+  }
+
+  function showFbConnected() {
+    document.getElementById('adv-connect-banner').style.display = 'none';
+    document.getElementById('adv-connected-bar').style.display  = '';
+    document.getElementById('adv-fb-name').textContent    = advFbUserName;
+    document.getElementById('adv-fb-account').textContent = advFbAccountId;
+  }
+
+  async function disconnectFacebook() {
+    if (!confirm('Disconnect Facebook? Your campaign history will be kept.')) return;
+    await db.from('merchant_fb_connections').delete().eq('merchant_id', currentMerchant.id);
+    advFbToken = null; advFbAccountId = null;
+    document.getElementById('adv-connect-banner').style.display = '';
+    document.getElementById('adv-connected-bar').style.display  = 'none';
+  }
+
+  async function fbGet(path, params = {}) {
+    const url = new URL(FB_GRAPH + path);
+    url.searchParams.set('access_token', advFbToken);
+    Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
+    const r = await fetch(url.toString());
+    return r.json();
+  }
+
+  async function fbPost(path, body = {}) {
+    const r = await fetch(FB_GRAPH + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...body, access_token: advFbToken }),
+    });
+    return r.json();
+  }
+
+  /* ─── Page init ─── */
+  async function loadAdvertising() {
+    switchAdvPage('dashboard', document.getElementById('advtab-dashboard'));
+    // Restore FB connection from DB
+    const { data } = await db.from('merchant_fb_connections')
+      .select('*').eq('merchant_id', currentMerchant.id).maybeSingle();
+    if (data) {
+      advFbToken     = data.access_token;
+      advFbAccountId = data.fb_ad_account_id;
+      advFbPageId    = data.fb_page_id;
+      advFbUserName  = data.fb_user_name || 'Connected';
+      showFbConnected();
+      loadAdvDashboard();
+    }
+  }
+
+  function switchAdvPage(page, btn) {
+    document.querySelectorAll('.adv-ptab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.adv-page').forEach(p => p.classList.remove('show'));
+    document.getElementById('adv-page-' + page).classList.add('show');
+    if (page === 'dashboard') loadAdvDashboard();
+    if (page === 'campaign')  initAdvWizard();
+    if (page === 'library')   loadAdvLibrary();
+    if (page === 'audiences') loadAdvAudiences();
+  }
+
+  /* ─── Dashboard ─── */
+  async function loadAdvDashboard() {
+    if (!advFbToken || !advFbAccountId) return;
+    // Fetch campaigns from DB
+    const { data: camps } = await db.from('ad_campaigns')
+      .select('*').eq('merchant_id', currentMerchant.id).order('created_at', { ascending: false });
+    advCampaigns = camps || [];
+    const active  = advCampaigns.filter(c => c.status === 'ACTIVE');
+    // Fetch live insights from FB for active campaigns
+    let totalSpend = 0, totalImpr = 0, totalReach = 0, totalClicks = 0;
+    if (advCampaigns.length && advFbToken) {
+      const fbIds = advCampaigns.filter(c=>c.fb_campaign_id).map(c=>c.fb_campaign_id);
+      if (fbIds.length) {
+        const insights = await fbGet(`/${advFbAccountId}/insights`, {
+          fields: 'campaign_id,spend,impressions,reach,clicks',
+          date_preset: 'last_30d', level: 'campaign',
+        });
+        (insights.data || []).forEach(i => {
+          totalSpend  += parseFloat(i.spend || 0);
+          totalImpr   += parseInt(i.impressions || 0);
+          totalReach  += parseInt(i.reach || 0);
+          totalClicks += parseInt(i.clicks || 0);
+        });
+      }
+    }
+    document.getElementById('adv-k-active').textContent  = active.length;
+    document.getElementById('adv-k-spend').textContent   = '₹' + Math.round(totalSpend).toLocaleString('en-IN');
+    document.getElementById('adv-k-impr').textContent    = totalImpr > 999 ? (totalImpr/1000).toFixed(1)+'K' : totalImpr || '—';
+    document.getElementById('adv-k-reach').textContent   = totalReach > 999 ? (totalReach/1000).toFixed(1)+'K' : totalReach || '—';
+    document.getElementById('adv-k-clicks').textContent  = totalClicks || '—';
+    document.getElementById('adv-k-cpr').textContent     = totalReach ? '₹' + (totalSpend/totalReach).toFixed(2) : '—';
+
+    const tbody = document.getElementById('adv-camp-tbody');
+    if (!advCampaigns.length) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--muted)">No campaigns yet. Click <strong>➕ Create Campaign</strong> to launch your first ad.</td></tr>`;
+      return;
+    }
+    const platIcon = { facebook:'📘', instagram:'📸', both:'📘📸' };
+    tbody.innerHTML = advCampaigns.map(c => {
+      const sc = c.status==='ACTIVE'?'status-confirmed':c.status==='PAUSED'?'status-pending':c.status==='draft'?'status-pending':'status-cancelled';
+      return `<tr>
+        <td style="font-weight:700;font-size:13px">${c.name}</td>
+        <td>${platIcon[c.platform]||'📘'}</td>
+        <td style="font-size:12px;color:var(--muted)">${ADV_OBJECTIVES.find(o=>o.id===c.objective)?.name||c.objective}</td>
+        <td style="font-size:13px">₹${(c.budget_amount||0).toLocaleString('en-IN')} <span style="font-size:10px;color:var(--muted)">${c.budget_type==='daily'?'/day':'total'}</span></td>
+        <td style="font-size:12px;color:var(--muted)">${c.start_date||'—'} → ${c.end_date||'—'}</td>
+        <td style="font-size:12px" id="adv-impr-${c.id}">—</td>
+        <td style="font-size:12px" id="adv-clk-${c.id}">—</td>
+        <td><span class="status-badge ${sc}">${c.status}</span></td>
+        <td><button class="actions-btn" onclick="pauseResumeCampaign('${c.id}','${c.fb_campaign_id}','${c.status}')">${c.status==='ACTIVE'?'Pause':'Resume'}</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  async function pauseResumeCampaign(localId, fbId, currentStatus) {
+    if (!fbId || !advFbToken) return;
+    const newStatus = currentStatus === 'ACTIVE' ? 'PAUSED' : 'ACTIVE';
+    await fbPost(`/${fbId}`, { status: newStatus });
+    await db.from('ad_campaigns').update({ status: newStatus }).eq('id', localId);
+    loadAdvDashboard();
+  }
+
+  /* ─── Campaign Wizard ─── */
+  const ADV_STEP_LABELS = ['Objective','Platform','Creative','Audience','Budget','Review'];
+
+  function initAdvWizard() {
+    advStep = 1;
+    advData = { objective:'bookings', platform:'both', format:'single', interests:[], cta:'BOOK_NOW', budget_type:'daily' };
+    renderAdvSteps();
+    renderAdvWizardStep();
+  }
+
+  function renderAdvSteps() {
+    document.getElementById('adv-steps').innerHTML = ADV_STEP_LABELS.map((label, i) => {
+      const n = i + 1;
+      const cls = n < advStep ? 'done' : n === advStep ? 'active' : '';
+      const lineCls = n < advStep ? 'done' : '';
+      return `<div class="adv-step-item">
+        <div class="adv-step-circle ${cls}">${n < advStep ? '✓' : n}</div>
+        <div class="adv-step-label ${n===advStep?'active':''}">${label}</div>
+        ${n < ADV_STEP_LABELS.length ? `<div class="adv-step-line ${lineCls}"></div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  function renderAdvWizardStep() {
+    const body = document.getElementById('adv-wizard-body');
+    if (advStep === 1) body.innerHTML = renderStepObjective();
+    if (advStep === 2) body.innerHTML = renderStepPlatform();
+    if (advStep === 3) body.innerHTML = renderStepCreative();
+    if (advStep === 4) body.innerHTML = renderStepAudience();
+    if (advStep === 5) body.innerHTML = renderStepBudget();
+    if (advStep === 6) body.innerHTML = renderStepReview();
+    if (advStep === 3) updateAdPreview();
+  }
+
+  function advNext() {
+    if (advStep === 3) {
+      advData.name        = document.getElementById('adv-cmp-name')?.value.trim();
+      advData.headline    = document.getElementById('adv-headline')?.value.trim();
+      advData.body        = document.getElementById('adv-body')?.value.trim();
+      advData.dest_url    = document.getElementById('adv-url')?.value.trim();
+      if (!advData.name)     { alert('Please enter a campaign name.'); return; }
+      if (!advData.headline) { alert('Please enter a headline.'); return; }
+      if (!advData.body)     { alert('Please enter the ad body text.'); return; }
+    }
+    if (advStep === 4) {
+      advData.location    = document.getElementById('adv-location')?.value.trim();
+      advData.radius_km   = parseInt(document.getElementById('adv-radius')?.value) || 5;
+      advData.age_min     = parseInt(document.getElementById('adv-age-min')?.value) || 22;
+      advData.age_max     = parseInt(document.getElementById('adv-age-max')?.value) || 55;
+      advData.gender      = document.querySelector('[name=adv-gender]:checked')?.value || 'all';
+    }
+    if (advStep === 5) {
+      advData.budget_amount = parseFloat(document.getElementById('adv-budget-amt')?.value) || 0;
+      advData.start_date    = document.getElementById('adv-start')?.value;
+      advData.end_date      = document.getElementById('adv-end')?.value;
+      if (!advData.budget_amount) { alert('Please enter a daily budget.'); return; }
+      if (!advData.start_date)    { alert('Please select a start date.'); return; }
+    }
+    if (advStep < 6) { advStep++; renderAdvSteps(); renderAdvWizardStep(); }
+  }
+
+  function advBack() {
+    if (advStep > 1) { advStep--; renderAdvSteps(); renderAdvWizardStep(); }
+  }
+
+  function selectAdvObjective(id) {
+    advData.objective = id;
+    document.querySelectorAll('.adv-obj-card').forEach(c => c.classList.toggle('selected', c.dataset.id === id));
+  }
+
+  function selectAdvPlatform(p) {
+    advData.platform = p;
+    document.querySelectorAll('.adv-platform-card').forEach(c => c.classList.toggle('selected', c.dataset.p === p));
+  }
+
+  function selectAdvFormat(f, el) {
+    advData.format = f;
+    document.querySelectorAll('.adv-format-pill').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function selectAdvCta(cta) {
+    advData.cta = cta;
+    document.querySelectorAll('.adv-cta-pill').forEach(p => p.classList.toggle('selected', p.dataset.cta === cta));
+    updateAdPreview();
+  }
+
+  function toggleAdvInterest(name, el) {
+    el.classList.toggle('selected');
+    if (el.classList.contains('selected')) {
+      advData.interests.push(name);
+    } else {
+      advData.interests = advData.interests.filter(i => i !== name);
+    }
+  }
+
+  function applyAdvTemplate(id) {
+    const t = ADV_TEMPLATES.find(x => x.id === id);
+    if (!t) return;
+    document.getElementById('adv-headline').value = t.headline;
+    document.getElementById('adv-body').value = t.body;
+    advData.headline = t.headline; advData.body = t.body;
+    updateAdPreview();
+  }
+
+  function updateAdPreview() {
+    const hl  = document.getElementById('adv-headline')?.value || 'Your headline here';
+    const bod = document.getElementById('adv-body')?.value     || 'Your message goes here…';
+    const cta = ADV_CTA_LABELS[advData.cta] || 'Book Now';
+    const previewEl = document.getElementById('adv-preview-content');
+    if (!previewEl) return;
+    previewEl.innerHTML = `
+      <div class="adv-feed-header">
+        <div class="adv-feed-avatar">${(currentMerchant?.business_name||'S')[0].toUpperCase()}</div>
+        <div><div class="adv-feed-name">${currentMerchant?.business_name||'Your Business'}</div><div class="adv-feed-sponsored">Sponsored · 🌐</div></div>
+      </div>
+      <div class="adv-feed-primary" style="padding:8px 12px 4px">${bod}</div>
+      <div class="adv-feed-img">🌿</div>
+      <div class="adv-feed-body">
+        <div style="font-size:9px;color:#888;margin-bottom:4px">${(document.getElementById('adv-url')?.value||'yourwebsite.com').replace(/https?:\/\//,'')}</div>
+        <div style="font-size:12px;font-weight:800;color:#111;margin-bottom:6px">${hl}</div>
+        <button class="adv-feed-cta">${cta}</button>
+      </div>`;
+  }
+
+  function setAdvBudget(amount, el) {
+    document.getElementById('adv-budget-amt').value = amount;
+    document.querySelectorAll('.adv-budget-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    calcAdvReach();
+  }
+
+  function calcAdvReach() {
+    const daily = parseFloat(document.getElementById('adv-budget-amt')?.value) || 0;
+    const lo = Math.round(daily * 8); const hi = Math.round(daily * 20);
+    document.getElementById('adv-reach-lo').textContent = lo.toLocaleString('en-IN');
+    document.getElementById('adv-reach-hi').textContent = hi.toLocaleString('en-IN');
+  }
+
+  /* ─── Render wizard steps ─── */
+  function renderStepObjective() {
+    return `<div class="adv-step-body">
+      <div class="adv-step-title">What's your campaign goal?</div>
+      <div class="adv-step-sub">Choose an objective — Facebook will optimise delivery toward this goal</div>
+      <div class="adv-obj-grid">${ADV_OBJECTIVES.map(o=>`
+        <div class="adv-obj-card ${advData.objective===o.id?'selected':''}" data-id="${o.id}" onclick="selectAdvObjective('${o.id}')">
+          <div class="adv-obj-icon">${o.icon}</div>
+          <div class="adv-obj-name">${o.name}</div>
+          <div class="adv-obj-desc">${o.desc}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="adv-wizard-nav">
+      <div></div>
+      <button class="bill-generate-btn" onclick="advNext()">Next: Platform →</button>
+    </div>`;
+  }
+
+  function renderStepPlatform() {
+    const fmts = ['Single image','Carousel','Story','Reel'];
+    return `<div class="adv-step-body">
+      <div class="adv-step-title">Where should your ad run?</div>
+      <div class="adv-step-sub">Pick one or both platforms, then choose your ad format</div>
+      <div class="adv-platform-grid">
+        <div class="adv-platform-card ${advData.platform==='facebook'?'selected':''}" data-p="facebook" onclick="selectAdvPlatform('facebook')">
+          <div class="adv-platform-icon">📘</div><div class="adv-platform-name">Facebook</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Feed, Stories, Reels</div>
+        </div>
+        <div class="adv-platform-card ${advData.platform==='instagram'?'selected':''}" data-p="instagram" onclick="selectAdvPlatform('instagram')">
+          <div class="adv-platform-icon">📸</div><div class="adv-platform-name">Instagram</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Feed, Stories, Reels</div>
+        </div>
+        <div class="adv-platform-card ${advData.platform==='both'?'selected':''}" data-p="both" onclick="selectAdvPlatform('both')">
+          <div class="adv-platform-icon">📘📸</div><div class="adv-platform-name">Both</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Maximum reach</div>
+        </div>
+      </div>
+      <div style="margin-top:18px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Ad format</div>
+      <div class="adv-format-pills">${fmts.map(f=>`
+        <div class="adv-format-pill ${advData.format===f.toLowerCase().replace(' ','_')?'selected':''}" onclick="selectAdvFormat('${f.toLowerCase().replace(' ','_')}',this)">${f}</div>`).join('')}
+      </div>
+    </div>
+    <div class="adv-wizard-nav">
+      <button onclick="advBack()" style="background:none;border:1.5px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit">← Back</button>
+      <button class="bill-generate-btn" onclick="advNext()">Next: Creative →</button>
+    </div>`;
+  }
+
+  function renderStepCreative() {
+    return `<div class="adv-step-body">
+      <div class="adv-step-title">Design your ad</div>
+      <div class="adv-step-sub">Write your message and see a live preview</div>
+      <div class="adv-creative-panels">
+        <div>
+          <div style="margin-bottom:14px">
+            <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Quick templates</div>
+            <div class="adv-tmpl-chips">${ADV_TEMPLATES.map(t=>`<span class="adv-tmpl-chip" onclick="applyAdvTemplate('${t.id}')">${t.name}</span>`).join('')}</div>
+          </div>
+          <div class="ncmp-field">
+            <label>Campaign name <span class="req">*</span></label>
+            <input class="am-input" id="adv-cmp-name" type="text" placeholder="e.g. June wellness promo" value="${advData.name||''}" />
+          </div>
+          <div class="ncmp-field">
+            <label>Headline (30 chars) <span class="req">*</span></label>
+            <input class="am-input" id="adv-headline" type="text" maxlength="30" placeholder="e.g. Relax this weekend 🌿" value="${advData.headline||''}" oninput="updateAdPreview()" />
+          </div>
+          <div class="ncmp-field">
+            <label>Primary text <span class="req">*</span></label>
+            <textarea class="am-input" id="adv-body" rows="3" placeholder="Your main ad message…" oninput="updateAdPreview()">${advData.body||''}</textarea>
+          </div>
+          <div class="ncmp-field">
+            <label>Destination URL</label>
+            <input class="am-input" id="adv-url" type="url" placeholder="https://your-booking-link.com" value="${advData.dest_url||''}" oninput="updateAdPreview()" />
+          </div>
+          <div class="ncmp-field">
+            <label>Call-to-action button</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              ${Object.entries(ADV_CTA_LABELS).map(([k,v])=>`
+                <div class="adv-cta-pill adv-format-pill ${advData.cta===k?'selected':''}" data-cta="${k}" onclick="selectAdvCta('${k}')">${v}</div>`).join('')}
+            </div>
+          </div>
+        </div>
+        <!-- Phone preview -->
+        <div class="adv-phone">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;text-align:center">Live preview</div>
+          <div class="adv-phone-frame">
+            <div class="adv-phone-screen">
+              <div class="adv-phone-status"><span>9:41</span><span>▶ 📶 🔋</span></div>
+              <div id="adv-preview-content"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="adv-wizard-nav">
+      <button onclick="advBack()" style="background:none;border:1.5px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit">← Back</button>
+      <button class="bill-generate-btn" onclick="advNext()">Next: Audience →</button>
+    </div>`;
+  }
+
+  function renderStepAudience() {
+    return `<div class="adv-step-body">
+      <div class="adv-step-title">Who should see your ad?</div>
+      <div class="adv-step-sub">Target people most likely to visit your spa or salon</div>
+      <div class="am-form-row" style="gap:16px">
+        <div class="am-field" style="flex:2">
+          <label>Location (city or area)</label>
+          <input class="am-input" id="adv-location" type="text" placeholder="e.g. Mumbai, Bandra" value="${advData.location||''}" />
+        </div>
+        <div class="am-field" style="flex:1">
+          <label>Radius (km)</label>
+          <input class="am-input" id="adv-radius" type="number" min="1" max="50" value="${advData.radius_km||5}" />
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Default 5 km for walk-in clients</div>
+        </div>
+      </div>
+      <div class="am-form-row" style="gap:16px">
+        <div class="am-field">
+          <label>Age range</label>
+          <div style="display:flex;gap:10px;align-items:center">
+            <input class="am-input" id="adv-age-min" type="number" min="18" max="64" value="${advData.age_min||22}" style="flex:1" />
+            <span style="color:var(--muted);font-weight:700">to</span>
+            <input class="am-input" id="adv-age-max" type="number" min="19" max="65" value="${advData.age_max||55}" style="flex:1" />
+          </div>
+        </div>
+        <div class="am-field">
+          <label>Gender</label>
+          <div style="display:flex;gap:16px;margin-top:10px">
+            ${[['all','All'],['female','Female (recommended)'],['male','Male']].map(([v,l])=>`
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;font-family:inherit">
+                <input type="radio" name="adv-gender" value="${v}" ${(advData.gender||'female')===v?'checked':''} /> ${l}
+              </label>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="am-field">
+        <label>Interests <span style="font-size:11px;color:var(--muted);font-weight:500">(pre-selected for spa/salon)</span></label>
+        <div class="adv-interest-chips" style="margin-top:8px">
+          ${ADV_INTERESTS.map(i=>`<div class="adv-interest-chip ${advData.interests.includes(i)||['💆 Spa','💅 Beauty','🧖 Wellness'].includes(i)?'selected':''}" onclick="toggleAdvInterest('${i}',this)">${i}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="adv-wizard-nav">
+      <button onclick="advBack()" style="background:none;border:1.5px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit">← Back</button>
+      <button class="bill-generate-btn" onclick="advNext()">Next: Budget →</button>
+    </div>`;
+  }
+
+  function renderStepBudget() {
+    const today = new Date().toISOString().split('T')[0];
+    return `<div class="adv-step-body">
+      <div class="adv-step-title">Set your budget &amp; schedule</div>
+      <div class="adv-step-sub">Facebook will spend up to your daily budget each day</div>
+      <div class="am-form-row" style="gap:16px">
+        <div class="am-field" style="flex:1">
+          <label>Daily budget (₹) <span class="req">*</span></label>
+          <input class="am-input" id="adv-budget-amt" type="number" min="50" value="${advData.budget_amount||300}" oninput="calcAdvReach()" />
+          <div class="adv-budget-suggestions">
+            <button class="adv-budget-pill" onclick="setAdvBudget(100,this)">₹100 <span style="font-size:10px;display:block;opacity:.7">Tier 3</span></button>
+            <button class="adv-budget-pill active" onclick="setAdvBudget(300,this)">₹300 <span style="font-size:10px;display:block;opacity:.7">Tier 2</span></button>
+            <button class="adv-budget-pill" onclick="setAdvBudget(500,this)">₹500 <span style="font-size:10px;display:block;opacity:.7">Metro</span></button>
+            <button class="adv-budget-pill" onclick="setAdvBudget(1000,this)">₹1000 <span style="font-size:10px;display:block;opacity:.7">High reach</span></button>
+          </div>
+        </div>
+        <div class="am-field" style="flex:1">
+          <label>Budget type</label>
+          <div style="display:flex;gap:12px;margin-top:10px">
+            ${[['daily','Daily budget'],['lifetime','Lifetime budget']].map(([v,l])=>`
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;font-family:inherit">
+                <input type="radio" name="adv-btype" value="${v}" ${(advData.budget_type||'daily')===v?'checked':''} /> ${l}
+              </label>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="am-form-row" style="gap:16px">
+        <div class="am-field">
+          <label>Start date <span class="req">*</span></label>
+          <input class="am-input" id="adv-start" type="date" min="${today}" value="${advData.start_date||today}" />
+        </div>
+        <div class="am-field">
+          <label>End date</label>
+          <input class="am-input" id="adv-end" type="date" min="${today}" value="${advData.end_date||''}" />
+        </div>
+      </div>
+      <div class="adv-reach-est">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--muted)">Estimated daily reach</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Based on ₹/day × audience size</div>
+        </div>
+        <div style="font-size:20px;font-weight:900;color:var(--green)">
+          <span id="adv-reach-lo">—</span> – <span id="adv-reach-hi">—</span> <span style="font-size:12px;font-weight:600;color:var(--muted)">people/day</span>
+        </div>
+      </div>
+    </div>
+    <div class="adv-wizard-nav">
+      <button onclick="advBack()" style="background:none;border:1.5px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit">← Back</button>
+      <button class="bill-generate-btn" onclick="advNext();calcAdvReach()">Review →</button>
+    </div>`;
+  }
+
+  function renderStepReview() {
+    const obj = ADV_OBJECTIVES.find(o=>o.id===advData.objective);
+    return `<div class="adv-step-body">
+      <div class="adv-step-title">Review &amp; Launch</div>
+      <div class="adv-step-sub">Everything looks good? Hit Launch to create your campaign on Facebook.</div>
+      <div class="adv-review-grid">
+        <div class="adv-review-card">
+          <div class="adv-review-card-title">Campaign</div>
+          <div class="adv-review-row"><span>Name</span><span class="adv-review-val">${advData.name||'—'}</span></div>
+          <div class="adv-review-row"><span>Objective</span><span class="adv-review-val">${obj?.icon} ${obj?.name||'—'}</span></div>
+          <div class="adv-review-row"><span>Platform</span><span class="adv-review-val">${advData.platform==='both'?'Facebook + Instagram':advData.platform}</span></div>
+          <div class="adv-review-row"><span>Format</span><span class="adv-review-val">${advData.format}</span></div>
+        </div>
+        <div class="adv-review-card">
+          <div class="adv-review-card-title">Creative</div>
+          <div class="adv-review-row"><span>Headline</span><span class="adv-review-val" style="max-width:160px;text-align:right;font-size:12px">${advData.headline||'—'}</span></div>
+          <div class="adv-review-row"><span>CTA</span><span class="adv-review-val">${ADV_CTA_LABELS[advData.cta]||'—'}</span></div>
+          <div class="adv-review-row"><span>URL</span><span class="adv-review-val" style="font-size:11px;max-width:160px;overflow:hidden;text-overflow:ellipsis">${advData.dest_url||'—'}</span></div>
+        </div>
+        <div class="adv-review-card">
+          <div class="adv-review-card-title">Audience</div>
+          <div class="adv-review-row"><span>Location</span><span class="adv-review-val">${advData.location||'—'} +${advData.radius_km||5}km</span></div>
+          <div class="adv-review-row"><span>Age</span><span class="adv-review-val">${advData.age_min||22}–${advData.age_max||55}</span></div>
+          <div class="adv-review-row"><span>Gender</span><span class="adv-review-val">${advData.gender||'all'}</span></div>
+          <div class="adv-review-row"><span>Interests</span><span class="adv-review-val" style="font-size:11px">${(advData.interests||[]).length} selected</span></div>
+        </div>
+        <div class="adv-review-card">
+          <div class="adv-review-card-title">Budget</div>
+          <div class="adv-review-row"><span>Daily budget</span><span class="adv-review-val">₹${advData.budget_amount||0}</span></div>
+          <div class="adv-review-row"><span>Start</span><span class="adv-review-val">${advData.start_date||'—'}</span></div>
+          <div class="adv-review-row"><span>End</span><span class="adv-review-val">${advData.end_date||'No end date'}</span></div>
+        </div>
+      </div>
+      <div class="am-err" id="adv-launch-err" style="margin-top:14px"></div>
+    </div>
+    <div class="adv-wizard-nav">
+      <button onclick="advBack()" style="background:none;border:1.5px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit">← Back</button>
+      <button class="bill-generate-btn" id="adv-launch-btn" onclick="launchCampaign()">🚀 Launch Campaign</button>
+    </div>`;
+  }
+
+  /* ─── FB Graph API Campaign Creation ─── */
+  async function launchCampaign() {
+    const errEl = document.getElementById('adv-launch-err');
+    errEl.classList.remove('show');
+    const btn = document.getElementById('adv-launch-btn');
+    btn.disabled = true; btn.textContent = 'Launching…';
+
+    if (!advFbToken || !advFbAccountId) {
+      errEl.textContent = 'Please connect your Facebook account first.';
+      errEl.classList.add('show'); btn.disabled = false; btn.textContent = '🚀 Launch Campaign';
+      return;
+    }
+    const obj = ADV_OBJECTIVES.find(o => o.id === advData.objective);
+    try {
+      // Step 1: Create campaign
+      const campaign = await fbPost(`/${advFbAccountId}/campaigns`, {
+        name: advData.name,
+        objective: obj.fbGoal,
+        status: 'ACTIVE',
+        special_ad_categories: [],
+      });
+      if (campaign.error) throw new Error(campaign.error.message);
+
+      // Step 2: Build targeting spec
+      const genderMap = { all: [1,2], female: [2], male: [1] };
+      const targeting = {
+        geo_locations: { custom_locations: [{ address_string: advData.location, radius: advData.radius_km, distance_unit: 'kilometer' }] },
+        age_min: advData.age_min, age_max: advData.age_max,
+        genders: genderMap[advData.gender] || [1,2],
+        flexible_spec: advData.interests.length ? [{ interests: advData.interests.map(i => ({ name: i.replace(/^.*?\s/,'') })) }] : undefined,
+        publisher_platforms: advData.platform === 'both' ? ['facebook','instagram'] : [advData.platform],
+      };
+
+      // Step 3: Create ad set
+      const budgetField = advData.budget_type === 'daily' ? 'daily_budget' : 'lifetime_budget';
+      const adset = await fbPost(`/${advFbAccountId}/adsets`, {
+        name: advData.name + ' — Ad Set',
+        campaign_id: campaign.id,
+        [budgetField]: Math.round(advData.budget_amount * 100),
+        billing_event: 'IMPRESSIONS',
+        optimization_goal: obj.fbGoal === 'OUTCOME_AWARENESS' ? 'REACH' : 'LINK_CLICKS',
+        bid_strategy: 'LOWEST_COST_WITHOUT_CAP',
+        targeting,
+        start_time: advData.start_date ? new Date(advData.start_date).toISOString() : new Date().toISOString(),
+        end_time: advData.end_date ? new Date(advData.end_date + 'T23:59:59').toISOString() : undefined,
+        status: 'ACTIVE',
+      });
+      if (adset.error) throw new Error(adset.error.message);
+
+      // Step 4: Create ad creative
+      const creative = await fbPost(`/${advFbAccountId}/adcreatives`, {
+        name: advData.name + ' — Creative',
+        object_story_spec: {
+          page_id: advFbPageId,
+          link_data: {
+            link: advData.dest_url || 'https://example.com',
+            message: advData.body,
+            name: advData.headline,
+            call_to_action: { type: advData.cta, value: { link: advData.dest_url || 'https://example.com' } },
+          },
+        },
+      });
+      if (creative.error) throw new Error(creative.error.message);
+
+      // Step 5: Create ad
+      const ad = await fbPost(`/${advFbAccountId}/ads`, {
+        name: advData.name + ' — Ad',
+        adset_id: adset.id,
+        creative: { creative_id: creative.id },
+        status: 'ACTIVE',
+      });
+      if (ad.error) throw new Error(ad.error.message);
+
+      // Save to local DB
+      await db.from('ad_campaigns').insert({
+        merchant_id: currentMerchant.id,
+        fb_campaign_id: campaign.id,
+        fb_adset_id: adset.id,
+        fb_ad_id: ad.id,
+        name: advData.name,
+        objective: advData.objective,
+        platform: advData.platform,
+        format: advData.format,
+        headline: advData.headline,
+        primary_text: advData.body,
+        cta: advData.cta,
+        destination_url: advData.dest_url,
+        targeting: { location: advData.location, radius_km: advData.radius_km, age_min: advData.age_min, age_max: advData.age_max, gender: advData.gender, interests: advData.interests },
+        budget_type: advData.budget_type,
+        budget_amount: advData.budget_amount,
+        start_date: advData.start_date,
+        end_date: advData.end_date || null,
+        status: 'ACTIVE',
+      });
+
+      btn.disabled = false; btn.textContent = '🚀 Launch Campaign';
+      alert('✅ Campaign launched successfully on Facebook!');
+      switchAdvPage('dashboard', document.getElementById('advtab-dashboard'));
+    } catch (e) {
+      errEl.textContent = '❌ ' + e.message;
+      errEl.classList.add('show');
+      btn.disabled = false; btn.textContent = '🚀 Launch Campaign';
+    }
+  }
+
+  /* ─── Ad Library ─── */
+  async function loadAdvLibrary() {
+    const { data } = await db.from('ad_creatives').select('*').eq('merchant_id', currentMerchant.id).order('created_at', { ascending: false });
+    const grid = document.getElementById('adv-lib-grid');
+    if (!data?.length) { grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No saved creatives yet.</div>'; return; }
+    grid.innerHTML = data.map(c => `
+      <div class="adv-lib-card">
+        <div class="adv-lib-img">🌿</div>
+        <div class="adv-lib-body">
+          <div class="adv-lib-name">${c.name}</div>
+          <div class="adv-lib-meta">${c.platform} · ${(c.created_at||'').split('T')[0]}</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${(c.headline||'')} — ${(c.primary_text||'').slice(0,50)}…</div>
+          <div class="adv-lib-actions">
+            <button class="nseg-use-btn" onclick="reuseCreative('${c.id}')">Reuse in campaign</button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  function reuseCreative(id) {
+    switchAdvPage('campaign', document.getElementById('advtab-campaign'));
+    // Pre-fill creative step — jump straight to it
+    setTimeout(() => { advStep = 3; renderAdvSteps(); renderAdvWizardStep(); }, 50);
+  }
+
+  function openSaveCreativeOverlay() { alert('Creative saving from existing campaigns — coming in next update.'); }
+
+  /* ─── Audiences ─── */
+  async function loadAdvAudiences() {
+    const { data } = await db.from('ad_audiences').select('*').eq('merchant_id', currentMerchant.id).order('created_at', { ascending: false });
+    advSavedAudiences = data || [];
+    const grid = document.getElementById('adv-aud-grid');
+    const newCard = `<div class="adv-aud-card" style="border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:120px;cursor:pointer;background:none" onclick="openSaveAudienceOverlay()">
+      <div style="font-size:28px">➕</div><div style="font-size:13px;font-weight:700;color:var(--muted)">New audience</div>
+    </div>`;
+    if (!data?.length) { grid.innerHTML = newCard; return; }
+    grid.innerHTML = newCard + data.map(a => `
+      <div class="adv-aud-card">
+        <div class="adv-aud-name">${a.name}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px">
+          <span class="adv-aud-tag">📍 ${a.location_city||'—'} +${a.radius_km||5}km</span>
+          <span class="adv-aud-tag">👤 ${a.age_min||18}–${a.age_max||65}</span>
+          <span class="adv-aud-tag">⚧ ${a.gender||'all'}</span>
+          ${(a.interests||[]).slice(0,2).map(i=>`<span class="adv-aud-tag">${i}</span>`).join('')}
+          ${(a.interests||[]).length>2?`<span class="adv-aud-tag">+${a.interests.length-2}</span>`:''}
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="nseg-use-btn" onclick="useAudienceInCampaign('${a.id}')">Use in campaign</button>
+          <button class="ntmpl-edit" onclick="deleteAdvAudience('${a.id}')">Delete</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function openSaveAudienceOverlay() {
+    // Collect current audience data from wizard if available, else prompt
+    const name = prompt('Audience name (e.g. "Mumbai Women 25-45"):');
+    if (!name) return;
+    const city = prompt('City / location:') || '';
+    const radius = parseInt(prompt('Radius (km):', '5')) || 5;
+    db.from('ad_audiences').insert({
+      merchant_id: currentMerchant.id, name,
+      location_city: city, radius_km: radius,
+      age_min: 22, age_max: 55, gender: 'female',
+      interests: ['💆 Spa','💅 Beauty','🧖 Wellness'],
+    }).then(() => loadAdvAudiences());
+  }
+
+  function useAudienceInCampaign(id) {
+    const aud = advSavedAudiences.find(a => a.id === id);
+    if (!aud) return;
+    advData.location = aud.location_city; advData.radius_km = aud.radius_km;
+    advData.age_min = aud.age_min; advData.age_max = aud.age_max;
+    advData.gender = aud.gender; advData.interests = aud.interests || [];
+    switchAdvPage('campaign', document.getElementById('advtab-campaign'));
+    setTimeout(() => { advStep = 4; renderAdvSteps(); renderAdvWizardStep(); }, 50);
+  }
+
+  async function deleteAdvAudience(id) {
+    if (!confirm('Delete this audience?')) return;
+    await db.from('ad_audiences').delete().eq('id', id);
+    loadAdvAudiences();
   }
 
   /* ── Compose overlay ── */
