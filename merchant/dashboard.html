@@ -991,6 +991,30 @@
     .sl-row-menu-item.danger { color:#DC2626; }
     .sl-row-menu-item.danger:hover { background:#FEF2F2; }
     .sl-row-menu-divider { height:1px; background:var(--border); margin:4px 8px; }
+    /* Org chart */
+    .org-tree { display:flex; flex-direction:column; align-items:center; }
+    .org-level { display:flex; gap:24px; justify-content:center; position:relative; padding-top:32px; }
+    .org-level::before { content:''; position:absolute; top:0; left:50%; width:2px; height:32px; background:var(--border); transform:translateX(-50%); }
+    .org-level-root { padding-top:0; }
+    .org-level-root::before { display:none; }
+    .org-branch { display:flex; flex-direction:column; align-items:center; position:relative; }
+    .org-branch::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--border); }
+    .org-branch:only-child::before { display:none; }
+    .org-branch::after { content:''; position:absolute; top:0; left:50%; width:2px; height:32px; background:var(--border); transform:translateX(-50%); }
+    .org-branch:only-child::after { display:none; }
+    .org-card { background:var(--white); border:1.5px solid var(--border); border-radius:12px; padding:14px 18px; min-width:150px; max-width:180px; text-align:center; position:relative; z-index:1; cursor:default; transition:box-shadow .15s; }
+    .org-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.1); border-color:#aaa; }
+    .org-card-avatar { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; color:#fff; margin:0 auto 8px; }
+    .org-card-name { font-size:13px; font-weight:700; color:var(--text); }
+    .org-card-role { font-size:11px; color:var(--muted); font-weight:600; margin-top:3px; }
+    .org-card-id { font-size:10px; color:#aaa; margin-top:2px; }
+    .org-children { display:flex; gap:24px; justify-content:center; position:relative; padding-top:32px; }
+    .org-children::before { content:''; position:absolute; top:0; left:calc(50% - 1px); width:2px; height:32px; background:var(--border); }
+    .org-children-wrap { position:relative; display:flex; gap:24px; }
+    .org-children-wrap::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--border); }
+    .org-child-col { display:flex; flex-direction:column; align-items:center; position:relative; padding-top:32px; }
+    .org-child-col::before { content:''; position:absolute; top:0; left:50%; width:2px; height:32px; background:var(--border); transform:translateX(-50%); }
+    .org-empty { text-align:center; padding:60px 0; color:var(--muted); font-size:14px; }
     .sl-att-drop   { border:2px dashed var(--border); border-radius:12px; padding:36px; text-align:center; margin-bottom:16px; transition:border-color .2s; }
     .sl-att-drop:hover { border-color:var(--green); }
     /* ── ADD TEAM MEMBER OVERLAY ── */
@@ -1565,6 +1589,7 @@
       <button class="sl-tab"        id="sltab-schedule"   onclick="switchStaffTab('schedule',this)">Staff Schedule</button>
       <button class="sl-tab"        id="sltab-attendance" onclick="switchStaffTab('attendance',this)">Upload Attendance</button>
       <button class="sl-tab"        id="sltab-inactive"   onclick="switchStaffTab('inactive',this)">Inactive Staff</button>
+      <button class="sl-tab"        id="sltab-reporting"  onclick="switchStaffTab('reporting',this)">Reporting Structure</button>
     </div>
 
     <!-- ── Staff List ── -->
@@ -1654,6 +1679,10 @@
           </tbody>
         </table>
       </div>
+    </div>
+
+    <div class="sl-page" id="sl-page-reporting">
+      <div id="sl-org-chart" style="overflow-x:auto;padding-bottom:24px"></div>
     </div>
   </div><!-- /tab-team-members -->
 
@@ -5469,7 +5498,58 @@
     document.querySelectorAll('.sl-page').forEach(p => p.classList.remove('show'));
     const pg = document.getElementById('sl-page-' + tab);
     if (pg) pg.classList.add('show');
-    if (tab === 'inactive') renderInactiveStaff();
+    if (tab === 'inactive')   renderInactiveStaff();
+    if (tab === 'reporting')  renderReportingStructure();
+  }
+
+  function renderReportingStructure() {
+    const wrap = document.getElementById('sl-org-chart');
+    if (!wrap) return;
+    const members = allTeamMembers.filter(s => s.active !== false);
+    if (!members.length) { wrap.innerHTML = '<div class="org-empty">No active staff to display.</div>'; return; }
+
+    const COLORS = ['#1D9E75','#3B82F6','#8B5CF6','#F59E0B','#EF4444','#06B6D4','#EC4899','#14B8A6'];
+    const colorMap = {};
+    members.forEach((s,i) => colorMap[s.id] = COLORS[i % COLORS.length]);
+
+    function initials(name) {
+      return (name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    }
+
+    function cardHtml(s, idx) {
+      const staffId = s.staff_id || ('SPAE' + String(idx+1).padStart(5,'0'));
+      return `<div class="org-card">
+        <div class="org-card-avatar" style="background:${colorMap[s.id]}">${initials(s.name)}</div>
+        <div class="org-card-name">${s.name}</div>
+        <div class="org-card-role">${s.role || 'Therapist'}</div>
+        <div class="org-card-id">${staffId}</div>
+      </div>`;
+    }
+
+    function buildNode(s, depth) {
+      const allIdx = members.indexOf(s);
+      const children = members.filter(m => m.manager_id === s.id);
+      if (!children.length) return `<div class="org-child-col">${cardHtml(s, allIdx)}</div>`;
+      return `<div class="org-child-col">
+        ${cardHtml(s, allIdx)}
+        <div style="position:relative;padding-top:32px;display:flex;gap:24px">
+          <div style="position:absolute;top:0;left:50%;width:2px;height:32px;background:var(--border);transform:translateX(-50%)"></div>
+          ${children.length > 1 ? `<div style="position:absolute;top:32px;left:calc(50% - ${(children.length-1)*12}px);right:calc(50% - ${(children.length-1)*12}px);height:2px;background:var(--border)"></div>` : ''}
+          ${children.map(c => buildNode(c, depth+1)).join('')}
+        </div>
+      </div>`;
+    }
+
+    // Find roots: staff with no manager_id or whose manager isn't in active list
+    const activeIds = new Set(members.map(m => m.id));
+    const roots = members.filter(s => !s.manager_id || !activeIds.has(s.manager_id));
+
+    const tree = `<div style="display:flex;flex-direction:column;align-items:center;min-width:max-content;padding:24px 32px">
+      <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap">
+        ${roots.map(r => buildNode(r, 0)).join('')}
+      </div>
+    </div>`;
+    wrap.innerHTML = tree;
   }
 
   function toggleStaffActionMenu() {
