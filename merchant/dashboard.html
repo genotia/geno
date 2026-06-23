@@ -1246,7 +1246,6 @@
       </button>
       <div class="nav-sub-group" id="team-sub-group">
         <button class="nav-item nav-sub" id="nav-team-members" onclick="switchPage('team-members',this)"><span class="nav-icon">👤</span> Manage Staff</button>
-        <button class="nav-item nav-sub" id="nav-timesheets"   onclick="switchPage('timesheets',this)"><span class="nav-icon">⏱️</span> Timesheets</button>
         <button class="nav-item nav-sub" id="nav-sales"        onclick="switchPage('sales',this)"><span class="nav-icon">💰</span> Sales</button>
         <button class="nav-item nav-sub" id="nav-schedule"     onclick="switchPage('schedule',this)"><span class="nav-icon">📅</span> Schedule</button>
         <button class="nav-item nav-sub" id="nav-roster"       onclick="switchPage('roster',this)"><span class="nav-icon">👥</span> Roster</button>
@@ -1691,18 +1690,6 @@
   </div><!-- /tab-team-members -->
 
 
-  <!-- ══════════════════ TIMESHEETS ══════════════════ -->
-  <div class="tab-panel" id="tab-timesheets">
-    <div class="shifts-toolbar">
-      <button class="shifts-today-btn" onclick="tsGoToday()">This week</button>
-      <button class="shifts-nav-btn" onclick="tsNav(-1)">‹</button>
-      <span class="shifts-week-label" id="ts-week-label">—</span>
-      <button class="shifts-nav-btn" onclick="tsNav(1)">›</button>
-    </div>
-    <div class="timesheet-wrap">
-      <div id="ts-grid-wrap"><div class="loading-state">Loading timesheets…</div></div>
-    </div>
-  </div><!-- /tab-timesheets -->
 
   <!-- ══════════════════ SALES / PAY RUNS ══════════════════ -->
   <div class="tab-panel" id="tab-sales">
@@ -5388,7 +5375,6 @@
   /* ── PAGE_TITLES extension ── */
   PAGE_TITLES['team-members']    = 'Team members';
   PAGE_TITLES['shifts']          = 'Scheduled shifts';
-  PAGE_TITLES['timesheets']      = 'Timesheets';
   PAGE_TITLES['sales']           = 'Sales';
   PAGE_TITLES['clients-list']    = 'Clients list';
   PAGE_TITLES['client-segments'] = 'Client segments';
@@ -5972,62 +5958,6 @@
   /* ════════════════════════════════════════════
      TIMESHEETS
   ════════════════════════════════════════════ */
-  let tsWeekOffset = 0;
-  function tsNav(d) { tsWeekOffset += d; loadTimesheets(); }
-  function tsGoToday() { tsWeekOffset = 0; loadTimesheets(); }
-
-  async function loadTimesheets() {
-    const dates = getWeekDates(tsWeekOffset);
-    document.getElementById('ts-week-label').textContent = weekLabel(dates);
-    if (!currentStaff.length)  await loadStaff();
-    if (!currentRoster.length) await loadRosterData();
-    renderTimesheets(dates);
-  }
-
-  function renderTimesheets(dates) {
-    const active = currentStaff.filter(s => s.active);
-    if (!active.length) {
-      document.getElementById('ts-grid-wrap').innerHTML = '<div class="empty-state">Add team members in Setup first.</div>';
-      return;
-    }
-    const rMap = {};
-    currentRoster.forEach(r => { rMap[r.staff_id + '_' + r.day_of_week] = r; });
-
-    document.getElementById('ts-grid-wrap').innerHTML = `
-      <table class="timesheet-grid">
-        <thead><tr>
-          <th>Team member</th>
-          ${SHIFT_DAYS.map((d,i) => `<th>${d}<br><span style="font-size:10px;font-weight:500">${dates[i].toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</span></th>`).join('')}
-          <th>Total</th>
-        </tr></thead>
-        <tbody>
-          ${active.map(s => {
-            const initials = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-            let weekTotal = 0;
-            const cells = SHIFT_DAYS.map(day => {
-              const r = rMap[s.id + '_' + day];
-              if (!r) return `<td><div class="ts-hrs zero">—</div></td>`;
-              const hrs = parseFloat(r.end_time) - parseFloat(r.start_time);
-              weekTotal += hrs;
-              return `<td>
-                <div class="ts-hrs">${hrs}h</div>
-                <div class="ts-status scheduled">Scheduled</div>
-              </td>`;
-            });
-            return `<tr>
-              <td>
-                <div class="shift-staff-cell">
-                  <div class="team-avatar" style="background:${s.color};width:34px;height:34px;font-size:12px">${initials}</div>
-                  <div><div style="font-weight:700;font-size:13px">${s.name}</div><div style="font-size:11px;color:var(--muted)">${s.role||'Therapist'}</div></div>
-                </div>
-              </td>
-              ${cells.join('')}
-              <td><div class="ts-total">${weekTotal}h</div></td>
-            </tr>`;
-          }).join('')}
-        </tbody>
-      </table>`;
-  }
 
   /* ════════════════════════════════════════════
      SALES / PAY RUNS
@@ -6127,7 +6057,6 @@
     if (page === 'productivity')  { openTeamNav(); loadProductivity(); }
     if (page === 'team-members')  { openTeamNav(); loadTeamMembers(); }
     if (page === 'shifts')        { switchPage('team-members', document.getElementById('nav-team-members')); setTimeout(() => switchStaffTab('schedule', document.getElementById('sltab-schedule')), 50); return; }
-    if (page === 'timesheets')    { openTeamNav(); loadTimesheets(); }
     if (page === 'sales')         { openTeamNav(); loadSales(); }
     if (page === 'clients-list')    { openClientNav(); loadClientsList(); }
     if (page === 'client-segments') { openClientNav(); loadClientSegments(); }
