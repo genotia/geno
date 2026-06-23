@@ -6026,49 +6026,50 @@
       const utilBadge = utilPct >= 70 ? 'green' : utilPct >= 40 ? 'amber' : 'red';
       const rbBadge   = rebookPct >= 40 ? 'green' : rebookPct >= 20 ? 'amber' : 'red';
 
-      return `<div class="sp-card">
-        <div class="sp-card-header">
-          <div class="sp-avatar" style="background:${bg}">${initials}</div>
-          <div>
-            <div class="sp-name">${s.name}</div>
-            <div class="sp-role">${s.role || '—'}</div>
+      return `<tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="sp-avatar" style="background:${bg};width:34px;height:34px;font-size:13px">${initials}</div>
+            <div>
+              <div class="sp-name" style="font-size:13px">${s.name}</div>
+              <div class="sp-role" style="font-size:11px">${s.role || '—'}</div>
+            </div>
           </div>
-        </div>
-        <div class="sp-metrics">
-          <div class="sp-metric">
-            <div class="sp-metric-val">${bookingCt}</div>
-            <div class="sp-metric-label">Bookings</div>
+        </td>
+        <td style="text-align:center;font-weight:700">${bookingCt}</td>
+        <td style="text-align:right;font-weight:700">${fmt(totalRev)}</td>
+        <td style="text-align:right;font-weight:700">${fmt(avgTicket)}</td>
+        <td style="text-align:right;font-weight:700">${fmt(revPerHr)}</td>
+        <td style="min-width:120px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="sp-util-bar-wrap" style="flex:1"><div class="sp-util-bar" style="width:${utilPct}%;background:${utilPct>=70?'#22C55E':utilPct>=40?'#F59E0B':'#EF4444'}"></div></div>
+            <span class="sp-badge ${utilBadge}" style="margin:0;white-space:nowrap">${utilPct}%</span>
           </div>
-          <div class="sp-metric">
-            <div class="sp-metric-val">${fmt(totalRev)}</div>
-            <div class="sp-metric-label">Revenue</div>
+        </td>
+        <td style="min-width:120px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="sp-util-bar-wrap" style="flex:1"><div class="sp-util-bar" style="width:${rebookPct}%;background:${rbBadge==='green'?'#22C55E':rbBadge==='amber'?'#F59E0B':'#EF4444'}"></div></div>
+            <span class="sp-badge ${rbBadge}" style="margin:0;white-space:nowrap">${rebookPct}%</span>
           </div>
-          <div class="sp-metric">
-            <div class="sp-metric-val">${fmt(avgTicket)}</div>
-            <div class="sp-metric-label">Avg Ticket</div>
-          </div>
-          <div class="sp-metric">
-            <div class="sp-metric-val">${fmt(revPerHr)}</div>
-            <div class="sp-metric-label">Revenue / hr</div>
-          </div>
-          <div class="sp-metric">
-            <div class="sp-metric-val">${utilPct}%</div>
-            <div class="sp-metric-label">Utilisation</div>
-            <div class="sp-util-bar-wrap"><div class="sp-util-bar" style="width:${utilPct}%;background:${utilPct>=70?'#22C55E':utilPct>=40?'#F59E0B':'#EF4444'}"></div></div>
-            <span class="sp-badge ${utilBadge}">${utilPct>=70?'High':utilPct>=40?'Medium':'Low'}</span>
-          </div>
-          <div class="sp-metric">
-            <div class="sp-metric-val">${rebookPct}%</div>
-            <div class="sp-metric-label">Rebooking</div>
-            <div class="sp-util-bar-wrap"><div class="sp-util-bar" style="width:${rebookPct}%;background:${rbBadge==='green'?'#22C55E':rbBadge==='amber'?'#F59E0B':'#EF4444'}"></div></div>
-            <span class="sp-badge ${rbBadge}">${uniqueClients} clients</span>
-          </div>
-        </div>
-      </div>`;
+        </td>
+      </tr>`;
     });
 
     document.getElementById('sp-cards').innerHTML = cards.length
-      ? `<div class="sp-grid">${cards.join('')}</div>`
+      ? `<div style="background:var(--white);border:1.5px solid var(--border);border-radius:14px;overflow:hidden">
+           <table class="bookings-table" style="width:100%">
+             <thead><tr>
+               <th>Staff</th>
+               <th style="text-align:center">Bookings</th>
+               <th style="text-align:right">Revenue</th>
+               <th style="text-align:right">Avg Ticket</th>
+               <th style="text-align:right">Revenue / hr</th>
+               <th>Utilisation</th>
+               <th>Rebooking</th>
+             </tr></thead>
+             <tbody>${cards.join('')}</tbody>
+           </table>
+         </div>`
       : '<div class="empty-state">No active staff found.</div>';
   }
 
