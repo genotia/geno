@@ -391,6 +391,23 @@
     .sd-status-pill { background:var(--bg); border-radius:10px; padding:12px 18px; text-align:center; flex:1; min-width:100px; }
     .sd-status-pill-val { font-size:22px; font-weight:800; }
     .sd-status-pill-label { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+    /* ── Staff Productivity ── */
+    .sp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:16px; }
+    .sp-card { background:var(--white); border:1.5px solid var(--border); border-radius:16px; padding:20px; }
+    .sp-card-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+    .sp-avatar { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:800; color:#fff; flex-shrink:0; }
+    .sp-name { font-size:15px; font-weight:700; color:var(--text); }
+    .sp-role { font-size:12px; color:var(--muted); margin-top:2px; }
+    .sp-metrics { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+    .sp-metric { background:var(--bg); border-radius:10px; padding:10px 12px; }
+    .sp-metric-val { font-size:18px; font-weight:800; color:var(--text); line-height:1.1; }
+    .sp-metric-label { font-size:10px; font-weight:600; color:var(--muted); margin-top:3px; text-transform:uppercase; letter-spacing:.4px; }
+    .sp-util-bar-wrap { background:#E5E7EB; border-radius:20px; height:6px; margin-top:6px; overflow:hidden; }
+    .sp-util-bar { height:100%; border-radius:20px; transition:width .4s; }
+    .sp-badge { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; margin-top:4px; }
+    .sp-badge.green { background:#DCFCE7; color:#16A34A; }
+    .sp-badge.amber { background:#FEF3C7; color:#D97706; }
+    .sp-badge.red   { background:#FEE2E2; color:#DC2626; }
     .payrun-header { margin-bottom: 6px; }
     .payrun-header h2 { font-size: 22px; font-weight: 800; letter-spacing: -.4px; }
     .payrun-header p { font-size: 13px; color: var(--muted); margin-top: 4px; }
@@ -1691,8 +1708,9 @@
   <div class="tab-panel" id="tab-sales">
     <!-- Tab bar -->
     <div class="sl-tabs" style="margin-bottom:24px">
-      <button class="sl-tab active" id="sales-tab-dashboard" onclick="switchSalesTab('dashboard',this)">Dashboard</button>
-      <button class="sl-tab"        id="sales-tab-payruns"   onclick="switchSalesTab('payruns',this)">Sales by Staff</button>
+      <button class="sl-tab active" id="sales-tab-dashboard"    onclick="switchSalesTab('dashboard',this)">Dashboard</button>
+      <button class="sl-tab"        id="sales-tab-payruns"      onclick="switchSalesTab('payruns',this)">Sales by Staff</button>
+      <button class="sl-tab"        id="sales-tab-productivity" onclick="switchSalesTab('productivity',this)">Staff Productivity</button>
     </div>
 
     <!-- ── Dashboard ── -->
@@ -1764,6 +1782,29 @@
       </div>
       <div class="payrun-totals" id="sales-totals"></div>
       <div id="sales-staff-list"><div class="loading-state">Loading…</div></div>
+    </div>
+    <!-- ── Staff Productivity ── -->
+    <div class="sl-page" id="sales-page-productivity">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+        <div>
+          <h2 style="font-size:20px;font-weight:800;margin:0">Staff Productivity</h2>
+          <p style="font-size:13px;color:var(--muted);margin:4px 0 0">Utilisation, revenue quality and client retention per team member.</p>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="sd-period-btn active" id="sp-btn-week"   onclick="setSpPeriod('week',this)">This Week</button>
+          <button class="sd-period-btn"        id="sp-btn-month"  onclick="setSpPeriod('month',this)">This Month</button>
+          <button class="sd-period-btn"        id="sp-btn-year"   onclick="setSpPeriod('year',this)">This Year</button>
+          <button class="sd-period-btn"        id="sp-btn-custom" onclick="setSpPeriod('custom',this)">Custom</button>
+        </div>
+      </div>
+      <div id="sp-custom-range" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px">
+        <label style="font-size:12px;font-weight:600;color:var(--muted)">From</label>
+        <input type="date" id="sp-from" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none" />
+        <label style="font-size:12px;font-weight:600;color:var(--muted)">To</label>
+        <input type="date" id="sp-to"   style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none" />
+        <button class="sd-period-btn active" onclick="applySpCustom()" style="margin-left:4px">Apply</button>
+      </div>
+      <div id="sp-cards"><div class="loading-state">Loading…</div></div>
     </div>
   </div><!-- /tab-sales -->
 
@@ -5874,7 +5915,8 @@
     document.querySelectorAll('#tab-sales .sl-page').forEach(p => p.classList.remove('show'));
     document.getElementById('sales-page-' + tab).classList.add('show');
     if (tab === 'dashboard') loadSalesDashboard();
-    if (tab === 'payruns')   loadSales();
+    if (tab === 'payruns')      loadSales();
+    if (tab === 'productivity') loadStaffProductivity();
   }
 
   function setSalesPeriod(period, btn) {
@@ -5882,6 +5924,152 @@
     document.querySelectorAll('.sd-period-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     loadSalesDashboard();
+  }
+
+  let spPeriod     = 'week';
+  let spCustomFrom = '';
+  let spCustomTo   = '';
+
+  function setSpPeriod(period, btn) {
+    spPeriod = period;
+    document.querySelectorAll('#sales-page-productivity .sd-period-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cr = document.getElementById('sp-custom-range');
+    if (period === 'custom') {
+      cr.style.display = 'flex';
+      const now = new Date();
+      document.getElementById('sp-from').value = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
+      document.getElementById('sp-to').value   = now.toISOString().slice(0,10);
+    } else {
+      cr.style.display = 'none';
+      loadStaffProductivity();
+    }
+  }
+
+  function applySpCustom() {
+    spCustomFrom = document.getElementById('sp-from').value;
+    spCustomTo   = document.getElementById('sp-to').value;
+    if (!spCustomFrom || !spCustomTo) return;
+    document.getElementById('sp-custom-range').style.display = 'none';
+    loadStaffProductivity();
+  }
+
+  async function loadStaffProductivity() {
+    document.getElementById('sp-cards').innerHTML = '<div class="loading-state">Loading…</div>';
+    if (!currentStaff.length) await loadStaff();
+
+    const now = new Date();
+    let from, to, dayCount;
+    if (spPeriod === 'week') {
+      const dates = getWeekDates(0);
+      from = dates[0].toISOString().slice(0,10);
+      to   = dates[6].toISOString().slice(0,10);
+      dayCount = 7;
+    } else if (spPeriod === 'month') {
+      from = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
+      to   = new Date(now.getFullYear(), now.getMonth()+1, 0).toISOString().slice(0,10);
+      dayCount = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+    } else if (spPeriod === 'year') {
+      from = new Date(now.getFullYear(), 0, 1).toISOString().slice(0,10);
+      to   = new Date(now.getFullYear(), 11, 31).toISOString().slice(0,10);
+      dayCount = 365;
+    } else {
+      from = spCustomFrom; to = spCustomTo;
+      dayCount = Math.max(1, Math.round((new Date(to)-new Date(from))/(1000*60*60*24))+1);
+    }
+
+    const [{ data: bks }, { data: lvs }] = await Promise.all([
+      db.from('bookings')
+        .select('id, staff_id, status, total_amount, customer_name, customer_phone, time_slot')
+        .eq('merchant_id', currentMerchant.id)
+        .gte('booking_date', from).lte('booking_date', to),
+      db.from('staff_leave')
+        .select('staff_id, date')
+        .eq('merchant_id', currentMerchant.id)
+        .gte('date', from).lte('date', to),
+    ]);
+
+    const bookings = bks || [];
+    const leaves   = lvs || [];
+
+    const activeStaff = currentStaff.filter(s => s.active !== false);
+    const cards = activeStaff.map(s => {
+      const mine      = bookings.filter(b => b.staff_id === s.id);
+      const confirmed = mine.filter(b => b.status === 'confirmed');
+      const totalRev  = confirmed.reduce((sum, b) => sum + (b.total_amount || 0), 0);
+      const bookingCt = confirmed.length;
+      const avgTicket = bookingCt ? totalRev / bookingCt : 0;
+
+      // Utilisation: booked hrs (assume 1hr each) vs available shift hrs
+      // Use roster: avg 8hr/day × working days (dayCount − leave days)
+      const leaveDays = leaves.filter(l => l.staff_id === s.id).length;
+      const workDays  = Math.max(0, dayCount - leaveDays);
+      const shiftHrs  = workDays * 8; // baseline hrs from roster
+      const bookedHrs = bookingCt;    // 1 hr per booking assumption
+      const utilPct   = shiftHrs ? Math.min(100, Math.round((bookedHrs / shiftHrs) * 100)) : 0;
+      const revPerHr  = bookedHrs ? totalRev / bookedHrs : 0;
+
+      // Rebooking: clients who appear more than once across ALL time
+      const phoneMap = {};
+      mine.forEach(b => {
+        const key = b.customer_phone || b.customer_name;
+        if (key) phoneMap[key] = (phoneMap[key] || 0) + 1;
+      });
+      const uniqueClients  = Object.keys(phoneMap).length;
+      const repeatClients  = Object.values(phoneMap).filter(n => n > 1).length;
+      const rebookPct      = uniqueClients ? Math.round((repeatClients / uniqueClients) * 100) : 0;
+
+      const fmt    = n => '₹' + Number(n).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+      const initials = s.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      const bg     = s.color || 'var(--green)';
+
+      const utilBadge = utilPct >= 70 ? 'green' : utilPct >= 40 ? 'amber' : 'red';
+      const rbBadge   = rebookPct >= 40 ? 'green' : rebookPct >= 20 ? 'amber' : 'red';
+
+      return `<div class="sp-card">
+        <div class="sp-card-header">
+          <div class="sp-avatar" style="background:${bg}">${initials}</div>
+          <div>
+            <div class="sp-name">${s.name}</div>
+            <div class="sp-role">${s.role || '—'}</div>
+          </div>
+        </div>
+        <div class="sp-metrics">
+          <div class="sp-metric">
+            <div class="sp-metric-val">${bookingCt}</div>
+            <div class="sp-metric-label">Bookings</div>
+          </div>
+          <div class="sp-metric">
+            <div class="sp-metric-val">${fmt(totalRev)}</div>
+            <div class="sp-metric-label">Revenue</div>
+          </div>
+          <div class="sp-metric">
+            <div class="sp-metric-val">${fmt(avgTicket)}</div>
+            <div class="sp-metric-label">Avg Ticket</div>
+          </div>
+          <div class="sp-metric">
+            <div class="sp-metric-val">${fmt(revPerHr)}</div>
+            <div class="sp-metric-label">Revenue / hr</div>
+          </div>
+          <div class="sp-metric">
+            <div class="sp-metric-val">${utilPct}%</div>
+            <div class="sp-metric-label">Utilisation</div>
+            <div class="sp-util-bar-wrap"><div class="sp-util-bar" style="width:${utilPct}%;background:${utilPct>=70?'#22C55E':utilPct>=40?'#F59E0B':'#EF4444'}"></div></div>
+            <span class="sp-badge ${utilBadge}">${utilPct>=70?'High':utilPct>=40?'Medium':'Low'}</span>
+          </div>
+          <div class="sp-metric">
+            <div class="sp-metric-val">${rebookPct}%</div>
+            <div class="sp-metric-label">Rebooking</div>
+            <div class="sp-util-bar-wrap"><div class="sp-util-bar" style="width:${rebookPct}%;background:${rbBadge==='green'?'#22C55E':rbBadge==='amber'?'#F59E0B':'#EF4444'}"></div></div>
+            <span class="sp-badge ${rbBadge}">${uniqueClients} clients</span>
+          </div>
+        </div>
+      </div>`;
+    });
+
+    document.getElementById('sp-cards').innerHTML = cards.length
+      ? `<div class="sp-grid">${cards.join('')}</div>`
+      : '<div class="empty-state">No active staff found.</div>';
   }
 
   async function loadSalesDashboard() {
