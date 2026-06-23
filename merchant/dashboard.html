@@ -4528,9 +4528,26 @@
     });
   }
 
+  function parseLegacyTime(timeSlot, idx) {
+    // Parses "9:00 AM – 10:00 AM" or "09:00 – 10:00" into HH:MM for the select
+    if (!timeSlot) return '';
+    const parts = timeSlot.split(/\s*[–-]\s*/);
+    if (!parts[idx]) return '';
+    const raw = parts[idx].trim();
+    const m12 = raw.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (m12) {
+      let h = parseInt(m12[1]), mn = m12[2];
+      if (m12[3].toUpperCase() === 'PM' && h !== 12) h += 12;
+      if (m12[3].toUpperCase() === 'AM' && h === 12) h = 0;
+      return String(h).padStart(2,'0') + ':' + mn;
+    }
+    return raw.slice(0,5); // already HH:MM
+  }
+
   function preselectTimeSlot(startTime, endTime) {
-    document.getElementById('f-start-time').value = startTime || '';
-    document.getElementById('f-end-time').value   = endTime   || '';
+    // DB time columns return HH:MM:SS — truncate to HH:MM to match option values
+    document.getElementById('f-start-time').value = (startTime || '').slice(0, 5);
+    document.getElementById('f-end-time').value   = (endTime   || '').slice(0, 5);
     updateDuration();
   }
 
@@ -4633,7 +4650,7 @@
       document.getElementById('f-emoji').value      = deal.emoji;
       document.getElementById('f-orig-price').value = deal.original_price;
       document.getElementById('f-discount').value   = deal.discount_pct;
-      preselectTimeSlot(deal.start_time || '', deal.end_time || '');
+      preselectTimeSlot(deal.start_time || parseLegacyTime(deal.time_slot, 0), deal.end_time || parseLegacyTime(deal.time_slot, 1));
       setSelectedDays(deal.days || 'Mon,Tue,Wed,Thu,Fri,Sat,Sun');
       document.getElementById('f-expires').value    = deal.expires_at || '';
       document.getElementById('f-capacity').value   = deal.capacity   || '';
