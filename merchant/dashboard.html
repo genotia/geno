@@ -3437,12 +3437,20 @@
           <div class="am-form-row">
             <div class="am-field">
               <label>Designation</label>
-              <select class="am-input" id="am-role">
+              <select class="am-input" id="am-role" onchange="updateManagerDropdown()">
                 <option value="Owner">Owner</option>
                 <option value="Manager">Manager</option>
                 <option value="Therapist" selected>Therapist</option>
                 <option value="Salon">Salon</option>
                 <option value="Beautician">Beautician</option>
+              </select>
+            </div>
+          </div>
+          <div class="am-form-row" id="am-manager-row">
+            <div class="am-field">
+              <label>Reports to</label>
+              <select class="am-input" id="am-manager">
+                <option value="">— Select manager —</option>
               </select>
             </div>
           </div>
@@ -5098,6 +5106,31 @@
 
   let amEditingId = null; // null = add mode, staff id = edit mode
 
+  function updateManagerDropdown() {
+    const role = document.getElementById('am-role')?.value || 'Therapist';
+    const row  = document.getElementById('am-manager-row');
+    const sel  = document.getElementById('am-manager');
+    if (!row || !sel) return;
+
+    if (role === 'Owner') {
+      row.style.display = 'none';
+      sel.value = '';
+      return;
+    }
+    row.style.display = '';
+
+    // Manager reports to Owner; everyone else reports to a Manager
+    const filterRole = role === 'Manager' ? 'Owner' : 'Manager';
+    const candidates = allTeamMembers.filter(m =>
+      m.role === filterRole && m.active !== false && m.id !== amEditingId
+    );
+
+    const prev = sel.value;
+    sel.innerHTML = `<option value="">— Select ${filterRole} —</option>` +
+      candidates.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+    if (prev && candidates.find(m => m.id === prev)) sel.value = prev;
+  }
+
   function openAddMember() {
     amEditingId = null;
     resetAddMemberForm();
@@ -5120,6 +5153,8 @@
     document.getElementById('am-last-name').value  = parts.slice(1).join(' ');
     document.getElementById('am-email').value       = s.email || '';
     document.getElementById('am-role').value        = s.role  || 'Therapist';
+    updateManagerDropdown();
+    document.getElementById('am-manager').value = s.manager_id || '';
     // Phone: strip country code prefix if present
     const rawPhone = s.phone || '';
     const codeMatch = rawPhone.match(/^(\+\d{1,4})\s?(.*)/);
@@ -5164,6 +5199,8 @@
      'am-hourly','am-commission','am-bank-name','am-bank-acct','am-bank-ifsc','am-bank-bank'
     ].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     document.getElementById('am-role').value = 'Therapist';
+    updateManagerDropdown();
+    document.getElementById('am-manager').value = '';
     document.getElementById('am-avatar').style.background = amSelectedColor;
     document.getElementById('am-avatar').textContent = '?';
     document.getElementById('am-color-picker').classList.add('hidden');
@@ -5264,6 +5301,7 @@
     const phoneCode = document.getElementById('am-phone-code').value;
     const phone     = document.getElementById('am-phone').value.trim();
     const role      = document.getElementById('am-role').value.trim() || 'Therapist';
+    const managerId = document.getElementById('am-manager').value || null;
     const commission= parseFloat(document.getElementById('am-commission').value) || 0;
     const hourly    = parseFloat(document.getElementById('am-hourly').value) || 0;
     const permission= document.querySelector('input[name=am-permission]:checked')?.value || 'Team member';
@@ -5278,6 +5316,7 @@
       phone: phone ? phoneCode + ' ' + phone : null,
       color: amSelectedColor,
       commission_pct: commission,
+      manager_id: managerId,
     };
 
     let error;
