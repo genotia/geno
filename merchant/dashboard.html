@@ -5290,7 +5290,7 @@
       document.getElementById('am-first-name').focus();
       return;
     }
-    if (!email) {
+    if (!email && !amEditingId) {
       errEl.textContent = 'Email address is required.';
       errEl.classList.add('show');
       amSwitch('profile', document.querySelector('#am-overlay .am-nav-item'));
