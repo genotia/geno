@@ -4219,7 +4219,25 @@
   /* ════════════════════════════════════════════
      TEAM SIDEBAR TOGGLE
   ════════════════════════════════════════════ */
+  const NAV_GROUPS = [
+    { toggleId: 'nav-team-toggle',     groupId: 'team-sub-group'     },
+    { toggleId: 'nav-clientdb-toggle', groupId: 'clientdb-sub-group' },
+    { toggleId: 'nav-catalog-toggle',  groupId: 'catalog-sub-group'  },
+    { toggleId: 'nav-inv-toggle',      groupId: 'inv-sub-group'      },
+    { toggleId: 'nav-mktg-toggle',     groupId: 'mktg-sub-group'     },
+    { toggleId: 'nav-finance-toggle',  groupId: 'finance-sub-group'  },
+  ];
+  function closeAllNavGroups(exceptToggleId) {
+    NAV_GROUPS.forEach(({ toggleId, groupId }) => {
+      if (toggleId === exceptToggleId) return;
+      document.getElementById(toggleId)?.classList.remove('open');
+      document.getElementById(groupId)?.classList.remove('open');
+    });
+  }
+
   function toggleTeamNav(btn) {
+    const willOpen = !btn.classList.contains('open');
+    if (willOpen) closeAllNavGroups('nav-team-toggle');
     btn.classList.toggle('open');
     document.getElementById('team-sub-group').classList.toggle('open');
   }
@@ -4647,6 +4665,8 @@
      CLIENTDB — NAV TOGGLE
   ════════════════════════════════════════════ */
   function toggleClientNav(btn) {
+    const willOpen = !btn.classList.contains('open');
+    if (willOpen) closeAllNavGroups('nav-clientdb-toggle');
     btn.classList.toggle('open');
     document.getElementById('clientdb-sub-group').classList.toggle('open');
   }
@@ -5360,7 +5380,12 @@
   let usageLines     = []; let usageLineId  = 0;
 
   /* ── Nav helpers ── */
-  function toggleInvNav(btn) { btn.classList.toggle('open'); document.getElementById('inv-sub-group').classList.toggle('open'); }
+  function toggleInvNav(btn) {
+    const willOpen = !btn.classList.contains('open');
+    if (willOpen) closeAllNavGroups('nav-inv-toggle');
+    btn.classList.toggle('open');
+    document.getElementById('inv-sub-group').classList.toggle('open');
+  }
   function openInvNav() { document.getElementById('nav-inv-toggle').classList.add('open'); document.getElementById('inv-sub-group').classList.add('open'); }
 
   /* ── Shared helpers ── */
@@ -5883,9 +5908,19 @@
   let allCampaigns = [];
   let composeChannel = 'whatsapp';
 
-  function toggleMarketingNav(btn) { btn.classList.toggle('open'); document.getElementById('mktg-sub-group').classList.toggle('open'); }
-  function openMarketingNav()      { document.getElementById('nav-mktg-toggle').classList.add('open'); document.getElementById('mktg-sub-group').classList.add('open'); }
-  function toggleFinanceNav(btn)   { btn.classList.toggle('open'); document.getElementById('finance-sub-group').classList.toggle('open'); }
+  function toggleMarketingNav(btn) {
+    const willOpen = !btn.classList.contains('open');
+    if (willOpen) closeAllNavGroups('nav-mktg-toggle');
+    btn.classList.toggle('open');
+    document.getElementById('mktg-sub-group').classList.toggle('open');
+  }
+  function openMarketingNav() { closeAllNavGroups('nav-mktg-toggle'); document.getElementById('nav-mktg-toggle').classList.add('open'); document.getElementById('mktg-sub-group').classList.add('open'); }
+  function toggleFinanceNav(btn) {
+    const willOpen = !btn.classList.contains('open');
+    if (willOpen) closeAllNavGroups('nav-finance-toggle');
+    btn.classList.toggle('open');
+    document.getElementById('finance-sub-group').classList.toggle('open');
+  }
   function openFinanceNav()        { document.getElementById('nav-finance-toggle').classList.add('open'); document.getElementById('finance-sub-group').classList.add('open'); }
 
   /* ── Channel config ── */
@@ -6054,6 +6089,8 @@
      CATALOG NAV TOGGLE
   ════════════════════════════════════════════ */
   function toggleCatalogNav(btn) {
+    const willOpen = !btn.classList.contains('open');
+    if (willOpen) closeAllNavGroups('nav-catalog-toggle');
     btn.classList.toggle('open');
     document.getElementById('catalog-sub-group').classList.toggle('open');
   }
