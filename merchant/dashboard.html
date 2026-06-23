@@ -3635,19 +3635,7 @@
       </div>
       <!-- Leave section -->
       <div id="shift-leave-section" style="display:none">
-        <div style="margin-bottom:12px">
-          <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">Leave type</label>
-          <select id="shift-leave-type" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none">
-            <option>Annual Leave</option>
-            <option>Sick Leave</option>
-            <option>Emergency Leave</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div style="margin-bottom:16px">
-          <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">Note (optional)</label>
-          <input type="text" id="shift-leave-note" placeholder="e.g. Doctor appointment" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box" />
-        </div>
+        <p style="font-size:13px;color:var(--muted);margin:0 0 16px">This staff member will be marked as <strong>On Leave</strong> for this day.</p>
         <div style="display:flex;gap:8px">
           <button class="btn-submit" onclick="saveLeave()">Mark as Leave</button>
           <button class="btn-submit" style="background:#FEE2E2;color:#DC2626" onclick="deleteLeave()">Clear Leave</button>
@@ -5874,7 +5862,7 @@
                 let cellClass, cellHtml;
                 if (lv) {
                   cellClass = 'leave';
-                  cellHtml  = `🏖 On Leave<br><span class="shift-leave-badge">${lv.leave_type}</span>`;
+                  cellHtml  = 'On Leave';
                 } else if (r) {
                   cellClass = 'working';
                   cellHtml  = fmt12h(r.start_time) + ' – ' + fmt12h(r.end_time);
@@ -5927,10 +5915,6 @@
     startSel.value = r ? r.start_time : '09:00';
     endSel.value   = r ? r.end_time   : '18:00';
 
-    // Pre-fill leave fields if leave exists
-    document.getElementById('shift-leave-type').value = lv ? lv.leave_type : 'Annual Leave';
-    document.getElementById('shift-leave-note').value = lv ? (lv.note || '') : '';
-
     // Default to leave mode if already on leave, else work mode
     setShiftMode(lv ? 'leave' : 'work');
 
@@ -5966,14 +5950,10 @@
   async function saveLeave() {
     const { staffId, date } = shiftEditMeta;
     if (!date) return;
-    const leaveType = document.getElementById('shift-leave-type').value;
-    const note      = document.getElementById('shift-leave-note').value.trim();
     await db.from('staff_leave').upsert({
       merchant_id: currentMerchant.id,
       staff_id: staffId,
       date,
-      leave_type: leaveType,
-      note: note || null,
     }, { onConflict: 'staff_id,date' });
     await loadLeaves(getWeekDates(shiftsWeekOffset));
     closeShiftModal();
