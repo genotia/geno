@@ -622,34 +622,82 @@
     .bm-back-btn { background: none; border: none; font-size: 13px; font-weight: 700; color: var(--green); cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 16px; padding: 0; font-family: inherit; }
     .bm-back-btn:hover { text-decoration: underline; }
     /* ── Notifications page ── */
-    .notif-channel-tabs { display:flex; gap:6px; margin-bottom:20px; border-bottom:2px solid var(--border); padding-bottom:0; }
-    .notif-tab { background:none; border:none; padding:10px 20px; font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; font-family:inherit; border-radius:6px 6px 0 0; transition:all .15s; }
-    .notif-tab:hover { color:var(--text); background:var(--bg); }
-    .notif-tab.active { color:var(--green); border-bottom-color:var(--green); background:none; }
-    .notif-panels { display:grid; grid-template-columns:280px 1fr; gap:20px; align-items:start; }
-    .notif-audience-panel { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:20px; }
-    .notif-compose-panel  { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:20px; }
-    .notif-panel-title { font-size:15px; font-weight:800; color:var(--text); margin-bottom:2px; }
-    .notif-panel-sub   { font-size:12px; color:var(--muted); margin-bottom:16px; }
-    .notif-seg-option { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; cursor:pointer; margin-bottom:8px; transition:all .15s; }
-    .notif-seg-option:hover { border-color:var(--green); background:#F0FDF9; }
-    .notif-seg-option.selected { border-color:var(--green); background:#F0FDF9; }
-    .notif-seg-icon { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
-    .notif-seg-body { flex:1; min-width:0; }
-    .notif-seg-name  { font-size:13px; font-weight:700; color:var(--text); }
-    .notif-seg-count { font-size:11px; color:var(--muted); }
-    .notif-seg-check { font-size:14px; color:var(--green); font-weight:900; flex-shrink:0; visibility:hidden; }
-    .notif-seg-option.selected .notif-seg-check { visibility:visible; }
-    .notif-seg-divider { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin:12px 0 10px; }
-    .notif-reach-box { display:flex; justify-content:space-between; align-items:center; background:var(--bg); border-radius:8px; padding:10px 14px; margin-top:16px; font-size:13px; font-weight:600; color:var(--muted); }
-    .notif-reach-num { font-size:18px; font-weight:900; color:var(--green); }
-    .notif-field { margin-bottom:14px; }
-    .notif-field label { display:block; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:6px; }
+    .notif-ptabs { display:flex; gap:4px; margin-bottom:24px; background:var(--bg); border:1.5px solid var(--border); border-radius:12px; padding:4px; width:fit-content; }
+    .notif-ptab { background:none; border:none; padding:9px 20px; font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; border-radius:9px; font-family:inherit; transition:all .18s; white-space:nowrap; }
+    .notif-ptab:hover { color:var(--text); background:rgba(255,255,255,.7); }
+    .notif-ptab.active { background:var(--white); color:var(--text); box-shadow:0 1px 6px rgba(0,0,0,.10); }
+    .notif-page { display:none; }
+    .notif-page.show { display:block; }
+    /* Segment cards */
+    .nseg-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
+    .nseg-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px; transition:box-shadow .15s,border-color .15s; }
+    .nseg-card:hover { border-color:var(--green); box-shadow:0 4px 16px rgba(29,158,117,.10); }
+    .nseg-card-head { display:flex; align-items:center; gap:12px; }
+    .nseg-card-icon { width:42px; height:42px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+    .nseg-card-title { font-size:14px; font-weight:800; color:var(--text); }
+    .nseg-card-count { font-size:11px; font-weight:700; background:#D1FAE5; color:#065F46; padding:2px 8px; border-radius:20px; width:fit-content; }
+    .nseg-card-criteria { font-size:12px; color:var(--muted); line-height:1.5; }
+    .nseg-card-obj { display:inline-flex; align-items:center; gap:5px; background:#EFF6FF; color:#1D4ED8; font-size:11px; font-weight:700; padding:3px 9px; border-radius:6px; width:fit-content; }
+    .nseg-card-sample { font-size:11px; color:#374151; font-style:italic; background:#F9FAFB; border-radius:7px; padding:7px 10px; border-left:3px solid var(--green); }
+    .nseg-card-actions { display:flex; gap:8px; margin-top:4px; }
+    .nseg-use-btn { flex:1; background:var(--green); color:#fff; border:none; border-radius:8px; padding:8px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; transition:opacity .15s; }
+    .nseg-use-btn:hover { opacity:.85; }
+    /* Templates */
+    .ntmpl-filter { display:flex; gap:8px; margin-bottom:18px; }
+    .ntmpl-filter-btn { background:var(--white); border:1.5px solid var(--border); border-radius:8px; padding:7px 16px; font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .15s; }
+    .ntmpl-filter-btn.active { background:var(--text); color:#fff; border-color:var(--text); }
+    .ntmpl-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+    .ntmpl-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px; }
+    .ntmpl-card-head { display:flex; align-items:center; gap:10px; }
+    .ntmpl-channel-badge { font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; }
+    .ntmpl-channel-badge.whatsapp { background:#DCFCE7; color:#15803D; }
+    .ntmpl-channel-badge.email    { background:#DBEAFE; color:#1D4ED8; }
+    .ntmpl-channel-badge.sms      { background:#EDE9FE; color:#6D28D9; }
+    .ntmpl-name { font-size:14px; font-weight:800; color:var(--text); flex:1; }
+    .ntmpl-preview { font-size:12px; color:var(--muted); line-height:1.6; background:var(--bg); border-radius:8px; padding:10px 12px; white-space:pre-wrap; max-height:80px; overflow:hidden; }
+    .ntmpl-actions { display:flex; gap:8px; }
+    .ntmpl-use { flex:1; background:var(--green); color:#fff; border:none; border-radius:8px; padding:8px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; transition:opacity .15s; }
+    .ntmpl-use:hover { opacity:.85; }
+    /* Campaign compose */
+    .ncmp-section { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:20px; margin-bottom:16px; }
+    .ncmp-section-title { font-size:13px; font-weight:800; color:var(--text); text-transform:uppercase; letter-spacing:.5px; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+    .ncmp-section-num { width:22px; height:22px; background:var(--text); color:#fff; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; flex-shrink:0; }
+    .ncmp-channel-cards { display:flex; gap:12px; }
+    .ncmp-channel-card { flex:1; border:2px solid var(--border); border-radius:12px; padding:16px 12px; text-align:center; cursor:pointer; transition:all .18s; }
+    .ncmp-channel-card:hover { border-color:var(--green); background:#F0FDF9; }
+    .ncmp-channel-card.selected { border-color:var(--green); background:#F0FDF9; box-shadow:0 0 0 3px rgba(29,158,117,.15); }
+    .ncmp-channel-icon { font-size:26px; margin-bottom:6px; }
+    .ncmp-channel-name { font-size:13px; font-weight:800; color:var(--text); }
+    .ncmp-channel-sub  { font-size:11px; color:var(--muted); margin-top:2px; }
+    .ncmp-seg-all { display:flex; align-items:center; gap:10px; padding:10px 12px; border:2px solid var(--border); border-radius:10px; cursor:pointer; margin-bottom:8px; transition:all .15s; }
+    .ncmp-seg-all.selected { border-color:var(--green); background:#F0FDF9; }
+    .ncmp-seg-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; max-height:260px; overflow-y:auto; padding-right:4px; }
+    .ncmp-seg-item { display:flex; align-items:center; gap:8px; padding:8px 10px; border:1.5px solid var(--border); border-radius:9px; cursor:pointer; transition:all .15s; }
+    .ncmp-seg-item:hover { border-color:var(--green); background:#F0FDF9; }
+    .ncmp-seg-item.checked { border-color:var(--green); background:#F0FDF9; }
+    .ncmp-seg-cb { width:16px; height:16px; border:2px solid var(--border); border-radius:4px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:900; color:transparent; }
+    .ncmp-seg-item.checked .ncmp-seg-cb { background:var(--green); border-color:var(--green); color:#fff; }
+    .ncmp-seg-label { font-size:12px; font-weight:700; color:var(--text); flex:1; }
+    .ncmp-seg-cnt { font-size:11px; color:var(--muted); }
+    .ncmp-reach-bar { display:flex; align-items:center; justify-content:space-between; background:#F0FDF9; border:1.5px solid #A7F3D0; border-radius:9px; padding:10px 14px; margin-top:12px; }
+    .ncmp-reach-label { font-size:13px; font-weight:700; color:var(--muted); }
+    .ncmp-reach-num   { font-size:20px; font-weight:900; color:var(--green); }
+    .ncmp-field { margin-bottom:14px; }
+    .ncmp-field label { display:block; font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
     .notif-vars { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
-    .notif-var-chip { background:#EDE9FE; color:#6D28D9; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; cursor:pointer; font-family:monospace; }
+    .notif-var-chip { background:#EDE9FE; color:#6D28D9; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; cursor:pointer; font-family:monospace; transition:background .15s; }
     .notif-var-chip:hover { background:#DDD6FE; }
-    .notif-char-count { font-size:11px; color:var(--muted); margin-top:4px; }
-    .notif-send-row { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; align-items:center; }
+    .notif-char-count { font-size:11px; color:var(--muted); margin-top:5px; }
+    .ncmp-send-row { display:flex; justify-content:flex-end; gap:10px; margin-top:6px; }
+    /* Analytics */
+    .nana-stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px; margin-bottom:24px; }
+    .nana-stat { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:18px 20px; }
+    .nana-stat-label { font-size:12px; color:var(--muted); font-weight:600; margin-bottom:6px; }
+    .nana-stat-value { font-size:26px; font-weight:900; color:var(--text); }
+    .nana-stat-sub   { font-size:11px; color:var(--muted); margin-top:3px; }
+    .nana-channel-tabs { display:flex; gap:8px; margin-bottom:16px; }
+    .nana-tab { background:var(--white); border:1.5px solid var(--border); border-radius:8px; padding:7px 16px; font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .15s; }
+    .nana-tab.active { background:var(--text); color:#fff; border-color:var(--text); }
     /* Invoice preview */
     .inv-preview { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 680px; margin: 0 auto; }
     .inv-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
@@ -2110,94 +2158,155 @@
     <div class="cl-topbar">
       <div>
         <div class="cl-page-title">Notifications</div>
-        <div class="cl-page-sub">Send campaigns to your clients across channels</div>
+        <div class="cl-page-sub">Segments · Templates · Campaigns · Analytics — all in one place</div>
       </div>
     </div>
 
-    <!-- Channel tabs -->
-    <div class="notif-channel-tabs" id="notif-channel-tabs">
-      <button class="notif-tab active" id="ntab-whatsapp" onclick="switchNotifChannel('whatsapp',this)">💬 WhatsApp</button>
-      <button class="notif-tab" id="ntab-email"     onclick="switchNotifChannel('email',this)">📧 Email</button>
-      <button class="notif-tab" id="ntab-sms"       onclick="switchNotifChannel('sms',this)">📱 SMS</button>
+    <!-- Page-level nav -->
+    <div class="notif-ptabs">
+      <button class="notif-ptab active" id="nptab-segments"  onclick="switchNotifPage('segments',this)">👥 Segments</button>
+      <button class="notif-ptab"        id="nptab-templates" onclick="switchNotifPage('templates',this)">📝 Templates</button>
+      <button class="notif-ptab"        id="nptab-campaign"  onclick="switchNotifPage('campaign',this)">📣 New Campaign</button>
+      <button class="notif-ptab"        id="nptab-analytics" onclick="switchNotifPage('analytics',this)">📊 Analytics</button>
     </div>
 
-    <!-- Two-panel: Audience + Compose -->
-    <div class="notif-panels">
+    <!-- ── SECTION 1: Segments ── -->
+    <div class="notif-page show" id="notif-page-segments">
+      <div class="nseg-grid" id="notif-seg-grid">
+        <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">Loading segments…</div>
+      </div>
+    </div>
 
-      <!-- LEFT: Audience / Segments -->
-      <div class="notif-audience-panel">
-        <div class="notif-panel-title">Audience</div>
-        <div class="notif-panel-sub">Select a segment to target</div>
+    <!-- ── SECTION 2: Templates ── -->
+    <div class="notif-page" id="notif-page-templates">
+      <div class="ntmpl-filter">
+        <button class="ntmpl-filter-btn active" id="ntf-all"       onclick="filterTemplates('all',this)">All</button>
+        <button class="ntmpl-filter-btn"        id="ntf-whatsapp"  onclick="filterTemplates('whatsapp',this)">💬 WhatsApp</button>
+        <button class="ntmpl-filter-btn"        id="ntf-email"     onclick="filterTemplates('email',this)">📧 Email</button>
+        <button class="ntmpl-filter-btn"        id="ntf-sms"       onclick="filterTemplates('sms',this)">📱 SMS</button>
+      </div>
+      <div class="ntmpl-grid" id="notif-tmpl-grid"></div>
+    </div>
 
-        <!-- All clients option -->
-        <div class="notif-seg-option selected" id="nseg-all" onclick="selectNotifSegment('all',this)">
-          <div class="notif-seg-icon" style="background:#E0F2FE">👥</div>
-          <div class="notif-seg-body">
-            <div class="notif-seg-name">All clients</div>
-            <div class="notif-seg-count" id="nseg-all-count">— clients</div>
+    <!-- ── SECTION 3: New Campaign ── -->
+    <div class="notif-page" id="notif-page-campaign">
+      <!-- Step 1: Channel -->
+      <div class="ncmp-section">
+        <div class="ncmp-section-title"><span class="ncmp-section-num">1</span> Channel</div>
+        <div class="ncmp-channel-cards">
+          <div class="ncmp-channel-card selected" id="ncmp-ch-whatsapp" onclick="selectCmpChannel('whatsapp')">
+            <div class="ncmp-channel-icon">💬</div>
+            <div class="ncmp-channel-name">WhatsApp</div>
+            <div class="ncmp-channel-sub">Rich messages, high open rate</div>
           </div>
-          <div class="notif-seg-check" id="nseg-check-all">✓</div>
-        </div>
-
-        <div class="notif-seg-divider">Or pick a segment</div>
-
-        <div id="notif-seg-list">
-          <!-- Populated by JS -->
-        </div>
-
-        <div class="notif-reach-box">
-          <span>Estimated reach</span>
-          <span class="notif-reach-num" id="notif-reach">—</span>
+          <div class="ncmp-channel-card" id="ncmp-ch-email" onclick="selectCmpChannel('email')">
+            <div class="ncmp-channel-icon">📧</div>
+            <div class="ncmp-channel-name">Email</div>
+            <div class="ncmp-channel-sub">Detailed content, newsletters</div>
+          </div>
+          <div class="ncmp-channel-card" id="ncmp-ch-sms" onclick="selectCmpChannel('sms')">
+            <div class="ncmp-channel-icon">📱</div>
+            <div class="ncmp-channel-name">SMS</div>
+            <div class="ncmp-channel-sub">Instant delivery, flash deals</div>
+          </div>
         </div>
       </div>
 
-      <!-- RIGHT: Compose -->
-      <div class="notif-compose-panel">
-        <div class="notif-panel-title">Compose message</div>
-        <div class="notif-panel-sub" id="notif-compose-sub">WhatsApp campaign</div>
+      <!-- Step 2: Audience (multi-select) -->
+      <div class="ncmp-section">
+        <div class="ncmp-section-title"><span class="ncmp-section-num">2</span> Audience</div>
 
-        <div class="am-err" id="notif-err"></div>
+        <!-- All clients toggle -->
+        <div class="ncmp-seg-all" id="ncmp-seg-all" onclick="toggleCmpAll()">
+          <div style="width:16px;height:16px;border:2px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:transparent;background:transparent" id="ncmp-all-cb"></div>
+          <div style="font-size:18px">👥</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:800;color:var(--text)">All clients</div>
+            <div style="font-size:11px;color:var(--muted)" id="ncmp-all-count">Everyone in your client list</div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);font-style:italic">select all</div>
+        </div>
 
-        <div class="notif-field">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:10px 0 8px">Or pick specific segments</div>
+        <div class="ncmp-seg-grid" id="ncmp-seg-list"></div>
+
+        <div class="ncmp-reach-bar">
+          <span class="ncmp-reach-label">Estimated reach</span>
+          <div>
+            <span class="ncmp-reach-num" id="ncmp-reach">0</span>
+            <span style="font-size:12px;color:var(--muted);margin-left:4px">clients</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Message -->
+      <div class="ncmp-section">
+        <div class="ncmp-section-title"><span class="ncmp-section-num">3</span> Message</div>
+        <div class="am-err" id="ncmp-err"></div>
+
+        <div class="ncmp-field">
           <label>Campaign name <span class="req">*</span></label>
-          <input class="am-input" id="notif-name" type="text" placeholder="e.g. June special offer" />
+          <input class="am-input" id="ncmp-name" type="text" placeholder="e.g. June wellness offer" />
         </div>
 
-        <!-- Email-only: subject -->
-        <div class="notif-field" id="notif-subject-field" style="display:none">
+        <div class="ncmp-field" id="ncmp-subject-field" style="display:none">
           <label>Subject line <span class="req">*</span></label>
-          <input class="am-input" id="notif-subject" type="text" placeholder="e.g. Exclusive offer just for you!" />
+          <input class="am-input" id="ncmp-subject" type="text" placeholder="e.g. A special offer just for you" />
         </div>
 
-        <div class="notif-field">
+        <div class="ncmp-field">
+          <label>Use a template (optional)</label>
+          <select class="am-input" id="ncmp-tmpl-select" onchange="applyNotifTemplate(this.value)">
+            <option value="">— start from scratch —</option>
+          </select>
+        </div>
+
+        <div class="ncmp-field">
           <label>Message <span class="req">*</span></label>
-          <div class="notif-vars">
-            Insert: <span class="notif-var-chip" onclick="notifInsertVar('{{name}}')">{{name}}</span>
-            <span class="notif-var-chip" onclick="notifInsertVar('{{phone}}')">{{phone}}</span>
-            <span class="notif-var-chip" onclick="notifInsertVar('{{business}}')">{{business}}</span>
+          <div class="notif-vars" style="margin-bottom:8px">
+            Insert: <span class="notif-var-chip" onclick="cmpInsertVar('{{name}}')">{{name}}</span>
+            <span class="notif-var-chip" onclick="cmpInsertVar('{{phone}}')">{{phone}}</span>
+            <span class="notif-var-chip" onclick="cmpInsertVar('{{business}}')">{{business}}</span>
           </div>
-          <textarea class="am-input" id="notif-body" rows="6"
+          <textarea class="am-input" id="ncmp-body" rows="5"
             placeholder="Hi {{name}}, we have a special offer for you at {{business}}…"
-            oninput="notifCharCount()"></textarea>
-          <div class="notif-char-count" id="notif-char-count"></div>
+            oninput="cmpCharCount()"></textarea>
+          <div class="notif-char-count" id="ncmp-char-count"></div>
         </div>
 
-        <div class="notif-send-row">
-          <button class="bill-action-btn" style="background:#6B7280;color:#fff;border:none;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer" onclick="sendNotifCampaign('draft')">Save draft</button>
-          <button class="bill-generate-btn" id="notif-send-btn" onclick="sendNotifCampaign('sent')">Send now →</button>
+        <div class="ncmp-send-row">
+          <button class="bill-action-btn" style="background:#6B7280;color:#fff;border:none;padding:11px 22px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer" onclick="sendCampaign('draft')">Save draft</button>
+          <button class="bill-generate-btn" id="ncmp-send-btn" onclick="sendCampaign('sent')">Send now →</button>
         </div>
       </div>
     </div>
 
-    <!-- Past campaigns -->
-    <div style="margin-top:28px">
-      <div class="notif-panel-title" style="margin-bottom:12px">Past campaigns <span id="notif-history-channel" style="font-size:12px;color:var(--muted);font-weight:500"></span></div>
+    <!-- ── SECTION 4: Analytics ── -->
+    <div class="notif-page" id="notif-page-analytics">
+      <!-- Summary stats -->
+      <div class="nana-stats" id="nana-stats">
+        <div class="nana-stat"><div class="nana-stat-label">Total campaigns</div><div class="nana-stat-value" id="nana-total">—</div><div class="nana-stat-sub">all channels</div></div>
+        <div class="nana-stat"><div class="nana-stat-label">Clients reached</div><div class="nana-stat-value" id="nana-reach">—</div><div class="nana-stat-sub">cumulative</div></div>
+        <div class="nana-stat"><div class="nana-stat-label">💬 WhatsApp</div><div class="nana-stat-value" id="nana-wa">—</div><div class="nana-stat-sub">campaigns sent</div></div>
+        <div class="nana-stat"><div class="nana-stat-label">📧 Email</div><div class="nana-stat-value" id="nana-em">—</div><div class="nana-stat-sub">campaigns sent</div></div>
+        <div class="nana-stat"><div class="nana-stat-label">📱 SMS</div><div class="nana-stat-value" id="nana-sms">—</div><div class="nana-stat-sub">campaigns sent</div></div>
+        <div class="nana-stat"><div class="nana-stat-label">Drafts</div><div class="nana-stat-value" id="nana-drafts">—</div><div class="nana-stat-sub">pending send</div></div>
+      </div>
+
+      <!-- Filter by channel -->
+      <div class="nana-channel-tabs">
+        <button class="nana-tab active" onclick="filterAnalytics('all',this)">All channels</button>
+        <button class="nana-tab" onclick="filterAnalytics('whatsapp',this)">💬 WhatsApp</button>
+        <button class="nana-tab" onclick="filterAnalytics('email',this)">📧 Email</button>
+        <button class="nana-tab" onclick="filterAnalytics('sms',this)">📱 SMS</button>
+      </div>
+
       <div class="team-table">
         <table>
           <thead><tr>
-            <th>Date</th><th>Channel</th><th>Campaign</th><th>Segment</th><th>Preview</th><th>Sent</th><th>Status</th>
+            <th>Date</th><th>Channel</th><th>Campaign</th><th>Segment</th><th>Message preview</th><th>Sent</th><th>Status</th>
           </tr></thead>
-          <tbody id="notif-history-tbody"><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">Loading…</td></tr></tbody>
+          <tbody id="nana-tbody"><tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -6729,173 +6838,405 @@
     sms:      { label:'📱 SMS',      color:'#6366F1', icon:'📱' },
   };
 
-  async function loadNotifications() {
-    notifChannel = 'whatsapp';
-    notifSegment = 'all';
-    // Activate first tab
-    document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('ntab-whatsapp').classList.add('active');
-    document.getElementById('notif-compose-sub').textContent = 'WhatsApp campaign';
-    document.getElementById('notif-subject-field').style.display = 'none';
-    // Reset form
-    document.getElementById('notif-name').value  = '';
-    document.getElementById('notif-body').value  = '';
-    document.getElementById('notif-err').classList.remove('show');
-    document.getElementById('notif-char-count').textContent = '';
+  /* ════════════════════════════════════════════
+     NOTIFICATIONS — 4-tab page
+  ════════════════════════════════════════════ */
 
-    await Promise.all([loadNotifSegments(), loadNotifHistory()]);
+  let notifChannel       = 'whatsapp';
+  let notifSelectedSegs  = new Set();   // multi-select for campaign
+  let _allCampaigns      = [];
+
+  const NOTIF_TEMPLATES = [
+    { id:'wa-welcome',  channel:'whatsapp', name:'Welcome offer',     icon:'🎉', body:'Hi {{name}}! Welcome to {{business}} 🙏 Enjoy 20% off your first booking. Use code WELCOME20. Book now!' },
+    { id:'wa-winback',  channel:'whatsapp', name:'Win-back',          icon:'💌', body:'Hi {{name}}, we miss you at {{business}}! Come back with ₹500 off your next visit. Valid for 7 days 🌟' },
+    { id:'wa-birthday', channel:'whatsapp', name:'Birthday special',  icon:'🎂', body:'Happy Birthday {{name}}! 🎂🎉 Enjoy ₹500 off your next visit at {{business}}. Valid this month only!' },
+    { id:'wa-referral', channel:'whatsapp', name:'Referral drive',    icon:'🤝', body:'Hi {{name}}! Refer a friend to {{business}} and earn 500 reward points when they book. Your friend gets 10% off too! 💚' },
+    { id:'wa-loyalty',  channel:'whatsapp', name:'Loyalty reward',    icon:'👑', body:'Hi {{name}}, you\'ve earned a reward at {{business}}! Visit us to claim your exclusive member perk 🌟' },
+    { id:'em-newslttr', channel:'email',    name:'Monthly newsletter', icon:'📰', subject:'Your exclusive update from {{business}}', body:'Dear {{name}},\n\nWe have exciting news and offers this month!\n\n✨ New services added\n💰 Exclusive member discounts\n📅 Upcoming events\n\nBook your next appointment today.\n\nWarm regards,\n{{business}} Team' },
+    { id:'em-winback',  channel:'email',    name:'Win-back email',     icon:'💌', subject:'We miss you, {{name}}!',                  body:'Dear {{name}},\n\nIt\'s been a while since we last saw you at {{business}}. We\'d love to welcome you back!\n\nAs a special gesture, enjoy ₹500 off your next booking. Valid for 14 days.\n\nBest wishes,\n{{business}} Team' },
+    { id:'em-promo',    channel:'email',    name:'Seasonal promotion',  icon:'🌟', subject:'Special offer this season — {{business}}', body:'Dear {{name}},\n\nThe season is here and so are our special offers!\n\n🎉 Up to 30% off select services\n⭐ Double reward points this week\n🎁 Free add-on with bookings over ₹2000\n\n{{business}} Team' },
+    { id:'sms-flash',   channel:'sms',      name:'Flash deal',          icon:'⚡', body:'{{business}}: Flash deal! 40% off today only. Book now. Reply STOP to opt out.' },
+    { id:'sms-remind',  channel:'sms',      name:'Appointment reminder',icon:'📅', body:'{{business}}: Hi {{name}}, reminder for your upcoming appointment. See you soon! Reply STOP to opt out.' },
+    { id:'sms-points',  channel:'sms',      name:'Points update',       icon:'🏆', body:'{{business}}: Hi {{name}}, you have loyalty points ready to redeem on your next visit! Reply STOP to opt out.' },
+  ];
+
+  async function loadNotifications() {
+    // Default to Segments tab
+    switchNotifPage('segments', document.getElementById('nptab-segments'));
   }
 
-  async function loadNotifSegments() {
-    // Reuse segment client data if already loaded, else fetch
-    if (!segClientData.length) {
-      const { data: clients } = await db.from('clients').select('*').eq('merchant_id', currentMerchant.id);
-      const { data: bks }     = await db.from('bookings').select('client_id,booking_date,status').eq('merchant_id', currentMerchant.id);
-      const now = new Date(); const nowTs = now.getTime();
-      const days = ms => ms / 86400000;
-      segClientData = (clients||[]).map(c => {
-        const myBks   = (bks||[]).filter(b => b.client_id === c.id);
-        const past    = myBks.filter(b => new Date(b.booking_date) < now);
-        const upcoming = myBks.filter(b => new Date(b.booking_date) >= now);
-        const lastBkDays = past.sort((a,b)=>new Date(b.booking_date)-new Date(a.booking_date))[0]
-          ? days(nowTs - new Date(past[0]?.booking_date).getTime()) : null;
-        return { ...c, _daysSince: days(nowTs-new Date(c.created_at).getTime()), _lastBooking: lastBkDays, _pastBookings: past.length, _upcomingBookings: upcoming.length, _bookings5m: past.filter(b=>days(nowTs-new Date(b.booking_date).getTime())<=150).length, _bookings12m: past.filter(b=>days(nowTs-new Date(b.booking_date).getTime())<=365).length, _spend12m:0, _birthdaySoon:false };
-      });
-    }
-    const totalCount = segClientData.length;
-    document.getElementById('nseg-all-count').textContent = `${totalCount} client${totalCount!==1?'s':''}`;
-    document.getElementById('notif-reach').textContent = totalCount;
+  function switchNotifPage(page, btn) {
+    document.querySelectorAll('.notif-ptab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.notif-page').forEach(p => p.classList.remove('show'));
+    document.getElementById('notif-page-' + page).classList.add('show');
 
-    const listEl = document.getElementById('notif-seg-list');
-    listEl.innerHTML = SEGMENTS.map(seg => {
+    if (page === 'segments')  loadNotifSegmentCards();
+    if (page === 'templates') renderTemplates('all');
+    if (page === 'campaign')  initCampaignForm();
+    if (page === 'analytics') loadAnalytics();
+  }
+
+  /* ── Helper: ensure segClientData is loaded ── */
+  async function ensureSegData() {
+    if (segClientData.length) return;
+    const { data: clients } = await db.from('clients').select('*').eq('merchant_id', currentMerchant.id);
+    const { data: bks }     = await db.from('bookings').select('client_id,booking_date,status').eq('merchant_id', currentMerchant.id);
+    const now = new Date(); const nowTs = now.getTime();
+    const days = ms => ms / 86400000;
+    segClientData = (clients||[]).map(c => {
+      const myBks    = (bks||[]).filter(b => b.client_id === c.id);
+      const past     = myBks.filter(b => new Date(b.booking_date) < now);
+      const upcoming = myBks.filter(b => new Date(b.booking_date) >= now);
+      const sorted   = past.sort((a,b)=>new Date(b.booking_date)-new Date(a.booking_date));
+      const lastBk   = sorted[0] ? days(nowTs - new Date(sorted[0].booking_date).getTime()) : null;
+      return { ...c,
+        _daysSince: days(nowTs - new Date(c.created_at).getTime()),
+        _lastBooking: lastBk, _pastBookings: past.length, _upcomingBookings: upcoming.length,
+        _bookings5m:  past.filter(b=>days(nowTs-new Date(b.booking_date).getTime())<=150).length,
+        _bookings12m: past.filter(b=>days(nowTs-new Date(b.booking_date).getTime())<=365).length,
+        _spend12m: 0, _birthdaySoon: false,
+      };
+    });
+  }
+
+  /* ─────────────── PAGE 1: Segments ─────────────── */
+  async function loadNotifSegmentCards() {
+    const grid = document.getElementById('notif-seg-grid');
+    grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">Loading…</div>';
+    await ensureSegData();
+    const totalCount = segClientData.length;
+
+    const OBJECTIVES = {
+      'new-users':'Convert first booking','not-booked':'Increase conversion',
+      'first-time':'Drive second booking','frequent':'Improve retention',
+      'high-value':'Increase loyalty','inactive':'Win-back campaign',
+      'off-peak':'Fill idle capacity','last-minute':'Increase utilisation',
+      'weekend':'Shift to weekdays','premium':'Upsell premium services',
+      'birthday':'Increase engagement','referral':'Acquire new customers',
+      'nearby':'Hyperlocal targeting',
+    };
+
+    grid.innerHTML = SEGMENTS.map(seg => {
       const count = segClientData.filter(seg.filter).length;
-      return `<div class="notif-seg-option" id="nseg-${seg.id}" onclick="selectNotifSegment('${seg.id}',this)">
-        <div class="notif-seg-icon" style="background:${seg.color}20">${seg.icon}</div>
-        <div class="notif-seg-body">
-          <div class="notif-seg-name">${seg.name}</div>
-          <div class="notif-seg-count">${count} client${count!==1?'s':''} · <span style="color:var(--muted);font-style:italic">${seg.sample}</span></div>
+      const pct   = totalCount ? Math.round(count/totalCount*100) : 0;
+      const obj   = OBJECTIVES[seg.id] || '';
+      return `<div class="nseg-card">
+        <div class="nseg-card-head">
+          <div class="nseg-card-icon" style="background:${seg.color}18">${seg.icon}</div>
+          <div>
+            <div class="nseg-card-title">${seg.name}</div>
+            <div class="nseg-card-count">${count} client${count!==1?'s':''} · ${pct}%</div>
+          </div>
         </div>
-        <div class="notif-seg-check">✓</div>
+        <div class="nseg-card-criteria">${seg.desc}</div>
+        ${obj ? `<div class="nseg-card-obj">🎯 ${obj}</div>` : ''}
+        <div class="nseg-card-sample">"${seg.sample}"</div>
+        <div class="nseg-card-actions">
+          <button class="nseg-use-btn" onclick="useSegInCampaign('${seg.id}')">📣 Create campaign</button>
+        </div>
       </div>`;
     }).join('');
   }
 
-  function selectNotifSegment(segId, el) {
-    document.querySelectorAll('.notif-seg-option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-    notifSegment = segId;
-
-    const seg    = SEGMENTS.find(s => s.id === segId);
-    const count  = segId === 'all' ? segClientData.length : (seg ? segClientData.filter(seg.filter).length : 0);
-    document.getElementById('notif-reach').textContent = count;
-
-    // Auto-fill message body with sample campaign if body is still empty
-    if (seg?.sample && !document.getElementById('notif-body').value.trim()) {
-      document.getElementById('notif-body').value = seg.sample;
-      notifCharCount();
-    }
+  function useSegInCampaign(segId) {
+    // Switch to Campaign tab and pre-select this segment
+    const btn = document.getElementById('nptab-campaign');
+    switchNotifPage('campaign', btn);
+    // Wait for DOM to render then tick the segment
+    setTimeout(() => {
+      notifSelectedSegs.clear();
+      notifSelectedSegs.add(segId);
+      document.querySelectorAll('.ncmp-seg-item').forEach(el => {
+        const s = el.dataset.segid;
+        el.classList.toggle('checked', s === segId);
+        el.querySelector('.ncmp-seg-cb').textContent = s === segId ? '✓' : '';
+      });
+      const seg = SEGMENTS.find(s => s.id === segId);
+      if (seg?.sample) document.getElementById('ncmp-body').value = seg.sample;
+      updateCmpReach();
+    }, 50);
   }
 
-  function switchNotifChannel(channel, btn) {
-    notifChannel = channel;
-    document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    const cfg = NOTIF_CHANNEL_CFG[channel];
-    document.getElementById('notif-compose-sub').textContent = cfg.label + ' campaign';
-    document.getElementById('notif-subject-field').style.display = channel === 'email' ? '' : 'none';
-    document.getElementById('notif-char-count').textContent = '';
-    loadNotifHistory();
+  /* ─────────────── PAGE 2: Templates ─────────────── */
+  function renderTemplates(filterChannel) {
+    document.querySelectorAll('.ntmpl-filter-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('ntf-' + filterChannel).classList.add('active');
+    const list = filterChannel === 'all' ? NOTIF_TEMPLATES : NOTIF_TEMPLATES.filter(t => t.channel === filterChannel);
+    const channelLabels = { whatsapp:'WhatsApp', email:'Email', sms:'SMS' };
+    document.getElementById('notif-tmpl-grid').innerHTML = list.map(t => `
+      <div class="ntmpl-card">
+        <div class="ntmpl-card-head">
+          <div style="font-size:20px">${t.icon}</div>
+          <div class="ntmpl-name">${t.name}</div>
+          <span class="ntmpl-channel-badge ${t.channel}">${channelLabels[t.channel]}</span>
+        </div>
+        ${t.subject ? `<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Subject: ${t.subject}</div>` : ''}
+        <div class="ntmpl-preview">${t.body}</div>
+        <div class="ntmpl-actions">
+          <button class="ntmpl-use" onclick="useTemplate('${t.id}')">Use this template</button>
+        </div>
+      </div>`).join('');
   }
 
-  async function loadNotifHistory() {
-    const tbody = document.getElementById('notif-history-tbody');
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">Loading…</td></tr>`;
-    document.getElementById('notif-history-channel').textContent = '— ' + NOTIF_CHANNEL_CFG[notifChannel].label;
+  function filterTemplates(channel, btn) {
+    renderTemplates(channel);
+  }
 
-    const { data, error } = await db.from('marketing_campaigns')
-      .select('*').eq('merchant_id', currentMerchant.id).eq('channel', notifChannel)
-      .order('created_at', { ascending: false }).limit(50);
+  function useTemplate(tmplId) {
+    const t = NOTIF_TEMPLATES.find(x => x.id === tmplId);
+    if (!t) return;
+    const btn = document.getElementById('nptab-campaign');
+    switchNotifPage('campaign', btn);
+    setTimeout(() => {
+      selectCmpChannel(t.channel);
+      document.getElementById('ncmp-body').value = t.body;
+      if (t.subject) document.getElementById('ncmp-subject').value = t.subject;
+      cmpCharCount();
+    }, 50);
+  }
 
-    if (error && error.code === '42P01') {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">Run SQL to create <code>marketing_campaigns</code> table first.</td></tr>`;
-      return;
-    }
-    const list = data || [];
-    if (!list.length) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">No campaigns yet for this channel.</td></tr>`;
-      return;
-    }
-    tbody.innerHTML = list.map(c => {
-      const dateStr = (c.sent_at||c.created_at||'').split('T')[0];
-      const statusCls = c.status==='sent'?'status-confirmed':c.status==='draft'?'status-pending':'status-cancelled';
-      const segLabel = c.recipient_type==='all' ? 'All clients' : (c.segment_value||c.tag_value||'—');
-      return `<tr>
-        <td style="font-size:13px;color:var(--muted)">${dateStr}</td>
-        <td><span style="font-size:18px">${NOTIF_CHANNEL_CFG[c.channel]?.icon||'📣'}</span></td>
-        <td style="font-weight:700;font-size:13px">${c.name}</td>
-        <td style="font-size:12px;color:var(--muted)">${segLabel}</td>
-        <td style="font-size:12px;color:var(--muted);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${(c.message_body||'').slice(0,60)}…</td>
-        <td style="font-size:13px;font-weight:700">${c.recipient_count||0}</td>
-        <td><span class="status-badge ${statusCls}">${c.status}</span></td>
-      </tr>`;
+  /* ─────────────── PAGE 3: Campaign ─────────────── */
+  async function initCampaignForm() {
+    notifChannel = 'whatsapp';
+    notifSelectedSegs.clear();
+    document.querySelectorAll('.ncmp-channel-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('ncmp-ch-whatsapp').classList.add('selected');
+    document.getElementById('ncmp-subject-field').style.display = 'none';
+    document.getElementById('ncmp-name').value  = '';
+    document.getElementById('ncmp-body').value  = '';
+    document.getElementById('ncmp-subject').value = '';
+    document.getElementById('ncmp-char-count').textContent = '';
+    document.getElementById('ncmp-err').classList.remove('show');
+    const allCb = document.getElementById('ncmp-all-cb');
+    allCb.style.background = ''; allCb.style.borderColor = ''; allCb.textContent = '';
+    document.getElementById('ncmp-seg-all').classList.remove('selected');
+
+    // Populate template selector for whatsapp by default
+    updateTmplDropdown('whatsapp');
+
+    await ensureSegData();
+    const totalCount = segClientData.length;
+    document.getElementById('ncmp-all-count').textContent = `All ${totalCount} client${totalCount!==1?'s':''} in your list`;
+    document.getElementById('ncmp-reach').textContent = '0';
+
+    const listEl = document.getElementById('ncmp-seg-list');
+    listEl.innerHTML = SEGMENTS.map(seg => {
+      const count = segClientData.filter(seg.filter).length;
+      return `<div class="ncmp-seg-item" data-segid="${seg.id}" onclick="toggleCmpSeg('${seg.id}',this)">
+        <div class="ncmp-seg-cb"></div>
+        <div style="font-size:15px">${seg.icon}</div>
+        <div style="flex:1;min-width:0">
+          <div class="ncmp-seg-label">${seg.name}</div>
+          <div class="ncmp-seg-cnt">${count} client${count!==1?'s':''}</div>
+        </div>
+      </div>`;
     }).join('');
   }
 
-  function notifCharCount() {
-    const len = document.getElementById('notif-body').value.length;
-    const el  = document.getElementById('notif-char-count');
-    el.textContent = notifChannel === 'sms'
-      ? `${len} chars (${Math.ceil(len/160)||1} SMS)`
-      : `${len} characters`;
+  function selectCmpChannel(channel) {
+    notifChannel = channel;
+    document.querySelectorAll('.ncmp-channel-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('ncmp-ch-' + channel).classList.add('selected');
+    document.getElementById('ncmp-subject-field').style.display = channel === 'email' ? '' : 'none';
+    document.getElementById('ncmp-char-count').textContent = '';
+    updateTmplDropdown(channel);
   }
 
-  function notifInsertVar(variable) {
-    const ta = document.getElementById('notif-body');
+  function updateTmplDropdown(channel) {
+    const sel = document.getElementById('ncmp-tmpl-select');
+    const filtered = NOTIF_TEMPLATES.filter(t => t.channel === channel);
+    sel.innerHTML = '<option value="">— start from scratch —</option>' +
+      filtered.map(t => `<option value="${t.id}">${t.icon} ${t.name}</option>`).join('');
+  }
+
+  function applyNotifTemplate(tmplId) {
+    if (!tmplId) return;
+    const t = NOTIF_TEMPLATES.find(x => x.id === tmplId);
+    if (!t) return;
+    document.getElementById('ncmp-body').value = t.body;
+    if (t.subject) document.getElementById('ncmp-subject').value = t.subject;
+    cmpCharCount();
+  }
+
+  function toggleCmpSeg(segId, el) {
+    if (notifSelectedSegs.has(segId)) {
+      notifSelectedSegs.delete(segId);
+      el.classList.remove('checked');
+      el.querySelector('.ncmp-seg-cb').textContent = '';
+    } else {
+      notifSelectedSegs.add(segId);
+      el.classList.add('checked');
+      el.querySelector('.ncmp-seg-cb').textContent = '✓';
+    }
+    // Deselect "all" if picking segments
+    const allCb = document.getElementById('ncmp-all-cb');
+    allCb.style.background = ''; allCb.style.borderColor = 'var(--border)'; allCb.textContent = '';
+    document.getElementById('ncmp-seg-all').classList.remove('selected');
+    updateCmpReach();
+  }
+
+  function toggleCmpAll() {
+    const allEl = document.getElementById('ncmp-seg-all');
+    const allCb = document.getElementById('ncmp-all-cb');
+    const isOn = allEl.classList.contains('selected');
+    if (isOn) {
+      allEl.classList.remove('selected');
+      allCb.style.background = ''; allCb.style.borderColor = ''; allCb.textContent = '';
+      notifSelectedSegs.clear();
+      document.querySelectorAll('.ncmp-seg-item').forEach(el => {
+        el.classList.remove('checked');
+        el.querySelector('.ncmp-seg-cb').textContent = '';
+      });
+    } else {
+      allEl.classList.add('selected');
+      allCb.style.background = 'var(--green)'; allCb.style.borderColor = 'var(--green)'; allCb.textContent = '✓'; allCb.style.color = '#fff';
+      notifSelectedSegs.clear();
+      notifSelectedSegs.add('__all__');
+      document.querySelectorAll('.ncmp-seg-item').forEach(el => {
+        el.classList.remove('checked');
+        el.querySelector('.ncmp-seg-cb').textContent = '';
+      });
+    }
+    updateCmpReach();
+  }
+
+  function updateCmpReach() {
+    let count = 0;
+    if (notifSelectedSegs.has('__all__')) {
+      count = segClientData.length;
+    } else {
+      const matched = new Set();
+      notifSelectedSegs.forEach(segId => {
+        const seg = SEGMENTS.find(s => s.id === segId);
+        if (seg) segClientData.filter(seg.filter).forEach(c => matched.add(c.id || c.phone));
+      });
+      count = matched.size;
+    }
+    document.getElementById('ncmp-reach').textContent = count;
+  }
+
+  function cmpInsertVar(variable) {
+    const ta = document.getElementById('ncmp-body');
     const s = ta.selectionStart, e = ta.selectionEnd;
     ta.value = ta.value.slice(0,s) + variable + ta.value.slice(e);
     ta.selectionStart = ta.selectionEnd = s + variable.length;
-    ta.focus(); notifCharCount();
+    ta.focus(); cmpCharCount();
   }
 
-  async function sendNotifCampaign(status) {
-    const errEl = document.getElementById('notif-err'); errEl.classList.remove('show');
-    const name  = document.getElementById('notif-name').value.trim();
-    const body  = document.getElementById('notif-body').value.trim();
-    const subject = notifChannel === 'email' ? document.getElementById('notif-subject').value.trim() : null;
+  function cmpCharCount() {
+    const len = document.getElementById('ncmp-body').value.length;
+    document.getElementById('ncmp-char-count').textContent = notifChannel === 'sms'
+      ? `${len} chars · ${Math.ceil(len/160)||1} SMS segment${Math.ceil(len/160)>1?'s':''}`
+      : `${len} characters`;
+  }
+
+  async function sendCampaign(status) {
+    const errEl = document.getElementById('ncmp-err'); errEl.classList.remove('show');
+    const name  = document.getElementById('ncmp-name').value.trim();
+    const body  = document.getElementById('ncmp-body').value.trim();
+    const subject = notifChannel === 'email' ? document.getElementById('ncmp-subject').value.trim() : null;
+
     if (!name) { errEl.textContent='Campaign name is required.'; errEl.classList.add('show'); return; }
     if (!body) { errEl.textContent='Message body is required.';  errEl.classList.add('show'); return; }
-    if (notifChannel === 'email' && !subject) { errEl.textContent='Subject line is required for email.'; errEl.classList.add('show'); return; }
+    if (notifChannel==='email' && !subject) { errEl.textContent='Subject is required for email.'; errEl.classList.add('show'); return; }
+    if (!notifSelectedSegs.size) { errEl.textContent='Please select an audience (All clients or a segment).'; errEl.classList.add('show'); return; }
 
-    const segId  = notifSegment;
-    const seg    = SEGMENTS.find(s => s.id === segId);
-    const count  = segId === 'all' ? segClientData.length : (seg ? segClientData.filter(seg.filter).length : 0);
+    const isAll  = notifSelectedSegs.has('__all__');
+    const segIds = isAll ? [] : [...notifSelectedSegs];
+    const reach  = parseInt(document.getElementById('ncmp-reach').textContent) || 0;
 
-    const sendBtn = document.getElementById('notif-send-btn');
+    const sendBtn = document.getElementById('ncmp-send-btn');
     sendBtn.disabled = true; sendBtn.textContent = 'Sending…';
 
-    const payload = {
-      merchant_id: currentMerchant.id,
-      channel: notifChannel,
-      name,
-      subject,
-      message_body: body,
-      recipient_type: segId === 'all' ? 'all' : 'segment',
-      segment_value: segId !== 'all' ? segId : null,
-      status,
-      sent_at: status === 'sent' ? new Date().toISOString() : null,
-      recipient_count: status === 'sent' ? count : 0,
-    };
-    const { error } = await db.from('marketing_campaigns').insert(payload);
+    const rows = segIds.length
+      ? segIds.map(segId => ({
+          merchant_id: currentMerchant.id, channel: notifChannel, name, subject,
+          message_body: body, recipient_type: 'segment', segment_value: segId,
+          status, sent_at: status==='sent' ? new Date().toISOString() : null,
+          recipient_count: status==='sent' ? (()=>{ const s=SEGMENTS.find(x=>x.id===segId); return s?segClientData.filter(s.filter).length:0; })() : 0,
+        }))
+      : [{ merchant_id: currentMerchant.id, channel: notifChannel, name, subject,
+           message_body: body, recipient_type: 'all', segment_value: null,
+           status, sent_at: status==='sent' ? new Date().toISOString() : null,
+           recipient_count: status==='sent' ? reach : 0 }];
+
+    const { error } = await db.from('marketing_campaigns').insert(rows);
     sendBtn.disabled = false; sendBtn.textContent = 'Send now →';
     if (error) { errEl.textContent = error.message; errEl.classList.add('show'); return; }
 
-    // Reset form
-    document.getElementById('notif-name').value = '';
-    document.getElementById('notif-body').value = '';
-    if (subject !== null) document.getElementById('notif-subject').value = '';
-    document.getElementById('notif-char-count').textContent = '';
+    // Success — show toast then switch to analytics
+    document.getElementById('ncmp-name').value=''; document.getElementById('ncmp-body').value='';
+    document.getElementById('ncmp-char-count').textContent='';
+    errEl.style.background='#D1FAE5'; errEl.style.color='#065F46'; errEl.style.borderColor='#6EE7B7';
+    errEl.textContent = status==='sent' ? `✅ Campaign sent to ${reach} client${reach!==1?'s':''}!` : '📝 Draft saved!';
+    errEl.classList.add('show');
+    setTimeout(() => { errEl.classList.remove('show'); errEl.style.background=''; errEl.style.color=''; errEl.style.borderColor=''; }, 3000);
+  }
 
-    loadNotifHistory();
+  /* ─────────────── PAGE 4: Analytics ─────────────── */
+  let _anaFilter = 'all';
+  async function loadAnalytics() {
+    document.getElementById('nana-tbody').innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr>`;
+    const { data, error } = await db.from('marketing_campaigns')
+      .select('*').eq('merchant_id', currentMerchant.id)
+      .order('created_at', { ascending: false }).limit(200);
+
+    if (error && error.code === '42P01') {
+      document.getElementById('nana-tbody').innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Create the <code>marketing_campaigns</code> table to track campaigns.</td></tr>`;
+      return;
+    }
+    _allCampaigns = data || [];
+    renderAnalyticsStats(_allCampaigns);
+    renderAnalyticsTable(_anaFilter);
+  }
+
+  function renderAnalyticsStats(list) {
+    const sent    = list.filter(c => c.status==='sent');
+    const drafts  = list.filter(c => c.status==='draft');
+    const totalRcpt = sent.reduce((s,c) => s+(c.recipient_count||0), 0);
+    const waSent  = sent.filter(c=>c.channel==='whatsapp').length;
+    const emSent  = sent.filter(c=>c.channel==='email').length;
+    const smsSent = sent.filter(c=>c.channel==='sms').length;
+    document.getElementById('nana-total').textContent  = sent.length;
+    document.getElementById('nana-reach').textContent  = totalRcpt.toLocaleString('en-IN');
+    document.getElementById('nana-wa').textContent     = waSent;
+    document.getElementById('nana-em').textContent     = emSent;
+    document.getElementById('nana-sms').textContent    = smsSent;
+    document.getElementById('nana-drafts').textContent = drafts.length;
+  }
+
+  function filterAnalytics(channel, btn) {
+    _anaFilter = channel;
+    document.querySelectorAll('.nana-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderAnalyticsTable(channel);
+  }
+
+  function renderAnalyticsTable(channel) {
+    const list = channel==='all' ? _allCampaigns : _allCampaigns.filter(c=>c.channel===channel);
+    const tbody = document.getElementById('nana-tbody');
+    if (!list.length) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">No campaigns yet${channel!=='all'?' for this channel':''}.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = list.map(c => {
+      const dateStr  = (c.sent_at||c.created_at||'').split('T')[0];
+      const statusCls = c.status==='sent'?'status-confirmed':c.status==='draft'?'status-pending':'status-cancelled';
+      const chanIcon  = NOTIF_CHANNEL_CFG[c.channel]?.icon || '📣';
+      const segLabel  = c.recipient_type==='all' ? 'All clients'
+        : (SEGMENTS.find(s=>s.id===c.segment_value)?.name || c.segment_value || '—');
+      const preview   = (c.message_body||'').slice(0,55) + ((c.message_body||'').length>55?'…':'');
+      return `<tr>
+        <td style="font-size:12px;color:var(--muted);white-space:nowrap">${dateStr}</td>
+        <td><span style="font-size:17px">${chanIcon}</span></td>
+        <td style="font-weight:700;font-size:13px">${c.name}</td>
+        <td style="font-size:12px;color:var(--muted)">${segLabel}</td>
+        <td style="font-size:12px;color:var(--muted);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${preview}</td>
+        <td style="font-size:13px;font-weight:800;color:var(--green)">${c.status==='sent'?(c.recipient_count||0).toLocaleString('en-IN'):'—'}</td>
+        <td><span class="status-badge ${statusCls}">${c.status}</span></td>
+      </tr>`;
+    }).join('');
   }
 
   /* ── Compose overlay ── */
