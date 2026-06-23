@@ -698,6 +698,40 @@
     .nana-channel-tabs { display:flex; gap:8px; margin-bottom:16px; }
     .nana-tab { background:var(--white); border:1.5px solid var(--border); border-radius:8px; padding:7px 16px; font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .15s; }
     .nana-tab.active { background:var(--text); color:#fff; border-color:var(--text); }
+    /* Analytics extra widgets */
+    .nana-widgets { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:24px; }
+    .nana-widget { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:20px; }
+    .nana-widget-title { font-size:12px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:14px; display:flex; align-items:center; gap:6px; }
+    /* Channel breakdown bars */
+    .nana-ch-row { margin-bottom:12px; }
+    .nana-ch-label { display:flex; justify-content:space-between; align-items:center; font-size:13px; font-weight:700; color:var(--text); margin-bottom:5px; }
+    .nana-ch-meta  { font-size:11px; color:var(--muted); }
+    .nana-bar-track { background:var(--bg); border-radius:20px; height:8px; overflow:hidden; }
+    .nana-bar-fill  { height:100%; border-radius:20px; transition:width .6s ease; }
+    /* Monthly trend */
+    .nana-trend { display:flex; align-items:flex-end; gap:6px; height:80px; }
+    .nana-trend-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .nana-trend-bar { width:100%; border-radius:4px 4px 0 0; min-height:4px; transition:height .4s ease; }
+    .nana-trend-label { font-size:10px; color:var(--muted); white-space:nowrap; }
+    /* Top segments */
+    .nana-seg-row { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); }
+    .nana-seg-row:last-child { border-bottom:none; }
+    .nana-seg-rank { font-size:16px; font-weight:900; color:var(--muted); width:22px; text-align:center; flex-shrink:0; }
+    .nana-seg-info { flex:1; min-width:0; }
+    .nana-seg-name { font-size:13px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .nana-seg-cnt  { font-size:11px; color:var(--muted); }
+    .nana-seg-bar  { width:60px; background:var(--bg); border-radius:20px; height:6px; overflow:hidden; flex-shrink:0; }
+    .nana-seg-bar-fill { height:100%; border-radius:20px; background:var(--green); }
+    /* Reach rate ring */
+    .nana-ring-wrap { display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .nana-ring-pct  { font-size:36px; font-weight:900; color:var(--green); }
+    .nana-ring-sub  { font-size:12px; color:var(--muted); text-align:center; }
+    /* Best campaign card */
+    .nana-best { background:linear-gradient(135deg,#085041,#1D9E75); border-radius:10px; padding:14px; color:#fff; }
+    .nana-best-label { font-size:11px; font-weight:700; opacity:.75; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+    .nana-best-name  { font-size:15px; font-weight:800; margin-bottom:4px; }
+    .nana-best-meta  { font-size:12px; opacity:.8; }
+    .nana-best-num   { font-size:30px; font-weight:900; margin-top:8px; }
     /* Tab action bar (New Template / New Segment buttons) */
     .notif-tab-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
     .notif-tab-bar-title { font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
@@ -2303,7 +2337,8 @@
 
     <!-- ── SECTION 4: Analytics ── -->
     <div class="notif-page show" id="notif-page-analytics">
-      <!-- Summary stats -->
+
+      <!-- Row 1: Summary KPI cards -->
       <div class="nana-stats" id="nana-stats">
         <div class="nana-stat"><div class="nana-stat-label">Total campaigns</div><div class="nana-stat-value" id="nana-total">—</div><div class="nana-stat-sub">all channels</div></div>
         <div class="nana-stat"><div class="nana-stat-label">Clients reached</div><div class="nana-stat-value" id="nana-reach">—</div><div class="nana-stat-sub">cumulative</div></div>
@@ -2313,14 +2348,71 @@
         <div class="nana-stat"><div class="nana-stat-label">Drafts</div><div class="nana-stat-value" id="nana-drafts">—</div><div class="nana-stat-sub">pending send</div></div>
       </div>
 
-      <!-- Filter by channel -->
+      <!-- Row 2: Visual widgets -->
+      <div class="nana-widgets">
+
+        <!-- Widget 1: Channel Breakdown -->
+        <div class="nana-widget">
+          <div class="nana-widget-title">📊 Channel breakdown</div>
+          <div id="nana-ch-breakdown">
+            <div class="nana-ch-row">
+              <div class="nana-ch-label"><span>💬 WhatsApp</span><span class="nana-ch-meta" id="nana-ch-wa-meta">—</span></div>
+              <div class="nana-bar-track"><div class="nana-bar-fill" id="nana-ch-wa-bar" style="width:0%;background:#25D366"></div></div>
+            </div>
+            <div class="nana-ch-row">
+              <div class="nana-ch-label"><span>📧 Email</span><span class="nana-ch-meta" id="nana-ch-em-meta">—</span></div>
+              <div class="nana-bar-track"><div class="nana-bar-fill" id="nana-ch-em-bar" style="width:0%;background:#2563EB"></div></div>
+            </div>
+            <div class="nana-ch-row" style="margin-bottom:0">
+              <div class="nana-ch-label"><span>📱 SMS</span><span class="nana-ch-meta" id="nana-ch-sms-meta">—</span></div>
+              <div class="nana-bar-track"><div class="nana-bar-fill" id="nana-ch-sms-bar" style="width:0%;background:#6366F1"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Widget 2: Monthly trend (last 6 months) -->
+        <div class="nana-widget">
+          <div class="nana-widget-title">📈 Monthly campaign trend</div>
+          <div class="nana-trend" id="nana-trend">
+            <div style="color:var(--muted);font-size:12px;align-self:center">Loading…</div>
+          </div>
+        </div>
+
+        <!-- Widget 3: Reach rate + Best campaign -->
+        <div class="nana-widget" style="display:flex;flex-direction:column;gap:16px">
+          <div>
+            <div class="nana-widget-title">🎯 Client base reach rate</div>
+            <div class="nana-ring-wrap">
+              <div class="nana-ring-pct" id="nana-reach-rate">—%</div>
+              <div class="nana-ring-sub" id="nana-reach-rate-sub">unique clients reached<br>out of your total client list</div>
+            </div>
+          </div>
+          <div>
+            <div class="nana-widget-title">🏆 Best campaign</div>
+            <div class="nana-best" id="nana-best-campaign">
+              <div class="nana-best-label">Highest reach</div>
+              <div class="nana-best-name" id="nana-best-name">—</div>
+              <div class="nana-best-meta" id="nana-best-meta">—</div>
+              <div class="nana-best-num" id="nana-best-num">—</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Widget 4: Top segments (full width) -->
+      <div class="nana-widget" style="margin-bottom:20px">
+        <div class="nana-widget-title">👥 Top segments targeted</div>
+        <div id="nana-top-segs" style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px"></div>
+      </div>
+
+      <!-- Row 3: Campaign history table -->
       <div class="nana-channel-tabs">
         <button class="nana-tab active" onclick="filterAnalytics('all',this)">All channels</button>
         <button class="nana-tab" onclick="filterAnalytics('whatsapp',this)">💬 WhatsApp</button>
         <button class="nana-tab" onclick="filterAnalytics('email',this)">📧 Email</button>
         <button class="nana-tab" onclick="filterAnalytics('sms',this)">📱 SMS</button>
       </div>
-
       <div class="team-table">
         <table>
           <thead><tr>
@@ -7662,9 +7754,13 @@
   let _anaFilter = 'all';
   async function loadAnalytics() {
     document.getElementById('nana-tbody').innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr>`;
-    const { data, error } = await db.from('marketing_campaigns')
-      .select('*').eq('merchant_id', currentMerchant.id)
-      .order('created_at', { ascending: false }).limit(200);
+    document.getElementById('nana-trend').innerHTML = '<div style="color:var(--muted);font-size:12px;align-self:center">Loading…</div>';
+
+    const [{ data, error }] = await Promise.all([
+      db.from('marketing_campaigns').select('*').eq('merchant_id', currentMerchant.id)
+        .order('created_at', { ascending: false }).limit(200),
+      ensureSegData(),
+    ]);
 
     if (error && error.code === '42P01') {
       document.getElementById('nana-tbody').innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Create the <code>marketing_campaigns</code> table to track campaigns.</td></tr>`;
@@ -7672,22 +7768,121 @@
     }
     _allCampaigns = data || [];
     renderAnalyticsStats(_allCampaigns);
+    renderChannelBreakdown(_allCampaigns);
+    renderMonthlyTrend(_allCampaigns);
+    renderReachRate(_allCampaigns);
+    renderBestCampaign(_allCampaigns);
+    renderTopSegments(_allCampaigns);
     renderAnalyticsTable(_anaFilter);
   }
 
   function renderAnalyticsStats(list) {
-    const sent    = list.filter(c => c.status==='sent');
-    const drafts  = list.filter(c => c.status==='draft');
+    const sent      = list.filter(c => c.status==='sent');
+    const drafts    = list.filter(c => c.status==='draft');
     const totalRcpt = sent.reduce((s,c) => s+(c.recipient_count||0), 0);
-    const waSent  = sent.filter(c=>c.channel==='whatsapp').length;
-    const emSent  = sent.filter(c=>c.channel==='email').length;
-    const smsSent = sent.filter(c=>c.channel==='sms').length;
     document.getElementById('nana-total').textContent  = sent.length;
     document.getElementById('nana-reach').textContent  = totalRcpt.toLocaleString('en-IN');
-    document.getElementById('nana-wa').textContent     = waSent;
-    document.getElementById('nana-em').textContent     = emSent;
-    document.getElementById('nana-sms').textContent    = smsSent;
+    document.getElementById('nana-wa').textContent     = sent.filter(c=>c.channel==='whatsapp').length;
+    document.getElementById('nana-em').textContent     = sent.filter(c=>c.channel==='email').length;
+    document.getElementById('nana-sms').textContent    = sent.filter(c=>c.channel==='sms').length;
     document.getElementById('nana-drafts').textContent = drafts.length;
+  }
+
+  function renderChannelBreakdown(list) {
+    const sent = list.filter(c => c.status==='sent');
+    const maxCampaigns = Math.max(1, sent.length);
+    const ch = {
+      whatsapp: { count: sent.filter(c=>c.channel==='whatsapp').length, reach: sent.filter(c=>c.channel==='whatsapp').reduce((s,c)=>s+(c.recipient_count||0),0) },
+      email:    { count: sent.filter(c=>c.channel==='email').length,    reach: sent.filter(c=>c.channel==='email').reduce((s,c)=>s+(c.recipient_count||0),0)    },
+      sms:      { count: sent.filter(c=>c.channel==='sms').length,      reach: sent.filter(c=>c.channel==='sms').reduce((s,c)=>s+(c.recipient_count||0),0)      },
+    };
+    [['wa','whatsapp'],['em','email'],['sms','sms']].forEach(([key,chan]) => {
+      const pct = Math.round(ch[chan].count / maxCampaigns * 100);
+      document.getElementById(`nana-ch-${key}-meta`).textContent = `${ch[chan].count} campaign${ch[chan].count!==1?'s':''} · ${ch[chan].reach.toLocaleString('en-IN')} reached`;
+      setTimeout(() => { document.getElementById(`nana-ch-${key}-bar`).style.width = pct + '%'; }, 80);
+    });
+  }
+
+  function renderMonthlyTrend(list) {
+    const sent = list.filter(c => c.status==='sent');
+    const now  = new Date();
+    const months = Array.from({ length: 6 }, (_, i) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - (5-i), 1);
+      return { year: d.getFullYear(), month: d.getMonth(), label: d.toLocaleString('en-IN',{month:'short'}) };
+    });
+    const counts = months.map(m =>
+      sent.filter(c => {
+        const d = new Date(c.sent_at || c.created_at);
+        return d.getFullYear()===m.year && d.getMonth()===m.month;
+      }).length
+    );
+    const maxC = Math.max(1, ...counts);
+    const trendEl = document.getElementById('nana-trend');
+    trendEl.innerHTML = months.map((m, i) => {
+      const h = Math.round((counts[i] / maxC) * 68);
+      const isLatest = i === 5;
+      return `<div class="nana-trend-col">
+        <div style="font-size:11px;font-weight:800;color:${isLatest?'var(--green)':'var(--muted)'};margin-bottom:2px">${counts[i]||''}</div>
+        <div class="nana-trend-bar" style="height:${Math.max(h,4)}px;background:${isLatest?'var(--green)':'#D1FAE5'}"></div>
+        <div class="nana-trend-label">${m.label}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderReachRate(list) {
+    const sent        = list.filter(c => c.status==='sent');
+    const totalRcpt   = sent.reduce((s,c) => s+(c.recipient_count||0), 0);
+    const totalClients = segClientData.length || 1;
+    const pct = Math.min(100, Math.round(totalRcpt / totalClients * 100));
+    document.getElementById('nana-reach-rate').textContent = pct + '%';
+    document.getElementById('nana-reach-rate-sub').innerHTML =
+      `<strong>${totalRcpt.toLocaleString('en-IN')}</strong> cumulative sends<br>across <strong>${totalClients}</strong> clients in your list`;
+  }
+
+  function renderBestCampaign(list) {
+    const sent = list.filter(c => c.status==='sent' && c.recipient_count > 0);
+    if (!sent.length) {
+      document.getElementById('nana-best-name').textContent = 'No campaigns yet';
+      document.getElementById('nana-best-meta').textContent = 'Send your first campaign to see your best performer';
+      document.getElementById('nana-best-num').textContent  = '—';
+      return;
+    }
+    const best = sent.sort((a,b) => (b.recipient_count||0) - (a.recipient_count||0))[0];
+    const chanIcon = NOTIF_CHANNEL_CFG[best.channel]?.icon || '📣';
+    const dateStr  = (best.sent_at||best.created_at||'').split('T')[0];
+    document.getElementById('nana-best-name').textContent = best.name;
+    document.getElementById('nana-best-meta').textContent = `${chanIcon} ${best.channel} · sent ${dateStr}`;
+    document.getElementById('nana-best-num').textContent  = (best.recipient_count||0).toLocaleString('en-IN') + ' clients';
+  }
+
+  function renderTopSegments(list) {
+    const sent = list.filter(c => c.status==='sent');
+    const segCount = {};
+    const segReach = {};
+    sent.forEach(c => {
+      const key = c.recipient_type==='all' ? '__all__' : (c.segment_value||'unknown');
+      segCount[key] = (segCount[key]||0) + 1;
+      segReach[key] = (segReach[key]||0) + (c.recipient_count||0);
+    });
+    const allSegs = [...SEGMENTS, ..._dbSegments];
+    const getName = id => id==='__all__' ? 'All clients' : (allSegs.find(s=>s.id===id)?.name || id);
+    const getIcon = id => id==='__all__' ? '👥' : (allSegs.find(s=>s.id===id)?.icon || '🎯');
+    const sorted = Object.entries(segCount).sort((a,b) => b[1]-a[1]).slice(0, 6);
+    const maxUsage = Math.max(1, sorted[0]?.[1] || 1);
+    const container = document.getElementById('nana-top-segs');
+    if (!sorted.length) {
+      container.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:12px 0;grid-column:1/-1">No campaigns sent yet.</div>';
+      return;
+    }
+    container.innerHTML = sorted.map(([id, count], i) => `
+      <div class="nana-seg-row">
+        <div class="nana-seg-rank">${getIcon(id)}</div>
+        <div class="nana-seg-info">
+          <div class="nana-seg-name">${getName(id)}</div>
+          <div class="nana-seg-cnt">${count} campaign${count!==1?'s':''} · ${(segReach[id]||0).toLocaleString('en-IN')} reached</div>
+        </div>
+        <div class="nana-seg-bar"><div class="nana-seg-bar-fill" style="width:${Math.round(count/maxUsage*100)}%"></div></div>
+      </div>`).join('');
   }
 
   function filterAnalytics(channel, btn) {
