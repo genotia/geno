@@ -433,6 +433,30 @@
     .tier-name { font-size:17px; font-weight:800; margin-bottom:4px; }
     .tier-rule { font-size:12px; font-weight:600; color:var(--muted); margin-bottom:6px; }
     .tier-perks { font-size:13px; color:var(--text); }
+    /* ── Loyalty rework ── */
+    .ly-config-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px; }
+    @media(max-width:640px){ .ly-config-row { grid-template-columns:1fr; } }
+    .ly-config-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:20px 22px; }
+    .ly-config-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .ly-config-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); }
+    .ly-config-value { font-size:22px; font-weight:800; color:var(--text); margin-bottom:4px; }
+    .ly-config-sub { font-size:13px; color:var(--muted); }
+    .ly-edit-btn { font-size:12px; font-weight:600; color:var(--green); background:rgba(29,158,117,.08); border:none; border-radius:7px; padding:5px 12px; cursor:pointer; }
+    .ly-edit-btn:hover { background:rgba(29,158,117,.16); }
+    .ly-tier-table { width:100%; border-collapse:collapse; background:var(--white); border:1.5px solid var(--border); border-radius:14px; overflow:hidden; margin-bottom:28px; }
+    .ly-tier-table th { font-size:12px; font-weight:700; color:var(--muted); padding:11px 16px; text-align:left; background:var(--bg); border-bottom:1px solid var(--border); }
+    .ly-tier-table td { padding:14px 16px; font-size:13px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    .ly-tier-table tr:last-child td { border-bottom:none; }
+    .ly-tier-badge { display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:14px; }
+    .ly-pts-range { font-size:12px; font-weight:600; color:var(--muted); display:inline-block; background:var(--bg); border-radius:20px; padding:3px 10px; }
+    .ly-discount-pill { display:inline-block; background:#D1FAE5; color:#065F46; font-size:12px; font-weight:700; padding:3px 10px; border-radius:20px; }
+    /* Bill loyalty bar */
+    .bill-loyalty-bar { background:linear-gradient(135deg,#ECFDF5,#D1FAE5); border:1.5px solid #6EE7B7; border-radius:10px; padding:12px 16px; margin-bottom:12px; display:none; }
+    .bill-loyalty-bar.show { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .bill-loyalty-pts { font-size:15px; font-weight:800; color:#065F46; }
+    .bill-loyalty-tier { font-size:12px; font-weight:600; color:#059669; }
+    .bill-loyalty-redeem { display:flex; align-items:center; gap:8px; margin-left:auto; }
+    .bill-redeem-toggle { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:#065F46; cursor:pointer; }
 
     /* ── INVENTORY MANAGEMENT ── */
     .inv-kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
@@ -1359,73 +1383,131 @@
 
   <!-- ══════════════════ CLIENT LOYALTY ══════════════════ -->
   <div class="tab-panel" id="tab-client-loyalty">
-    <div class="cl-topbar">
-      <div>
-        <div class="cl-page-title">Rewards & Loyalty</div>
-        <div class="cl-page-sub">Reward your regulars and turn new clients into loyal ones</div>
+
+    <!-- ── Points rules ── -->
+    <div class="ly-config-row">
+      <div class="ly-config-card">
+        <div class="ly-config-head">
+          <div class="ly-config-title">Points earning rule</div>
+          <button class="ly-edit-btn" onclick="openLoyaltyConfigOverlay()">Edit</button>
+        </div>
+        <div class="ly-config-value">Every ₹<span id="ly-spend-amount">1,000</span> spent</div>
+        <div class="ly-config-sub">earns <strong><span id="ly-earn-points">100</span> points</strong></div>
+      </div>
+      <div class="ly-config-card">
+        <div class="ly-config-head">
+          <div class="ly-config-title">Points redemption value</div>
+          <button class="ly-edit-btn" onclick="openLoyaltyConfigOverlay()">Edit</button>
+        </div>
+        <div class="ly-config-value">1 point = ₹<span id="ly-point-value">1</span></div>
+        <div class="ly-config-sub">discount applied at billing</div>
       </div>
     </div>
-    <!-- Loyalty summary cards -->
-    <div class="loyalty-cards" id="loyalty-cards">
-      <div class="loyalty-card">
-        <div class="loyalty-card-icon">👥</div>
-        <div class="loyalty-card-num" id="loyalty-enrolled">0</div>
-        <div class="loyalty-card-label">Enrolled clients</div>
-      </div>
-      <div class="loyalty-card">
-        <div class="loyalty-card-icon">⭐</div>
-        <div class="loyalty-card-num" id="loyalty-points">0</div>
-        <div class="loyalty-card-label">Points issued</div>
-      </div>
-      <div class="loyalty-card">
-        <div class="loyalty-card-icon">🎁</div>
-        <div class="loyalty-card-num" id="loyalty-redeemed">0</div>
-        <div class="loyalty-card-label">Rewards redeemed</div>
-      </div>
-      <div class="loyalty-card">
-        <div class="loyalty-card-icon">🔁</div>
-        <div class="loyalty-card-num" id="loyalty-repeat">0%</div>
-        <div class="loyalty-card-label">Repeat visit rate</div>
-      </div>
+
+    <!-- ── KPI summary ── -->
+    <div class="loyalty-cards">
+      <div class="loyalty-card"><div class="loyalty-card-icon">👥</div><div class="loyalty-card-num" id="loyalty-enrolled">0</div><div class="loyalty-card-label">Enrolled clients</div></div>
+      <div class="loyalty-card"><div class="loyalty-card-icon">⭐</div><div class="loyalty-card-num" id="loyalty-points">0</div><div class="loyalty-card-label">Points issued</div></div>
+      <div class="loyalty-card"><div class="loyalty-card-icon">🎁</div><div class="loyalty-card-num" id="loyalty-redeemed">0</div><div class="loyalty-card-label">Points redeemed</div></div>
+      <div class="loyalty-card"><div class="loyalty-card-icon">💰</div><div class="loyalty-card-num" id="loyalty-value-saved">₹0</div><div class="loyalty-card-label">Value redeemed</div></div>
     </div>
-    <!-- Tiers -->
-    <div class="loyalty-section-title">Membership tiers</div>
-    <div class="tier-list">
-      <div class="tier-card bronze">
-        <div class="tier-icon">🥉</div>
-        <div class="tier-name">Bronze</div>
-        <div class="tier-rule">0 – 499 points</div>
-        <div class="tier-perks">5% discount on bookings</div>
-      </div>
-      <div class="tier-card silver">
-        <div class="tier-icon">🥈</div>
-        <div class="tier-name">Silver</div>
-        <div class="tier-rule">500 – 1,499 points</div>
-        <div class="tier-perks">10% discount + priority booking</div>
-      </div>
-      <div class="tier-card gold">
-        <div class="tier-icon">🥇</div>
-        <div class="tier-name">Gold</div>
-        <div class="tier-rule">1,500+ points</div>
-        <div class="tier-perks">15% discount + free upgrade on select services</div>
-      </div>
+
+    <!-- ── Tiers ── -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="loyalty-section-title" style="margin-bottom:0">Membership tiers</div>
     </div>
-    <!-- Per-client loyalty table -->
-    <div class="loyalty-section-title" style="margin-top:28px">Client loyalty overview</div>
+    <table class="ly-tier-table" id="ly-tier-table">
+      <thead><tr>
+        <th>Tier</th><th>Points range</th><th>Discount</th><th>Perks</th><th></th>
+      </tr></thead>
+      <tbody id="ly-tier-tbody"></tbody>
+    </table>
+
+    <!-- ── Client loyalty overview ── -->
+    <div class="loyalty-section-title">Client loyalty overview</div>
     <div class="team-table">
       <table>
         <thead><tr>
-          <th>Client</th>
-          <th>Points</th>
-          <th>Tier</th>
-          <th>Visits</th>
-          <th>Last visit</th>
-          <th>Status</th>
+          <th>Client</th><th>Points balance</th><th>Tier</th><th>Earned</th><th>Redeemed</th><th>Value saved</th>
         </tr></thead>
         <tbody id="loyalty-tbody"><tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
       </table>
     </div>
   </div><!-- /tab-client-loyalty -->
+
+  <!-- ── Loyalty config overlay ── -->
+  <div class="am-overlay" id="ly-config-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title">Edit loyalty settings</div>
+      <div class="am-topbar-actions">
+        <button class="am-close-btn" onclick="closeLoyaltyConfigOverlay()">Close</button>
+        <button class="am-add-btn" onclick="saveLoyaltyConfig()">Save</button>
+      </div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:520px">
+      <div class="am-err" id="ly-config-err"></div>
+      <div class="am-section-title">Points earning rule</div>
+      <div class="am-section-sub">How many points a client earns for each rupee spent</div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Spend amount (₹) <span class="req">*</span></label>
+          <input class="am-input" id="ly-cfg-spend" type="number" min="1" placeholder="1000" />
+        </div>
+        <div class="am-field"><label>Points earned <span class="req">*</span></label>
+          <input class="am-input" id="ly-cfg-pts" type="number" min="1" placeholder="100" />
+        </div>
+      </div>
+      <div class="am-section-sub" style="margin-top:4px;color:var(--green);font-weight:600" id="ly-cfg-preview"></div>
+      <hr class="am-divider" />
+      <div class="am-section-title">Points redemption value</div>
+      <div class="am-section-sub">How much ₹ discount each point gives at billing</div>
+      <div class="am-form-row single">
+        <div class="am-field"><label>1 point = ₹ <span class="req">*</span></label>
+          <input class="am-input" id="ly-cfg-val" type="number" min="0.01" step="0.01" placeholder="1" />
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ── Tier edit overlay ── -->
+  <div class="am-overlay" id="ly-tier-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title" id="ly-tier-overlay-title">Edit tier</div>
+      <div class="am-topbar-actions">
+        <button class="am-close-btn" onclick="closeTierOverlay()">Close</button>
+        <button class="am-add-btn" onclick="saveTier()">Save</button>
+      </div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:520px">
+      <div class="am-err" id="ly-tier-err"></div>
+      <input type="hidden" id="ly-tier-edit-id" />
+      <div class="am-form-row">
+        <div class="am-field"><label>Tier name <span class="req">*</span></label>
+          <input class="am-input" id="ly-tier-name" type="text" placeholder="e.g. Gold" />
+        </div>
+        <div class="am-field"><label>Icon (emoji)</label>
+          <input class="am-input" id="ly-tier-icon" type="text" placeholder="🥇" maxlength="4" />
+        </div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Min points <span class="req">*</span></label>
+          <input class="am-input" id="ly-tier-min" type="number" min="0" placeholder="0" />
+        </div>
+        <div class="am-field"><label>Max points <span class="req">*</span></label>
+          <input class="am-input" id="ly-tier-max" type="number" min="0" placeholder="299 (leave 0 = unlimited)" />
+        </div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Discount % <span class="req">*</span></label>
+          <input class="am-input" id="ly-tier-disc" type="number" min="0" max="100" step="0.1" placeholder="10" />
+        </div>
+      </div>
+      <div class="am-form-row single">
+        <div class="am-field"><label>Perks description</label>
+          <input class="am-input" id="ly-tier-perks" type="text" placeholder="e.g. Priority booking + free upgrade" />
+        </div>
+      </div>
+    </div></div>
+  </div>
 
   <!-- ══════════════════ ADD / EDIT CLIENT OVERLAY ══════════════════ -->
   <div class="am-overlay" id="cl-overlay">
@@ -1688,6 +1770,25 @@
         <span id="bill-client-tag-name">Walk-in Client</span>
         <span class="tag-clear" onclick="clearBillClient()">✕</span>
       </div>
+      <!-- Loyalty bar: shown when a registered client is selected -->
+      <div class="bill-loyalty-bar" id="bill-loyalty-bar">
+        <div>
+          <div class="bill-loyalty-pts">⭐ <span id="bl-points">0</span> pts</div>
+          <div class="bill-loyalty-tier" id="bl-tier">—</div>
+        </div>
+        <div style="font-size:12px;color:#059669;font-weight:600" id="bl-tier-disc"></div>
+        <div class="bill-loyalty-redeem">
+          <label class="bill-redeem-toggle">
+            <input type="checkbox" id="bl-redeem-toggle" onchange="toggleRedeemPoints()" />
+            Redeem points
+          </label>
+          <div id="bl-redeem-input-wrap" style="display:none;align-items:center;gap:6px">
+            <input type="number" id="bl-redeem-pts" class="bill-charge-input" style="width:90px"
+              placeholder="pts" min="0" oninput="onRedeemPtsInput()" />
+            <span style="font-size:12px;color:#059669;font-weight:600" id="bl-redeem-rs"></span>
+          </div>
+        </div>
+      </div>
 
       <!-- Line items -->
       <div class="bill-items-header">
@@ -1762,11 +1863,13 @@
           <div class="bill-sum-row"><span>Tip Amount (₹):</span><span id="bs-tip">0.00</span></div>
           <div class="bill-sum-row"><span>Ex Charges (₹):</span><span id="bs-ex">0.00</span></div>
           <div class="bill-sum-row"><span>Discount (₹):</span><span id="bs-discount" style="color:#DC2626">0.00</span></div>
+          <div class="bill-sum-row" id="bs-reward-row" style="display:none"><span>Points redeemed (₹):</span><span id="bs-reward-val" style="color:#059669">0.00</span></div>
           <div class="bill-sum-row"><span>Total (₹):</span><span id="bs-total">0.00</span></div>
           <div class="bill-sum-row"><span>GST (₹):</span><span id="bs-gst">0.00</span></div>
           <div class="bill-sum-row grand"><span>Grand Total (₹):</span><span id="bs-grand">0.00</span></div>
           <div class="bill-sum-row muted"><span>Paying Now (₹):</span><span id="bs-paying">0.00</span></div>
           <div class="bill-sum-row muted"><span>Due Amount (₹):</span><span id="bs-due">0.00</span></div>
+          <div class="bill-sum-row" id="bs-pts-earn-row" style="display:none;color:#059669"><span>Points to earn:</span><span id="bs-pts-earn">+0</span></div>
         </div>
       </div>
 
@@ -4912,52 +5015,209 @@
   /* ════════════════════════════════════════════
      CLIENT LOYALTY
   ════════════════════════════════════════════ */
+  /* ════════════════════════════════════════════
+     REWARDS & LOYALTY
+  ════════════════════════════════════════════ */
+  let loyaltyConfig = { spend_amount: 1000, earn_points: 100, point_value: 1 };
+  let loyaltyTiers  = [
+    { id:'__bronze', name:'Bronze', icon:'🥉', min_points:0,   max_points:99,  discount_pct:5,  perks:'5% discount on next booking',                    sort_order:0 },
+    { id:'__silver', name:'Silver', icon:'🥈', min_points:100, max_points:299, discount_pct:10, perks:'10% discount on next booking',                   sort_order:1 },
+    { id:'__gold',   name:'Gold',   icon:'🥇', min_points:300, max_points:null,discount_pct:15, perks:'15% discount + priority booking',                sort_order:2 },
+  ];
+
   function tierFor(pts) {
-    if (pts >= 1500) return { name:'Gold',   icon:'🥇', cls:'gold' };
-    if (pts >= 500)  return { name:'Silver', icon:'🥈', cls:'silver' };
-    return                  { name:'Bronze', icon:'🥉', cls:'bronze' };
+    const sorted = [...loyaltyTiers].sort((a,b) => b.min_points - a.min_points);
+    return sorted.find(t => pts >= t.min_points) || loyaltyTiers[0];
   }
 
+  /* ── Load config + tiers from DB ── */
+  async function loadLoyaltySettings() {
+    const { data: cfg } = await db.from('loyalty_config').select('*').eq('merchant_id', currentMerchant.id).maybeSingle();
+    if (cfg) loyaltyConfig = { spend_amount: cfg.spend_amount, earn_points: cfg.earn_points, point_value: cfg.point_value };
+    const { data: tiers } = await db.from('loyalty_tiers').select('*').eq('merchant_id', currentMerchant.id).order('sort_order');
+    if (tiers && tiers.length) loyaltyTiers = tiers;
+    renderLoyaltyConfig();
+    renderTiers();
+  }
+
+  function renderLoyaltyConfig() {
+    document.getElementById('ly-spend-amount').textContent  = Number(loyaltyConfig.spend_amount).toLocaleString('en-IN');
+    document.getElementById('ly-earn-points').textContent   = loyaltyConfig.earn_points;
+    document.getElementById('ly-point-value').textContent   = loyaltyConfig.point_value;
+  }
+
+  function renderTiers() {
+    const tbody = document.getElementById('ly-tier-tbody');
+    const TIER_COLORS = { Bronze:'#F59E0B', Silver:'#94A3B8', Gold:'#EAB308' };
+    tbody.innerHTML = loyaltyTiers.map(t => {
+      const range = t.max_points ? `${t.min_points.toLocaleString('en-IN')} – ${t.max_points.toLocaleString('en-IN')}` : `${t.min_points.toLocaleString('en-IN')}+`;
+      const col   = TIER_COLORS[t.name] || '#6B7280';
+      return `<tr>
+        <td><span class="ly-tier-badge"><span style="font-size:20px">${t.icon||'⭐'}</span> <span style="color:${col}">${t.name}</span></span></td>
+        <td><span class="ly-pts-range">${range} pts</span></td>
+        <td><span class="ly-discount-pill">${t.discount_pct}% off</span></td>
+        <td style="font-size:13px;color:var(--muted)">${t.perks||'—'}</td>
+        <td><button class="actions-btn" onclick="openTierOverlay('${t.id}')">Edit</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  /* ── Config overlay ── */
+  function openLoyaltyConfigOverlay() {
+    document.getElementById('ly-cfg-spend').value = loyaltyConfig.spend_amount;
+    document.getElementById('ly-cfg-pts').value   = loyaltyConfig.earn_points;
+    document.getElementById('ly-cfg-val').value   = loyaltyConfig.point_value;
+    document.getElementById('ly-config-err').classList.remove('show');
+    updateLyCfgPreview();
+    document.getElementById('ly-config-overlay').classList.add('open'); document.body.style.overflow='hidden';
+  }
+  function closeLoyaltyConfigOverlay() { document.getElementById('ly-config-overlay').classList.remove('open'); document.body.style.overflow=''; }
+  function updateLyCfgPreview() {
+    const spend = parseFloat(document.getElementById('ly-cfg-spend').value)||1000;
+    const pts   = parseFloat(document.getElementById('ly-cfg-pts').value)||100;
+    const val   = parseFloat(document.getElementById('ly-cfg-val').value)||1;
+    document.getElementById('ly-cfg-preview').textContent = `Every ₹${spend.toLocaleString('en-IN')} spent = ${pts} pts = ₹${(pts*val).toLocaleString('en-IN')} discount value`;
+  }
+  async function saveLoyaltyConfig() {
+    const spend = parseFloat(document.getElementById('ly-cfg-spend').value)||0;
+    const pts   = parseInt(document.getElementById('ly-cfg-pts').value)||0;
+    const val   = parseFloat(document.getElementById('ly-cfg-val').value)||0;
+    const errEl = document.getElementById('ly-config-err');
+    if (!spend||!pts||!val) { errEl.textContent='All fields required.'; errEl.classList.add('show'); return; }
+    const payload = { merchant_id: currentMerchant.id, spend_amount: spend, earn_points: pts, point_value: val };
+    const existing = (await db.from('loyalty_config').select('id').eq('merchant_id', currentMerchant.id).maybeSingle()).data;
+    if (existing) { await db.from('loyalty_config').update(payload).eq('merchant_id', currentMerchant.id); }
+    else          { await db.from('loyalty_config').insert(payload); }
+    loyaltyConfig = { spend_amount: spend, earn_points: pts, point_value: val };
+    renderLoyaltyConfig(); closeLoyaltyConfigOverlay();
+  }
+
+  /* ── Tier overlay ── */
+  function openTierOverlay(id) {
+    const t = loyaltyTiers.find(x=>x.id===id);
+    document.getElementById('ly-tier-edit-id').value  = id||'';
+    document.getElementById('ly-tier-overlay-title').textContent = t ? 'Edit tier' : 'Add tier';
+    document.getElementById('ly-tier-name').value  = t?.name||'';
+    document.getElementById('ly-tier-icon').value  = t?.icon||'';
+    document.getElementById('ly-tier-min').value   = t?.min_points??'';
+    document.getElementById('ly-tier-max').value   = t?.max_points??'';
+    document.getElementById('ly-tier-disc').value  = t?.discount_pct||'';
+    document.getElementById('ly-tier-perks').value = t?.perks||'';
+    document.getElementById('ly-tier-err').classList.remove('show');
+    document.getElementById('ly-tier-overlay').classList.add('open'); document.body.style.overflow='hidden';
+  }
+  function closeTierOverlay() { document.getElementById('ly-tier-overlay').classList.remove('open'); document.body.style.overflow=''; }
+  async function saveTier() {
+    const errEl = document.getElementById('ly-tier-err'); errEl.classList.remove('show');
+    const id   = document.getElementById('ly-tier-edit-id').value;
+    const name = document.getElementById('ly-tier-name').value.trim();
+    const minP = parseInt(document.getElementById('ly-tier-min').value);
+    const maxP = parseInt(document.getElementById('ly-tier-max').value)||null;
+    const disc = parseFloat(document.getElementById('ly-tier-disc').value);
+    if (!name||isNaN(minP)||isNaN(disc)) { errEl.textContent='Name, min points and discount % are required.'; errEl.classList.add('show'); return; }
+    const payload = { merchant_id: currentMerchant.id, name, icon: document.getElementById('ly-tier-icon').value.trim()||'⭐', min_points: minP, max_points: maxP, discount_pct: disc, perks: document.getElementById('ly-tier-perks').value.trim()||null, sort_order: minP };
+    let error;
+    if (id && !id.startsWith('__')) { ({error} = await db.from('loyalty_tiers').update(payload).eq('id',id)); }
+    else                            { ({error} = await db.from('loyalty_tiers').insert(payload)); }
+    if (error) { errEl.textContent=error.message; errEl.classList.add('show'); return; }
+    loyaltyTiers=[];
+    const {data:tiers} = await db.from('loyalty_tiers').select('*').eq('merchant_id',currentMerchant.id).order('sort_order');
+    if (tiers&&tiers.length) loyaltyTiers=tiers;
+    renderTiers(); closeTierOverlay();
+  }
+
+  /* ── Load loyalty page ── */
   async function loadClientLoyalty() {
+    await loadLoyaltySettings();
     const { data: clients } = await db.from('clients').select('*').eq('merchant_id', currentMerchant.id);
-    const { data: bks }     = await db.from('bookings').select('client_id,booking_date,status').eq('merchant_id', currentMerchant.id).eq('status','confirmed');
-    const list = (clients || []).map(c => {
-      const myBks  = (bks || []).filter(b => b.client_id === c.id);
-      const points = myBks.length * 100;
-      const past   = myBks.filter(b => new Date(b.booking_date) < new Date());
-      const last   = past.sort((a,b) => new Date(b.booking_date)-new Date(a.booking_date))[0];
-      return { ...c, points, visits: myBks.length, lastVisit: last?.booking_date || null };
-    });
-
-    const enrolled = list.filter(c => c.points > 0).length;
-    const totalPts = list.reduce((s,c) => s+c.points, 0);
-    const totalVisits = list.reduce((s,c) => s+c.visits, 0);
-    const repeat = list.length ? Math.round(list.filter(c=>c.visits>1).length / list.length * 100) : 0;
-
-    document.getElementById('loyalty-enrolled').textContent  = enrolled;
-    document.getElementById('loyalty-points').textContent    = totalPts.toLocaleString('en-IN');
-    document.getElementById('loyalty-redeemed').textContent  = 0;
-    document.getElementById('loyalty-repeat').textContent    = repeat + '%';
-
-    const tbody = document.getElementById('loyalty-tbody');
-    if (!list.length) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">No clients yet. Add clients to start tracking loyalty.</td></tr>`;
+    const { data: txns, error: txErr } = await db.from('loyalty_transactions').select('*').eq('merchant_id', currentMerchant.id);
+    if (txErr && txErr.code === '42P01') {
+      // Table not created yet — show clients with 0 pts
+      renderLoyaltyTable((clients||[]).map(c=>({...c,earned:0,redeemed:0,balance:0})));
+      document.getElementById('loyalty-enrolled').textContent = '0';
+      document.getElementById('loyalty-points').textContent   = '0';
+      document.getElementById('loyalty-redeemed').textContent = '0';
+      document.getElementById('loyalty-value-saved').textContent = '₹0';
       return;
     }
+    const allTxns = txns || [];
+    const list = (clients||[]).map(c => {
+      const myTxns   = allTxns.filter(t => t.client_id === c.id);
+      const earned   = myTxns.filter(t=>t.type==='earn').reduce((s,t)=>s+t.points,0);
+      const redeemed = myTxns.filter(t=>t.type==='redeem').reduce((s,t)=>s+t.points,0);
+      const balance  = earned - redeemed;
+      return { ...c, earned, redeemed, balance };
+    });
+    const enrolled   = list.filter(c=>c.balance>0).length;
+    const totalEarn  = list.reduce((s,c)=>s+c.earned,0);
+    const totalRed   = list.reduce((s,c)=>s+c.redeemed,0);
+    const valueSaved = totalRed * loyaltyConfig.point_value;
+    document.getElementById('loyalty-enrolled').textContent      = enrolled;
+    document.getElementById('loyalty-points').textContent        = totalEarn.toLocaleString('en-IN');
+    document.getElementById('loyalty-redeemed').textContent      = totalRed.toLocaleString('en-IN');
+    document.getElementById('loyalty-value-saved').textContent   = '₹' + valueSaved.toLocaleString('en-IN');
+    renderLoyaltyTable(list);
+  }
+
+  function renderLoyaltyTable(list) {
+    const tbody = document.getElementById('loyalty-tbody');
+    if (!list.length) { tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">No clients yet.</td></tr>`; return; }
     tbody.innerHTML = list.map(c => {
       const initials = c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
       const color    = CL_COLORS[c.name.charCodeAt(0) % CL_COLORS.length];
-      const tier     = tierFor(c.points);
-      const lastDate = c.lastVisit ? new Date(c.lastVisit).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '—';
+      const tier     = tierFor(c.balance||0);
+      const valueSaved = ((c.redeemed||0) * loyaltyConfig.point_value).toLocaleString('en-IN',{minimumFractionDigits:0});
       return `<tr>
-        <td><div class="team-member-cell"><div class="team-avatar" style="background:${color}">${initials}</div><div><div class="team-member-name">${c.name}</div><div class="team-member-role">${c.email||''}</div></div></div></td>
-        <td style="font-weight:700;font-size:14px">${c.points.toLocaleString('en-IN')}</td>
-        <td>${tier.icon} ${tier.name}</td>
-        <td>${c.visits}</td>
-        <td style="color:var(--muted);font-size:13px">${lastDate}</td>
-        <td><span class="status-badge ${c.points > 0 ? 'status-confirmed' : 'status-pending'}">${c.points > 0 ? 'Active' : 'Not enrolled'}</span></td>
+        <td><div class="team-member-cell"><div class="team-avatar" style="background:${color}">${initials}</div><div><div class="team-member-name">${c.name}</div><div class="team-member-role">${c.phone||c.email||''}</div></div></div></td>
+        <td style="font-weight:800;font-size:15px;color:var(--green)">${(c.balance||0).toLocaleString('en-IN')}</td>
+        <td>${tier.icon} <strong>${tier.name}</strong><div style="font-size:11px;color:var(--muted)">${tier.discount_pct}% off</div></td>
+        <td style="font-size:13px">${(c.earned||0).toLocaleString('en-IN')}</td>
+        <td style="font-size:13px;color:#DC2626">${(c.redeemed||0).toLocaleString('en-IN')}</td>
+        <td style="font-size:13px;font-weight:600;color:var(--green)">₹${valueSaved}</td>
       </tr>`;
     }).join('');
+  }
+
+  /* ── Client points balance helper (for bill) ── */
+  let billClientBalance = 0;
+  async function updateBillClientLoyalty(clientId) {
+    const bar = document.getElementById('bill-loyalty-bar');
+    if (!clientId) { bar.classList.remove('show'); billClientBalance=0; return; }
+    await loadLoyaltySettings();
+    const { data: txns } = await db.from('loyalty_transactions').select('type,points').eq('client_id', clientId).eq('merchant_id', currentMerchant.id);
+    const earned   = (txns||[]).filter(t=>t.type==='earn').reduce((s,t)=>s+t.points,0);
+    const redeemed = (txns||[]).filter(t=>t.type==='redeem').reduce((s,t)=>s+t.points,0);
+    billClientBalance = Math.max(0, earned - redeemed);
+    const tier = tierFor(billClientBalance);
+    document.getElementById('bl-points').textContent    = billClientBalance.toLocaleString('en-IN');
+    document.getElementById('bl-tier').textContent      = `${tier.icon} ${tier.name}`;
+    document.getElementById('bl-tier-disc').textContent = `${tier.discount_pct}% tier discount`;
+    document.getElementById('bl-redeem-pts').max        = billClientBalance;
+    bar.classList.add('show');
+    recalcBill();
+  }
+  function toggleRedeemPoints() {
+    const on = document.getElementById('bl-redeem-toggle').checked;
+    document.getElementById('bl-redeem-input-wrap').style.display = on ? 'flex' : 'none';
+    if (!on) { document.getElementById('bl-redeem-pts').value=''; }
+    recalcBill();
+  }
+  function onRedeemPtsInput() {
+    const pts = Math.min(parseFloat(document.getElementById('bl-redeem-pts').value)||0, billClientBalance);
+    const rs  = pts * loyaltyConfig.point_value;
+    document.getElementById('bl-redeem-rs').textContent = pts ? `= ₹${rs.toFixed(2)} discount` : '';
+    recalcBill();
+  }
+  function getRedeemAmount() {
+    const on  = document.getElementById('bl-redeem-toggle')?.checked;
+    if (!on) return 0;
+    const pts = Math.min(parseFloat(document.getElementById('bl-redeem-pts').value)||0, billClientBalance);
+    return pts * loyaltyConfig.point_value;
+  }
+  function getRedeemPts() {
+    const on  = document.getElementById('bl-redeem-toggle')?.checked;
+    if (!on) return 0;
+    return Math.min(parseFloat(document.getElementById('bl-redeem-pts').value)||0, billClientBalance);
   }
 
   /* ════════════════════════════════════════════
@@ -5009,6 +5269,10 @@
     document.getElementById('bill-client-dd').classList.remove('open');
     document.getElementById('bill-client-tag-name').textContent = c.name + (c.phone ? ' · ' + c.phone : '');
     document.getElementById('bill-client-tag').style.display = 'flex';
+    // Reset redeem toggle
+    const tog = document.getElementById('bl-redeem-toggle');
+    if (tog) { tog.checked=false; document.getElementById('bl-redeem-input-wrap').style.display='none'; document.getElementById('bl-redeem-pts').value=''; }
+    updateBillClientLoyalty(c.id);
   }
 
   function setWalkinClient() {
@@ -5017,12 +5281,14 @@
     document.getElementById('bill-client-tag-name').textContent = billClient.name;
     document.getElementById('bill-client-tag').style.display = 'flex';
     document.getElementById('bill-client-input').value = '';
+    updateBillClientLoyalty(null); // walk-in has no loyalty
   }
 
   function clearBillClient() {
     billClient = null;
     document.getElementById('bill-client-tag').style.display = 'none';
     document.getElementById('bill-client-input').value = '';
+    updateBillClientLoyalty(null);
   }
 
   /* ── Line items ── */
@@ -5152,29 +5418,51 @@
     const discountVal = parseFloat(document.getElementById('bill-discount')?.value) || 0;
     const discType    = document.getElementById('bill-discount-type')?.value || 'pct';
     const gstPct      = parseFloat(document.getElementById('bill-gst')?.value) || 0;
-    const rewardPts   = parseFloat(document.getElementById('bill-reward')?.value) || 0;
+    const redeemAmt   = getRedeemAmount();
+    const redeemPts   = getRedeemPts();
 
-    const discAmt     = discType === 'pct' ? (subtotal * discountVal / 100) : discountVal;
-    const afterDisc   = subtotal - discAmt + tipAmt + exCharges - rewardPts;
-    const gstAmt      = afterDisc > 0 ? (afterDisc * gstPct / 100) : 0;
-    const grandTotal  = Math.max(0, afterDisc + gstAmt);
+    const discAmt    = discType === 'pct' ? (subtotal * discountVal / 100) : discountVal;
+    const afterDisc  = subtotal - discAmt - redeemAmt + tipAmt + exCharges;
+    const gstAmt     = afterDisc > 0 ? (afterDisc * gstPct / 100) : 0;
+    const grandTotal = Math.max(0, afterDisc + gstAmt);
 
     const payingNowEl = document.getElementById('bill-paying-now');
     const payingNow   = parseFloat(payingNowEl?.value) || grandTotal;
     const due         = Math.max(0, grandTotal - payingNow);
+
+    // Points to earn on this bill
+    const ptsToEarn = loyaltyConfig.spend_amount > 0
+      ? Math.floor(grandTotal / loyaltyConfig.spend_amount) * loyaltyConfig.earn_points
+      : 0;
 
     const fmt = n => n.toFixed(2);
     document.getElementById('bs-subtotal').textContent  = fmt(subtotal);
     document.getElementById('bs-tip').textContent       = fmt(tipAmt);
     document.getElementById('bs-ex').textContent        = fmt(exCharges);
     document.getElementById('bs-discount').textContent  = fmt(discAmt);
-    document.getElementById('bs-total').textContent     = fmt(subtotal + tipAmt + exCharges - discAmt - rewardPts);
+    document.getElementById('bs-total').textContent     = fmt(subtotal + tipAmt + exCharges - discAmt - redeemAmt);
     document.getElementById('bs-gst').textContent       = fmt(gstAmt);
     document.getElementById('bs-grand').textContent     = fmt(grandTotal);
     document.getElementById('bs-paying').textContent    = fmt(payingNow);
     document.getElementById('bs-due').textContent       = fmt(due);
 
-    return { subtotal, tipAmt, exCharges, discAmt, gstPct, gstAmt, grandTotal, payingNow, due };
+    // Reward row visibility
+    const rRow = document.getElementById('bs-reward-row');
+    if (rRow) { rRow.style.display = redeemAmt > 0 ? '' : 'none'; }
+    const rVal = document.getElementById('bs-reward-val');
+    if (rVal) rVal.textContent = fmt(redeemAmt);
+
+    // Points to earn preview (only for registered client)
+    const earnRow = document.getElementById('bs-pts-earn-row');
+    const earnEl  = document.getElementById('bs-pts-earn');
+    if (earnRow && billClient?.id) {
+      earnRow.style.display = '';
+      earnEl.textContent    = '+' + ptsToEarn + ' pts';
+    } else if (earnRow) {
+      earnRow.style.display = 'none';
+    }
+
+    return { subtotal, tipAmt, exCharges, discAmt, redeemAmt, redeemPts, gstPct, gstAmt, grandTotal, payingNow, due, ptsToEarn };
   }
 
   /* ── Generate bill ── */
@@ -5214,9 +5502,24 @@
       notes: notes || null,
       bill_date: billDate,
     };
-    const { error } = await db.from('invoices').insert(payload);
+    const { data: savedInv, error } = await db.from('invoices').insert(payload).select().single();
     if (error && error.code !== '42P01') {
       alert('Error saving invoice: ' + error.message); return;
+    }
+    const invId = savedInv?.id || null;
+
+    // Loyalty transactions for registered client
+    if (billClient?.id) {
+      const txns = [];
+      if (totals.redeemPts > 0) {
+        txns.push({ merchant_id: currentMerchant.id, client_id: billClient.id, invoice_id: invId, type: 'redeem', points: totals.redeemPts, notes: `Redeemed on invoice ${invoiceNo}` });
+      }
+      if (totals.ptsToEarn > 0) {
+        txns.push({ merchant_id: currentMerchant.id, client_id: billClient.id, invoice_id: invId, type: 'earn', points: totals.ptsToEarn, notes: `Earned on invoice ${invoiceNo} (₹${totals.grandTotal.toFixed(2)})` });
+      }
+      if (txns.length) await db.from('loyalty_transactions').insert(txns);
+      // Reset UI
+      billClientBalance = Math.max(0, billClientBalance - totals.redeemPts + totals.ptsToEarn);
     }
 
     billLastInv = { ...payload, invoiceNo, clientName, clientPhone, clientEmail, totals };
