@@ -1810,15 +1810,6 @@
       <!-- Charges -->
       <div class="bill-charges-row">
         <div class="bill-charge-field">
-          <label>Reward Points</label>
-          <select class="bill-charge-sel" id="bill-reward" onchange="recalcBill()">
-            <option value="">Select Reward Point</option>
-            <option value="50">50 pts = ₹50</option>
-            <option value="100">100 pts = ₹100</option>
-            <option value="200">200 pts = ₹200</option>
-          </select>
-        </div>
-        <div class="bill-charge-field">
           <label>Ex Charges</label>
           <input type="number" class="bill-charge-input" id="bill-ex-charges" placeholder="0" min="0" step="0.01" oninput="recalcBill()" />
         </div>
@@ -5279,35 +5270,55 @@
   let billPayMethod = 'cash';
   let billLastInv = null;   // last generated invoice data
 
-  function initBillPage() {
-    if (document.getElementById('bill-items-wrap').children.length) return;
+  async function initBillPage() {
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('bill-date').value = today;
     document.getElementById('bill-client-tag').style.display = 'none';
-    billItems = []; billItemId = 0; billClient = null;
+    document.getElementById('bill-loyalty-bar').classList.remove('show');
+    billItems = []; billItemId = 0; billClient = null; billClientBalance = 0;
+
+    // Load all data sources in parallel before rendering
+    const jobs = [];
+    if (!currentStaff.length)  jobs.push(loadStaff());
+    if (!allServices.length)   jobs.push(loadServiceMenu().catch(()=>{}));
+    if (!allProducts.length)   jobs.push(loadProducts().catch(()=>{}));
+    if (!allClients.length)    jobs.push(loadClientsList().catch(()=>{}));
+    if (jobs.length) await Promise.all(jobs);
+
     billAddItem('service');
     recalcBill();
-    if (!currentStaff.length) loadStaff();
-    if (!allServices.length) loadServiceMenu().catch(() => {});
-    if (!allProducts.length) loadProducts().catch(() => {});
   }
 
-  /* ── Client search ── */
+  /* ── Client search (from in-memory ClientDB list) ── */
   async function searchBillClient(q) {
     const dd = document.getElementById('bill-client-dd');
-    if (!q || q.length < 3) { dd.classList.remove('open'); return; }
-    const { data } = await db.from('clients').select('*')
-      .eq('merchant_id', currentMerchant.id)
-      .or(`name.ilike.%${q}%,email.ilike.%${q}%,phone.ilike.%${q}%`)
-      .limit(8);
-    const list = data || [];
+    if (!q || q.length < 2) { dd.classList.remove('open'); return; }
+    const ql = q.toLowerCase();
+
+    // Use in-memory list (includes booking-sourced clients)
+    let list = allClients.filter(c =>
+      (c.name||'').toLowerCase().includes(ql) ||
+      (c.email||'').toLowerCase().includes(ql) ||
+      (c.phone||'').includes(q)
+    ).slice(0, 8);
+
+    // Fall back to DB if allClients not yet loaded
+    if (!list.length && !allClients.length) {
+      const { data } = await db.from('clients').select('*')
+        .eq('merchant_id', currentMerchant.id)
+        .or(`name.ilike.%${q}%,phone.ilike.%${q}%`)
+        .limit(8);
+      list = data || [];
+    }
+
     if (!list.length) {
       dd.innerHTML = `<div class="bill-client-dd-item" style="color:var(--muted)">No clients found</div>`;
     } else {
       dd.innerHTML = list.map(c => `
         <div class="bill-client-dd-item" onclick="selectBillClient(${JSON.stringify(c).replace(/"/g,'&quot;')})">
           <strong>${c.name}</strong>
-          <span style="color:var(--muted);font-size:12px;margin-left:8px">${c.email||''} ${c.phone||''}</span>
+          <span style="color:var(--muted);font-size:12px;margin-left:8px">${c.phone||''} ${c.email||''}</span>
+          ${c.source==='booking' ? '<span style="font-size:10px;background:#FEF3C7;color:#92400E;padding:1px 5px;border-radius:8px;margin-left:6px;font-weight:600">walk-in</span>' : ''}
         </div>`).join('');
     }
     dd.classList.add('open');
@@ -5322,7 +5333,8 @@
     // Reset redeem toggle
     const tog = document.getElementById('bl-redeem-toggle');
     if (tog) { tog.checked=false; document.getElementById('bl-redeem-input-wrap').style.display='none'; document.getElementById('bl-redeem-pts').value=''; }
-    updateBillClientLoyalty(c.id);
+    // Only load loyalty for registered clients (source:'db' or legacy no-source with real id)
+    updateBillClientLoyalty(c.source === 'booking' ? null : c.id);
   }
 
   function setWalkinClient() {
