@@ -4176,7 +4176,6 @@
     document.getElementById('home-greeting-text').textContent = greet + ', ' + currentMerchant.name + ' 👋';
     document.getElementById('home-greeting-sub').textContent = new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
-    buildTimeOptions();
     await Promise.all([loadDeals(), loadHome()]);
   }
 
