@@ -1735,15 +1735,29 @@
 
     <!-- ── Sales by Staff ── -->
     <div class="sl-page" id="sales-page-payruns">
-      <div class="payrun-header">
-        <h2>Sales by Staff</h2>
-        <p>Calculate and settle the amount owed to your team for commissions and wages.</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+        <div>
+          <h2 style="font-size:20px;font-weight:800;margin:0">Sales by Staff</h2>
+          <p style="font-size:13px;color:var(--muted);margin:4px 0 0">Breakdown of bookings and earnings per team member.</p>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="sd-period-btn active" id="sbs-btn-week"   onclick="setSbsPeriod('week',this)">This Week</button>
+          <button class="sd-period-btn"        id="sbs-btn-month"  onclick="setSbsPeriod('month',this)">This Month</button>
+          <button class="sd-period-btn"        id="sbs-btn-year"   onclick="setSbsPeriod('year',this)">This Year</button>
+          <button class="sd-period-btn"        id="sbs-btn-custom" onclick="setSbsPeriod('custom',this)">Custom</button>
+        </div>
       </div>
-      <div class="payrun-toolbar">
-        <button class="shifts-nav-btn" onclick="salesNav(-1)">‹</button>
-        <span class="payrun-week-label" id="sales-week-label">—</span>
-        <button class="shifts-nav-btn" onclick="salesNav(1)">›</button>
-        <div class="payrun-search">
+      <!-- Custom date range (hidden until Custom is selected) -->
+      <div id="sbs-custom-range" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px">
+        <label style="font-size:12px;font-weight:600;color:var(--muted)">From</label>
+        <input type="date" id="sbs-from" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none" />
+        <label style="font-size:12px;font-weight:600;color:var(--muted)">To</label>
+        <input type="date" id="sbs-to" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none" />
+        <button class="sd-period-btn active" onclick="applySbsCustom()" style="margin-left:4px">Apply</button>
+      </div>
+      <div class="payrun-toolbar" style="margin-bottom:12px">
+        <span class="payrun-week-label" id="sales-week-label" style="font-size:13px;color:var(--muted);font-weight:600;border:none;background:none;padding:0"></span>
+        <div class="payrun-search" style="margin-left:auto">
           <span style="color:var(--muted)">🔍</span>
           <input type="text" id="sales-search" placeholder="Search by name" oninput="filterSalesRows()" />
         </div>
@@ -5850,6 +5864,9 @@
   let salesWeekOffset = 0;
   let allSalesData    = [];
   let sdPeriod        = 'week';
+  let sbsPeriod       = 'week';
+  let sbsCustomFrom   = '';
+  let sbsCustomTo     = '';
 
   function switchSalesTab(tab, btn) {
     document.querySelectorAll('#tab-sales .sl-tab').forEach(t => t.classList.remove('active'));
@@ -5957,11 +5974,50 @@
 
   function salesNav(d) { salesWeekOffset += d; loadSales(); }
 
+  function setSbsPeriod(period, btn) {
+    sbsPeriod = period;
+    document.querySelectorAll('#sales-page-payruns .sd-period-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const customRange = document.getElementById('sbs-custom-range');
+    if (period === 'custom') {
+      customRange.style.display = 'flex';
+      const now = new Date();
+      document.getElementById('sbs-from').value = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
+      document.getElementById('sbs-to').value   = now.toISOString().slice(0,10);
+    } else {
+      customRange.style.display = 'none';
+      loadSales();
+    }
+  }
+
+  function applySbsCustom() {
+    sbsCustomFrom = document.getElementById('sbs-from').value;
+    sbsCustomTo   = document.getElementById('sbs-to').value;
+    if (!sbsCustomFrom || !sbsCustomTo) return;
+    loadSales();
+  }
+
   async function loadSales() {
-    const dates    = getWeekDates(salesWeekOffset);
-    const weekStart = dates[0].toISOString().split('T')[0];
-    const weekEnd   = dates[6].toISOString().split('T')[0];
-    document.getElementById('sales-week-label').textContent = weekLabel(dates);
+    const now = new Date();
+    let weekStart, weekEnd;
+    if (sbsPeriod === 'week') {
+      const dates = getWeekDates(salesWeekOffset);
+      weekStart = dates[0].toISOString().slice(0,10);
+      weekEnd   = dates[6].toISOString().slice(0,10);
+      document.getElementById('sales-week-label').textContent = weekLabel(dates);
+    } else if (sbsPeriod === 'month') {
+      weekStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
+      weekEnd   = new Date(now.getFullYear(), now.getMonth()+1, 0).toISOString().slice(0,10);
+      document.getElementById('sales-week-label').textContent = now.toLocaleDateString('en-IN',{month:'long',year:'numeric'});
+    } else if (sbsPeriod === 'year') {
+      weekStart = new Date(now.getFullYear(), 0, 1).toISOString().slice(0,10);
+      weekEnd   = new Date(now.getFullYear(), 11, 31).toISOString().slice(0,10);
+      document.getElementById('sales-week-label').textContent = String(now.getFullYear());
+    } else {
+      weekStart = sbsCustomFrom;
+      weekEnd   = sbsCustomTo;
+      document.getElementById('sales-week-label').textContent = weekStart + ' → ' + weekEnd;
+    }
     if (!currentStaff.length) await loadStaff();
 
     const { data: bks } = await db.from('bookings')
