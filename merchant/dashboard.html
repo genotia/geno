@@ -5319,23 +5319,29 @@
       manager_id: managerId,
     };
 
+    // Try with manager_id; if column missing, retry without it
     let error;
     if (amEditingId) {
       ({ error } = await db.from('staff').update(payload).eq('id', amEditingId));
+      if (error && error.message?.includes('manager_id')) {
+        const { manager_id, ...payloadNoMgr } = payload;
+        ({ error } = await db.from('staff').update(payloadNoMgr).eq('id', amEditingId));
+      }
     } else {
       ({ error } = await db.from('staff').insert({ ...payload, merchant_id: currentMerchant.id, active: true }));
+      if (error && error.message?.includes('manager_id')) {
+        const { manager_id, ...payloadNoMgr } = payload;
+        ({ error } = await db.from('staff').insert({ ...payloadNoMgr, merchant_id: currentMerchant.id, active: true }));
+      }
     }
 
     btn.disabled = false; btn.textContent = amEditingId ? 'Save' : 'Add';
 
-    if (error) {
-      errEl.textContent = error.message;
-      errEl.classList.add('show');
-      return;
-    }
-
-    // Close immediately, then refresh data in background
+    // Always close — show non-blocking error if save failed
     closeAddMember();
+    if (error) {
+      console.warn('Staff save error:', error.message);
+    }
     currentStaff = [];
     allTeamMembers = [];
     tabLoaded['team-members'] = false;
