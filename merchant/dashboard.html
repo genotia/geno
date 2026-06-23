@@ -1428,9 +1428,9 @@
     <div class="team-table">
       <table>
         <thead><tr>
-          <th>Client</th><th>Points balance</th><th>Tier</th><th>Earned</th><th>Redeemed</th><th>Value saved</th>
+          <th>Client</th><th>Points balance</th><th>Tier</th><th>Earned</th><th>Redeemed</th><th>Value saved</th><th></th>
         </tr></thead>
-        <tbody id="loyalty-tbody"><tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
+        <tbody id="loyalty-tbody"><tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
       </table>
     </div>
   </div><!-- /tab-client-loyalty -->
@@ -1504,6 +1504,45 @@
       <div class="am-form-row single">
         <div class="am-field"><label>Perks description</label>
           <input class="am-input" id="ly-tier-perks" type="text" placeholder="e.g. Priority booking + free upgrade" />
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ══════════════════ AWARD POINTS OVERLAY ══════════════════ -->
+  <div class="am-overlay" id="ly-award-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title">Award / Adjust Points</div>
+      <div class="am-topbar-actions">
+        <button class="am-close-btn" onclick="closeAwardPtsOverlay()">Close</button>
+        <button class="am-add-btn" onclick="saveAwardPts()">Save</button>
+      </div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:460px">
+      <div class="am-err" id="ly-award-err"></div>
+      <input type="hidden" id="ly-award-client-id" />
+      <input type="hidden" id="ly-award-client-name" />
+      <div style="background:var(--bg);border-radius:12px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:12px">
+        <div id="ly-award-avatar" style="width:40px;height:40px;border-radius:50%;background:#7C3AED;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:15px;flex-shrink:0">?</div>
+        <div>
+          <div id="ly-award-name" style="font-weight:700;font-size:15px"></div>
+          <div id="ly-award-balance" style="font-size:12px;color:var(--muted)"></div>
+        </div>
+      </div>
+      <div class="am-form-row">
+        <div class="am-field"><label>Type <span class="req">*</span></label>
+          <select class="am-input" id="ly-award-type">
+            <option value="earn">Award points (earn)</option>
+            <option value="redeem">Deduct points (redeem)</option>
+          </select>
+        </div>
+        <div class="am-field"><label>Points <span class="req">*</span></label>
+          <input class="am-input" id="ly-award-pts" type="number" min="1" placeholder="e.g. 100" />
+        </div>
+      </div>
+      <div class="am-form-row single">
+        <div class="am-field"><label>Note (optional)</label>
+          <input class="am-input" id="ly-award-note" type="text" placeholder="e.g. Past visit credit" />
         </div>
       </div>
     </div></div>
@@ -5171,53 +5210,138 @@
   /* ── Load loyalty page ── */
   async function loadClientLoyalty() {
     await loadLoyaltySettings();
-    const { data: clients } = await db.from('clients').select('*').eq('merchant_id', currentMerchant.id);
-    const { data: txns, error: txErr } = await db.from('loyalty_transactions').select('*').eq('merchant_id', currentMerchant.id);
-    if (txErr && txErr.code === '42P01') {
-      // Table not created yet — show clients with 0 pts
-      renderLoyaltyTable((clients||[]).map(c=>({...c,earned:0,redeemed:0,balance:0})));
-      document.getElementById('loyalty-enrolled').textContent = '0';
-      document.getElementById('loyalty-points').textContent   = '0';
-      document.getElementById('loyalty-redeemed').textContent = '0';
-      document.getElementById('loyalty-value-saved').textContent = '₹0';
-      return;
+
+    // Pull registered clients + all bookings (same merge as clients list)
+    const [{ data: dbClients }, { data: bks }, { data: txns, error: txErr }] = await Promise.all([
+      db.from('clients').select('*').eq('merchant_id', currentMerchant.id),
+      db.from('bookings').select('customer_name,customer_phone,customer_email,booking_date').eq('merchant_id', currentMerchant.id),
+      db.from('loyalty_transactions').select('*').eq('merchant_id', currentMerchant.id),
+    ]);
+
+    const allTxns = (txErr && txErr.code === '42P01') ? [] : (txns || []);
+
+    // Build merged unique-client list (phone-keyed, same logic as loadClientsList)
+    const normalise = s => (s||'').replace(/\s/g,'').toLowerCase();
+    const bkMap = new Map();
+    for (const b of (bks||[])) {
+      const key = normalise(b.customer_phone) || normalise(b.customer_name) || '__unknown';
+      if (!bkMap.has(key)) bkMap.set(key, { name: b.customer_name||'', phone: b.customer_phone||'', email: b.customer_email||'', dates:[] });
+      if (b.booking_date) bkMap.get(key).dates.push(b.booking_date);
     }
-    const allTxns = txns || [];
-    const list = (clients||[]).map(c => {
+
+    const mergedMap = new Map();
+    for (const c of (dbClients||[])) {
+      const key = normalise(c.phone) || normalise(c.email) || normalise(c.name);
+      const bkEntry = [...bkMap.entries()].find(([k,v]) =>
+        (c.phone && normalise(k) === normalise(c.phone)) ||
+        (c.email && normalise(v.email) === normalise(c.email))
+      );
       const myTxns   = allTxns.filter(t => t.client_id === c.id);
       const earned   = myTxns.filter(t=>t.type==='earn').reduce((s,t)=>s+t.points,0);
       const redeemed = myTxns.filter(t=>t.type==='redeem').reduce((s,t)=>s+t.points,0);
-      const balance  = earned - redeemed;
-      return { ...c, earned, redeemed, balance };
-    });
-    const enrolled   = list.filter(c=>c.balance>0).length;
+      mergedMap.set(key, { ...c, source:'db', visits: bkEntry?.[1]?.dates?.length||0, earned, redeemed, balance: earned-redeemed });
+      if (bkEntry) bkMap.delete(bkEntry[0]);
+    }
+    // Booking-only visitors (not yet in clients table)
+    for (const [, v] of bkMap.entries()) {
+      if (!v.name) continue;
+      const key = normalise(v.phone) || normalise(v.name);
+      if (!mergedMap.has(key)) {
+        mergedMap.set(key, { id:null, name:v.name, phone:v.phone, email:v.email, source:'booking', visits:v.dates.length, earned:0, redeemed:0, balance:0 });
+      }
+    }
+
+    const list     = [...mergedMap.values()].filter(c=>c.name).sort((a,b)=>(b.balance-a.balance)||a.name.localeCompare(b.name));
+    const enrolled = list.filter(c=>c.balance>0).length;
     const totalEarn  = list.reduce((s,c)=>s+c.earned,0);
     const totalRed   = list.reduce((s,c)=>s+c.redeemed,0);
     const valueSaved = totalRed * loyaltyConfig.point_value;
-    document.getElementById('loyalty-enrolled').textContent      = enrolled;
-    document.getElementById('loyalty-points').textContent        = totalEarn.toLocaleString('en-IN');
-    document.getElementById('loyalty-redeemed').textContent      = totalRed.toLocaleString('en-IN');
-    document.getElementById('loyalty-value-saved').textContent   = '₹' + valueSaved.toLocaleString('en-IN');
+
+    document.getElementById('loyalty-enrolled').textContent     = enrolled;
+    document.getElementById('loyalty-points').textContent       = totalEarn.toLocaleString('en-IN');
+    document.getElementById('loyalty-redeemed').textContent     = totalRed.toLocaleString('en-IN');
+    document.getElementById('loyalty-value-saved').textContent  = '₹' + valueSaved.toLocaleString('en-IN');
     renderLoyaltyTable(list);
   }
 
   function renderLoyaltyTable(list) {
     const tbody = document.getElementById('loyalty-tbody');
-    if (!list.length) { tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">No clients yet.</td></tr>`; return; }
+    if (!list.length) { tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">No visitors yet.</td></tr>`; return; }
     tbody.innerHTML = list.map(c => {
-      const initials = c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-      const color    = CL_COLORS[c.name.charCodeAt(0) % CL_COLORS.length];
-      const tier     = tierFor(c.balance||0);
+      const initials   = (c.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      const color      = CL_COLORS[(c.name||'').charCodeAt(0) % CL_COLORS.length];
+      const tier       = tierFor(c.balance||0);
       const valueSaved = ((c.redeemed||0) * loyaltyConfig.point_value).toLocaleString('en-IN',{minimumFractionDigits:0});
+      const notEnrolled = c.source === 'booking';
+      const awardBtn   = `<button class="actions-btn" onclick="openAwardPtsOverlay(${JSON.stringify(c).replace(/"/g,'&quot;')})">Award pts</button>`;
       return `<tr>
-        <td><div class="team-member-cell"><div class="team-avatar" style="background:${color}">${initials}</div><div><div class="team-member-name">${c.name}</div><div class="team-member-role">${c.phone||c.email||''}</div></div></div></td>
-        <td style="font-weight:800;font-size:15px;color:var(--green)">${(c.balance||0).toLocaleString('en-IN')}</td>
-        <td>${tier.icon} <strong>${tier.name}</strong><div style="font-size:11px;color:var(--muted)">${tier.discount_pct}% off</div></td>
+        <td>
+          <div class="team-member-cell">
+            <div class="team-avatar" style="background:${color}">${initials}</div>
+            <div>
+              <div class="team-member-name">${c.name}
+                ${notEnrolled ? '<span style="font-size:10px;background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:10px;font-weight:600;margin-left:6px">walk-in</span>' : ''}
+              </div>
+              <div class="team-member-role">${c.phone||c.email||''}</div>
+            </div>
+          </div>
+        </td>
+        <td style="font-weight:800;font-size:15px;color:${c.balance>0?'var(--green)':'var(--muted)'}">${(c.balance||0).toLocaleString('en-IN')}</td>
+        <td>${notEnrolled ? '<span style="color:var(--muted);font-size:12px">Not enrolled</span>' : `${tier.icon} <strong>${tier.name}</strong><div style="font-size:11px;color:var(--muted)">${tier.discount_pct}% off</div>`}</td>
         <td style="font-size:13px">${(c.earned||0).toLocaleString('en-IN')}</td>
         <td style="font-size:13px;color:#DC2626">${(c.redeemed||0).toLocaleString('en-IN')}</td>
         <td style="font-size:13px;font-weight:600;color:var(--green)">₹${valueSaved}</td>
+        <td>${awardBtn}</td>
       </tr>`;
     }).join('');
+  }
+
+  /* ── Award / Adjust points overlay ── */
+  let _awardClient = null;
+  function openAwardPtsOverlay(c) {
+    _awardClient = c;
+    const initials = (c.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const color    = CL_COLORS[(c.name||'').charCodeAt(0) % CL_COLORS.length];
+    document.getElementById('ly-award-avatar').textContent  = initials;
+    document.getElementById('ly-award-avatar').style.background = color;
+    document.getElementById('ly-award-name').textContent    = c.name;
+    document.getElementById('ly-award-balance').textContent = `Current balance: ${(c.balance||0).toLocaleString('en-IN')} pts`;
+    document.getElementById('ly-award-client-id').value     = c.id||'';
+    document.getElementById('ly-award-client-name').value   = c.name||'';
+    document.getElementById('ly-award-pts').value           = '';
+    document.getElementById('ly-award-note').value          = '';
+    document.getElementById('ly-award-type').value          = 'earn';
+    document.getElementById('ly-award-err').classList.remove('show');
+    document.getElementById('ly-award-overlay').classList.add('open'); document.body.style.overflow='hidden';
+  }
+  function closeAwardPtsOverlay() { document.getElementById('ly-award-overlay').classList.remove('open'); document.body.style.overflow=''; }
+
+  async function saveAwardPts() {
+    const errEl = document.getElementById('ly-award-err'); errEl.classList.remove('show');
+    const pts   = parseInt(document.getElementById('ly-award-pts').value)||0;
+    const type  = document.getElementById('ly-award-type').value;
+    const note  = document.getElementById('ly-award-note').value.trim();
+    if (!pts || pts < 1) { errEl.textContent='Enter a valid number of points.'; errEl.classList.add('show'); return; }
+
+    let clientId = _awardClient?.id;
+
+    // If this is a booking-only visitor, create a clients record first
+    if (!clientId) {
+      const parts = (_awardClient.name||'').split(' ');
+      const payload = { merchant_id: currentMerchant.id, name: _awardClient.name, phone: _awardClient.phone||null, email: _awardClient.email||null };
+      const { data: newClient, error: cErr } = await db.from('clients').insert(payload).select().single();
+      if (cErr) { errEl.textContent='Could not create client: ' + cErr.message; errEl.classList.add('show'); return; }
+      clientId = newClient.id;
+    }
+
+    const { error } = await db.from('loyalty_transactions').insert({
+      merchant_id: currentMerchant.id, client_id: clientId,
+      type, points: pts,
+      notes: note || (type==='earn' ? 'Manual award' : 'Manual adjustment'),
+    });
+    if (error) { errEl.textContent=error.message; errEl.classList.add('show'); return; }
+    closeAwardPtsOverlay();
+    loadClientLoyalty(); // refresh table
   }
 
   /* ── Client points balance helper (for bill) ── */
