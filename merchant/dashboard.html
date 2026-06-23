@@ -5477,21 +5477,24 @@
     document.getElementById('sl-action-menu')?.classList.remove('open');
   }
 
-  // Floating row-action menu (shared singleton)
-  (function() {
-    const el = document.createElement('div');
-    el.id = 'sl-row-menu';
-    el.className = 'sl-row-menu';
-    document.body.appendChild(el);
-    document.addEventListener('click', e => {
-      if (!e.target.closest('.sl-three-dot') && !e.target.closest('#sl-row-menu')) {
-        el.classList.remove('open');
-      }
-    });
-  })();
+  function getStaffRowMenu() {
+    let menu = document.getElementById('sl-row-menu');
+    if (!menu) {
+      menu = document.createElement('div');
+      menu.id = 'sl-row-menu';
+      menu.className = 'sl-row-menu';
+      document.body.appendChild(menu);
+      document.addEventListener('click', e => {
+        if (!e.target.closest('.sl-three-dot') && !e.target.closest('#sl-row-menu')) {
+          menu.classList.remove('open');
+        }
+      });
+    }
+    return menu;
+  }
 
   function toggleStaffRowMenu(staffId, btn, isActive) {
-    const menu = document.getElementById('sl-row-menu');
+    const menu = getStaffRowMenu();
     const rect = btn.getBoundingClientRect();
     const activeLabel = isActive ? 'Mark Inactive' : 'Mark Active';
     const activeIcon  = isActive ? '⛔' : '✅';
