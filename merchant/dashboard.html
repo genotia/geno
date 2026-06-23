@@ -7070,6 +7070,7 @@
     if (error && error.code !== '42P01') console.warn('client_segments:', error.message);
     _dbSegments = (data || []).map(s => ({
       ...s,
+      desc: s.description,   // normalise column name for card rendering
       filter: buildFilterFromRules(s.rules),
     }));
   }
@@ -7328,7 +7329,7 @@
       if (!s) return;
       document.getElementById('seg-cust-name').value   = s.name || '';
       document.getElementById('seg-cust-icon').value   = s.icon || '🎯';
-      document.getElementById('seg-cust-desc').value   = s.desc || '';
+      document.getElementById('seg-cust-desc').value   = s.description || '';
       document.getElementById('seg-cust-sample').value = s.sample || '';
       _segSelectedColor = s.color || '#8B5CF6';
       document.getElementById('seg-cust-color').value  = _segSelectedColor;
@@ -7449,15 +7450,15 @@
     const name   = document.getElementById('seg-cust-name').value.trim();
     const icon   = document.getElementById('seg-cust-icon').value.trim() || '🎯';
     const color  = document.getElementById('seg-cust-color').value || '#8B5CF6';
-    const desc   = document.getElementById('seg-cust-desc').value.trim();
-    const sample = document.getElementById('seg-cust-sample').value.trim();
-    const rules  = collectSegRules();
+    const description = document.getElementById('seg-cust-desc').value.trim();
+    const sample      = document.getElementById('seg-cust-sample').value.trim();
+    const rules       = collectSegRules();
     if (!name) { errEl.textContent='Segment name is required.'; errEl.classList.add('show'); return; }
     if (!rules.conditions.length) { errEl.textContent='Add at least one filter condition.'; errEl.classList.add('show'); return; }
 
     const btn = document.getElementById('seg-save-btn');
     btn.disabled = true; btn.textContent = 'Saving…';
-    const payload = { merchant_id: currentMerchant.id, name, icon, color, desc, sample, rules };
+    const payload = { merchant_id: currentMerchant.id, name, icon, color, description, sample, rules };
     let error;
     if (_segEditingId) {
       ({ error } = await db.from('client_segments').update(payload).eq('id', _segEditingId));
