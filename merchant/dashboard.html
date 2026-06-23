@@ -2566,15 +2566,7 @@
 
     <!-- ── Platform Selector ── -->
     <div class="adv-plat-selector">
-      <div class="adv-plat-card active-fb" id="adv-plat-fb" onclick="switchAdvPlatform('fb')">
-        <div class="adv-plat-logo" style="background:#1877F2">📘</div>
-        <div style="flex:1">
-          <div class="adv-plat-name">Facebook Ads</div>
-          <div class="adv-plat-desc">Feed · Stories · Marketplace · Reels</div>
-        </div>
-        <div class="adv-plat-badge fb-badge">Meta Ads API</div>
-      </div>
-      <div class="adv-plat-card" id="adv-plat-ig" onclick="switchAdvPlatform('ig')">
+      <div class="adv-plat-card active-ig" id="adv-plat-ig" onclick="switchAdvPlatform('ig')">
         <div class="adv-plat-logo" style="background:linear-gradient(135deg,#f09433,#dc2743,#bc1888)">📸</div>
         <div style="flex:1">
           <div class="adv-plat-name">Instagram Ads</div>
@@ -2590,10 +2582,18 @@
         </div>
         <div class="adv-plat-badge wa-badge">Business API</div>
       </div>
+      <div class="adv-plat-card" id="adv-plat-fb" onclick="switchAdvPlatform('fb')">
+        <div class="adv-plat-logo" style="background:#1877F2">📘</div>
+        <div style="flex:1">
+          <div class="adv-plat-name">Facebook Ads</div>
+          <div class="adv-plat-desc">Feed · Stories · Marketplace · Reels</div>
+        </div>
+        <div class="adv-plat-badge fb-badge">Meta Ads API</div>
+      </div>
     </div>
 
     <!-- ══════════ FACEBOOK SECTION ══════════ -->
-    <div id="adv-section-fb" class="adv-plat-section show">
+    <div id="adv-section-fb" class="adv-plat-section">
       <div id="adv-connect-banner">
         <div class="fb-connect-banner">
           <div class="fb-connect-logo">📘</div>
@@ -2656,7 +2656,7 @@
     </div>
 
     <!-- ══════════ INSTAGRAM SECTION ══════════ -->
-    <div id="adv-section-ig" class="adv-plat-section">
+    <div id="adv-section-ig" class="adv-plat-section show">
       <div class="ig-connect-note">
         <div style="font-size:36px">📸</div>
         <div>
@@ -8284,7 +8284,7 @@
   let advSavedAudiences = [];
   let advStep           = 1;
   let advData           = {};
-  let advActivePlatform = 'fb';   // 'fb' | 'ig' | 'wa'
+  let advActivePlatform = 'ig';   // 'ig' | 'wa' | 'fb'
 
   // Spa/salon ad copy templates
   const ADV_TEMPLATES = [
@@ -8453,7 +8453,7 @@
 
   /* ─── Page init ─── */
   async function loadAdvertising() {
-    switchAdvPlatform('fb');
+    switchAdvPlatform('ig');
     const { data } = await db.from('merchant_fb_connections')
       .select('*').eq('merchant_id', currentMerchant.id).maybeSingle();
     if (data) {
@@ -8462,7 +8462,7 @@
       advFbPageId    = data.fb_page_id;
       advFbUserName  = data.fb_user_name || 'Connected';
       showFbConnected();
-      loadAdvDashboard('fb');
+      loadAdvDashboard('ig');
     }
   }
 
