@@ -1344,9 +1344,9 @@
           <th style="width:40px"><input type="checkbox" /></th>
           <th>Client name</th>
           <th>Mobile number</th>
-          <th>Reviews</th>
-          <th>Sales</th>
-          <th>Created at</th>
+          <th>Visits</th>
+          <th>Last visit</th>
+          <th>Since</th>
           <th></th>
         </tr></thead>
         <tbody id="cl-tbody"><tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
@@ -4786,18 +4786,51 @@
   const CL_COLORS    = ['#7C3AED','#2563EB','#DC2626','#D97706','#DB2777','#0891B2','#059669','#1D9E75','#EA580C'];
 
   async function loadClientsList() {
-    const { data, error } = await db.from('clients')
+    // Fetch registered clients (may not exist yet)
+    const { data: dbClients, error: clErr } = await db.from('clients')
       .select('*').eq('merchant_id', currentMerchant.id).order('created_at', { ascending: false });
-    if (error && error.code === '42P01') {
-      document.getElementById('cl-tbody').innerHTML =
-        `<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--muted)">
-          <div style="font-size:28px;margin-bottom:8px">🔧</div>
-          <div style="font-weight:700">Clients table not set up yet</div>
-          <div style="font-size:12px;margin-top:4px">Run the SQL in Supabase to create the clients table</div>
-        </td></tr>`;
-      return;
+
+    // Fetch all bookings to derive customer list
+    const { data: bks } = await db.from('bookings')
+      .select('customer_name,customer_phone,customer_email,booking_date,status')
+      .eq('merchant_id', currentMerchant.id);
+
+    const registeredClients = (clErr ? [] : dbClients) || [];
+
+    // Group bookings by phone (normalised) → fall back to name
+    const bkMap = new Map(); // key → { name, phone, email, dates[] }
+    for (const b of (bks || [])) {
+      const key = (b.customer_phone || '').replace(/\s/g,'') || b.customer_name?.toLowerCase().trim() || '__unknown';
+      if (!bkMap.has(key)) bkMap.set(key, { name: b.customer_name||'', phone: b.customer_phone||'', email: b.customer_email||'', dates: [] });
+      if (b.booking_date) bkMap.get(key).dates.push(b.booking_date);
     }
-    allClients = data || [];
+
+    // Merge: for each registered client, inject visits from bookings
+    const normalise = s => (s||'').replace(/\s/g,'').toLowerCase();
+    const mergedMap = new Map(); // key → unified record
+
+    for (const c of registeredClients) {
+      const key = normalise(c.phone) || normalise(c.email) || normalise(c.name);
+      const bkEntry = [...bkMap.entries()].find(([k,v]) =>
+        (c.phone && normalise(k) === normalise(c.phone)) ||
+        (c.email && normalise(v.email) === normalise(c.email))
+      );
+      const dates = bkEntry ? bkEntry[1].dates : [];
+      mergedMap.set(key, { ...c, visits: dates.length, lastVisit: dates.sort().at(-1)||null, since: c.created_at, source:'db' });
+      if (bkEntry) bkMap.delete(bkEntry[0]);
+    }
+
+    // Remaining booking-only customers not yet in clients table
+    for (const [key, v] of bkMap.entries()) {
+      if (!v.name) continue;
+      const mKey = normalise(v.phone) || normalise(v.name);
+      if (!mergedMap.has(mKey)) {
+        const dates = v.dates.sort();
+        mergedMap.set(mKey, { id: null, name: v.name, phone: v.phone, email: v.email, visits: dates.length, lastVisit: dates.at(-1)||null, since: dates[0]||null, source:'booking' });
+      }
+    }
+
+    allClients = [...mergedMap.values()].filter(c => c.name);
     document.getElementById('cl-count-badge').textContent = allClients.length;
     filterClients();
   }
@@ -4806,15 +4839,15 @@
     const q    = (document.getElementById('cl-search')?.value || '').toLowerCase();
     const sort = document.getElementById('cl-sort')?.value || 'created_desc';
     let list   = allClients.filter(c =>
-      c.name.toLowerCase().includes(q) ||
+      (c.name||'').toLowerCase().includes(q) ||
       (c.email||'').toLowerCase().includes(q) ||
       (c.phone||'').includes(q)
     );
     list = list.sort((a, b) => {
-      if (sort === 'name_asc')      return a.name.localeCompare(b.name);
-      if (sort === 'name_desc')     return b.name.localeCompare(a.name);
-      if (sort === 'created_asc')   return new Date(a.created_at) - new Date(b.created_at);
-      return new Date(b.created_at) - new Date(a.created_at);
+      if (sort === 'name_asc')      return (a.name||'').localeCompare(b.name||'');
+      if (sort === 'name_desc')     return (b.name||'').localeCompare(a.name||'');
+      if (sort === 'created_asc')   return new Date(a.since||0) - new Date(b.since||0);
+      return new Date(b.since||0) - new Date(a.since||0);
     });
     renderClientsList(list);
   }
@@ -4826,15 +4859,18 @@
       tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:48px;color:var(--muted)">
         <div style="font-size:32px;margin-bottom:10px">🧑‍🤝‍🧑</div>
         <div style="font-weight:700;font-size:15px;color:var(--text)">No clients yet</div>
-        <div style="font-size:13px;margin-top:4px">Click ＋ Add to add your first client</div>
+        <div style="font-size:13px;margin-top:4px">Clients appear automatically from bookings, or click ＋ Add</div>
       </td></tr>`;
       footer.textContent = '';
       return;
     }
+    const fmtDate = d => d ? new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '—';
     tbody.innerHTML = list.map(c => {
-      const initials = c.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-      const color    = CL_COLORS[c.name.charCodeAt(0) % CL_COLORS.length];
-      const created  = new Date(c.created_at).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+      const initials = (c.name||'?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      const color    = CL_COLORS[(c.name||'').charCodeAt(0) % CL_COLORS.length];
+      const editBtn  = c.source === 'db'
+        ? `<button class="actions-btn" onclick="openEditClient('${c.id}')">Edit</button>`
+        : `<button class="actions-btn" onclick="addClientFromBooking('${c.name}','${c.phone}','${c.email}')">+ Add</button>`;
       return `<tr>
         <td><input type="checkbox" /></td>
         <td>
@@ -4842,18 +4878,32 @@
             <div class="team-avatar" style="background:${color}">${initials}</div>
             <div>
               <div class="team-member-name">${c.name}</div>
-              <div class="team-member-role">${c.email || ''}</div>
+              <div class="team-member-role" style="display:flex;align-items:center;gap:6px">
+                ${c.email || ''}
+                ${c.source==='booking' ? '<span style="font-size:10px;background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:10px;font-weight:600">from bookings</span>' : ''}
+              </div>
             </div>
           </div>
         </td>
         <td style="color:var(--muted);font-size:13px">${c.phone || '—'}</td>
-        <td style="color:var(--muted);font-size:13px">—</td>
-        <td style="color:var(--muted);font-size:13px">₹0</td>
-        <td style="font-size:13px;color:var(--muted)">${created}</td>
-        <td><button class="actions-btn" onclick="openEditClient('${c.id}')">Edit</button></td>
+        <td style="font-size:13px;font-weight:700;color:var(--text)">${c.visits||0}</td>
+        <td style="font-size:13px;color:var(--muted)">${fmtDate(c.lastVisit)}</td>
+        <td style="font-size:13px;color:var(--muted)">${fmtDate(c.since)}</td>
+        <td>${editBtn}</td>
       </tr>`;
     }).join('');
     footer.textContent = `Viewing 1 – ${list.length} of ${list.length} result${list.length === 1 ? '' : 's'}`;
+  }
+
+  function addClientFromBooking(name, phone, email) {
+    openAddClient();
+    const parts = (name||'').split(' ');
+    document.getElementById('cl-first').value = parts[0]||'';
+    document.getElementById('cl-last').value  = parts.slice(1).join(' ')||'';
+    document.getElementById('cl-phone').value = phone||'';
+    document.getElementById('cl-email').value = email||'';
+    const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('cl-avatar').textContent = initials;
   }
 
   /* Add / Edit client overlay */
