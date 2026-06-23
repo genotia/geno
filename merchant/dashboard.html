@@ -5264,16 +5264,18 @@
     renderLoyaltyTable(list);
   }
 
+  let _loyaltyList = [];
   function renderLoyaltyTable(list) {
+    _loyaltyList = list;
     const tbody = document.getElementById('loyalty-tbody');
     if (!list.length) { tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">No visitors yet.</td></tr>`; return; }
-    tbody.innerHTML = list.map(c => {
+    tbody.innerHTML = list.map((c, idx) => {
       const initials   = (c.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
       const color      = CL_COLORS[(c.name||'').charCodeAt(0) % CL_COLORS.length];
       const tier       = tierFor(c.balance||0);
       const valueSaved = ((c.redeemed||0) * loyaltyConfig.point_value).toLocaleString('en-IN',{minimumFractionDigits:0});
       const notEnrolled = c.source === 'booking';
-      const awardBtn   = `<button class="actions-btn" onclick="openAwardPtsOverlay(${JSON.stringify(c).replace(/"/g,'&quot;')})">Award pts</button>`;
+      const awardBtn   = `<button class="actions-btn" onclick="openAwardPtsOverlay(${idx})">Edit</button>`;
       return `<tr>
         <td>
           <div class="team-member-cell">
@@ -5298,7 +5300,9 @@
 
   /* ── Award / Adjust points overlay ── */
   let _awardClient = null;
-  function openAwardPtsOverlay(c) {
+  function openAwardPtsOverlay(idx) {
+    const c = _loyaltyList[idx];
+    if (!c) return;
     _awardClient = c;
     const initials = (c.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
     const color    = CL_COLORS[(c.name||'').charCodeAt(0) % CL_COLORS.length];
