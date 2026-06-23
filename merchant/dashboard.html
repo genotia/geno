@@ -1240,7 +1240,6 @@
       </button>
       <div class="nav-sub-group" id="team-sub-group">
         <button class="nav-item nav-sub" id="nav-team-members" onclick="switchPage('team-members',this)"><span class="nav-icon">👤</span> Manage Staff</button>
-        <button class="nav-item nav-sub" id="nav-shifts"       onclick="switchPage('shifts',this)"><span class="nav-icon">📆</span> Scheduled shifts</button>
         <button class="nav-item nav-sub" id="nav-timesheets"   onclick="switchPage('timesheets',this)"><span class="nav-icon">⏱️</span> Timesheets</button>
         <button class="nav-item nav-sub" id="nav-sales"        onclick="switchPage('sales',this)"><span class="nav-icon">💰</span> Sales</button>
         <button class="nav-item nav-sub" id="nav-schedule"     onclick="switchPage('schedule',this)"><span class="nav-icon">📅</span> Schedule</button>
@@ -1631,12 +1630,19 @@
 
     <!-- ── Staff Schedule ── -->
     <div class="sl-page" id="sl-page-schedule">
-      <div style="padding:48px;text-align:center;color:var(--muted)">
-        <div style="font-size:36px;margin-bottom:10px">📆</div>
-        <div style="font-weight:800;font-size:16px;color:var(--text);margin-bottom:6px">Staff Schedule</div>
-        <div style="font-size:13px;margin-bottom:20px">View and manage weekly shifts from the Scheduled Shifts page.</div>
-        <button class="bill-generate-btn" onclick="switchPage('shifts',document.getElementById('nav-shifts'))">Go to Scheduled Shifts →</button>
+      <div class="shifts-toolbar">
+        <button class="shifts-today-btn" onclick="shiftsGoToday()">This week</button>
+        <button class="shifts-nav-btn" onclick="shiftsNav(-1)">‹</button>
+        <span class="shifts-week-label" id="shifts-week-label">—</span>
+        <button class="shifts-nav-btn" onclick="shiftsNav(1)">›</button>
+        <button class="btn-add admin-only" style="margin-left:auto" onclick="openShiftModal(null,null)">＋ Add shift</button>
       </div>
+      <div class="shifts-wrap">
+        <div id="shifts-grid-wrap"><div class="loading-state">Loading shifts…</div></div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-top:14px;padding:0 4px">
+        💡 Click any cell to set or edit a shift for that team member.
+      </p>
     </div>
 
     <!-- ── Upload Attendance ── -->
@@ -1678,22 +1684,6 @@
     </div>
   </div><!-- /tab-team-members -->
 
-  <!-- ══════════════════ SCHEDULED SHIFTS ══════════════════ -->
-  <div class="tab-panel" id="tab-shifts">
-    <div class="shifts-toolbar">
-      <button class="shifts-today-btn" onclick="shiftsGoToday()">This week</button>
-      <button class="shifts-nav-btn" onclick="shiftsNav(-1)">‹</button>
-      <span class="shifts-week-label" id="shifts-week-label">—</span>
-      <button class="shifts-nav-btn" onclick="shiftsNav(1)">›</button>
-      <button class="btn-add admin-only" style="margin-left:auto" onclick="openShiftModal(null,null)">＋ Add shift</button>
-    </div>
-    <div class="shifts-wrap">
-      <div id="shifts-grid-wrap"><div class="loading-state">Loading shifts…</div></div>
-    </div>
-    <p style="font-size:12px;color:var(--muted);margin-top:14px;padding:0 4px">
-      💡 The schedule shows your team's availability for bookings. Click any cell to set or edit a shift.
-    </p>
-  </div><!-- /tab-shifts -->
 
   <!-- ══════════════════ TIMESHEETS ══════════════════ -->
   <div class="tab-panel" id="tab-timesheets">
@@ -5537,6 +5527,7 @@
     document.querySelectorAll('.sl-page').forEach(p => p.classList.remove('show'));
     const pg = document.getElementById('sl-page-' + tab);
     if (pg) pg.classList.add('show');
+    if (tab === 'schedule')   loadShifts();
     if (tab === 'inactive')   renderInactiveStaff();
     if (tab === 'reporting')  renderReportingStructure();
   }
@@ -6052,7 +6043,7 @@
     if (page === 'schedule')      { openTeamNav(); Promise.all([loadStaff(), loadRooms(), loadRosterData()]).then(loadSchedule); }
     if (page === 'productivity')  { openTeamNav(); loadProductivity(); }
     if (page === 'team-members')  { openTeamNav(); loadTeamMembers(); }
-    if (page === 'shifts')        { openTeamNav(); loadShifts(); }
+    if (page === 'shifts')        { switchPage('team-members', document.getElementById('nav-team-members')); setTimeout(() => switchStaffTab('schedule', document.getElementById('sltab-schedule')), 50); return; }
     if (page === 'timesheets')    { openTeamNav(); loadTimesheets(); }
     if (page === 'sales')         { openTeamNav(); loadSales(); }
     if (page === 'clients-list')    { openClientNav(); loadClientsList(); }
