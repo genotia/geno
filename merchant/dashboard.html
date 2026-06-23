@@ -5994,6 +5994,7 @@
     sbsCustomFrom = document.getElementById('sbs-from').value;
     sbsCustomTo   = document.getElementById('sbs-to').value;
     if (!sbsCustomFrom || !sbsCustomTo) return;
+    document.getElementById('sbs-custom-range').style.display = 'none';
     loadSales();
   }
 
