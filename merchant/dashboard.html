@@ -5351,39 +5351,54 @@
   /* ── Client points balance helper (for bill) ── */
   let billClientBalance = 0;
   async function updateBillClientLoyalty(clientId) {
-    const bar       = document.getElementById('bill-loyalty-bar');
-    const availEl   = document.getElementById('bill-reward-avail');
-    const redeemEl  = document.getElementById('bill-redeem-pts-charge');
-    const redeemRsEl= document.getElementById('bill-redeem-rs-charge');
+    const bar        = document.getElementById('bill-loyalty-bar');
+    const availEl    = document.getElementById('bill-reward-avail');
+    const redeemEl   = document.getElementById('bill-redeem-pts-charge');
+    const redeemRsEl = document.getElementById('bill-redeem-rs-charge');
+
     if (!clientId) {
+      // No client / walk-in — hide bar, lock field
       bar.classList.remove('show');
       billClientBalance = 0;
-      if (availEl)  availEl.textContent  = '';
-      if (redeemEl) { redeemEl.value = ''; redeemEl.max = 0; redeemEl.disabled = true; redeemEl.placeholder = 'Select a client'; }
+      if (availEl)    availEl.textContent = '';
+      if (redeemEl)   { redeemEl.value = ''; redeemEl.max = 0; redeemEl.disabled = true; redeemEl.placeholder = 'Select a client'; }
       if (redeemRsEl) redeemRsEl.textContent = '';
       recalcBill();
       return;
     }
+
     await loadLoyaltySettings();
-    const { data: txns } = await db.from('loyalty_transactions').select('type,points')
-      .eq('client_id', clientId).eq('merchant_id', currentMerchant.id);
+    const { data: txns, error: txErr } = await db.from('loyalty_transactions')
+      .select('type,points')
+      .eq('client_id', clientId)
+      .eq('merchant_id', currentMerchant.id);
+
+    if (txErr && txErr.code !== '42P01') {
+      console.warn('loyalty_transactions fetch error:', txErr.message);
+    }
+
     const earned   = (txns||[]).filter(t=>t.type==='earn').reduce((s,t)=>s+t.points,0);
     const redeemed = (txns||[]).filter(t=>t.type==='redeem').reduce((s,t)=>s+t.points,0);
     billClientBalance = Math.max(0, earned - redeemed);
     const tier = tierFor(billClientBalance);
 
-    // Update loyalty bar (info display)
+    // Loyalty bar — always show for registered clients
     document.getElementById('bl-points').textContent    = billClientBalance.toLocaleString('en-IN');
     document.getElementById('bl-tier').textContent      = `${tier.icon} ${tier.name}`;
     document.getElementById('bl-tier-disc').textContent = `${tier.discount_pct}% tier discount`;
     bar.classList.add('show');
 
-    // Update charges-row reward field
-    if (availEl)  availEl.textContent  = `${billClientBalance.toLocaleString('en-IN')} pts available`;
+    // Charges-row reward field — always enabled for registered clients
+    if (availEl) {
+      availEl.textContent = billClientBalance > 0
+        ? `${billClientBalance.toLocaleString('en-IN')} pts available`
+        : '0 pts — no balance yet';
+      availEl.style.color = billClientBalance > 0 ? 'var(--green)' : 'var(--muted)';
+    }
     if (redeemEl) {
+      redeemEl.disabled    = false;
       redeemEl.max         = billClientBalance;
-      redeemEl.disabled    = billClientBalance === 0;
-      redeemEl.placeholder = billClientBalance > 0 ? '0' : 'No pts';
+      redeemEl.placeholder = billClientBalance > 0 ? `max ${billClientBalance} pts` : '0';
       redeemEl.value       = '';
     }
     if (redeemRsEl) redeemRsEl.textContent = '';
@@ -5484,11 +5499,17 @@
     document.getElementById('bill-client-dd').classList.remove('open');
     document.getElementById('bill-client-tag-name').textContent = c.name + (c.phone ? ' · ' + c.phone : '');
     document.getElementById('bill-client-tag').style.display = 'flex';
-    // Reset redeem toggle
-    const tog = document.getElementById('bl-redeem-toggle');
-    if (tog) { tog.checked=false; document.getElementById('bl-redeem-input-wrap').style.display='none'; document.getElementById('bl-redeem-pts').value=''; }
-    // Only load loyalty for registered clients (source:'db' or legacy no-source with real id)
-    updateBillClientLoyalty(c.source === 'booking' ? null : c.id);
+    // Resolve real client DB id — look up by phone/email if this is a booking-only entry
+    let loyaltyId = (c.source !== 'booking' && c.id) ? c.id : null;
+    if (!loyaltyId && (c.phone || c.email)) {
+      let q = db.from('clients').select('id').eq('merchant_id', currentMerchant.id);
+      if (c.phone) q = q.eq('phone', c.phone);
+      else         q = q.eq('email', c.email);
+      const { data: found } = await q.maybeSingle();
+      loyaltyId = found?.id || null;
+      if (loyaltyId) billClient = { ...c, id: loyaltyId, source: 'db' }; // upgrade in-memory entry
+    }
+    updateBillClientLoyalty(loyaltyId);
   }
 
   function setWalkinClient() {
