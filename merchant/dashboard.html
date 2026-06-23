@@ -5774,8 +5774,10 @@
   async function loadShifts() {
     const dates = getWeekDates(shiftsWeekOffset);
     document.getElementById('shifts-week-label').textContent = weekLabel(dates);
-    if (!currentStaff.length) await loadStaff();
-    if (!currentRoster.length) await loadRosterData();
+    const fetches = [];
+    if (!currentStaff.length)  fetches.push(loadStaff());
+    if (!currentRoster.length) fetches.push(loadRosterData());
+    if (fetches.length) await Promise.all(fetches);
     renderShiftsGrid(dates);
   }
 
