@@ -6826,21 +6826,14 @@
 
   /* ── Load campaigns ── */
   /* ════════════════════════════════════════════
-     NOTIFICATIONS (combined WhatsApp / Email / SMS)
+     NOTIFICATIONS — 4-tab page
   ════════════════════════════════════════════ */
-  let notifChannel      = 'whatsapp';
-  let notifSegment      = 'all';
-  let notifSegClientData = [];
 
   const NOTIF_CHANNEL_CFG = {
     whatsapp: { label:'💬 WhatsApp', color:'#25D366', icon:'💬' },
     email:    { label:'📧 Email',    color:'#2563EB', icon:'📧' },
     sms:      { label:'📱 SMS',      color:'#6366F1', icon:'📱' },
   };
-
-  /* ════════════════════════════════════════════
-     NOTIFICATIONS — 4-tab page
-  ════════════════════════════════════════════ */
 
   let notifChannel       = 'whatsapp';
   let notifSelectedSegs  = new Set();   // multi-select for campaign
