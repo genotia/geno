@@ -1770,24 +1770,14 @@
         <span id="bill-client-tag-name">Walk-in Client</span>
         <span class="tag-clear" onclick="clearBillClient()">✕</span>
       </div>
-      <!-- Loyalty bar: shown when a registered client is selected -->
+      <!-- Loyalty bar: shown when a registered client is selected (info only) -->
       <div class="bill-loyalty-bar" id="bill-loyalty-bar">
         <div>
-          <div class="bill-loyalty-pts">⭐ <span id="bl-points">0</span> pts</div>
+          <div class="bill-loyalty-pts">⭐ <span id="bl-points">0</span> pts available</div>
           <div class="bill-loyalty-tier" id="bl-tier">—</div>
         </div>
         <div style="font-size:12px;color:#059669;font-weight:600" id="bl-tier-disc"></div>
-        <div class="bill-loyalty-redeem">
-          <label class="bill-redeem-toggle">
-            <input type="checkbox" id="bl-redeem-toggle" onchange="toggleRedeemPoints()" />
-            Redeem points
-          </label>
-          <div id="bl-redeem-input-wrap" style="display:none;align-items:center;gap:6px">
-            <input type="number" id="bl-redeem-pts" class="bill-charge-input" style="width:90px"
-              placeholder="pts" min="0" oninput="onRedeemPtsInput()" />
-            <span style="font-size:12px;color:#059669;font-weight:600" id="bl-redeem-rs"></span>
-          </div>
-        </div>
+        <div style="font-size:12px;color:var(--muted)">Enter pts to redeem in the Reward Points field below ↓</div>
       </div>
 
       <!-- Line items -->
@@ -1809,6 +1799,17 @@
 
       <!-- Charges -->
       <div class="bill-charges-row">
+        <div class="bill-charge-field">
+          <label style="display:flex;align-items:center;justify-content:space-between">
+            Reward Points
+            <span id="bill-reward-avail" style="font-size:11px;color:var(--muted);font-weight:500"></span>
+          </label>
+          <input type="number" class="bill-charge-input" id="bill-redeem-pts-charge"
+            placeholder="0 pts" min="0" step="1"
+            oninput="onRedeemChargeInput(this)"
+            style="background:var(--white)" />
+          <span id="bill-redeem-rs-charge" style="font-size:11px;color:#059669;font-weight:600;margin-top:3px;display:block"></span>
+        </div>
         <div class="bill-charge-field">
           <label>Ex Charges</label>
           <input type="number" class="bill-charge-input" id="bill-ex-charges" placeholder="0" min="0" step="0.01" oninput="recalcBill()" />
@@ -5222,43 +5223,62 @@
   /* ── Client points balance helper (for bill) ── */
   let billClientBalance = 0;
   async function updateBillClientLoyalty(clientId) {
-    const bar = document.getElementById('bill-loyalty-bar');
-    if (!clientId) { bar.classList.remove('show'); billClientBalance=0; return; }
+    const bar       = document.getElementById('bill-loyalty-bar');
+    const availEl   = document.getElementById('bill-reward-avail');
+    const redeemEl  = document.getElementById('bill-redeem-pts-charge');
+    const redeemRsEl= document.getElementById('bill-redeem-rs-charge');
+    if (!clientId) {
+      bar.classList.remove('show');
+      billClientBalance = 0;
+      if (availEl)  availEl.textContent  = '';
+      if (redeemEl) { redeemEl.value = ''; redeemEl.max = 0; redeemEl.disabled = true; redeemEl.placeholder = 'Select a client'; }
+      if (redeemRsEl) redeemRsEl.textContent = '';
+      recalcBill();
+      return;
+    }
     await loadLoyaltySettings();
-    const { data: txns } = await db.from('loyalty_transactions').select('type,points').eq('client_id', clientId).eq('merchant_id', currentMerchant.id);
+    const { data: txns } = await db.from('loyalty_transactions').select('type,points')
+      .eq('client_id', clientId).eq('merchant_id', currentMerchant.id);
     const earned   = (txns||[]).filter(t=>t.type==='earn').reduce((s,t)=>s+t.points,0);
     const redeemed = (txns||[]).filter(t=>t.type==='redeem').reduce((s,t)=>s+t.points,0);
     billClientBalance = Math.max(0, earned - redeemed);
     const tier = tierFor(billClientBalance);
+
+    // Update loyalty bar (info display)
     document.getElementById('bl-points').textContent    = billClientBalance.toLocaleString('en-IN');
     document.getElementById('bl-tier').textContent      = `${tier.icon} ${tier.name}`;
     document.getElementById('bl-tier-disc').textContent = `${tier.discount_pct}% tier discount`;
-    document.getElementById('bl-redeem-pts').max        = billClientBalance;
     bar.classList.add('show');
+
+    // Update charges-row reward field
+    if (availEl)  availEl.textContent  = `${billClientBalance.toLocaleString('en-IN')} pts available`;
+    if (redeemEl) {
+      redeemEl.max         = billClientBalance;
+      redeemEl.disabled    = billClientBalance === 0;
+      redeemEl.placeholder = billClientBalance > 0 ? '0' : 'No pts';
+      redeemEl.value       = '';
+    }
+    if (redeemRsEl) redeemRsEl.textContent = '';
     recalcBill();
   }
-  function toggleRedeemPoints() {
-    const on = document.getElementById('bl-redeem-toggle').checked;
-    document.getElementById('bl-redeem-input-wrap').style.display = on ? 'flex' : 'none';
-    if (!on) { document.getElementById('bl-redeem-pts').value=''; }
+
+  function onRedeemChargeInput(input) {
+    const raw   = parseFloat(input.value) || 0;
+    const pts   = Math.min(raw, billClientBalance);
+    if (raw > billClientBalance) input.value = billClientBalance; // clamp
+    const rs    = pts * loyaltyConfig.point_value;
+    const rsEl  = document.getElementById('bill-redeem-rs-charge');
+    if (rsEl) rsEl.textContent = pts > 0 ? `= ₹${rs.toFixed(2)} discount` : '';
     recalcBill();
   }
-  function onRedeemPtsInput() {
-    const pts = Math.min(parseFloat(document.getElementById('bl-redeem-pts').value)||0, billClientBalance);
-    const rs  = pts * loyaltyConfig.point_value;
-    document.getElementById('bl-redeem-rs').textContent = pts ? `= ₹${rs.toFixed(2)} discount` : '';
-    recalcBill();
+
+  function getRedeemPts() {
+    const el = document.getElementById('bill-redeem-pts-charge');
+    if (!el || el.disabled) return 0;
+    return Math.min(parseFloat(el.value)||0, billClientBalance);
   }
   function getRedeemAmount() {
-    const on  = document.getElementById('bl-redeem-toggle')?.checked;
-    if (!on) return 0;
-    const pts = Math.min(parseFloat(document.getElementById('bl-redeem-pts').value)||0, billClientBalance);
-    return pts * loyaltyConfig.point_value;
-  }
-  function getRedeemPts() {
-    const on  = document.getElementById('bl-redeem-toggle')?.checked;
-    if (!on) return 0;
-    return Math.min(parseFloat(document.getElementById('bl-redeem-pts').value)||0, billClientBalance);
+    return getRedeemPts() * loyaltyConfig.point_value;
   }
 
   /* ════════════════════════════════════════════
@@ -5276,6 +5296,12 @@
     document.getElementById('bill-client-tag').style.display = 'none';
     document.getElementById('bill-loyalty-bar').classList.remove('show');
     billItems = []; billItemId = 0; billClient = null; billClientBalance = 0;
+    const redeemEl = document.getElementById('bill-redeem-pts-charge');
+    if (redeemEl) { redeemEl.value=''; redeemEl.disabled=true; redeemEl.placeholder='Select a client'; }
+    const availEl = document.getElementById('bill-reward-avail');
+    if (availEl) availEl.textContent = '';
+    const rsEl = document.getElementById('bill-redeem-rs-charge');
+    if (rsEl) rsEl.textContent = '';
 
     // Load all data sources in parallel before rendering
     const jobs = [];
