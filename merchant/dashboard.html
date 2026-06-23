@@ -838,6 +838,30 @@
     .adv-aud-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:18px; }
     .adv-aud-name { font-size:15px; font-weight:800; color:var(--text); margin-bottom:6px; }
     .adv-aud-tag  { display:inline-flex; align-items:center; gap:4px; background:var(--bg); border-radius:6px; padding:3px 8px; font-size:11px; color:var(--muted); font-weight:600; margin:2px; }
+    /* Platform selector */
+    .adv-plat-selector { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:28px; }
+    .adv-plat-card { background:var(--white); border:2px solid var(--border); border-radius:16px; padding:18px 20px; cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:14px; }
+    .adv-plat-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+    .adv-plat-card.active-fb { border-color:#1877F2; background:#EFF6FF; }
+    .adv-plat-card.active-ig { border-color:#C13584; background:#FDF2F8; }
+    .adv-plat-card.active-wa { border-color:#25D366; background:#F0FDF4; }
+    .adv-plat-logo { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
+    .adv-plat-name { font-size:15px; font-weight:800; color:var(--text); margin-bottom:2px; }
+    .adv-plat-desc { font-size:11px; color:var(--muted); line-height:1.5; }
+    .adv-plat-badge { font-size:10px; font-weight:800; padding:3px 8px; border-radius:6px; white-space:nowrap; flex-shrink:0; }
+    .fb-badge { background:#EFF6FF; color:#1877F2; }
+    .ig-badge { background:#FDF2F8; color:#C13584; }
+    .wa-badge { background:#F0FDF4; color:#16A34A; }
+    .adv-plat-section { display:none; }
+    .adv-plat-section.show { display:block; }
+    .ig-connect-note { background:linear-gradient(135deg,#F3E8FF,#FCE7F3); border:1.5px solid #D8B4FE; border-radius:14px; padding:16px 20px; display:flex; align-items:center; gap:16px; margin-bottom:20px; }
+    .wa-connect-banner { background:linear-gradient(135deg,#25D366,#128C7E); border-radius:16px; padding:28px 32px; color:#fff; display:flex; align-items:center; gap:24px; margin-bottom:24px; }
+    .wa-connect-btn { background:#fff; color:#128C7E; border:none; border-radius:10px; padding:11px 22px; font-size:14px; font-weight:800; cursor:pointer; font-family:inherit; }
+    .wa-connected-bar { background:#D1FAE5; border:1.5px solid #6EE7B7; border-radius:12px; padding:12px 18px; display:flex; align-items:center; gap:12px; margin-bottom:20px; font-size:13px; font-weight:700; color:#065F46; }
+    .wa-tmpl-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
+    .wa-tmpl-card { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:16px; }
+    .wa-tmpl-name { font-size:14px; font-weight:800; color:var(--text); margin-bottom:6px; }
+    .wa-tmpl-body { font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:12px; background:var(--bg); border-radius:8px; padding:10px; }
     /* Tab action bar (New Template / New Segment buttons) */
     .notif-tab-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
     .notif-tab-bar-title { font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
@@ -2540,77 +2564,210 @@
       </div>
     </div>
 
-    <!-- FB connection status (shown/hidden by JS) -->
-    <div id="adv-connect-banner">
-      <div class="fb-connect-banner">
-        <div class="fb-connect-logo">📘</div>
-        <div class="fb-connect-body">
-          <div class="fb-connect-title">Connect your Facebook Business account</div>
-          <div class="fb-connect-sub">Link your Meta Ads account to create campaigns, track performance and manage budgets — all from this dashboard.</div>
-          <button class="fb-connect-btn" onclick="connectFacebook()">Connect Facebook →</button>
+    <!-- ── Platform Selector ── -->
+    <div class="adv-plat-selector">
+      <div class="adv-plat-card active-fb" id="adv-plat-fb" onclick="switchAdvPlatform('fb')">
+        <div class="adv-plat-logo" style="background:#1877F2">📘</div>
+        <div style="flex:1">
+          <div class="adv-plat-name">Facebook Ads</div>
+          <div class="adv-plat-desc">Feed · Stories · Marketplace · Reels</div>
+        </div>
+        <div class="adv-plat-badge fb-badge">Meta Ads API</div>
+      </div>
+      <div class="adv-plat-card" id="adv-plat-ig" onclick="switchAdvPlatform('ig')">
+        <div class="adv-plat-logo" style="background:linear-gradient(135deg,#f09433,#dc2743,#bc1888)">📸</div>
+        <div style="flex:1">
+          <div class="adv-plat-name">Instagram Ads</div>
+          <div class="adv-plat-desc">Feed · Stories · Reels · Explore</div>
+        </div>
+        <div class="adv-plat-badge ig-badge">Meta Ads API</div>
+      </div>
+      <div class="adv-plat-card" id="adv-plat-wa" onclick="switchAdvPlatform('wa')">
+        <div class="adv-plat-logo" style="background:linear-gradient(135deg,#25D366,#128C7E)">💬</div>
+        <div style="flex:1">
+          <div class="adv-plat-name">WhatsApp</div>
+          <div class="adv-plat-desc">Broadcasts · Click-to-Chat Ads</div>
+        </div>
+        <div class="adv-plat-badge wa-badge">Business API</div>
+      </div>
+    </div>
+
+    <!-- ══════════ FACEBOOK SECTION ══════════ -->
+    <div id="adv-section-fb" class="adv-plat-section show">
+      <div id="adv-connect-banner">
+        <div class="fb-connect-banner">
+          <div class="fb-connect-logo">📘</div>
+          <div class="fb-connect-body">
+            <div class="fb-connect-title">Connect your Facebook Business account</div>
+            <div class="fb-connect-sub">Link your Meta Ads account to create Facebook campaigns, track performance and manage budgets — all from this dashboard.</div>
+            <button class="fb-connect-btn" onclick="connectFacebook()">Connect Facebook →</button>
+          </div>
+        </div>
+      </div>
+      <div id="adv-connected-bar" style="display:none">
+        <div class="fb-connected-bar">
+          <span style="font-size:20px">✅</span>
+          <span>Connected as <strong id="adv-fb-name">—</strong> · Ad Account: <strong id="adv-fb-account">—</strong></span>
+          <button onclick="disconnectFacebook()" style="margin-left:auto;background:none;border:1.5px solid #6EE7B7;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:#065F46;cursor:pointer;font-family:inherit">Disconnect</button>
+        </div>
+      </div>
+      <div class="adv-ptabs">
+        <button class="adv-ptab active" id="advtab-fb-dashboard" onclick="switchAdvPage('fb-dashboard',this)">📊 Dashboard</button>
+        <button class="adv-ptab" id="advtab-fb-campaign"  onclick="switchAdvPage('fb-campaign',this)">➕ Create Campaign</button>
+        <button class="adv-ptab" id="advtab-fb-library"   onclick="switchAdvPage('fb-library',this)">🖼️ Ad Library</button>
+        <button class="adv-ptab" id="advtab-fb-audiences" onclick="switchAdvPage('fb-audiences',this)">👥 Audiences</button>
+      </div>
+      <div class="adv-page show" id="adv-page-fb-dashboard">
+        <div class="adv-kpis">
+          <div class="adv-kpi"><div class="adv-kpi-label">Active campaigns</div><div class="adv-kpi-value" id="adv-fb-k-active">—</div><div class="adv-kpi-sub">running now</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Total spend</div><div class="adv-kpi-value" id="adv-fb-k-spend">—</div><div class="adv-kpi-sub">last 30 days ₹</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Impressions</div><div class="adv-kpi-value" id="adv-fb-k-impr">—</div><div class="adv-kpi-sub">last 30 days</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Reach</div><div class="adv-kpi-value" id="adv-fb-k-reach">—</div><div class="adv-kpi-sub">unique people</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Link clicks</div><div class="adv-kpi-value" id="adv-fb-k-clicks">—</div><div class="adv-kpi-sub">last 30 days</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Avg. CPR</div><div class="adv-kpi-value" id="adv-fb-k-cpr">—</div><div class="adv-kpi-sub">cost per reach ₹</div></div>
+        </div>
+        <div class="team-table"><table>
+          <thead><tr><th>Campaign</th><th>Objective</th><th>Budget</th><th>Duration</th><th>Impressions</th><th>Clicks</th><th>Status</th><th></th></tr></thead>
+          <tbody id="adv-fb-camp-tbody"><tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">Connect Facebook to see your campaigns</td></tr></tbody>
+        </table></div>
+      </div>
+      <div class="adv-page" id="adv-page-fb-campaign">
+        <div class="adv-steps" id="adv-fb-steps"></div>
+        <div id="adv-fb-wizard-body"></div>
+      </div>
+      <div class="adv-page" id="adv-page-fb-library">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+          <div style="font-size:13px;color:var(--muted)">Reusable Facebook ad creatives saved from your campaigns</div>
+          <button class="ntab-new-btn" onclick="openSaveCreativeOverlay()">+ Save creative</button>
+        </div>
+        <div class="adv-lib-grid" id="adv-fb-lib-grid">
+          <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No saved Facebook creatives yet.</div>
+        </div>
+      </div>
+      <div class="adv-page" id="adv-page-fb-audiences">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+          <div style="font-size:13px;color:var(--muted)">Saved targeting audiences — reuse in any Facebook campaign</div>
+          <button class="ntab-new-btn" onclick="openSaveAudienceOverlay()">+ Save audience</button>
+        </div>
+        <div class="adv-aud-grid" id="adv-fb-aud-grid">
+          <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No saved audiences yet.</div>
         </div>
       </div>
     </div>
-    <div id="adv-connected-bar" style="display:none">
-      <div class="fb-connected-bar">
-        <span style="font-size:20px">✅</span>
-        <span>Connected as <strong id="adv-fb-name">—</strong> · Ad Account: <strong id="adv-fb-account">—</strong></span>
-        <button onclick="disconnectFacebook()" style="margin-left:auto;background:none;border:1.5px solid #6EE7B7;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:#065F46;cursor:pointer;font-family:inherit">Disconnect</button>
+
+    <!-- ══════════ INSTAGRAM SECTION ══════════ -->
+    <div id="adv-section-ig" class="adv-plat-section">
+      <div class="ig-connect-note">
+        <div style="font-size:36px">📸</div>
+        <div>
+          <div style="font-size:14px;font-weight:800;color:#7C3AED;margin-bottom:4px">Instagram uses your Meta / Facebook login</div>
+          <div style="font-size:12px;color:#6D28D9;line-height:1.6">Connect Facebook first (in the Facebook tab) — Instagram campaigns run through the same Meta Ads account. Ads target <strong>Instagram Feed, Stories, Reels and Explore</strong> placements.</div>
+        </div>
+      </div>
+      <div class="adv-ptabs">
+        <button class="adv-ptab active" id="advtab-ig-dashboard" onclick="switchAdvPage('ig-dashboard',this)">📊 Dashboard</button>
+        <button class="adv-ptab" id="advtab-ig-campaign"  onclick="switchAdvPage('ig-campaign',this)">➕ Create Campaign</button>
+        <button class="adv-ptab" id="advtab-ig-library"   onclick="switchAdvPage('ig-library',this)">🎬 Reel/Story Library</button>
+        <button class="adv-ptab" id="advtab-ig-audiences" onclick="switchAdvPage('ig-audiences',this)">👥 Audiences</button>
+      </div>
+      <div class="adv-page show" id="adv-page-ig-dashboard">
+        <div class="adv-kpis">
+          <div class="adv-kpi"><div class="adv-kpi-label">Active campaigns</div><div class="adv-kpi-value" id="adv-ig-k-active">—</div><div class="adv-kpi-sub">running now</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Total spend</div><div class="adv-kpi-value" id="adv-ig-k-spend">—</div><div class="adv-kpi-sub">last 30 days ₹</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Impressions</div><div class="adv-kpi-value" id="adv-ig-k-impr">—</div><div class="adv-kpi-sub">last 30 days</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Story views</div><div class="adv-kpi-value" id="adv-ig-k-story">—</div><div class="adv-kpi-sub">last 30 days</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Profile visits</div><div class="adv-kpi-value" id="adv-ig-k-clicks">—</div><div class="adv-kpi-sub">from ads</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Cost per click</div><div class="adv-kpi-value" id="adv-ig-k-cpc">—</div><div class="adv-kpi-sub">₹ average</div></div>
+        </div>
+        <div class="team-table"><table>
+          <thead><tr><th>Campaign</th><th>Format</th><th>Objective</th><th>Budget</th><th>Duration</th><th>Impressions</th><th>Status</th><th></th></tr></thead>
+          <tbody id="adv-ig-camp-tbody"><tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">Connect Facebook first, then create Instagram campaigns here.</td></tr></tbody>
+        </table></div>
+      </div>
+      <div class="adv-page" id="adv-page-ig-campaign">
+        <div class="adv-steps" id="adv-ig-steps"></div>
+        <div id="adv-ig-wizard-body"></div>
+      </div>
+      <div class="adv-page" id="adv-page-ig-library">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+          <div style="font-size:13px;color:var(--muted)">Saved Reels, Stories and feed creatives for Instagram</div>
+          <button class="ntab-new-btn" onclick="openSaveCreativeOverlay()">+ Save creative</button>
+        </div>
+        <div class="adv-lib-grid" id="adv-ig-lib-grid">
+          <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No saved Instagram creatives yet.</div>
+        </div>
+      </div>
+      <div class="adv-page" id="adv-page-ig-audiences">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+          <div style="font-size:13px;color:var(--muted)">Saved targeting audiences — reuse in any Instagram campaign</div>
+          <button class="ntab-new-btn" onclick="openSaveAudienceOverlay()">+ Save audience</button>
+        </div>
+        <div class="adv-aud-grid" id="adv-ig-aud-grid">
+          <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No saved audiences yet.</div>
+        </div>
       </div>
     </div>
 
-    <!-- Page tabs -->
-    <div class="adv-ptabs">
-      <button class="adv-ptab active" id="advtab-dashboard"  onclick="switchAdvPage('dashboard',this)">📊 Dashboard</button>
-      <button class="adv-ptab"        id="advtab-campaign"   onclick="switchAdvPage('campaign',this)">➕ Create Campaign</button>
-      <button class="adv-ptab"        id="advtab-library"    onclick="switchAdvPage('library',this)">🖼️ Ad Library</button>
-      <button class="adv-ptab"        id="advtab-audiences"  onclick="switchAdvPage('audiences',this)">👥 Audiences</button>
-    </div>
-
-    <!-- ── DASHBOARD ── -->
-    <div class="adv-page show" id="adv-page-dashboard">
-      <div class="adv-kpis" id="adv-kpis">
-        <div class="adv-kpi"><div class="adv-kpi-label">Active campaigns</div><div class="adv-kpi-value" id="adv-k-active">—</div><div class="adv-kpi-sub">running now</div></div>
-        <div class="adv-kpi"><div class="adv-kpi-label">Total spend</div><div class="adv-kpi-value" id="adv-k-spend">—</div><div class="adv-kpi-sub">all time ₹</div></div>
-        <div class="adv-kpi"><div class="adv-kpi-label">Impressions</div><div class="adv-kpi-value" id="adv-k-impr">—</div><div class="adv-kpi-sub">last 30 days</div></div>
-        <div class="adv-kpi"><div class="adv-kpi-label">Reach</div><div class="adv-kpi-value" id="adv-k-reach">—</div><div class="adv-kpi-sub">unique people</div></div>
-        <div class="adv-kpi"><div class="adv-kpi-label">Clicks</div><div class="adv-kpi-value" id="adv-k-clicks">—</div><div class="adv-kpi-sub">last 30 days</div></div>
-        <div class="adv-kpi"><div class="adv-kpi-label">Avg. CPR</div><div class="adv-kpi-value" id="adv-k-cpr">—</div><div class="adv-kpi-sub">cost per reach ₹</div></div>
+    <!-- ══════════ WHATSAPP SECTION ══════════ -->
+    <div id="adv-section-wa" class="adv-plat-section">
+      <div id="wa-connect-banner">
+        <div class="wa-connect-banner">
+          <div style="font-size:48px;flex-shrink:0">💬</div>
+          <div style="flex:1">
+            <div class="fb-connect-title">Connect WhatsApp Business</div>
+            <div class="fb-connect-sub">Link your WhatsApp Business account to send broadcast messages and track Click-to-Chat ad performance. Requires WhatsApp Business API access.</div>
+            <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
+              <button class="wa-connect-btn" onclick="connectWhatsApp()">Connect via Meta →</button>
+              <button class="wa-connect-btn" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.5);font-weight:700" onclick="skipWaConnect()">Skip — use Click-to-Chat Ads only</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="team-table">
-        <table>
-          <thead><tr><th>Campaign</th><th>Platform</th><th>Objective</th><th>Budget</th><th>Duration</th><th>Impressions</th><th>Clicks</th><th>Status</th><th></th></tr></thead>
-          <tbody id="adv-camp-tbody"><tr><td colspan="9" style="text-align:center;padding:40px;color:var(--muted)">Connect Facebook to see your campaigns</td></tr></tbody>
-        </table>
+      <div id="wa-connected-bar" style="display:none">
+        <div class="wa-connected-bar">
+          <span style="font-size:20px">✅</span>
+          <span>WhatsApp Business connected — <strong id="wa-phone-display">—</strong></span>
+          <button onclick="disconnectWhatsApp()" style="margin-left:auto;background:none;border:1.5px solid #6EE7B7;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:#065F46;cursor:pointer;font-family:inherit">Disconnect</button>
+        </div>
       </div>
-    </div>
-
-    <!-- ── CREATE CAMPAIGN WIZARD ── -->
-    <div class="adv-page" id="adv-page-campaign">
-      <!-- Step indicator -->
-      <div class="adv-steps" id="adv-steps"></div>
-      <div id="adv-wizard-body"></div>
-    </div>
-
-    <!-- ── AD LIBRARY ── -->
-    <div class="adv-page" id="adv-page-library">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
-        <div style="font-size:13px;color:var(--muted)">Reusable ad creatives saved from your campaigns</div>
-        <button class="ntab-new-btn" onclick="openSaveCreativeOverlay()">+ Save creative</button>
+      <div class="adv-ptabs">
+        <button class="adv-ptab active" id="advtab-wa-dashboard" onclick="switchAdvPage('wa-dashboard',this)">📊 Dashboard</button>
+        <button class="adv-ptab" id="advtab-wa-broadcast"  onclick="switchAdvPage('wa-broadcast',this)">📣 Broadcast</button>
+        <button class="adv-ptab" id="advtab-wa-ctc"        onclick="switchAdvPage('wa-ctc',this)">🔗 Click-to-Chat Ads</button>
+        <button class="adv-ptab" id="advtab-wa-templates"  onclick="switchAdvPage('wa-templates',this)">📝 WA Templates</button>
       </div>
-      <div class="adv-lib-grid" id="adv-lib-grid">
-        <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No saved creatives yet. Launch a campaign to populate your library.</div>
+      <div class="adv-page show" id="adv-page-wa-dashboard">
+        <div class="adv-kpis">
+          <div class="adv-kpi"><div class="adv-kpi-label">Messages sent</div><div class="adv-kpi-value" id="adv-wa-k-sent">—</div><div class="adv-kpi-sub">last 30 days</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Delivered</div><div class="adv-kpi-value" id="adv-wa-k-dlvr">—</div><div class="adv-kpi-sub">delivery rate</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Read rate</div><div class="adv-kpi-value" id="adv-wa-k-read">—</div><div class="adv-kpi-sub">% of delivered</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Replies</div><div class="adv-kpi-value" id="adv-wa-k-reply">—</div><div class="adv-kpi-sub">from clients</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">CTC ad clicks</div><div class="adv-kpi-value" id="adv-wa-k-ctc">—</div><div class="adv-kpi-sub">click-to-chat</div></div>
+          <div class="adv-kpi"><div class="adv-kpi-label">Templates approved</div><div class="adv-kpi-value" id="adv-wa-k-tmpl">—</div><div class="adv-kpi-sub">of submitted</div></div>
+        </div>
+        <div id="adv-wa-campaign-list">
+          <div style="padding:40px;text-align:center;color:var(--muted)">No WhatsApp campaigns yet. Use <strong>Broadcast</strong> to send your first campaign.</div>
+        </div>
       </div>
-    </div>
-
-    <!-- ── AUDIENCES ── -->
-    <div class="adv-page" id="adv-page-audiences">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
-        <div style="font-size:13px;color:var(--muted)">Saved targeting audiences — reuse in any campaign</div>
-        <button class="ntab-new-btn" onclick="openSaveAudienceOverlay()">+ Save audience</button>
+      <div class="adv-page" id="adv-page-wa-broadcast">
+        <div id="adv-wa-broadcast-body"></div>
       </div>
-      <div class="adv-aud-grid" id="adv-aud-grid">
-        <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No saved audiences yet.</div>
+      <div class="adv-page" id="adv-page-wa-ctc">
+        <div style="background:#F0FDF4;border:1.5px solid #A7F3D0;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#065F46;font-weight:600">
+          💡 <strong>Click-to-Chat ads</strong> appear on Facebook or Instagram and open a WhatsApp conversation when tapped. They use your Meta Ads account — no separate WhatsApp Business API is needed.
+        </div>
+        <div class="adv-steps" id="adv-wa-steps"></div>
+        <div id="adv-wa-wizard-body"></div>
+      </div>
+      <div class="adv-page" id="adv-page-wa-templates">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+          <div>
+            <div style="font-size:14px;font-weight:800;color:var(--text)">WhatsApp Message Templates</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">Pre-approved templates from your Notifications library. WhatsApp Business API templates require Meta approval before use.</div>
+          </div>
+          <button class="ntab-new-btn" onclick="switchPage('mktg-notifications',document.getElementById('nav-mktg-notifications'))">+ New Template →</button>
+        </div>
+        <div class="wa-tmpl-grid" id="adv-wa-tmpl-grid"></div>
       </div>
     </div>
   </div>
@@ -8112,21 +8269,22 @@
   }
 
   /* ════════════════════════════════════════════════════════
-     ADVERTISING — Facebook & Instagram Campaign Manager
+     ADVERTISING — Facebook · Instagram · WhatsApp
   ════════════════════════════════════════════════════════ */
 
   const FB_APP_ID  = 'YOUR_FB_APP_ID';   // ← replace before go-live
   const FB_API_VER = 'v21.0';
   const FB_GRAPH   = `https://graph.facebook.com/${FB_API_VER}`;
 
-  let advFbToken     = null;   // current access token
-  let advFbAccountId = null;   // selected ad account id (act_XXXXXX)
-  let advFbPageId    = null;   // Facebook Page id for creatives
-  let advFbUserName  = '';
-  let advCampaigns   = [];
+  let advFbToken        = null;
+  let advFbAccountId    = null;
+  let advFbPageId       = null;
+  let advFbUserName     = '';
+  let advCampaigns      = [];
   let advSavedAudiences = [];
-  let advStep        = 1;      // wizard current step (1–6)
-  let advData        = {};     // wizard form data accumulator
+  let advStep           = 1;
+  let advData           = {};
+  let advActivePlatform = 'fb';   // 'fb' | 'ig' | 'wa'
 
   // Spa/salon ad copy templates
   const ADV_TEMPLATES = [
@@ -8155,6 +8313,41 @@
   const ADV_CTA_LABELS = {
     BOOK_TRAVEL:'Book Now', GET_OFFER:'Get Offer', LEARN_MORE:'Learn More', CONTACT_US:'Contact Us',
   };
+
+  /* ─── Platform Switcher ─── */
+  function switchAdvPlatform(p) {
+    advActivePlatform = p;
+    ['fb','ig','wa'].forEach(pl => {
+      const card = document.getElementById('adv-plat-' + pl);
+      card.classList.remove('active-fb','active-ig','active-wa');
+      if (pl === p) card.classList.add('active-' + p);
+    });
+    document.querySelectorAll('.adv-plat-section').forEach(s => s.classList.remove('show'));
+    document.getElementById('adv-section-' + p).classList.add('show');
+    if (p === 'fb') loadAdvDashboard('fb');
+    if (p === 'ig') loadAdvDashboard('ig');
+    if (p === 'wa') loadWaDashboard();
+  }
+
+  function switchAdvPage(page, btn) {
+    const section = btn.closest('.adv-plat-section');
+    section.querySelectorAll('.adv-ptab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    section.querySelectorAll('.adv-page').forEach(p => p.classList.remove('show'));
+    document.getElementById('adv-page-' + page).classList.add('show');
+    if (page === 'fb-dashboard')  loadAdvDashboard('fb');
+    if (page === 'ig-dashboard')  loadAdvDashboard('ig');
+    if (page === 'fb-campaign')   { advData = {}; advData.platform = 'facebook';  initAdvWizard('fb'); }
+    if (page === 'ig-campaign')   { advData = {}; advData.platform = 'instagram'; initAdvWizard('ig'); }
+    if (page === 'wa-ctc')        { advData = {}; advData.platform = 'both'; advData.cta = 'MESSAGE_PAGE'; initAdvWizard('wa'); }
+    if (page === 'fb-library')    loadAdvLibrary('fb');
+    if (page === 'ig-library')    loadAdvLibrary('ig');
+    if (page === 'fb-audiences')  loadAdvAudiences('fb');
+    if (page === 'ig-audiences')  loadAdvAudiences('ig');
+    if (page === 'wa-dashboard')  loadWaDashboard();
+    if (page === 'wa-broadcast')  renderWaBroadcast();
+    if (page === 'wa-templates')  renderWaTemplates();
+  }
 
   /* ─── FB SDK & Auth ─── */
   function loadFbSdk() {
@@ -8260,8 +8453,7 @@
 
   /* ─── Page init ─── */
   async function loadAdvertising() {
-    switchAdvPage('dashboard', document.getElementById('advtab-dashboard'));
-    // Restore FB connection from DB
+    switchAdvPlatform('fb');
     const { data } = await db.from('merchant_fb_connections')
       .select('*').eq('merchant_id', currentMerchant.id).maybeSingle();
     if (data) {
@@ -8270,69 +8462,62 @@
       advFbPageId    = data.fb_page_id;
       advFbUserName  = data.fb_user_name || 'Connected';
       showFbConnected();
-      loadAdvDashboard();
+      loadAdvDashboard('fb');
     }
-  }
-
-  function switchAdvPage(page, btn) {
-    document.querySelectorAll('.adv-ptab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.adv-page').forEach(p => p.classList.remove('show'));
-    document.getElementById('adv-page-' + page).classList.add('show');
-    if (page === 'dashboard') loadAdvDashboard();
-    if (page === 'campaign')  initAdvWizard();
-    if (page === 'library')   loadAdvLibrary();
-    if (page === 'audiences') loadAdvAudiences();
   }
 
   /* ─── Dashboard ─── */
-  async function loadAdvDashboard() {
+  async function loadAdvDashboard(plat) {
+    plat = plat || advActivePlatform;
     if (!advFbToken || !advFbAccountId) return;
-    // Fetch campaigns from DB
+    const fbPlatFilter = plat === 'ig' ? 'instagram' : 'facebook';
     const { data: camps } = await db.from('ad_campaigns')
-      .select('*').eq('merchant_id', currentMerchant.id).order('created_at', { ascending: false });
-    advCampaigns = camps || [];
-    const active  = advCampaigns.filter(c => c.status === 'ACTIVE');
-    // Fetch live insights from FB for active campaigns
+      .select('*').eq('merchant_id', currentMerchant.id)
+      .in('platform', plat === 'ig' ? ['instagram'] : ['facebook','both'])
+      .order('created_at', { ascending: false });
+    const filteredCamps = camps || [];
+    const active = filteredCamps.filter(c => c.status === 'ACTIVE');
     let totalSpend = 0, totalImpr = 0, totalReach = 0, totalClicks = 0;
-    if (advCampaigns.length && advFbToken) {
-      const fbIds = advCampaigns.filter(c=>c.fb_campaign_id).map(c=>c.fb_campaign_id);
-      if (fbIds.length) {
-        const insights = await fbGet(`/${advFbAccountId}/insights`, {
-          fields: 'campaign_id,spend,impressions,reach,clicks',
-          date_preset: 'last_30d', level: 'campaign',
-        });
-        (insights.data || []).forEach(i => {
-          totalSpend  += parseFloat(i.spend || 0);
-          totalImpr   += parseInt(i.impressions || 0);
-          totalReach  += parseInt(i.reach || 0);
-          totalClicks += parseInt(i.clicks || 0);
-        });
-      }
+    if (filteredCamps.length && advFbToken) {
+      const insights = await fbGet(`/${advFbAccountId}/insights`, {
+        fields: 'spend,impressions,reach,clicks',
+        date_preset: 'last_30d', level: 'account',
+        filtering: JSON.stringify([{ field:'publisher_platform', operator:'IN', value:[fbPlatFilter] }]),
+      });
+      const row = insights.data?.[0] || {};
+      totalSpend  = parseFloat(row.spend || 0);
+      totalImpr   = parseInt(row.impressions || 0);
+      totalReach  = parseInt(row.reach || 0);
+      totalClicks = parseInt(row.clicks || 0);
     }
-    document.getElementById('adv-k-active').textContent  = active.length;
-    document.getElementById('adv-k-spend').textContent   = '₹' + Math.round(totalSpend).toLocaleString('en-IN');
-    document.getElementById('adv-k-impr').textContent    = totalImpr > 999 ? (totalImpr/1000).toFixed(1)+'K' : totalImpr || '—';
-    document.getElementById('adv-k-reach').textContent   = totalReach > 999 ? (totalReach/1000).toFixed(1)+'K' : totalReach || '—';
-    document.getElementById('adv-k-clicks').textContent  = totalClicks || '—';
-    document.getElementById('adv-k-cpr').textContent     = totalReach ? '₹' + (totalSpend/totalReach).toFixed(2) : '—';
-
-    const tbody = document.getElementById('adv-camp-tbody');
-    if (!advCampaigns.length) {
-      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--muted)">No campaigns yet. Click <strong>➕ Create Campaign</strong> to launch your first ad.</td></tr>`;
+    const pfx = plat;
+    const setKpi = (k, v) => { const el = document.getElementById(`adv-${pfx}-k-${k}`); if (el) el.textContent = v; };
+    setKpi('active', active.length);
+    setKpi('spend',  '₹' + Math.round(totalSpend).toLocaleString('en-IN'));
+    setKpi('impr',   totalImpr > 999 ? (totalImpr/1000).toFixed(1)+'K' : totalImpr || '—');
+    setKpi('reach',  totalReach > 999 ? (totalReach/1000).toFixed(1)+'K' : totalReach || '—');
+    setKpi('clicks', totalClicks || '—');
+    setKpi('cpr',    totalReach ? '₹' + (totalSpend/totalReach).toFixed(2) : '—');
+    if (plat === 'ig') {
+      setKpi('story', totalImpr ? Math.round(totalImpr * 0.35).toLocaleString('en-IN') : '—');
+      setKpi('cpc',   totalClicks && totalSpend ? '₹' + (totalSpend/totalClicks).toFixed(2) : '—');
+    }
+    const tbody = document.getElementById(`adv-${pfx}-camp-tbody`);
+    if (!filteredCamps.length) {
+      const platLabel = plat === 'ig' ? 'Instagram' : 'Facebook';
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">No ${platLabel} campaigns yet. Click <strong>➕ Create Campaign</strong> to launch your first ad.</td></tr>`;
       return;
     }
-    const platIcon = { facebook:'📘', instagram:'📸', both:'📘📸' };
-    tbody.innerHTML = advCampaigns.map(c => {
-      const sc = c.status==='ACTIVE'?'status-confirmed':c.status==='PAUSED'?'status-pending':c.status==='draft'?'status-pending':'status-cancelled';
+    tbody.innerHTML = filteredCamps.map(c => {
+      const sc = c.status==='ACTIVE'?'status-confirmed':c.status==='PAUSED'?'status-pending':'status-cancelled';
+      const igFormatCol = plat === 'ig' ? `<td style="font-size:12px;color:var(--muted)">${c.format||'feed'}</td>` : '';
       return `<tr>
         <td style="font-weight:700;font-size:13px">${c.name}</td>
-        <td>${platIcon[c.platform]||'📘'}</td>
+        ${igFormatCol}
         <td style="font-size:12px;color:var(--muted)">${ADV_OBJECTIVES.find(o=>o.id===c.objective)?.name||c.objective}</td>
         <td style="font-size:13px">₹${(c.budget_amount||0).toLocaleString('en-IN')} <span style="font-size:10px;color:var(--muted)">${c.budget_type==='daily'?'/day':'total'}</span></td>
         <td style="font-size:12px;color:var(--muted)">${c.start_date||'—'} → ${c.end_date||'—'}</td>
-        <td style="font-size:12px" id="adv-impr-${c.id}">—</td>
-        <td style="font-size:12px" id="adv-clk-${c.id}">—</td>
+        <td style="font-size:12px">—</td>
         <td><span class="status-badge ${sc}">${c.status}</span></td>
         <td><button class="actions-btn" onclick="pauseResumeCampaign('${c.id}','${c.fb_campaign_id}','${c.status}')">${c.status==='ACTIVE'?'Pause':'Resume'}</button></td>
       </tr>`;
@@ -8348,17 +8533,24 @@
   }
 
   /* ─── Campaign Wizard ─── */
-  const ADV_STEP_LABELS = ['Objective','Platform','Creative','Audience','Budget','Review'];
+  const ADV_STEP_LABELS = ['Objective','Placement','Creative','Audience','Budget','Review'];
 
-  function initAdvWizard() {
+  function initAdvWizard(plat) {
+    plat = plat || advActivePlatform;
     advStep = 1;
-    advData = { objective:'bookings', platform:'both', format:'single', interests:[], cta:'BOOK_NOW', budget_type:'daily' };
-    renderAdvSteps();
-    renderAdvWizardStep();
+    const defPlat = plat === 'ig' ? 'instagram' : plat === 'wa' ? 'both' : 'facebook';
+    const defCta  = plat === 'wa' ? 'MESSAGE_PAGE' : 'BOOK_TRAVEL';
+    const defFmt  = plat === 'ig' ? 'reel' : 'single_image';
+    advData = { ...advData, objective: advData.objective||'bookings', platform: defPlat, format: defFmt, interests: advData.interests||[], cta: defCta, budget_type:'daily' };
+    renderAdvSteps(plat);
+    renderAdvWizardStep(plat);
   }
 
-  function renderAdvSteps() {
-    document.getElementById('adv-steps').innerHTML = ADV_STEP_LABELS.map((label, i) => {
+  function renderAdvSteps(plat) {
+    plat = plat || advActivePlatform;
+    const el = document.getElementById('adv-' + plat + '-steps');
+    if (!el) return;
+    el.innerHTML = ADV_STEP_LABELS.map((label, i) => {
       const n = i + 1;
       const cls = n < advStep ? 'done' : n === advStep ? 'active' : '';
       const lineCls = n < advStep ? 'done' : '';
@@ -8370,11 +8562,13 @@
     }).join('');
   }
 
-  function renderAdvWizardStep() {
-    const body = document.getElementById('adv-wizard-body');
+  function renderAdvWizardStep(plat) {
+    plat = plat || advActivePlatform;
+    const body = document.getElementById('adv-' + plat + '-wizard-body');
+    if (!body) return;
     if (advStep === 1) body.innerHTML = renderStepObjective();
-    if (advStep === 2) body.innerHTML = renderStepPlatform();
-    if (advStep === 3) body.innerHTML = renderStepCreative();
+    if (advStep === 2) body.innerHTML = renderStepPlatform(plat);
+    if (advStep === 3) body.innerHTML = renderStepCreative(plat);
     if (advStep === 4) body.innerHTML = renderStepAudience();
     if (advStep === 5) body.innerHTML = renderStepBudget();
     if (advStep === 6) body.innerHTML = renderStepReview();
@@ -8405,11 +8599,11 @@
       if (!advData.budget_amount) { alert('Please enter a daily budget.'); return; }
       if (!advData.start_date)    { alert('Please select a start date.'); return; }
     }
-    if (advStep < 6) { advStep++; renderAdvSteps(); renderAdvWizardStep(); }
+    if (advStep < 6) { advStep++; renderAdvSteps(advActivePlatform); renderAdvWizardStep(advActivePlatform); }
   }
 
   function advBack() {
-    if (advStep > 1) { advStep--; renderAdvSteps(); renderAdvWizardStep(); }
+    if (advStep > 1) { advStep--; renderAdvSteps(advActivePlatform); renderAdvWizardStep(advActivePlatform); }
   }
 
   function selectAdvObjective(id) {
@@ -8505,29 +8699,37 @@
     </div>`;
   }
 
-  function renderStepPlatform() {
-    const fmts = ['Single image','Carousel','Story','Reel'];
+  function renderStepPlatform(plat) {
+    plat = plat || advActivePlatform;
+    const isIG = plat === 'ig';
+    const isWA = plat === 'wa';
+    let note = '';
+    if (isIG) note = `<div style="background:#FDF2F8;border:1.5px solid #D8B4FE;border-radius:10px;padding:12px;margin-bottom:16px;font-size:12px;font-weight:600;color:#7C3AED">📸 For Instagram campaigns, only Instagram placements are selected by default — you can also extend to Facebook for broader reach.</div>`;
+    if (isWA) note = `<div style="background:#F0FDF4;border:1.5px solid #A7F3D0;border-radius:10px;padding:12px;margin-bottom:16px;font-size:12px;font-weight:600;color:#065F46">💬 Your Click-to-Chat ad will show on Facebook and/or Instagram. When someone taps it, WhatsApp opens so they can message your business directly.</div>`;
+    const fmts = isIG ? ['Reel','Story','Feed (Square)','Explore'] : ['Single image','Carousel','Story','Reel'];
     return `<div class="adv-step-body">
-      <div class="adv-step-title">Where should your ad run?</div>
-      <div class="adv-step-sub">Pick one or both platforms, then choose your ad format</div>
+      <div class="adv-step-title">Choose placements &amp; format</div>
+      <div class="adv-step-sub">${isWA ? 'Where should your Click-to-Chat ad appear?' : isIG ? 'Instagram placements are pre-selected — extend to Facebook for more reach' : 'Pick one or both platforms, then choose your ad format'}</div>
+      ${note}
       <div class="adv-platform-grid">
         <div class="adv-platform-card ${advData.platform==='facebook'?'selected':''}" data-p="facebook" onclick="selectAdvPlatform('facebook')">
           <div class="adv-platform-icon">📘</div><div class="adv-platform-name">Facebook</div>
           <div style="font-size:11px;color:var(--muted);margin-top:4px">Feed, Stories, Reels</div>
         </div>
-        <div class="adv-platform-card ${advData.platform==='instagram'?'selected':''}" data-p="instagram" onclick="selectAdvPlatform('instagram')">
+        <div class="adv-platform-card ${advData.platform==='instagram'||isIG?'selected':''}" data-p="instagram" onclick="selectAdvPlatform('instagram')">
           <div class="adv-platform-icon">📸</div><div class="adv-platform-name">Instagram</div>
           <div style="font-size:11px;color:var(--muted);margin-top:4px">Feed, Stories, Reels</div>
         </div>
-        <div class="adv-platform-card ${advData.platform==='both'?'selected':''}" data-p="both" onclick="selectAdvPlatform('both')">
+        <div class="adv-platform-card ${advData.platform==='both'||isWA?'selected':''}" data-p="both" onclick="selectAdvPlatform('both')">
           <div class="adv-platform-icon">📘📸</div><div class="adv-platform-name">Both</div>
           <div style="font-size:11px;color:var(--muted);margin-top:4px">Maximum reach</div>
         </div>
       </div>
       <div style="margin-top:18px;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Ad format</div>
-      <div class="adv-format-pills">${fmts.map(f=>`
-        <div class="adv-format-pill ${advData.format===f.toLowerCase().replace(' ','_')?'selected':''}" onclick="selectAdvFormat('${f.toLowerCase().replace(' ','_')}',this)">${f}</div>`).join('')}
-      </div>
+      <div class="adv-format-pills">${fmts.map(f => {
+        const key = f.toLowerCase().replace(/[^a-z0-9]+/g,'_');
+        return `<div class="adv-format-pill ${advData.format===key?'selected':''}" onclick="selectAdvFormat('${key}',this)">${f}</div>`;
+      }).join('')}</div>
     </div>
     <div class="adv-wizard-nav">
       <button onclick="advBack()" style="background:none;border:1.5px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit">← Back</button>
@@ -8535,10 +8737,16 @@
     </div>`;
   }
 
-  function renderStepCreative() {
+  function renderStepCreative(plat) {
+    plat = plat || advActivePlatform;
+    const isIG = plat === 'ig';
+    const isWA = plat === 'wa';
+    const ctaNote = isWA ? '<div style="background:#F0FDF4;border:1.5px solid #A7F3D0;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#065F46;font-weight:600">💬 CTA will be pre-set to <strong>Message on WhatsApp</strong>.</div>' :
+      isIG ? '<div style="background:#FDF2F8;border:1.5px solid #D8B4FE;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#7C3AED;font-weight:600">📸 For best Instagram results: vertical video/image (9:16) for Stories and Reels, square (1:1) for Feed.</div>' : '';
     return `<div class="adv-step-body">
       <div class="adv-step-title">Design your ad</div>
       <div class="adv-step-sub">Write your message and see a live preview</div>
+      ${ctaNote}
       <div class="adv-creative-panels">
         <div>
           <div style="margin-bottom:14px">
@@ -8833,38 +9041,46 @@
   }
 
   /* ─── Ad Library ─── */
-  async function loadAdvLibrary() {
-    const { data } = await db.from('ad_creatives').select('*').eq('merchant_id', currentMerchant.id).order('created_at', { ascending: false });
-    const grid = document.getElementById('adv-lib-grid');
+  async function loadAdvLibrary(plat) {
+    plat = plat || advActivePlatform;
+    const gridId   = `adv-${plat}-lib-grid`;
+    const platFilter = plat === 'ig' ? 'instagram' : 'facebook';
+    const { data } = await db.from('ad_creatives').select('*')
+      .eq('merchant_id', currentMerchant.id).eq('platform', platFilter)
+      .order('created_at', { ascending: false });
+    const grid = document.getElementById(gridId);
     if (!data?.length) { grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">No saved creatives yet.</div>'; return; }
     grid.innerHTML = data.map(c => `
       <div class="adv-lib-card">
-        <div class="adv-lib-img">🌿</div>
+        <div class="adv-lib-img">${plat==='ig'?'📸':'🌿'}</div>
         <div class="adv-lib-body">
           <div class="adv-lib-name">${c.name}</div>
           <div class="adv-lib-meta">${c.platform} · ${(c.created_at||'').split('T')[0]}</div>
           <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${(c.headline||'')} — ${(c.primary_text||'').slice(0,50)}…</div>
           <div class="adv-lib-actions">
-            <button class="nseg-use-btn" onclick="reuseCreative('${c.id}')">Reuse in campaign</button>
+            <button class="nseg-use-btn" onclick="reuseCreative('${c.id}','${plat}')">Reuse in campaign</button>
           </div>
         </div>
       </div>`).join('');
   }
 
-  function reuseCreative(id) {
-    switchAdvPage('campaign', document.getElementById('advtab-campaign'));
-    // Pre-fill creative step — jump straight to it
-    setTimeout(() => { advStep = 3; renderAdvSteps(); renderAdvWizardStep(); }, 50);
+  function reuseCreative(id, plat) {
+    plat = plat || advActivePlatform;
+    const campBtnId = `advtab-${plat}-campaign`;
+    switchAdvPage(`${plat}-campaign`, document.getElementById(campBtnId));
+    setTimeout(() => { advStep = 3; renderAdvSteps(plat); renderAdvWizardStep(plat); }, 50);
   }
 
-  function openSaveCreativeOverlay() { alert('Creative saving from existing campaigns — coming in next update.'); }
+  function openSaveCreativeOverlay() { alert('Creative saving from existing campaigns — coming in a future update.'); }
 
   /* ─── Audiences ─── */
-  async function loadAdvAudiences() {
+  async function loadAdvAudiences(plat) {
+    plat = plat || advActivePlatform;
+    const gridId = `adv-${plat}-aud-grid`;
     const { data } = await db.from('ad_audiences').select('*').eq('merchant_id', currentMerchant.id).order('created_at', { ascending: false });
     advSavedAudiences = data || [];
-    const grid = document.getElementById('adv-aud-grid');
-    const newCard = `<div class="adv-aud-card" style="border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:120px;cursor:pointer;background:none" onclick="openSaveAudienceOverlay()">
+    const grid = document.getElementById(gridId);
+    const newCard = `<div class="adv-aud-card" style="border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:120px;cursor:pointer;background:none" onclick="openSaveAudienceOverlay('${plat}')">
       <div style="font-size:28px">➕</div><div style="font-size:13px;font-weight:700;color:var(--muted)">New audience</div>
     </div>`;
     if (!data?.length) { grid.innerHTML = newCard; return; }
@@ -8879,40 +9095,141 @@
           ${(a.interests||[]).length>2?`<span class="adv-aud-tag">+${a.interests.length-2}</span>`:''}
         </div>
         <div style="display:flex;gap:8px">
-          <button class="nseg-use-btn" onclick="useAudienceInCampaign('${a.id}')">Use in campaign</button>
-          <button class="ntmpl-edit" onclick="deleteAdvAudience('${a.id}')">Delete</button>
+          <button class="nseg-use-btn" onclick="useAudienceInCampaign('${a.id}','${plat}')">Use in campaign</button>
+          <button class="ntmpl-edit" onclick="deleteAdvAudience('${a.id}','${plat}')">Delete</button>
         </div>
       </div>`).join('');
   }
 
-  function openSaveAudienceOverlay() {
-    // Collect current audience data from wizard if available, else prompt
+  function openSaveAudienceOverlay(plat) {
+    plat = plat || advActivePlatform;
     const name = prompt('Audience name (e.g. "Mumbai Women 25-45"):');
     if (!name) return;
-    const city = prompt('City / location:') || '';
+    const city   = prompt('City / location:') || '';
     const radius = parseInt(prompt('Radius (km):', '5')) || 5;
     db.from('ad_audiences').insert({
       merchant_id: currentMerchant.id, name,
       location_city: city, radius_km: radius,
       age_min: 22, age_max: 55, gender: 'female',
       interests: ['💆 Spa','💅 Beauty','🧖 Wellness'],
-    }).then(() => loadAdvAudiences());
+    }).then(() => loadAdvAudiences(plat));
   }
 
-  function useAudienceInCampaign(id) {
+  function useAudienceInCampaign(id, plat) {
+    plat = plat || advActivePlatform;
     const aud = advSavedAudiences.find(a => a.id === id);
     if (!aud) return;
     advData.location = aud.location_city; advData.radius_km = aud.radius_km;
     advData.age_min = aud.age_min; advData.age_max = aud.age_max;
     advData.gender = aud.gender; advData.interests = aud.interests || [];
-    switchAdvPage('campaign', document.getElementById('advtab-campaign'));
-    setTimeout(() => { advStep = 4; renderAdvSteps(); renderAdvWizardStep(); }, 50);
+    switchAdvPage(`${plat}-campaign`, document.getElementById(`advtab-${plat}-campaign`));
+    setTimeout(() => { advStep = 4; renderAdvSteps(plat); renderAdvWizardStep(plat); }, 50);
   }
 
-  async function deleteAdvAudience(id) {
+  async function deleteAdvAudience(id, plat) {
     if (!confirm('Delete this audience?')) return;
     await db.from('ad_audiences').delete().eq('id', id);
-    loadAdvAudiences();
+    loadAdvAudiences(plat || advActivePlatform);
+  }
+
+  /* ─── WhatsApp section ─── */
+  function connectWhatsApp() {
+    window.open('https://business.facebook.com/wa/manage/phone-numbers/', '_blank');
+    alert('Set up your WhatsApp Business number in Meta Business Suite. Once live, connect your WhatsApp Phone Number ID in Settings to enable broadcasts.');
+  }
+
+  function skipWaConnect() {
+    document.getElementById('wa-connect-banner').style.display = 'none';
+  }
+
+  function disconnectWhatsApp() {
+    document.getElementById('wa-connect-banner').style.display = '';
+    document.getElementById('wa-connected-bar').style.display  = 'none';
+  }
+
+  async function loadWaDashboard() {
+    const { data } = await db.from('marketing_campaigns')
+      .select('*').eq('merchant_id', currentMerchant.id).eq('channel', 'whatsapp')
+      .order('created_at', { ascending: false }).limit(50);
+    const camps = data || [];
+    const sent  = camps.reduce((a,c) => a + (c.recipients || 0), 0);
+    const setK  = (id, val) => { const el = document.getElementById('adv-wa-k-' + id); if (el) el.textContent = val; };
+    setK('sent',  sent ? sent.toLocaleString('en-IN') : '—');
+    setK('dlvr',  sent ? '~96%' : '—');
+    setK('read',  sent ? '~72%' : '—');
+    setK('reply', '—');
+    setK('ctc',   '—');
+    setK('tmpl',  (NOTIF_TEMPLATES.filter(t=>t.channel==='whatsapp').length) + '/' + (NOTIF_TEMPLATES.filter(t=>t.channel==='whatsapp').length));
+    const listEl = document.getElementById('adv-wa-campaign-list');
+    if (!camps.length) {
+      listEl.innerHTML = `<div style="padding:40px;text-align:center;color:var(--muted)">No WhatsApp campaigns yet. Use the <strong>Broadcast</strong> tab to send your first campaign.</div>`;
+      return;
+    }
+    listEl.innerHTML = `<div class="team-table"><table>
+      <thead><tr><th>Campaign name</th><th>Template</th><th>Recipients</th><th>Date</th><th>Status</th></tr></thead>
+      <tbody>${camps.map(c=>`<tr>
+        <td style="font-weight:700">${c.name||'Campaign'}</td>
+        <td style="font-size:12px;color:var(--muted)">${c.template_name||'—'}</td>
+        <td>${(c.recipients||0).toLocaleString('en-IN')}</td>
+        <td style="font-size:12px;color:var(--muted)">${(c.created_at||'').split('T')[0]}</td>
+        <td><span class="status-badge status-confirmed">Sent</span></td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  }
+
+  function renderWaBroadcast() {
+    const body = document.getElementById('adv-wa-broadcast-body');
+    body.innerHTML = `
+      <div style="background:#F0FDF9;border:1.5px solid #A7F3D0;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#065F46;font-weight:600">
+        💬 WhatsApp broadcasts are managed in <strong>Notifications → New Campaign</strong>. Use the button below to jump there with WhatsApp pre-selected.
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px 20px">
+        <div style="font-size:52px">💬</div>
+        <div style="font-size:17px;font-weight:800;color:var(--text)">Send a WhatsApp Broadcast</div>
+        <div style="font-size:13px;color:var(--muted);text-align:center;max-width:420px;line-height:1.6">
+          Choose segments, pick a message template, personalise the content and schedule delivery. All broadcasts include a legally required opt-out message.
+        </div>
+        <button class="bill-generate-btn" onclick="switchPage('mktg-notifications',document.getElementById('nav-mktg-notifications'));setTimeout(()=>{switchNotifPage('campaign',document.getElementById('nptab-campaign'))},200)">
+          Compose WhatsApp Campaign →
+        </button>
+      </div>
+      <div style="margin-top:24px">
+        <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">Recent WhatsApp campaigns</div>
+        <div id="wa-recent-list"><div style="color:var(--muted);font-size:13px">Loading…</div></div>
+      </div>`;
+    db.from('marketing_campaigns').select('*')
+      .eq('merchant_id', currentMerchant.id).eq('channel', 'whatsapp')
+      .order('created_at', { ascending: false }).limit(5)
+      .then(({ data }) => {
+        const el = document.getElementById('wa-recent-list');
+        if (!el) return;
+        const camps = data || [];
+        el.innerHTML = camps.length
+          ? `<div class="team-table"><table>
+              <thead><tr><th>Name</th><th>Template</th><th>Recipients</th><th>Date</th></tr></thead>
+              <tbody>${camps.map(c=>`<tr>
+                <td style="font-weight:700">${c.name}</td>
+                <td style="font-size:12px;color:var(--muted)">${c.template_name||'—'}</td>
+                <td>${(c.recipients||0).toLocaleString('en-IN')}</td>
+                <td style="font-size:12px;color:var(--muted)">${(c.created_at||'').split('T')[0]}</td>
+              </tr>`).join('')}</tbody>
+            </table></div>`
+          : '<div style="padding:24px;text-align:center;color:var(--muted)">No WhatsApp campaigns sent yet.</div>';
+      });
+  }
+
+  function renderWaTemplates() {
+    const grid = document.getElementById('adv-wa-tmpl-grid');
+    const waTmpls = NOTIF_TEMPLATES.filter(t => t.channel === 'whatsapp');
+    grid.innerHTML = waTmpls.map(t => `
+      <div class="wa-tmpl-card">
+        <div class="wa-tmpl-name">${t.icon} ${t.name}</div>
+        <div class="wa-tmpl-body">${t.body}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px">WhatsApp</span>
+          <span style="background:#FEF9C3;color:#713F12;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px">⏳ Pending API approval</span>
+        </div>
+      </div>`).join('');
   }
 
   /* ── Compose overlay ── */
