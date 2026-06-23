@@ -1015,6 +1015,14 @@
     .org-child-col { display:flex; flex-direction:column; align-items:center; position:relative; padding-top:32px; }
     .org-child-col::before { content:''; position:absolute; top:0; left:50%; width:2px; height:32px; background:var(--border); transform:translateX(-50%); }
     .org-empty { text-align:center; padding:60px 0; color:var(--muted); font-size:14px; }
+    .org-card { cursor:grab; user-select:none; }
+    .org-card:active { cursor:grabbing; }
+    .org-drag-handle { font-size:16px; color:#ccc; margin-bottom:4px; letter-spacing:2px; }
+    .org-card.org-dragging { opacity:0.35; transform:scale(0.97); }
+    .org-card.org-drop-over { border-color:var(--green); box-shadow:0 0 0 3px rgba(29,158,117,0.25); background:#F0FDF8; }
+    .org-toolbar { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--bg); border:1.5px solid var(--border); border-radius:10px; margin-bottom:20px; gap:16px; flex-wrap:wrap; }
+    .org-root-zone { border:2px dashed var(--border); border-radius:8px; padding:8px 20px; font-size:12px; font-weight:600; color:var(--muted); cursor:default; transition:all .15s; white-space:nowrap; }
+    .org-root-zone.org-drop-over { border-color:var(--green); background:#F0FDF8; color:var(--green); }
     .sl-att-drop   { border:2px dashed var(--border); border-radius:12px; padding:36px; text-align:center; margin-bottom:16px; transition:border-color .2s; }
     .sl-att-drop:hover { border-color:var(--green); }
     /* ── ADD TEAM MEMBER OVERLAY ── */
@@ -5502,6 +5510,53 @@
     if (tab === 'reporting')  renderReportingStructure();
   }
 
+  let orgDragId = null;
+
+  function orgIsDescendant(ancestorId, nodeId) {
+    if (ancestorId === nodeId) return true;
+    const children = allTeamMembers.filter(m => m.manager_id === ancestorId);
+    return children.some(c => orgIsDescendant(c.id, nodeId));
+  }
+
+  function orgDragStart(id, el) {
+    orgDragId = id;
+    setTimeout(() => el.classList.add('org-dragging'), 0);
+  }
+
+  function orgDragEnd(el) {
+    el.classList.remove('org-dragging');
+    document.querySelectorAll('.org-card.org-drop-over').forEach(c => c.classList.remove('org-drop-over'));
+    document.querySelectorAll('.org-root-zone.org-drop-over').forEach(z => z.classList.remove('org-drop-over'));
+  }
+
+  function orgDragEnter(el) { el.classList.add('org-drop-over'); }
+  function orgDragLeave(el) { el.classList.remove('org-drop-over'); }
+  function orgDragOver(e)   { e.preventDefault(); }
+
+  async function orgDrop(targetId, el) {
+    el.classList.remove('org-drop-over');
+    if (!orgDragId || orgDragId === targetId) return;
+    if (orgIsDescendant(orgDragId, targetId)) {
+      alert('Cannot place a manager under their own report — this would create a cycle.');
+      return;
+    }
+    const member = allTeamMembers.find(m => m.id === orgDragId);
+    if (member) member.manager_id = targetId;
+    await db.from('staff').update({ manager_id: targetId }).eq('id', orgDragId);
+    orgDragId = null;
+    renderReportingStructure();
+  }
+
+  async function orgDropRoot(el) {
+    el.classList.remove('org-drop-over');
+    if (!orgDragId) return;
+    const member = allTeamMembers.find(m => m.id === orgDragId);
+    if (member) member.manager_id = null;
+    await db.from('staff').update({ manager_id: null }).eq('id', orgDragId);
+    orgDragId = null;
+    renderReportingStructure();
+  }
+
   function renderReportingStructure() {
     const wrap = document.getElementById('sl-org-chart');
     if (!wrap) return;
@@ -5518,7 +5573,15 @@
 
     function cardHtml(s, idx) {
       const staffId = s.staff_id || ('SPAE' + String(idx+1).padStart(5,'0'));
-      return `<div class="org-card">
+      return `<div class="org-card"
+          draggable="true"
+          ondragstart="orgDragStart('${s.id}',this)"
+          ondragend="orgDragEnd(this)"
+          ondragover="orgDragOver(event)"
+          ondragenter="orgDragEnter(this)"
+          ondragleave="orgDragLeave(this)"
+          ondrop="orgDrop('${s.id}',this)">
+        <div class="org-drag-handle">⠿</div>
         <div class="org-card-avatar" style="background:${colorMap[s.id]}">${initials(s.name)}</div>
         <div class="org-card-name">${s.name}</div>
         <div class="org-card-role">${s.role || 'Therapist'}</div>
@@ -5534,22 +5597,31 @@
         ${cardHtml(s, allIdx)}
         <div style="position:relative;padding-top:32px;display:flex;gap:24px">
           <div style="position:absolute;top:0;left:50%;width:2px;height:32px;background:var(--border);transform:translateX(-50%)"></div>
-          ${children.length > 1 ? `<div style="position:absolute;top:32px;left:calc(50% - ${(children.length-1)*12}px);right:calc(50% - ${(children.length-1)*12}px);height:2px;background:var(--border)"></div>` : ''}
+          ${children.length > 1 ? `<div style="position:absolute;top:32px;left:0;right:0;height:2px;background:var(--border)"></div>` : ''}
           ${children.map(c => buildNode(c, depth+1)).join('')}
         </div>
       </div>`;
     }
 
-    // Find roots: staff with no manager_id or whose manager isn't in active list
     const activeIds = new Set(members.map(m => m.id));
     const roots = members.filter(s => !s.manager_id || !activeIds.has(s.manager_id));
 
-    const tree = `<div style="display:flex;flex-direction:column;align-items:center;min-width:max-content;padding:24px 32px">
-      <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap">
-        ${roots.map(r => buildNode(r, 0)).join('')}
+    wrap.innerHTML = `
+      <div class="org-toolbar">
+        <span style="font-size:13px;color:var(--muted)">⠿ Drag a card onto another to reassign their manager</span>
+        <div class="org-root-zone"
+          ondragover="orgDragOver(event)"
+          ondragenter="orgDragEnter(this)"
+          ondragleave="orgDragLeave(this)"
+          ondrop="orgDropRoot(this)">
+          Drop here to remove manager (make root)
+        </div>
       </div>
-    </div>`;
-    wrap.innerHTML = tree;
+      <div style="display:flex;flex-direction:column;align-items:center;min-width:max-content;padding:16px 32px 32px">
+        <div style="display:flex;gap:40px;justify-content:center;flex-wrap:wrap">
+          ${roots.map(r => buildNode(r, 0)).join('')}
+        </div>
+      </div>`;
   }
 
   function toggleStaffActionMenu() {
