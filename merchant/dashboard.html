@@ -621,6 +621,35 @@
     .bm-preview-panel.show { display: block; }
     .bm-back-btn { background: none; border: none; font-size: 13px; font-weight: 700; color: var(--green); cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 16px; padding: 0; font-family: inherit; }
     .bm-back-btn:hover { text-decoration: underline; }
+    /* ── Notifications page ── */
+    .notif-channel-tabs { display:flex; gap:6px; margin-bottom:20px; border-bottom:2px solid var(--border); padding-bottom:0; }
+    .notif-tab { background:none; border:none; padding:10px 20px; font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; font-family:inherit; border-radius:6px 6px 0 0; transition:all .15s; }
+    .notif-tab:hover { color:var(--text); background:var(--bg); }
+    .notif-tab.active { color:var(--green); border-bottom-color:var(--green); background:none; }
+    .notif-panels { display:grid; grid-template-columns:280px 1fr; gap:20px; align-items:start; }
+    .notif-audience-panel { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:20px; }
+    .notif-compose-panel  { background:var(--white); border:1.5px solid var(--border); border-radius:14px; padding:20px; }
+    .notif-panel-title { font-size:15px; font-weight:800; color:var(--text); margin-bottom:2px; }
+    .notif-panel-sub   { font-size:12px; color:var(--muted); margin-bottom:16px; }
+    .notif-seg-option { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; cursor:pointer; margin-bottom:8px; transition:all .15s; }
+    .notif-seg-option:hover { border-color:var(--green); background:#F0FDF9; }
+    .notif-seg-option.selected { border-color:var(--green); background:#F0FDF9; }
+    .notif-seg-icon { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+    .notif-seg-body { flex:1; min-width:0; }
+    .notif-seg-name  { font-size:13px; font-weight:700; color:var(--text); }
+    .notif-seg-count { font-size:11px; color:var(--muted); }
+    .notif-seg-check { font-size:14px; color:var(--green); font-weight:900; flex-shrink:0; visibility:hidden; }
+    .notif-seg-option.selected .notif-seg-check { visibility:visible; }
+    .notif-seg-divider { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin:12px 0 10px; }
+    .notif-reach-box { display:flex; justify-content:space-between; align-items:center; background:var(--bg); border-radius:8px; padding:10px 14px; margin-top:16px; font-size:13px; font-weight:600; color:var(--muted); }
+    .notif-reach-num { font-size:18px; font-weight:900; color:var(--green); }
+    .notif-field { margin-bottom:14px; }
+    .notif-field label { display:block; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:6px; }
+    .notif-vars { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+    .notif-var-chip { background:#EDE9FE; color:#6D28D9; font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; cursor:pointer; font-family:monospace; }
+    .notif-var-chip:hover { background:#DDD6FE; }
+    .notif-char-count { font-size:11px; color:var(--muted); margin-top:4px; }
+    .notif-send-row { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; align-items:center; }
     /* Invoice preview */
     .inv-preview { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 680px; margin: 0 auto; }
     .inv-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
@@ -974,9 +1003,7 @@
         <span class="nav-icon">📣</span> Marketing <span class="nav-chevron">▾</span>
       </button>
       <div class="nav-sub-group" id="mktg-sub-group">
-        <button class="nav-item nav-sub" id="nav-mktg-whatsapp" onclick="switchPage('mktg-whatsapp',this)"><span class="nav-icon">💬</span> WhatsApp</button>
-        <button class="nav-item nav-sub" id="nav-mktg-email"    onclick="switchPage('mktg-email',this)"><span class="nav-icon">📧</span> Email</button>
-        <button class="nav-item nav-sub" id="nav-mktg-sms"      onclick="switchPage('mktg-sms',this)"><span class="nav-icon">📱</span> SMS</button>
+        <button class="nav-item nav-sub" id="nav-mktg-notifications" onclick="switchPage('mktg-notifications',this)">Notifications</button>
       </div>
     </div>
     <div class="nav-group">
@@ -2078,45 +2105,102 @@
   </div>
 
   <!-- ══════════════════ WHATSAPP NOTIFICATIONS ══════════════════ -->
-  <div class="tab-panel" id="tab-mktg-whatsapp">
-    <div class="cl-topbar-actions" style="margin-bottom:16px">
-      <button class="am-close-btn" onclick="openComposeOverlay('whatsapp')">＋ New campaign</button>
+  <!-- ══════════════════ NOTIFICATIONS (combined) ══════════════════ -->
+  <div class="tab-panel" id="tab-mktg-notifications">
+    <div class="cl-topbar">
+      <div>
+        <div class="cl-page-title">Notifications</div>
+        <div class="cl-page-sub">Send campaigns to your clients across channels</div>
+      </div>
     </div>
-    <div class="mktg-stats">
-      <div class="mktg-stat"><div class="mktg-stat-num" id="wa-stat-total">—</div><div class="mktg-stat-label">Campaigns sent</div></div>
-      <div class="mktg-stat"><div class="mktg-stat-num" id="wa-stat-recipients">—</div><div class="mktg-stat-label">Total recipients</div></div>
-      <div class="mktg-stat"><div class="mktg-stat-num" id="wa-stat-this-month">—</div><div class="mktg-stat-label">This month</div></div>
-      <div class="mktg-stat"><div class="mktg-stat-num" id="wa-stat-scheduled">—</div><div class="mktg-stat-label">Scheduled</div></div>
-    </div>
-    <div id="wa-campaign-list"><div style="text-align:center;padding:40px;color:var(--muted)">Loading…</div></div>
-  </div>
 
-  <!-- ══════════════════ EMAIL NOTIFICATIONS ══════════════════ -->
-  <div class="tab-panel" id="tab-mktg-email">
-    <div class="cl-topbar-actions" style="margin-bottom:16px">
-      <button class="am-close-btn" onclick="openComposeOverlay('email')">＋ New campaign</button>
+    <!-- Channel tabs -->
+    <div class="notif-channel-tabs" id="notif-channel-tabs">
+      <button class="notif-tab active" id="ntab-whatsapp" onclick="switchNotifChannel('whatsapp',this)">💬 WhatsApp</button>
+      <button class="notif-tab" id="ntab-email"     onclick="switchNotifChannel('email',this)">📧 Email</button>
+      <button class="notif-tab" id="ntab-sms"       onclick="switchNotifChannel('sms',this)">📱 SMS</button>
     </div>
-    <div class="mktg-stats">
-      <div class="mktg-stat"><div class="mktg-stat-num" id="em-stat-total">—</div><div class="mktg-stat-label">Campaigns sent</div></div>
-      <div class="mktg-stat"><div class="mktg-stat-num" id="em-stat-recipients">—</div><div class="mktg-stat-label">Total recipients</div></div>
-      <div class="mktg-stat"><div class="mktg-stat-num" id="em-stat-this-month">—</div><div class="mktg-stat-label">This month</div></div>
-      <div class="mktg-stat"><div class="mktg-stat-num" id="em-stat-scheduled">—</div><div class="mktg-stat-label">Scheduled</div></div>
-    </div>
-    <div id="em-campaign-list"><div style="text-align:center;padding:40px;color:var(--muted)">Loading…</div></div>
-  </div>
 
-  <!-- ══════════════════ SMS NOTIFICATIONS ══════════════════ -->
-  <div class="tab-panel" id="tab-mktg-sms">
-    <div class="cl-topbar-actions" style="margin-bottom:16px">
-      <button class="am-close-btn" onclick="openComposeOverlay('sms')">＋ New campaign</button>
+    <!-- Two-panel: Audience + Compose -->
+    <div class="notif-panels">
+
+      <!-- LEFT: Audience / Segments -->
+      <div class="notif-audience-panel">
+        <div class="notif-panel-title">Audience</div>
+        <div class="notif-panel-sub">Select a segment to target</div>
+
+        <!-- All clients option -->
+        <div class="notif-seg-option selected" id="nseg-all" onclick="selectNotifSegment('all',this)">
+          <div class="notif-seg-icon" style="background:#E0F2FE">👥</div>
+          <div class="notif-seg-body">
+            <div class="notif-seg-name">All clients</div>
+            <div class="notif-seg-count" id="nseg-all-count">— clients</div>
+          </div>
+          <div class="notif-seg-check" id="nseg-check-all">✓</div>
+        </div>
+
+        <div class="notif-seg-divider">Or pick a segment</div>
+
+        <div id="notif-seg-list">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="notif-reach-box">
+          <span>Estimated reach</span>
+          <span class="notif-reach-num" id="notif-reach">—</span>
+        </div>
+      </div>
+
+      <!-- RIGHT: Compose -->
+      <div class="notif-compose-panel">
+        <div class="notif-panel-title">Compose message</div>
+        <div class="notif-panel-sub" id="notif-compose-sub">WhatsApp campaign</div>
+
+        <div class="am-err" id="notif-err"></div>
+
+        <div class="notif-field">
+          <label>Campaign name <span class="req">*</span></label>
+          <input class="am-input" id="notif-name" type="text" placeholder="e.g. June special offer" />
+        </div>
+
+        <!-- Email-only: subject -->
+        <div class="notif-field" id="notif-subject-field" style="display:none">
+          <label>Subject line <span class="req">*</span></label>
+          <input class="am-input" id="notif-subject" type="text" placeholder="e.g. Exclusive offer just for you!" />
+        </div>
+
+        <div class="notif-field">
+          <label>Message <span class="req">*</span></label>
+          <div class="notif-vars">
+            Insert: <span class="notif-var-chip" onclick="notifInsertVar('{{name}}')">{{name}}</span>
+            <span class="notif-var-chip" onclick="notifInsertVar('{{phone}}')">{{phone}}</span>
+            <span class="notif-var-chip" onclick="notifInsertVar('{{business}}')">{{business}}</span>
+          </div>
+          <textarea class="am-input" id="notif-body" rows="6"
+            placeholder="Hi {{name}}, we have a special offer for you at {{business}}…"
+            oninput="notifCharCount()"></textarea>
+          <div class="notif-char-count" id="notif-char-count"></div>
+        </div>
+
+        <div class="notif-send-row">
+          <button class="bill-action-btn" style="background:#6B7280;color:#fff;border:none;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer" onclick="sendNotifCampaign('draft')">Save draft</button>
+          <button class="bill-generate-btn" id="notif-send-btn" onclick="sendNotifCampaign('sent')">Send now →</button>
+        </div>
+      </div>
     </div>
-    <div class="mktg-stats">
-      <div class="mktg-stat"><div class="mktg-stat-num" id="sms-stat-total">—</div><div class="mktg-stat-label">Campaigns sent</div></div>
-      <div class="mktg-stat"><div class="mktg-stat-num" id="sms-stat-recipients">—</div><div class="mktg-stat-label">Total recipients</div></div>
-      <div class="mktg-stat"><div class="mktg-stat-num" id="sms-stat-this-month">—</div><div class="mktg-stat-label">This month</div></div>
-      <div class="mktg-stat"><div class="mktg-stat-num" id="sms-stat-scheduled">—</div><div class="mktg-stat-label">Scheduled</div></div>
+
+    <!-- Past campaigns -->
+    <div style="margin-top:28px">
+      <div class="notif-panel-title" style="margin-bottom:12px">Past campaigns <span id="notif-history-channel" style="font-size:12px;color:var(--muted);font-weight:500"></span></div>
+      <div class="team-table">
+        <table>
+          <thead><tr>
+            <th>Date</th><th>Channel</th><th>Campaign</th><th>Segment</th><th>Preview</th><th>Sent</th><th>Status</th>
+          </tr></thead>
+          <tbody id="notif-history-tbody"><tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">Loading…</td></tr></tbody>
+        </table>
+      </div>
     </div>
-    <div id="sms-campaign-list"><div style="text-align:center;padding:40px;color:var(--muted)">Loading…</div></div>
   </div>
 
   <!-- ══════════════════ COMPOSE CAMPAIGN OVERLAY (shared) ══════════════════ -->
@@ -4433,9 +4517,7 @@
   PAGE_TITLES['inv-usage']         = 'Stock Usage';
   PAGE_TITLES['inv-adjustments']   = 'Adjustments';
   PAGE_TITLES['inv-suppliers']     = 'Suppliers';
-  PAGE_TITLES['mktg-whatsapp']     = 'WhatsApp Notifications';
-  PAGE_TITLES['mktg-email']        = 'Email Notifications';
-  PAGE_TITLES['mktg-sms']          = 'SMS Notifications';
+  PAGE_TITLES['mktg-notifications'] = 'Notifications';
   PAGE_TITLES['service-menu']    = 'Service menu';
   PAGE_TITLES['memberships']     = 'Memberships';
   PAGE_TITLES['product-list']    = 'Products';
@@ -4821,9 +4903,7 @@
     if (page === 'inv-usage')        { openInvNav(); loadUsageLogs(); }
     if (page === 'inv-adjustments')  { openInvNav(); loadAdjustments(); }
     if (page === 'inv-suppliers')    { openInvNav(); loadSuppliers(); }
-    if (page === 'mktg-whatsapp')    { openMarketingNav(); loadCampaigns('whatsapp'); }
-    if (page === 'mktg-email')       { openMarketingNav(); loadCampaigns('email'); }
-    if (page === 'mktg-sms')         { openMarketingNav(); loadCampaigns('sms'); }
+    if (page === 'mktg-notifications') { openMarketingNav(); loadNotifications(); }
     if (page === 'service-menu')    { openCatalogNav(); loadServiceMenu(); }
     if (page === 'memberships')     { openCatalogNav(); loadMemberships(); }
     if (page === 'product-list')    { openCatalogNav(); loadProducts(); }
@@ -6552,65 +6632,186 @@
   const CHANNEL_ICON = { whatsapp:'💬', email:'📧', sms:'📱' };
 
   /* ── Load campaigns ── */
-  async function loadCampaigns(channel) {
-    const cfg = CHANNEL_CONFIG[channel];
-    const listEl = document.getElementById(cfg.listId);
-    listEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">Loading…</div>';
+  /* ════════════════════════════════════════════
+     NOTIFICATIONS (combined WhatsApp / Email / SMS)
+  ════════════════════════════════════════════ */
+  let notifChannel      = 'whatsapp';
+  let notifSegment      = 'all';
+  let notifSegClientData = [];
 
-    const { data, error } = await db.from('marketing_campaigns')
-      .select('*').eq('merchant_id', currentMerchant.id).eq('channel', channel)
-      .order('created_at', { ascending: false });
+  const NOTIF_CHANNEL_CFG = {
+    whatsapp: { label:'💬 WhatsApp', color:'#25D366', icon:'💬' },
+    email:    { label:'📧 Email',    color:'#2563EB', icon:'📧' },
+    sms:      { label:'📱 SMS',      color:'#6366F1', icon:'📱' },
+  };
 
-    if (error && error.code === '42P01') {
-      listEl.innerHTML = '<div style="text-align:center;padding:60px;color:var(--muted)"><div style="font-size:28px;margin-bottom:8px">🔧</div><div style="font-weight:700">Table not set up yet</div><div style="font-size:12px;margin-top:4px">Run the SQL to create <code>marketing_campaigns</code></div></div>';
-      updateMktgStats(channel, [], cfg);
-      return;
-    }
-    const campaigns = data || [];
-    allCampaigns = campaigns;
-    updateMktgStats(channel, campaigns, cfg);
-    renderCampaigns(campaigns, cfg);
+  async function loadNotifications() {
+    notifChannel = 'whatsapp';
+    notifSegment = 'all';
+    // Activate first tab
+    document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('ntab-whatsapp').classList.add('active');
+    document.getElementById('notif-compose-sub').textContent = 'WhatsApp campaign';
+    document.getElementById('notif-subject-field').style.display = 'none';
+    // Reset form
+    document.getElementById('notif-name').value  = '';
+    document.getElementById('notif-body').value  = '';
+    document.getElementById('notif-err').classList.remove('show');
+    document.getElementById('notif-char-count').textContent = '';
+
+    await Promise.all([loadNotifSegments(), loadNotifHistory()]);
   }
 
-  function updateMktgStats(channel, campaigns, cfg) {
-    const p = cfg.statPrefix;
-    const now = new Date(); const m = now.getMonth(); const y = now.getFullYear();
-    const sent      = campaigns.filter(c => c.status === 'sent');
-    const scheduled = campaigns.filter(c => c.status === 'scheduled');
-    const thisMonth = sent.filter(c => { const d = new Date(c.created_at); return d.getMonth()===m && d.getFullYear()===y; });
-    const totalRcpt = sent.reduce((s,c)=>s+(c.recipient_count||0),0);
-    document.getElementById(p+'stat-total').textContent      = sent.length;
-    document.getElementById(p+'stat-recipients').textContent  = totalRcpt;
-    document.getElementById(p+'stat-this-month').textContent  = thisMonth.length;
-    document.getElementById(p+'stat-scheduled').textContent   = scheduled.length;
-  }
-
-  function renderCampaigns(list, cfg) {
-    const listEl = document.getElementById(cfg.listId);
-    if (!list.length) {
-      listEl.innerHTML = `<div style="text-align:center;padding:60px;color:var(--muted)">
-        <div style="font-size:36px;margin-bottom:10px">${CHANNEL_ICON[composeChannel]}</div>
-        <div style="font-weight:700;font-size:15px;color:var(--text)">No campaigns yet</div>
-        <div style="font-size:13px;margin-top:4px">Click ＋ New campaign to send your first message</div>
-      </div>`;
-      return;
+  async function loadNotifSegments() {
+    // Reuse segment client data if already loaded, else fetch
+    if (!segClientData.length) {
+      const { data: clients } = await db.from('clients').select('*').eq('merchant_id', currentMerchant.id);
+      const { data: bks }     = await db.from('bookings').select('client_id,booking_date,status').eq('merchant_id', currentMerchant.id);
+      const now = new Date(); const nowTs = now.getTime();
+      const days = ms => ms / 86400000;
+      segClientData = (clients||[]).map(c => {
+        const myBks   = (bks||[]).filter(b => b.client_id === c.id);
+        const past    = myBks.filter(b => new Date(b.booking_date) < now);
+        const upcoming = myBks.filter(b => new Date(b.booking_date) >= now);
+        const lastBkDays = past.sort((a,b)=>new Date(b.booking_date)-new Date(a.booking_date))[0]
+          ? days(nowTs - new Date(past[0]?.booking_date).getTime()) : null;
+        return { ...c, _daysSince: days(nowTs-new Date(c.created_at).getTime()), _lastBooking: lastBkDays, _pastBookings: past.length, _upcomingBookings: upcoming.length, _bookings5m: past.filter(b=>days(nowTs-new Date(b.booking_date).getTime())<=150).length, _bookings12m: past.filter(b=>days(nowTs-new Date(b.booking_date).getTime())<=365).length, _spend12m:0, _birthdaySoon:false };
+      });
     }
-    listEl.innerHTML = list.map(c => {
-      const statusClass = c.status === 'sent' ? 'sent' : c.status === 'scheduled' ? 'scheduled' : c.status === 'failed' ? 'failed' : 'draft';
-      const dateStr = c.status === 'sent' ? (c.sent_at||c.created_at||'').split('T')[0] : c.scheduled_at ? c.scheduled_at.replace('T',' ').slice(0,16) : (c.created_at||'').split('T')[0];
-      return `<div class="mktg-campaign-card">
-        <div class="mktg-campaign-icon" style="background:${cfg.color}">${CHANNEL_ICON[c.channel]}</div>
-        <div class="mktg-campaign-body">
-          <div class="mktg-campaign-title">${c.name}</div>
-          <div class="mktg-campaign-meta">${c.recipient_type==='all'?'All clients':c.recipient_type==='segment'?(c.segment_value||'Segment'):'Tag: '+(c.tag_value||'')} · ${c.status==='sent'?(c.recipient_count||0)+' sent':'–'}</div>
-          <div class="mktg-campaign-meta" style="margin-top:4px;font-style:italic;color:#374151">${(c.message_body||'').slice(0,80)}${(c.message_body||'').length>80?'…':''}</div>
+    const totalCount = segClientData.length;
+    document.getElementById('nseg-all-count').textContent = `${totalCount} client${totalCount!==1?'s':''}`;
+    document.getElementById('notif-reach').textContent = totalCount;
+
+    const listEl = document.getElementById('notif-seg-list');
+    listEl.innerHTML = SEGMENTS.map(seg => {
+      const count = segClientData.filter(seg.filter).length;
+      return `<div class="notif-seg-option" id="nseg-${seg.id}" onclick="selectNotifSegment('${seg.id}',this)">
+        <div class="notif-seg-icon" style="background:${seg.color}20">${seg.icon}</div>
+        <div class="notif-seg-body">
+          <div class="notif-seg-name">${seg.name}</div>
+          <div class="notif-seg-count">${count} client${count!==1?'s':''}</div>
         </div>
-        <div class="mktg-campaign-right">
-          <div><span class="mktg-status-pill ${statusClass}">${c.status}</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:6px">${dateStr}</div>
-        </div>
+        <div class="notif-seg-check">✓</div>
       </div>`;
     }).join('');
+  }
+
+  function selectNotifSegment(segId, el) {
+    // Deselect all
+    document.querySelectorAll('.notif-seg-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    notifSegment = segId;
+    // Update reach count
+    let count;
+    if (segId === 'all') {
+      count = segClientData.length;
+    } else {
+      const seg = SEGMENTS.find(s => s.id === segId);
+      count = seg ? segClientData.filter(seg.filter).length : 0;
+    }
+    document.getElementById('notif-reach').textContent = count;
+  }
+
+  function switchNotifChannel(channel, btn) {
+    notifChannel = channel;
+    document.querySelectorAll('.notif-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const cfg = NOTIF_CHANNEL_CFG[channel];
+    document.getElementById('notif-compose-sub').textContent = cfg.label + ' campaign';
+    document.getElementById('notif-subject-field').style.display = channel === 'email' ? '' : 'none';
+    document.getElementById('notif-char-count').textContent = '';
+    loadNotifHistory();
+  }
+
+  async function loadNotifHistory() {
+    const tbody = document.getElementById('notif-history-tbody');
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--muted)">Loading…</td></tr>`;
+    document.getElementById('notif-history-channel').textContent = '— ' + NOTIF_CHANNEL_CFG[notifChannel].label;
+
+    const { data, error } = await db.from('marketing_campaigns')
+      .select('*').eq('merchant_id', currentMerchant.id).eq('channel', notifChannel)
+      .order('created_at', { ascending: false }).limit(50);
+
+    if (error && error.code === '42P01') {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">Run SQL to create <code>marketing_campaigns</code> table first.</td></tr>`;
+      return;
+    }
+    const list = data || [];
+    if (!list.length) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted)">No campaigns yet for this channel.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = list.map(c => {
+      const dateStr = (c.sent_at||c.created_at||'').split('T')[0];
+      const statusCls = c.status==='sent'?'status-confirmed':c.status==='draft'?'status-pending':'status-cancelled';
+      const segLabel = c.recipient_type==='all' ? 'All clients' : (c.segment_value||c.tag_value||'—');
+      return `<tr>
+        <td style="font-size:13px;color:var(--muted)">${dateStr}</td>
+        <td><span style="font-size:18px">${NOTIF_CHANNEL_CFG[c.channel]?.icon||'📣'}</span></td>
+        <td style="font-weight:700;font-size:13px">${c.name}</td>
+        <td style="font-size:12px;color:var(--muted)">${segLabel}</td>
+        <td style="font-size:12px;color:var(--muted);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${(c.message_body||'').slice(0,60)}…</td>
+        <td style="font-size:13px;font-weight:700">${c.recipient_count||0}</td>
+        <td><span class="status-badge ${statusCls}">${c.status}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  function notifCharCount() {
+    const len = document.getElementById('notif-body').value.length;
+    const el  = document.getElementById('notif-char-count');
+    el.textContent = notifChannel === 'sms'
+      ? `${len} chars (${Math.ceil(len/160)||1} SMS)`
+      : `${len} characters`;
+  }
+
+  function notifInsertVar(variable) {
+    const ta = document.getElementById('notif-body');
+    const s = ta.selectionStart, e = ta.selectionEnd;
+    ta.value = ta.value.slice(0,s) + variable + ta.value.slice(e);
+    ta.selectionStart = ta.selectionEnd = s + variable.length;
+    ta.focus(); notifCharCount();
+  }
+
+  async function sendNotifCampaign(status) {
+    const errEl = document.getElementById('notif-err'); errEl.classList.remove('show');
+    const name  = document.getElementById('notif-name').value.trim();
+    const body  = document.getElementById('notif-body').value.trim();
+    const subject = notifChannel === 'email' ? document.getElementById('notif-subject').value.trim() : null;
+    if (!name) { errEl.textContent='Campaign name is required.'; errEl.classList.add('show'); return; }
+    if (!body) { errEl.textContent='Message body is required.';  errEl.classList.add('show'); return; }
+    if (notifChannel === 'email' && !subject) { errEl.textContent='Subject line is required for email.'; errEl.classList.add('show'); return; }
+
+    const segId  = notifSegment;
+    const seg    = SEGMENTS.find(s => s.id === segId);
+    const count  = segId === 'all' ? segClientData.length : (seg ? segClientData.filter(seg.filter).length : 0);
+
+    const sendBtn = document.getElementById('notif-send-btn');
+    sendBtn.disabled = true; sendBtn.textContent = 'Sending…';
+
+    const payload = {
+      merchant_id: currentMerchant.id,
+      channel: notifChannel,
+      name,
+      subject,
+      message_body: body,
+      recipient_type: segId === 'all' ? 'all' : 'segment',
+      segment_value: segId !== 'all' ? segId : null,
+      status,
+      sent_at: status === 'sent' ? new Date().toISOString() : null,
+      recipient_count: status === 'sent' ? count : 0,
+    };
+    const { error } = await db.from('marketing_campaigns').insert(payload);
+    sendBtn.disabled = false; sendBtn.textContent = 'Send now →';
+    if (error) { errEl.textContent = error.message; errEl.classList.add('show'); return; }
+
+    // Reset form
+    document.getElementById('notif-name').value = '';
+    document.getElementById('notif-body').value = '';
+    if (subject !== null) document.getElementById('notif-subject').value = '';
+    document.getElementById('notif-char-count').textContent = '';
+
+    loadNotifHistory();
   }
 
   /* ── Compose overlay ── */
