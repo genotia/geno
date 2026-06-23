@@ -5138,23 +5138,29 @@
      REWARDS & LOYALTY
   ════════════════════════════════════════════ */
   let loyaltyConfig = { spend_amount: 1000, earn_points: 100, point_value: 1 };
-  let loyaltyTiers  = [
-    { id:'__bronze', name:'Bronze', icon:'🥉', min_points:0,   max_points:99,  discount_pct:5,  perks:'5% discount on next booking',                    sort_order:0 },
-    { id:'__silver', name:'Silver', icon:'🥈', min_points:100, max_points:299, discount_pct:10, perks:'10% discount on next booking',                   sort_order:1 },
-    { id:'__gold',   name:'Gold',   icon:'🥇', min_points:300, max_points:null,discount_pct:15, perks:'15% discount + priority booking',                sort_order:2 },
-  ];
+  let loyaltyTiers  = []; // populated by loadLoyaltySettings (merges DB + DEFAULT_TIERS)
 
   function tierFor(pts) {
     const sorted = [...loyaltyTiers].sort((a,b) => b.min_points - a.min_points);
     return sorted.find(t => pts >= t.min_points) || loyaltyTiers[0];
   }
 
+  /* ── Default tiers (always shown until saved to DB) ── */
+  const DEFAULT_TIERS = [
+    { id:'__bronze', name:'Bronze', icon:'🥉', min_points:0,   max_points:99,  discount_pct:5,  perks:'5% discount on next booking',   sort_order:0 },
+    { id:'__silver', name:'Silver', icon:'🥈', min_points:100, max_points:299, discount_pct:10, perks:'10% discount on next booking',  sort_order:1 },
+    { id:'__gold',   name:'Gold',   icon:'🥇', min_points:300, max_points:null,discount_pct:15, perks:'15% discount + priority booking',sort_order:2 },
+  ];
+
   /* ── Load config + tiers from DB ── */
   async function loadLoyaltySettings() {
     const { data: cfg } = await db.from('loyalty_config').select('*').eq('merchant_id', currentMerchant.id).maybeSingle();
     if (cfg) loyaltyConfig = { spend_amount: cfg.spend_amount, earn_points: cfg.earn_points, point_value: cfg.point_value };
     const { data: tiers } = await db.from('loyalty_tiers').select('*').eq('merchant_id', currentMerchant.id).order('sort_order');
-    if (tiers && tiers.length) loyaltyTiers = tiers;
+    const dbTiers = tiers || [];
+    // Always fill in any missing default tiers so Silver/Gold never disappear
+    const missing = DEFAULT_TIERS.filter(d => !dbTiers.some(t => t.name === d.name));
+    loyaltyTiers = [...dbTiers, ...missing].sort((a,b) => (a.sort_order??a.min_points) - (b.sort_order??b.min_points));
     renderLoyaltyConfig();
     renderTiers();
   }
