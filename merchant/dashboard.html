@@ -1247,8 +1247,6 @@
       <div class="nav-sub-group" id="team-sub-group">
         <button class="nav-item nav-sub" id="nav-team-members" onclick="switchPage('team-members',this)"><span class="nav-icon">👤</span> Manage Staff</button>
         <button class="nav-item nav-sub" id="nav-sales"        onclick="switchPage('sales',this)"><span class="nav-icon">💰</span> Sales</button>
-        <button class="nav-item nav-sub" id="nav-schedule"     onclick="switchPage('schedule',this)"><span class="nav-icon">📅</span> Schedule</button>
-        <button class="nav-item nav-sub" id="nav-roster"       onclick="switchPage('roster',this)"><span class="nav-icon">👥</span> Roster</button>
         <button class="nav-item nav-sub" id="nav-productivity" onclick="switchPage('productivity',this)"><span class="nav-icon">📊</span> Insights</button>
       </div>
     </div>
@@ -1496,29 +1494,6 @@
     </div>
   </div><!-- /tab-bookings -->
 
-  <!-- ── SCHEDULE TAB ── -->
-  <div class="tab-panel" id="tab-schedule">
-    <div class="schedule-nav">
-      <button class="sch-nav-btn" onclick="schNav(-1)">‹</button>
-      <span class="sch-date-label" id="sch-date-label"></span>
-      <button class="sch-nav-btn" onclick="schNav(1)">›</button>
-      <button class="sch-today-btn" onclick="schGoToday()">Today</button>
-    </div>
-    <div class="pending-queue" id="pending-queue" style="display:none">
-      <div class="pending-queue-title">⏳ Pending assignments</div>
-      <div id="pending-queue-list"></div>
-    </div>
-    <div class="schedule-wrap">
-      <div id="sch-grid-wrap"><div class="loading-state">Loading schedule…</div></div>
-    </div>
-  </div><!-- /tab-schedule -->
-
-  <!-- ── ROSTER TAB ── -->
-  <div class="tab-panel" id="tab-roster">
-    <div class="roster-wrap">
-      <div id="roster-grid-wrap"><div class="loading-state">Loading roster…</div></div>
-    </div>
-  </div><!-- /tab-roster -->
 
   <!-- ── PRODUCTIVITY TAB ── -->
   <div class="tab-panel" id="tab-productivity">
@@ -3878,7 +3853,7 @@
   };
 
   /* ── PAGE SWITCHING ── */
-  const PAGE_TITLES = { home:'Home', deals:'Off-Peak Deals', bookings:'Bookings', schedule:'Schedule', roster:'Roster', productivity:'Insights', setup:'Setup' };
+  const PAGE_TITLES = { home:'Home', deals:'Off-Peak Deals', bookings:'Bookings', productivity:'Insights', setup:'Setup' };
   function switchPage(page, btn) {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -4816,163 +4791,6 @@
     await loadRooms();
   }
 
-  /* ════════════════════════════════════════════
-     ROSTER
-  ════════════════════════════════════════════ */
-  let currentRoster = [];
-  const WEEK_DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-
-  async function loadRoster() {
-    const { data } = await db.from('roster').select('*').eq('merchant_id', currentMerchant.id);
-    currentRoster = data || [];
-    renderRosterGrid();
-  }
-
-  function renderRosterGrid() {
-    const active = currentStaff.filter(s => s.active);
-    if (!active.length) {
-      document.getElementById('roster-grid-wrap').innerHTML = '<div class="empty-state">Add therapists in Setup first.</div>';
-      return;
-    }
-    const rosterMap = {};
-    currentRoster.forEach(r => { rosterMap[r.staff_id + '_' + r.day_of_week] = r; });
-
-    document.getElementById('roster-grid-wrap').innerHTML = `
-      <table class="roster-grid">
-        <thead><tr>
-          <th>Therapist</th>
-          ${WEEK_DAYS.map(d => `<th>${d}</th>`).join('')}
-        </tr></thead>
-        <tbody>
-          ${active.map(s => `
-            <tr>
-              <td>
-                <div class="staff-name-cell">
-                  <div class="staff-dot" style="background:${s.color}"></div>
-                  <span style="font-weight:600;font-size:13px">${s.name}</span>
-                </div>
-              </td>
-              ${WEEK_DAYS.map(d => {
-                const key = s.id + '_' + d;
-                const r = rosterMap[key];
-                return `<td>
-                  <div class="roster-cell ${r ? 'on' : ''}" style="${r ? 'background:' + s.color : ''}"
-                    onclick="toggleRosterCell('${s.id}','${d}','${s.color}',this)">
-                    ${r ? '✓' : ''}
-                  </div>
-                </td>`;
-              }).join('')}
-            </tr>`).join('')}
-        </tbody>
-      </table>`;
-  }
-
-  async function toggleRosterCell(staffId, day, color, el) {
-    const isOn = el.classList.contains('on');
-    if (isOn) {
-      await db.from('roster').delete().eq('staff_id', staffId).eq('day_of_week', day);
-      el.classList.remove('on'); el.style.background = ''; el.textContent = '';
-    } else {
-      const { error } = await db.from('roster').upsert({
-        merchant_id: currentMerchant.id, staff_id: staffId,
-        day_of_week: day, start_time: '09:00', end_time: '18:00',
-      }, { onConflict: 'staff_id,day_of_week' });
-      if (!error) { el.classList.add('on'); el.style.background = color; el.textContent = '✓'; }
-    }
-  }
-
-  /* ════════════════════════════════════════════
-     SCHEDULE
-  ════════════════════════════════════════════ */
-  let schDate = new Date();
-  const SCH_HOURS = [8,9,10,11,12,13,14,15,16,17,18,19,20];
-  let pendingBookings   = [];
-  let assigningBookingId = null;
-
-  function schNav(dir) {
-    schDate = new Date(schDate); schDate.setDate(schDate.getDate() + dir);
-    loadSchedule();
-  }
-  function schGoToday() { schDate = new Date(); loadSchedule(); }
-
-  async function loadSchedule() {
-    const dateStr = schDate.toISOString().split('T')[0];
-    document.getElementById('sch-date-label').textContent =
-      schDate.toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-
-    const [{ data: bks }, { data: rms }] = await Promise.all([
-      db.from('bookings').select('*, staff(name,color), rooms(name)')
-        .eq('merchant_id', currentMerchant.id).eq('booking_date', dateStr),
-      db.from('rooms').select('*').eq('merchant_id', currentMerchant.id).eq('active', true).order('name'),
-    ]);
-
-    const booked    = (bks || []).filter(b => b.status !== 'cancelled');
-    pendingBookings = booked.filter(b => !b.room_id);
-    const assigned  = booked.filter(b => b.room_id);
-    const rooms     = rms || [];
-
-    // Pending queue
-    const pq = document.getElementById('pending-queue');
-    const pql = document.getElementById('pending-queue-list');
-    if (pendingBookings.length) {
-      pq.style.display = '';
-      pql.innerHTML = pendingBookings.map(b => `
-        <div class="pending-bk">
-          <span class="status-badge status-${b.status}">${b.status}</span>
-          <strong>${b.customer_name}</strong>
-          <span style="color:var(--muted);font-size:12px">${b.deal_title} · ${b.time_slot}</span>
-          <button class="btn-assign" onclick="openAssignModal('${b.id}')">Assign →</button>
-        </div>`).join('');
-    } else { pq.style.display = 'none'; }
-
-    if (!rooms.length) {
-      document.getElementById('sch-grid-wrap').innerHTML = '<div class="empty-state">Add rooms in Setup first.</div>';
-      return;
-    }
-
-    // Build lookup: room_id → [bookings]
-    const byRoom = {};
-    rooms.forEach(r => { byRoom[r.id] = []; });
-    assigned.forEach(b => { if (byRoom[b.room_id]) byRoom[b.room_id].push(b); });
-
-    const hourLabel = h => {
-      const ampm = h >= 12 ? 'PM' : 'AM';
-      return (h % 12 || 12) + ' ' + ampm;
-    };
-
-    // Render grid
-    const apptInHour = (roomId, h) => {
-      const appt = byRoom[roomId]?.find(b => {
-        if (!b.start_time) return false;
-        const sh = parseInt(b.start_time.split(':')[0]);
-        const eh = parseInt((b.end_time || b.start_time).split(':')[0]);
-        return h >= sh && h < (eh || sh + 1);
-      });
-      if (appt) {
-        const color = appt.staff?.color || '#1D9E75';
-        return `<div class="sch-appt" style="background:${color}">
-          <span>${appt.staff?.name || 'Unassigned'}</span>
-          <span class="appt-ref">${appt.booking_ref} · ${appt.deal_title}</span>
-        </div>`;
-      }
-      return `<div class="sch-empty-cell" onclick="openAssignModalForSlot('${roomId}',${h})">＋</div>`;
-    };
-
-    document.getElementById('sch-grid-wrap').innerHTML = `
-      <table class="sch-grid">
-        <thead><tr>
-          <th>Room</th>
-          ${SCH_HOURS.map(h => `<th>${hourLabel(h)}</th>`).join('')}
-        </tr></thead>
-        <tbody>
-          ${rooms.map(r => `
-            <tr>
-              <td>${r.name}<br><span style="font-size:11px;color:var(--muted)">${r.room_type}</span></td>
-              ${SCH_HOURS.map(h => `<td>${apptInHour(r.id, h)}</td>`).join('')}
-            </tr>`).join('')}
-        </tbody>
-      </table>`;
-  }
 
   /* ── ASSIGN MODAL ── */
   function openAssignModal(bookingId) {
@@ -5034,7 +4852,6 @@
     if (error) { errEl.textContent = error.message; return; }
     closeAssignModal();
     // Refresh open/loaded tabs
-    if (tabLoaded['schedule'])  loadSchedule();
     if (allBookings.length > 0 || document.getElementById('tab-bookings').classList.contains('active')) loadBookings();
     tabLoaded['productivity'] = false;
   }
@@ -6052,8 +5869,6 @@
     if (tabLoaded[page]) return;
     tabLoaded[page] = true;
     if (page === 'setup')         { loadRooms(); }
-    if (page === 'roster')        { openTeamNav(); Promise.all([loadStaff(), loadRooms()]).then(loadRoster); }
-    if (page === 'schedule')      { openTeamNav(); Promise.all([loadStaff(), loadRooms(), loadRosterData()]).then(loadSchedule); }
     if (page === 'productivity')  { openTeamNav(); loadProductivity(); }
     if (page === 'team-members')  { openTeamNav(); loadTeamMembers(); }
     if (page === 'shifts')        { switchPage('team-members', document.getElementById('nav-team-members')); setTimeout(() => switchStaffTab('schedule', document.getElementById('sltab-schedule')), 50); return; }
