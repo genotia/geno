@@ -2158,20 +2158,20 @@
     <div class="cl-topbar">
       <div>
         <div class="cl-page-title">Notifications</div>
-        <div class="cl-page-sub">Segments · Templates · Campaigns · Analytics — all in one place</div>
+        <div class="cl-page-sub">Analytics · New Campaign · Templates · Segments — all in one place</div>
       </div>
     </div>
 
     <!-- Page-level nav -->
     <div class="notif-ptabs">
-      <button class="notif-ptab active" id="nptab-segments"  onclick="switchNotifPage('segments',this)">👥 Segments</button>
-      <button class="notif-ptab"        id="nptab-templates" onclick="switchNotifPage('templates',this)">📝 Templates</button>
+      <button class="notif-ptab active" id="nptab-analytics" onclick="switchNotifPage('analytics',this)">📊 Analytics</button>
       <button class="notif-ptab"        id="nptab-campaign"  onclick="switchNotifPage('campaign',this)">📣 New Campaign</button>
-      <button class="notif-ptab"        id="nptab-analytics" onclick="switchNotifPage('analytics',this)">📊 Analytics</button>
+      <button class="notif-ptab"        id="nptab-templates" onclick="switchNotifPage('templates',this)">📝 Templates</button>
+      <button class="notif-ptab"        id="nptab-segments"  onclick="switchNotifPage('segments',this)">👥 Segments</button>
     </div>
 
     <!-- ── SECTION 1: Segments ── -->
-    <div class="notif-page show" id="notif-page-segments">
+    <div class="notif-page" id="notif-page-segments">
       <div class="nseg-grid" id="notif-seg-grid">
         <div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">Loading segments…</div>
       </div>
@@ -2282,7 +2282,7 @@
     </div>
 
     <!-- ── SECTION 4: Analytics ── -->
-    <div class="notif-page" id="notif-page-analytics">
+    <div class="notif-page show" id="notif-page-analytics">
       <!-- Summary stats -->
       <div class="nana-stats" id="nana-stats">
         <div class="nana-stat"><div class="nana-stat-label">Total campaigns</div><div class="nana-stat-value" id="nana-total">—</div><div class="nana-stat-sub">all channels</div></div>
@@ -6854,8 +6854,8 @@
   ];
 
   async function loadNotifications() {
-    // Default to Segments tab
-    switchNotifPage('segments', document.getElementById('nptab-segments'));
+    // Default to Analytics tab
+    switchNotifPage('analytics', document.getElementById('nptab-analytics'));
   }
 
   function switchNotifPage(page, btn) {
