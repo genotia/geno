@@ -3823,22 +3823,12 @@
           <div class="custom-time-row" id="custom-time-row">
             <div class="time-sel-wrap">
               <div class="time-sel-label">From</div>
-              <div class="time-sel-inner">
-                <select class="time-sel" id="f-start-time" onchange="updateDuration()" required>
-                  <option value="">— start —</option>
-                </select>
-                <span class="time-sel-arrow">▾</span>
-              </div>
+              <input type="time" class="am-input" id="f-start-time" onchange="updateDuration()" required style="width:120px;padding:8px 12px" />
             </div>
             <div class="time-sep">→</div>
             <div class="time-sel-wrap">
               <div class="time-sel-label">To</div>
-              <div class="time-sel-inner">
-                <select class="time-sel" id="f-end-time" onchange="updateDuration()" required>
-                  <option value="">— end —</option>
-                </select>
-                <span class="time-sel-arrow">▾</span>
-              </div>
+              <input type="time" class="am-input" id="f-end-time" onchange="updateDuration()" required style="width:120px;padding:8px 12px" />
             </div>
           </div>
           <div class="slot-hint" id="slot-hint"></div>
@@ -4545,7 +4535,6 @@
   }
 
   function preselectTimeSlot(startTime, endTime) {
-    // DB time columns return HH:MM:SS — truncate to HH:MM to match option values
     document.getElementById('f-start-time').value = (startTime || '').slice(0, 5);
     document.getElementById('f-end-time').value   = (endTime   || '').slice(0, 5);
     updateDuration();
@@ -4628,7 +4617,6 @@
     document.getElementById('price-preview').textContent = '';
     document.getElementById('slot-hint').textContent = '';
     setSelectedDays('Mon,Tue,Wed,Thu,Fri');
-    buildTimeOptions();
     document.getElementById('f-start-time').value = '';
     document.getElementById('f-end-time').value   = '';
     selectedColor = '#FDF4FF';
@@ -4644,7 +4632,6 @@
     document.getElementById('form-err').classList.remove('show');
 
     if (deal) {
-      buildTimeOptions();
       document.getElementById('f-title').value      = deal.title;
       document.getElementById('f-category').value   = deal.category;
       document.getElementById('f-emoji').value      = deal.emoji;
