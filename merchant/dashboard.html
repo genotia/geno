@@ -5146,13 +5146,97 @@
      CLIENT SEGMENTS
   ════════════════════════════════════════════ */
   const SEGMENTS = [
-    { id:'new',       icon:'😊', color:'#8B5CF6', name:'New clients',        desc:'Clients added in the last 30 days',                                        filter: c => c._daysSince <= 30 },
-    { id:'recent',    icon:'🏥', color:'#3B82F6', name:'Recent clients',      desc:'Clients with appointments in the last 30 days',                            filter: c => c._lastBooking && c._lastBooking <= 30 },
-    { id:'firstvisit',icon:'👾', color:'#F59E0B', name:'First visit',         desc:'Clients with no past appointments, but with upcoming ones',                 filter: c => c._upcomingBookings > 0 && c._pastBookings === 0 },
-    { id:'loyal',     icon:'👑', color:'#EAB308', name:'Loyal clients',       desc:'Clients with 2 or more bookings in the last 5 months',                     filter: c => c._bookings5m >= 2 },
-    { id:'lapsed',    icon:'⏰', color:'#6366F1', name:'Lapsed clients',      desc:'Clients with 3+ bookings in last 12 months, and no bookings last 2 months',filter: c => c._bookings12m >= 3 && (!c._lastBooking || c._lastBooking > 60) },
-    { id:'high',      icon:'💰', color:'#10B981', name:'High spenders',       desc:'Clients with more than ₹500 in sales in the last 12 months',               filter: c => c._spend12m > 500 },
-    { id:'birthday',  icon:'🎂', color:'#F43F5E', name:'Upcoming birthdays',  desc:'Clients with birthdays in the next 30 days',                               filter: c => c._birthdaySoon },
+    {
+      id:'new-users', icon:'🎉', color:'#8B5CF6',
+      name:'New Users',
+      desc:'Recently registered with no bookings yet — convert their first visit',
+      sample:'🎉 Get ₹300 off your first booking!',
+      filter: c => c._daysSince <= 30 && c._pastBookings === 0,
+    },
+    {
+      id:'not-booked', icon:'👀', color:'#F59E0B',
+      name:'Browsed but Not Booked',
+      desc:'Registered clients who have never made a booking',
+      sample:'The spa you viewed is now 30% off',
+      filter: c => c._pastBookings === 0 && c._upcomingBookings === 0,
+    },
+    {
+      id:'first-time', icon:'⭐', color:'#3B82F6',
+      name:'First-Time Customers',
+      desc:'Completed exactly 1 booking — nudge them to return',
+      sample:'Book again within 30 days and earn 2× points',
+      filter: c => c._pastBookings === 1,
+    },
+    {
+      id:'frequent', icon:'🔁', color:'#10B981',
+      name:'Frequent Customers',
+      desc:'5 or more bookings in the last 6 months',
+      sample:'Exclusive Gold Member offers just for you',
+      filter: c => c._bookings5m >= 5,
+    },
+    {
+      id:'high-value', icon:'💎', color:'#EAB308',
+      name:'High-Value Customers',
+      desc:'₹10,000+ in annual spend — reward loyalty',
+      sample:'VIP access to our premium deals',
+      filter: c => c._spend12m >= 10000,
+    },
+    {
+      id:'inactive', icon:'⏰', color:'#6366F1',
+      name:'Inactive Customers',
+      desc:'No booking in 30+ days despite past visits — win them back',
+      sample:'We miss you! Here\'s ₹500 off your next visit',
+      filter: c => c._pastBookings > 0 && (!c._lastBooking || c._lastBooking > 30),
+    },
+    {
+      id:'off-peak', icon:'🕐', color:'#0EA5E9',
+      name:'Off-Peak Deal Seekers',
+      desc:'Clients with 3+ bookings — likely to respond to off-peak offers',
+      sample:'Save up to 70% on Off-Peak Deals',
+      filter: c => c._bookings12m >= 3,
+    },
+    {
+      id:'last-minute', icon:'⚡', color:'#F43F5E',
+      name:'Last-Minute Bookers',
+      desc:'Clients with upcoming bookings — receptive to same-day deals',
+      sample:'Last-minute spa slot today at 50% off',
+      filter: c => c._upcomingBookings > 0,
+    },
+    {
+      id:'weekend', icon:'📅', color:'#EC4899',
+      name:'Weekend Customers',
+      desc:'Active clients who visit regularly — encourage weekday bookings',
+      sample:'Earn 2× points on weekday visits',
+      filter: c => c._bookings12m >= 2,
+    },
+    {
+      id:'premium', icon:'👑', color:'#7C3AED',
+      name:'Premium Customers',
+      desc:'High-frequency visitors who prefer premium experiences',
+      sample:'Luxury wellness experiences curated for you',
+      filter: c => c._bookings12m >= 6 || c._spend12m >= 5000,
+    },
+    {
+      id:'birthday', icon:'🎂', color:'#F97316',
+      name:'Birthday Customers',
+      desc:'Clients with a birthday coming in the next 7 days',
+      sample:'Happy Birthday! Enjoy ₹500 off your visit 🎂',
+      filter: c => c._birthdaySoon,
+    },
+    {
+      id:'referral', icon:'🤝', color:'#14B8A6',
+      name:'Referral Candidates',
+      desc:'Highly engaged clients (5+ bookings) — ideal for referral campaigns',
+      sample:'Refer a friend and earn 500 points',
+      filter: c => c._pastBookings >= 5,
+    },
+    {
+      id:'nearby', icon:'📍', color:'#84CC16',
+      name:'Nearby Customers',
+      desc:'All clients — use for hyperlocal area-specific campaigns',
+      sample:'Deals available near you today',
+      filter: c => !!c,
+    },
   ];
 
   let segClientData = [];
@@ -6689,7 +6773,7 @@
         <div class="notif-seg-icon" style="background:${seg.color}20">${seg.icon}</div>
         <div class="notif-seg-body">
           <div class="notif-seg-name">${seg.name}</div>
-          <div class="notif-seg-count">${count} client${count!==1?'s':''}</div>
+          <div class="notif-seg-count">${count} client${count!==1?'s':''} · <span style="color:var(--muted);font-style:italic">${seg.sample}</span></div>
         </div>
         <div class="notif-seg-check">✓</div>
       </div>`;
@@ -6697,19 +6781,19 @@
   }
 
   function selectNotifSegment(segId, el) {
-    // Deselect all
     document.querySelectorAll('.notif-seg-option').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
     notifSegment = segId;
-    // Update reach count
-    let count;
-    if (segId === 'all') {
-      count = segClientData.length;
-    } else {
-      const seg = SEGMENTS.find(s => s.id === segId);
-      count = seg ? segClientData.filter(seg.filter).length : 0;
-    }
+
+    const seg    = SEGMENTS.find(s => s.id === segId);
+    const count  = segId === 'all' ? segClientData.length : (seg ? segClientData.filter(seg.filter).length : 0);
     document.getElementById('notif-reach').textContent = count;
+
+    // Auto-fill message body with sample campaign if body is still empty
+    if (seg?.sample && !document.getElementById('notif-body').value.trim()) {
+      document.getElementById('notif-body').value = seg.sample;
+      notifCharCount();
+    }
   }
 
   function switchNotifChannel(channel, btn) {
