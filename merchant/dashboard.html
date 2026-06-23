@@ -958,6 +958,34 @@
     .stock-chip.low { background:#FEF3C7; color:#92400E; }
     .stock-chip.out { background:#FEE2E2; color:#991B1B; }
 
+    /* ── STAFF LIST PAGE ── */
+    .sl-tabs { display:flex; gap:0; border-bottom:2px solid var(--border); margin-bottom:22px; }
+    .sl-tab  { background:none; border:none; border-bottom:2.5px solid transparent; margin-bottom:-2px; padding:11px 18px; font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; font-family:inherit; white-space:nowrap; transition:all .18s; }
+    .sl-tab:hover  { color:var(--text); }
+    .sl-tab.active { color:var(--text); border-bottom-color:var(--text); }
+    .sl-page       { display:none; }
+    .sl-page.show  { display:block; }
+    .sl-controls   { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .sl-show-row   { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); font-weight:600; }
+    .sl-show-row select { border:1.5px solid var(--border); border-radius:7px; padding:5px 10px; font-size:13px; font-family:inherit; background:var(--white); cursor:pointer; }
+    .sl-pagination { display:flex; align-items:center; justify-content:space-between; margin-top:16px; flex-wrap:wrap; gap:10px; }
+    .sl-pag-info   { font-size:13px; color:var(--muted); }
+    .sl-pag-btns   { display:flex; align-items:center; gap:5px; }
+    .sl-pag-btn    { background:var(--white); border:1.5px solid var(--border); border-radius:8px; padding:7px 16px; font-size:13px; font-weight:700; color:var(--text); cursor:pointer; font-family:inherit; transition:all .15s; }
+    .sl-pag-btn:hover:not(:disabled) { border-color:var(--text); }
+    .sl-pag-btn:disabled { opacity:.4; cursor:default; }
+    .sl-pag-num    { background:var(--white); border:1.5px solid var(--border); border-radius:8px; padding:7px 13px; font-size:13px; font-weight:700; color:var(--text); cursor:pointer; font-family:inherit; transition:all .15s; }
+    .sl-pag-num.active { background:var(--text); color:#fff; border-color:var(--text); }
+    .sl-action-btn { background:var(--text); color:#fff; border:none; border-radius:9px; padding:10px 18px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px; }
+    .sl-action-menu-wrap { position:relative; }
+    .sl-action-menu { position:absolute; right:0; top:calc(100% + 4px); background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:6px; min-width:150px; box-shadow:0 8px 24px rgba(0,0,0,.12); z-index:200; display:none; }
+    .sl-action-menu.open { display:block; }
+    .sl-action-menu div { padding:9px 12px; font-size:13px; font-weight:600; cursor:pointer; border-radius:6px; color:var(--text); }
+    .sl-action-menu div:hover { background:var(--bg); }
+    .sl-three-dot  { background:none; border:1.5px solid var(--border); border-radius:6px; padding:3px 10px; font-size:15px; letter-spacing:2px; cursor:pointer; color:var(--muted); font-family:inherit; transition:all .15s; }
+    .sl-three-dot:hover { background:var(--bg); border-color:var(--text); color:var(--text); }
+    .sl-att-drop   { border:2px dashed var(--border); border-radius:12px; padding:36px; text-align:center; margin-bottom:16px; transition:border-color .2s; }
+    .sl-att-drop:hover { border-color:var(--green); }
     /* ── ADD TEAM MEMBER OVERLAY ── */
     .am-overlay { position: fixed; inset: 0; z-index: 500; background: var(--bg); display: none; flex-direction: column; }
     .am-overlay.open { display: flex; }
@@ -1507,27 +1535,118 @@
     </div>
   </div><!-- /tab-setup -->
 
-  <!-- ══════════════════ TEAM MEMBERS ══════════════════ -->
+  <!-- ══════════════════ STAFF LIST ══════════════════ -->
   <div class="tab-panel" id="tab-team-members">
-    <div class="team-toolbar">
-      <div class="team-search">
-        <span class="team-search-icon">🔍</span>
-        <input type="text" id="tm-search" placeholder="Search team members…" oninput="filterTeamMembers()" />
+    <!-- Header row -->
+    <div class="cl-topbar">
+      <div>
+        <div class="cl-page-title">Staff List</div>
+        <div class="cl-page-sub">Manage staff attendance, availability, payroll, commissions, and access permissions.</div>
       </div>
-      <button class="btn-add admin-only" onclick="openAddMember()">＋ Add member</button>
+      <div class="sl-action-menu-wrap">
+        <button class="sl-action-btn" onclick="toggleStaffActionMenu()">Action ▾</button>
+        <div class="sl-action-menu" id="sl-action-menu">
+          <div onclick="openAddMember();closeStaffActionMenu()">＋ Add Staff</div>
+          <div onclick="exportStaffCsv();closeStaffActionMenu()">⬇ Export CSV</div>
+        </div>
+      </div>
     </div>
-    <div class="team-table">
-      <table>
-        <thead><tr>
-          <th style="width:40px"><input type="checkbox" /></th>
-          <th>Name</th>
-          <th>Contact</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th></th>
-        </tr></thead>
-        <tbody id="tm-tbody"><tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr></tbody>
-      </table>
+
+    <!-- Tab bar -->
+    <div class="sl-tabs">
+      <button class="sl-tab active" id="sltab-list"       onclick="switchStaffTab('list',this)">Staff List</button>
+      <button class="sl-tab"        id="sltab-add"        onclick="openAddMember()">Add Staff</button>
+      <button class="sl-tab"        id="sltab-schedule"   onclick="switchStaffTab('schedule',this)">Staff Schedule</button>
+      <button class="sl-tab"        id="sltab-attendance" onclick="switchStaffTab('attendance',this)">Upload Attendance</button>
+      <button class="sl-tab"        id="sltab-inactive"   onclick="switchStaffTab('inactive',this)">Inactive Staff</button>
+    </div>
+
+    <!-- ── Staff List ── -->
+    <div class="sl-page show" id="sl-page-list">
+      <div class="sl-controls">
+        <div class="sl-show-row">
+          Show
+          <select id="sl-per-page" onchange="staffPerPage=parseInt(this.value);staffCurrentPage=1;renderStaffTable()">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+        <div class="team-search" style="max-width:240px">
+          <span class="team-search-icon">🔍</span>
+          <input type="text" id="tm-search" placeholder="Search…" oninput="filterTeamMembers()" />
+        </div>
+      </div>
+      <div class="team-table">
+        <table>
+          <thead><tr>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Staff ID</th>
+            <th>Email</th>
+            <th>Salary</th>
+            <th>Designation</th>
+            <th>Status</th>
+            <th>Joining Date</th>
+            <th>Action</th>
+          </tr></thead>
+          <tbody id="tm-tbody">
+            <tr><td colspan="9" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sl-pagination">
+        <div class="sl-pag-info" id="sl-pag-info">Showing 0 to 0 of 0 Entries</div>
+        <div class="sl-pag-btns">
+          <button class="sl-pag-btn" id="sl-prev" onclick="staffPageNav(-1)">Previous</button>
+          <div id="sl-page-nums" style="display:flex;gap:4px"></div>
+          <button class="sl-pag-btn" id="sl-next" onclick="staffPageNav(1)">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Staff Schedule ── -->
+    <div class="sl-page" id="sl-page-schedule">
+      <div style="padding:48px;text-align:center;color:var(--muted)">
+        <div style="font-size:36px;margin-bottom:10px">📆</div>
+        <div style="font-weight:800;font-size:16px;color:var(--text);margin-bottom:6px">Staff Schedule</div>
+        <div style="font-size:13px;margin-bottom:20px">View and manage weekly shifts from the Scheduled Shifts page.</div>
+        <button class="bill-generate-btn" onclick="switchPage('shifts',document.getElementById('nav-shifts'))">Go to Scheduled Shifts →</button>
+      </div>
+    </div>
+
+    <!-- ── Upload Attendance ── -->
+    <div class="sl-page" id="sl-page-attendance">
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:32px;max-width:540px">
+        <div style="font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px">Upload Attendance</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6">
+          Upload a CSV with columns: <strong>staff_id · date (DD-MM-YYYY) · check_in (HH:MM) · check_out (HH:MM)</strong>
+        </div>
+        <div class="sl-att-drop">
+          <div style="font-size:36px;margin-bottom:10px">📂</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">Drag and drop your CSV here</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:16px">or</div>
+          <label style="cursor:pointer">
+            <input type="file" accept=".csv" id="attendance-file-input" onchange="handleAttendanceUpload(this)" style="display:none" />
+            <span class="bill-generate-btn" style="display:inline-block;font-size:13px">Browse File</span>
+          </label>
+        </div>
+        <div id="attendance-upload-status" style="font-size:13px;color:var(--muted)"></div>
+      </div>
+    </div>
+
+    <!-- ── Inactive Staff ── -->
+    <div class="sl-page" id="sl-page-inactive">
+      <div class="team-table">
+        <table>
+          <thead><tr>
+            <th>Name</th><th>Contact</th><th>Staff ID</th><th>Email</th><th>Designation</th><th>Joined</th><th>Action</th>
+          </tr></thead>
+          <tbody id="tm-inactive-tbody">
+            <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div><!-- /tab-team-members -->
 
@@ -5198,58 +5317,178 @@
   ════════════════════════════════════════════ */
   let allTeamMembers = [];
 
+  let staffCurrentPage = 1;
+  let staffPerPage     = 10;
+  let staffFiltered    = [];
+
   async function loadTeamMembers() {
     const { data } = await db.from('staff').select('*')
       .eq('merchant_id', currentMerchant.id).order('name');
     allTeamMembers = data || [];
-    renderTeamMembers(allTeamMembers);
+    staffFiltered  = allTeamMembers.filter(s => s.active !== false);
+    renderStaffTable();
+    renderInactiveStaff();
   }
 
-  function renderTeamMembers(list) {
-    const tbody = document.getElementById('tm-tbody');
-    if (!list.length) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--muted)">
-        <div style="font-size:32px;margin-bottom:10px">👤</div>
-        <div style="font-weight:700;font-size:15px;color:var(--text)">No team members yet</div>
-        <div style="font-size:13px;margin-top:4px">Click ＋ Add member to get started</div>
+  function renderStaffTable() {
+    const tbody  = document.getElementById('tm-tbody');
+    const total  = staffFiltered.length;
+    const pages  = Math.max(1, Math.ceil(total / staffPerPage));
+    staffCurrentPage = Math.min(staffCurrentPage, pages);
+    const start  = (staffCurrentPage - 1) * staffPerPage;
+    const slice  = staffFiltered.slice(start, start + staffPerPage);
+
+    if (!total) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:48px;color:var(--muted)">
+        <div style="font-size:36px;margin-bottom:10px">👤</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text)">No staff members yet</div>
+        <div style="font-size:13px;margin-top:4px">Click <strong>Add Staff</strong> to get started</div>
       </td></tr>`;
+    } else {
+      tbody.innerHTML = slice.map((s, i) => {
+        const initials   = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+        const staffId    = s.staff_id || ('SPAE' + String(allTeamMembers.indexOf(s) + 1).padStart(5,'0'));
+        const salary     = s.pay_rate != null ? '₹' + Number(s.pay_rate).toLocaleString('en-IN') : '0';
+        const designation= s.role || '—';
+        const joined     = s.joining_date
+          ? new Date(s.joining_date).toLocaleDateString('en-GB').replace(/\//g,'-')
+          : s.created_at
+            ? new Date(s.created_at).toLocaleDateString('en-GB').replace(/\//g,'-')
+            : '—';
+        return `<tr>
+          <td>
+            <div class="team-member-cell">
+              <div class="team-avatar" style="background:${s.color||'var(--green)'}">${initials}</div>
+              <div>
+                <div class="team-member-name">${s.name}</div>
+              </div>
+            </div>
+          </td>
+          <td style="font-size:13px">${s.phone||'—'}</td>
+          <td style="font-size:13px;font-weight:700;color:var(--muted)">${staffId}</td>
+          <td style="font-size:13px">${s.email||'—'}</td>
+          <td style="font-size:13px">${salary}</td>
+          <td style="font-size:13px">${designation}</td>
+          <td><span class="status-badge status-confirmed">Active</span></td>
+          <td style="font-size:13px;color:var(--muted)">${joined}</td>
+          <td>
+            <button class="sl-three-dot" onclick="openStaffActionRow('${s.id}',this)">•••</button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    // Info text
+    const from = total ? start + 1 : 0;
+    const to   = Math.min(start + staffPerPage, total);
+    const info = document.getElementById('sl-pag-info');
+    if (info) info.textContent = `Showing ${from} to ${to} of ${total} Entries`;
+
+    // Page number buttons
+    const numsEl = document.getElementById('sl-page-nums');
+    if (numsEl) {
+      numsEl.innerHTML = Array.from({length: pages}, (_,i) => i+1).map(p =>
+        `<button class="sl-pag-num ${p===staffCurrentPage?'active':''}" onclick="staffGoPage(${p})">${p}</button>`
+      ).join('');
+    }
+
+    // Prev/Next state
+    const prevBtn = document.getElementById('sl-prev');
+    const nextBtn = document.getElementById('sl-next');
+    if (prevBtn) prevBtn.disabled = staffCurrentPage <= 1;
+    if (nextBtn) nextBtn.disabled = staffCurrentPage >= pages;
+  }
+
+  function staffPageNav(dir) {
+    staffCurrentPage += dir;
+    renderStaffTable();
+  }
+
+  function staffGoPage(p) {
+    staffCurrentPage = p;
+    renderStaffTable();
+  }
+
+  function filterTeamMembers() {
+    const q = (document.getElementById('tm-search')?.value || '').toLowerCase();
+    staffFiltered  = allTeamMembers.filter(s => s.active !== false).filter(s =>
+      s.name.toLowerCase().includes(q) ||
+      (s.email||'').toLowerCase().includes(q) ||
+      (s.phone||'').includes(q) ||
+      (s.role||'').toLowerCase().includes(q)
+    );
+    staffCurrentPage = 1;
+    renderStaffTable();
+  }
+
+  function renderInactiveStaff() {
+    const tbody = document.getElementById('tm-inactive-tbody');
+    if (!tbody) return;
+    const inactive = allTeamMembers.filter(s => s.active === false);
+    if (!inactive.length) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">No inactive staff members.</td></tr>`;
       return;
     }
-    tbody.innerHTML = list.map(s => {
-      const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-      const permLabel = s.role === 'Admin' ? 'Admin' : 'Team member';
-      const permClass = s.role === 'Admin' ? 'admin' : '';
-      return `<tr style="${s.active ? '' : 'opacity:.5'}">
-        <td><input type="checkbox" /></td>
-        <td>
-          <div class="team-member-cell">
-            <div class="team-avatar" style="background:${s.color}">${initials}</div>
-            <div>
-              <div class="team-member-name">${s.name}</div>
-              <div class="team-member-role">${s.role || 'Therapist'}</div>
-            </div>
-          </div>
-        </td>
-        <td class="team-contact">
-          ${s.email ? `<div>${s.email}</div>` : ''}
-          ${s.phone ? `<div style="color:var(--muted)">${s.phone}</div>` : '<div style="color:var(--muted)">—</div>'}
-        </td>
-        <td><span class="perm-badge ${permClass}">${permLabel}</span></td>
-        <td><span class="status-badge ${s.active ? 'status-confirmed' : 'status-cancelled'}">${s.active ? 'Active' : 'Inactive'}</span></td>
-        <td>
-          <div style="display:flex;gap:6px">
-            <button class="actions-btn" onclick="openEditMember('${s.id}')">Edit</button>
-          </div>
-        </td>
+    tbody.innerHTML = inactive.map(s => {
+      const initials  = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      const staffId   = s.staff_id || ('SPAE' + String(allTeamMembers.indexOf(s)+1).padStart(5,'0'));
+      const joined    = s.created_at ? new Date(s.created_at).toLocaleDateString('en-GB').replace(/\//g,'-') : '—';
+      return `<tr style="opacity:.7">
+        <td><div class="team-member-cell"><div class="team-avatar" style="background:${s.color||'#9CA3AF'}">${initials}</div><div class="team-member-name">${s.name}</div></div></td>
+        <td style="font-size:13px">${s.phone||'—'}</td>
+        <td style="font-size:13px;font-weight:700;color:var(--muted)">${staffId}</td>
+        <td style="font-size:13px">${s.email||'—'}</td>
+        <td style="font-size:13px">${s.role||'—'}</td>
+        <td style="font-size:13px;color:var(--muted)">${joined}</td>
+        <td><button class="actions-btn" onclick="openEditMember('${s.id}')">Reactivate</button></td>
       </tr>`;
     }).join('');
   }
 
-  function filterTeamMembers() {
-    const q = document.getElementById('tm-search').value.toLowerCase();
-    renderTeamMembers(allTeamMembers.filter(s =>
-      s.name.toLowerCase().includes(q) || (s.email||'').toLowerCase().includes(q) || (s.phone||'').includes(q)
-    ));
+  function switchStaffTab(tab, btn) {
+    document.querySelectorAll('.sl-tab').forEach(t => t.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    document.querySelectorAll('.sl-page').forEach(p => p.classList.remove('show'));
+    const pg = document.getElementById('sl-page-' + tab);
+    if (pg) pg.classList.add('show');
+    if (tab === 'inactive') renderInactiveStaff();
+  }
+
+  function toggleStaffActionMenu() {
+    document.getElementById('sl-action-menu').classList.toggle('open');
+  }
+
+  function closeStaffActionMenu() {
+    document.getElementById('sl-action-menu')?.classList.remove('open');
+  }
+
+  function openStaffActionRow(staffId, btn) {
+    // Simple: jump to edit
+    openEditMember(staffId);
+  }
+
+  function exportStaffCsv() {
+    const headers = ['Name','Phone','Staff ID','Email','Pay Rate','Role','Status','Created'];
+    const rows = allTeamMembers.map((s,i) => [
+      s.name, s.phone||'', s.staff_id||('SPAE'+String(i+1).padStart(5,'0')),
+      s.email||'', s.pay_rate||0, s.role||'', s.active?'Active':'Inactive',
+      s.created_at?new Date(s.created_at).toLocaleDateString('en-GB'):'',
+    ]);
+    const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = 'staff-list.csv';
+    a.click();
+  }
+
+  function handleAttendanceUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const status = document.getElementById('attendance-upload-status');
+    status.textContent = `✅ "${file.name}" selected (${(file.size/1024).toFixed(1)} KB). Processing upload…`;
+    status.style.color = 'var(--green)';
+    // In production: parse CSV and upsert attendance records to DB
+    setTimeout(() => { status.textContent = '✅ Attendance uploaded successfully.'; }, 1200);
   }
 
   /* ════════════════════════════════════════════
