@@ -5501,16 +5501,8 @@
     const rect = btn.getBoundingClientRect();
     const activeLabel = isActive ? 'Mark Inactive' : 'Mark Active';
     const activeIcon  = isActive ? '⛔' : '✅';
-    const DESIGNATIONS = ['Owner','Manager','Therapist','Salon','Beautician'];
-    const currentDesig = allTeamMembers.find(m=>m.id===staffId)?.role || 'Therapist';
     menu.innerHTML = `
       <div class="sl-row-menu-item" onclick="openEditMember('${staffId}');menu_close()">✏️ Edit</div>
-      <div class="sl-row-menu-item" style="flex-direction:column;align-items:flex-start;gap:6px">
-        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600">🎭 Change Designation</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px;padding-left:2px">
-          ${DESIGNATIONS.map(d=>`<span onclick="staffChangeDesignation('${staffId}','${d}');menu_close()" style="background:${d===currentDesig?'var(--text)':'var(--bg)'};color:${d===currentDesig?'#fff':'var(--muted)'};border:1.5px solid ${d===currentDesig?'var(--text)':'var(--border)'};border-radius:20px;padding:3px 11px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">${d}</span>`).join('')}
-        </div>
-      </div>
       <div class="sl-row-menu-item" onclick="staffResetPassword('${staffId}');menu_close()">🔑 Reset Password</div>
       <div class="sl-row-menu-item" onclick="staffAssignServices('${staffId}');menu_close()">🔧 Assign to Services</div>
       <div class="sl-row-menu-item" onclick="staffToggleActive('${staffId}',${isActive});menu_close()">${activeIcon} ${activeLabel}</div>
