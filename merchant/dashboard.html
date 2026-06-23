@@ -1085,6 +1085,12 @@
     .shift-time-row select { flex: 1; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; outline: none; }
     .shift-time-row select:focus { border-color: var(--green); }
     .shift-sep { color: var(--muted); font-size: 18px; }
+    .shift-mode-toggle { display:flex; gap:6px; margin-bottom:18px; background:var(--bg); border-radius:10px; padding:4px; }
+    .shift-mode-btn { flex:1; padding:8px; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; background:transparent; color:var(--muted); font-family:inherit; transition:all .15s; }
+    .shift-mode-btn.active { background:var(--white); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,.1); }
+    .shift-cell.leave { background:#FEF2F2; color:#DC2626; font-weight:700; font-size:12px; border-radius:8px; }
+    .shift-cell.leave:hover { background:#FEE2E2; }
+    .shift-leave-badge { display:inline-block; font-size:10px; font-weight:700; background:#DC2626; color:#fff; border-radius:20px; padding:2px 7px; margin-top:3px; }
     /* ── BOOKINGS ── */
     .bk-filter-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
     .bk-filter-btn { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .12s; }
@@ -3609,15 +3615,44 @@
     <div class="shift-modal-box">
       <div class="shift-modal-title" id="shift-modal-title">Edit shift</div>
       <div class="shift-modal-sub" id="shift-modal-sub"></div>
-      <div class="shift-time-row">
-        <select id="shift-start-sel"></select>
-        <span class="shift-sep">–</span>
-        <select id="shift-end-sel"></select>
+      <!-- Mode toggle -->
+      <div class="shift-mode-toggle">
+        <button id="shift-mode-work"  class="shift-mode-btn active" onclick="setShiftMode('work')">⏰ Working</button>
+        <button id="shift-mode-leave" class="shift-mode-btn"        onclick="setShiftMode('leave')">🏖 Leave</button>
       </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn-submit" onclick="saveShift()">Save shift</button>
-        <button class="btn-submit" style="background:#FEE2E2;color:#DC2626" onclick="deleteShift()">Remove</button>
-        <button class="btn-cancel" onclick="closeShiftModal()">Cancel</button>
+      <!-- Working section -->
+      <div id="shift-work-section">
+        <div class="shift-time-row">
+          <select id="shift-start-sel"></select>
+          <span class="shift-sep">–</span>
+          <select id="shift-end-sel"></select>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-submit" onclick="saveShift()">Save shift</button>
+          <button class="btn-submit" style="background:#FEE2E2;color:#DC2626" onclick="deleteShift()">Remove</button>
+          <button class="btn-cancel" onclick="closeShiftModal()">Cancel</button>
+        </div>
+      </div>
+      <!-- Leave section -->
+      <div id="shift-leave-section" style="display:none">
+        <div style="margin-bottom:12px">
+          <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">Leave type</label>
+          <select id="shift-leave-type" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none">
+            <option>Annual Leave</option>
+            <option>Sick Leave</option>
+            <option>Emergency Leave</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div style="margin-bottom:16px">
+          <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">Note (optional)</label>
+          <input type="text" id="shift-leave-note" placeholder="e.g. Doctor appointment" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box" />
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-submit" onclick="saveLeave()">Mark as Leave</button>
+          <button class="btn-submit" style="background:#FEE2E2;color:#DC2626" onclick="deleteLeave()">Clear Leave</button>
+          <button class="btn-cancel" onclick="closeShiftModal()">Cancel</button>
+        </div>
       </div>
     </div>
   </div>
@@ -5737,7 +5772,8 @@
   ════════════════════════════════════════════ */
   const SHIFT_DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   let shiftsWeekOffset = 0;
-  let shiftEditMeta = null; // { staffId, day }
+  let shiftEditMeta = null; // { staffId, day, date }
+  let currentLeaves = [];
 
   function getWeekDates(offset = 0) {
     const now = new Date();
@@ -5764,13 +5800,24 @@
   function shiftsNav(d) { shiftsWeekOffset += d; loadShifts(); }
   function shiftsGoToday() { shiftsWeekOffset = 0; loadShifts(); }
 
+  async function loadLeaves(dates) {
+    const from = dates[0].toISOString().slice(0,10);
+    const to   = dates[6].toISOString().slice(0,10);
+    const { data } = await db.from('staff_leave')
+      .select('*')
+      .eq('merchant_id', currentMerchant.id)
+      .gte('date', from).lte('date', to);
+    currentLeaves = data || [];
+  }
+
   async function loadShifts() {
     const dates = getWeekDates(shiftsWeekOffset);
     document.getElementById('shifts-week-label').textContent = weekLabel(dates);
     const fetches = [];
     if (!currentStaff.length)  fetches.push(loadStaff());
     if (!currentRoster.length) fetches.push(loadRosterData());
-    if (fetches.length) await Promise.all(fetches);
+    fetches.push(loadLeaves(dates));
+    await Promise.all(fetches);
     renderShiftsGrid(dates);
   }
 
@@ -5820,11 +5867,23 @@
                   </div>
                 </div>
               </td>
-              ${SHIFT_DAYS.map(day => {
+              ${SHIFT_DAYS.map((day, di) => {
+                const dateStr = dates[di].toISOString().slice(0,10);
                 const r = rMap[s.id + '_' + day];
-                const label = r ? fmt12h(r.start_time) + ' – ' + fmt12h(r.end_time) : 'Not working';
-                return `<td><div class="shift-cell ${r ? 'working' : 'off'}"
-                  onclick="openShiftModal('${s.id}','${day}')">${label}</div></td>`;
+                const lv = currentLeaves.find(l => l.staff_id === s.id && l.date === dateStr);
+                let cellClass, cellHtml;
+                if (lv) {
+                  cellClass = 'leave';
+                  cellHtml  = `🏖 On Leave<br><span class="shift-leave-badge">${lv.leave_type}</span>`;
+                } else if (r) {
+                  cellClass = 'working';
+                  cellHtml  = fmt12h(r.start_time) + ' – ' + fmt12h(r.end_time);
+                } else {
+                  cellClass = 'off';
+                  cellHtml  = 'Not working';
+                }
+                return `<td><div class="shift-cell ${cellClass}"
+                  onclick="openShiftModal('${s.id}','${day}','${dateStr}')">${cellHtml}</div></td>`;
               }).join('')}
             </tr>`;
           }).join('')}
@@ -5844,19 +5903,37 @@
     return opts.join('');
   }
 
-  function openShiftModal(staffId, day) {
+  function setShiftMode(mode) {
+    document.getElementById('shift-work-section').style.display  = mode === 'work'  ? '' : 'none';
+    document.getElementById('shift-leave-section').style.display = mode === 'leave' ? '' : 'none';
+    document.getElementById('shift-mode-work').classList.toggle('active',  mode === 'work');
+    document.getElementById('shift-mode-leave').classList.toggle('active', mode === 'leave');
+  }
+
+  function openShiftModal(staffId, day, dateStr) {
     if (!staffId) return;
-    shiftEditMeta = { staffId, day };
-    const s    = currentStaff.find(x => x.id === staffId);
-    const r    = currentRoster.find(x => x.staff_id === staffId && x.day_of_week === day);
-    document.getElementById('shift-modal-title').textContent = day + ' shift — ' + (s?.name || '');
-    document.getElementById('shift-modal-sub').textContent   = r ? 'Currently: ' + fmt12h(r.start_time) + ' – ' + fmt12h(r.end_time) : 'No shift set';
+    shiftEditMeta = { staffId, day, date: dateStr };
+    const s  = currentStaff.find(x => x.id === staffId);
+    const r  = currentRoster.find(x => x.staff_id === staffId && x.day_of_week === day);
+    const lv = dateStr ? currentLeaves.find(l => l.staff_id === staffId && l.date === dateStr) : null;
+
+    document.getElementById('shift-modal-title').textContent = (day || '') + ' — ' + (s?.name || '');
+    document.getElementById('shift-modal-sub').textContent   = dateStr ? new Date(dateStr + 'T00:00:00').toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'}) : '';
+
     const startSel = document.getElementById('shift-start-sel');
     const endSel   = document.getElementById('shift-end-sel');
     startSel.innerHTML = buildShiftTimeOpts();
     endSel.innerHTML   = buildShiftTimeOpts();
     startSel.value = r ? r.start_time : '09:00';
     endSel.value   = r ? r.end_time   : '18:00';
+
+    // Pre-fill leave fields if leave exists
+    document.getElementById('shift-leave-type').value = lv ? lv.leave_type : 'Annual Leave';
+    document.getElementById('shift-leave-note').value = lv ? (lv.note || '') : '';
+
+    // Default to leave mode if already on leave, else work mode
+    setShiftMode(lv ? 'leave' : 'work');
+
     document.getElementById('shift-modal').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -5882,6 +5959,32 @@
     const { staffId, day } = shiftEditMeta;
     await db.from('roster').delete().eq('staff_id', staffId).eq('day_of_week', day);
     currentRoster = currentRoster.filter(r => !(r.staff_id === staffId && r.day_of_week === day));
+    closeShiftModal();
+    renderShiftsGrid(getWeekDates(shiftsWeekOffset));
+  }
+
+  async function saveLeave() {
+    const { staffId, date } = shiftEditMeta;
+    if (!date) return;
+    const leaveType = document.getElementById('shift-leave-type').value;
+    const note      = document.getElementById('shift-leave-note').value.trim();
+    await db.from('staff_leave').upsert({
+      merchant_id: currentMerchant.id,
+      staff_id: staffId,
+      date,
+      leave_type: leaveType,
+      note: note || null,
+    }, { onConflict: 'staff_id,date' });
+    await loadLeaves(getWeekDates(shiftsWeekOffset));
+    closeShiftModal();
+    renderShiftsGrid(getWeekDates(shiftsWeekOffset));
+  }
+
+  async function deleteLeave() {
+    const { staffId, date } = shiftEditMeta;
+    if (!date) return;
+    await db.from('staff_leave').delete().eq('staff_id', staffId).eq('date', date);
+    currentLeaves = currentLeaves.filter(l => !(l.staff_id === staffId && l.date === date));
     closeShiftModal();
     renderShiftsGrid(getWeekDates(shiftsWeekOffset));
   }
