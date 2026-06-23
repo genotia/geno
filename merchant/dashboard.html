@@ -948,9 +948,14 @@
         <button class="nav-item nav-sub" id="nav-mktg-sms"      onclick="switchPage('mktg-sms',this)"><span class="nav-icon">📱</span> SMS</button>
       </div>
     </div>
-    <button class="nav-item" id="nav-generate-bill" onclick="switchPage('generate-bill',this)">
-      <span class="nav-icon">🧾</span> Generate Bill
-    </button>
+    <div class="nav-group">
+      <button class="nav-item nav-group-toggle" id="nav-finance-toggle" onclick="toggleFinanceNav(this)">
+        <span class="nav-icon">💳</span> Finance <span class="nav-chevron">▾</span>
+      </button>
+      <div class="nav-sub-group" id="finance-sub-group">
+        <button class="nav-item nav-sub" id="nav-generate-bill" onclick="switchPage('generate-bill',this)"><span class="nav-icon">🧾</span> Generate Bill</button>
+      </div>
+    </div>
     <button class="nav-item admin-only" id="nav-setup" style="display:none" onclick="switchPage('setup',this)"><span class="nav-icon">⚙️</span> Setup</button>
   </nav>
   <div class="sb-foot">
@@ -4619,7 +4624,7 @@
     if (page === 'clients-list')    { openClientNav(); loadClientsList(); }
     if (page === 'client-segments') { openClientNav(); loadClientSegments(); }
     if (page === 'client-loyalty')  { openClientNav(); loadClientLoyalty(); }
-    if (page === 'generate-bill')    { initBillPage(); }
+    if (page === 'generate-bill')    { openFinanceNav(); initBillPage(); }
     if (page === 'inv-overview')     { openInvNav(); loadInvOverview(); }
     if (page === 'inv-items')        { openInvNav(); loadInvItems(); }
     if (page === 'inv-intake')       { openInvNav(); loadIntakes(); }
@@ -5880,6 +5885,8 @@
 
   function toggleMarketingNav(btn) { btn.classList.toggle('open'); document.getElementById('mktg-sub-group').classList.toggle('open'); }
   function openMarketingNav()      { document.getElementById('nav-mktg-toggle').classList.add('open'); document.getElementById('mktg-sub-group').classList.add('open'); }
+  function toggleFinanceNav(btn)   { btn.classList.toggle('open'); document.getElementById('finance-sub-group').classList.toggle('open'); }
+  function openFinanceNav()        { document.getElementById('nav-finance-toggle').classList.add('open'); document.getElementById('finance-sub-group').classList.add('open'); }
 
   /* ── Channel config ── */
   const CHANNEL_CONFIG = {
