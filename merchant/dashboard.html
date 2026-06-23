@@ -5334,12 +5334,12 @@
       return;
     }
 
-    // Reload caches and close
+    // Close immediately, then refresh data in background
+    closeAddMember();
     currentStaff = [];
     allTeamMembers = [];
     tabLoaded['team-members'] = false;
     await Promise.all([loadStaff(), loadTeamMembers()]);
-    closeAddMember();
   }
 
   /* ════════════════════════════════════════════
