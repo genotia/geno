@@ -5433,7 +5433,9 @@
   let billPayMethod = 'cash';
   let billLastInv = null;   // last generated invoice data
 
+  let billPageReady = false;
   async function initBillPage() {
+    // Always reset form state on each visit
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('bill-date').value = today;
     document.getElementById('bill-client-tag').style.display = 'none';
@@ -5446,13 +5448,16 @@
     const rsEl = document.getElementById('bill-redeem-rs-charge');
     if (rsEl) rsEl.textContent = '';
 
-    // Load all data sources in parallel before rendering
-    const jobs = [];
-    if (!currentStaff.length)  jobs.push(loadStaff());
-    if (!allServices.length)   jobs.push(loadServiceMenu().catch(()=>{}));
-    if (!allProducts.length)   jobs.push(loadProducts().catch(()=>{}));
-    if (!allClients.length)    jobs.push(loadClientsList().catch(()=>{}));
-    if (jobs.length) await Promise.all(jobs);
+    // Load background data only once per session
+    if (!billPageReady) {
+      const jobs = [];
+      if (!currentStaff.length) jobs.push(loadStaff());
+      if (!allServices.length)  jobs.push(loadServiceMenu().catch(()=>{}));
+      if (!allProducts.length)  jobs.push(loadProducts().catch(()=>{}));
+      // allClients is loaded lazily via searchBillClient — no bulk load here
+      if (jobs.length) await Promise.all(jobs);
+      billPageReady = true;
+    }
 
     billAddItem('service');
     recalcBill();
@@ -5463,21 +5468,22 @@
     const dd = document.getElementById('bill-client-dd');
     if (!q || q.length < 2) { dd.classList.remove('open'); return; }
     const ql = q.toLowerCase();
+    let list = [];
 
-    // Use in-memory list (includes booking-sourced clients)
-    let list = allClients.filter(c =>
-      (c.name||'').toLowerCase().includes(ql) ||
-      (c.email||'').toLowerCase().includes(ql) ||
-      (c.phone||'').includes(q)
-    ).slice(0, 8);
-
-    // Fall back to DB if allClients not yet loaded
-    if (!list.length && !allClients.length) {
-      const { data } = await db.from('clients').select('*')
+    if (allClients.length) {
+      // Search in-memory merged list (clients + bookings)
+      list = allClients.filter(c =>
+        (c.name||'').toLowerCase().includes(ql) ||
+        (c.email||'').toLowerCase().includes(ql) ||
+        (c.phone||'').includes(q)
+      ).slice(0, 8);
+    } else {
+      // allClients not loaded yet — query DB directly (fast, no bulk load)
+      const { data: dbRes } = await db.from('clients').select('id,name,phone,email')
         .eq('merchant_id', currentMerchant.id)
-        .or(`name.ilike.%${q}%,phone.ilike.%${q}%`)
+        .or(`name.ilike.%${q}%,phone.ilike.%${q}%,email.ilike.%${q}%`)
         .limit(8);
-      list = data || [];
+      list = (dbRes||[]).map(c => ({...c, source:'db'}));
     }
 
     if (!list.length) {
