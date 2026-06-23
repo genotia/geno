@@ -1593,13 +1593,12 @@
             <th>Salary</th>
             <th>Designation</th>
             <th>Manager</th>
-            <th>Reporting Structure</th>
             <th>Status</th>
             <th>Joining Date</th>
             <th>Action</th>
           </tr></thead>
           <tbody id="tm-tbody">
-            <tr><td colspan="11" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr>
+            <tr><td colspan="10" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr>
           </tbody>
         </table>
       </div>
@@ -5347,7 +5346,7 @@
     const slice  = staffFiltered.slice(start, start + staffPerPage);
 
     if (!total) {
-      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:48px;color:var(--muted)">
+      tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:48px;color:var(--muted)">
         <div style="font-size:36px;margin-bottom:10px">👤</div>
         <div style="font-weight:700;font-size:15px;color:var(--text)">No staff members yet</div>
         <div style="font-size:13px;margin-top:4px">Click <strong>Action → Add Staff</strong> to get started</div>
@@ -5359,7 +5358,6 @@
         const salary          = s.pay_rate != null ? '₹' + Number(s.pay_rate).toLocaleString('en-IN') : '0';
         const designation     = s.role || '—';
         const managerName     = s.manager_name || (allTeamMembers.find(m => m.id === s.manager_id)?.name) || '—';
-        const reportingLevel  = s.reporting_level || (s.role === 'Admin' ? 'Senior Management' : s.role === 'Manager' ? 'Middle Management' : 'Individual Contributor');
         const joined          = s.joining_date
           ? new Date(s.joining_date).toLocaleDateString('en-GB').replace(/\//g,'-')
           : s.created_at
@@ -5383,7 +5381,6 @@
           <td style="font-size:13px">${salary}</td>
           <td style="font-size:13px">${designation}</td>
           <td style="font-size:13px">${managerName}</td>
-          <td style="font-size:12px;color:var(--muted)">${reportingLevel}</td>
           <td>${statusBadge}</td>
           <td style="font-size:13px;color:var(--muted)">${joined}</td>
           <td style="position:relative">
