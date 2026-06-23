@@ -1185,10 +1185,10 @@
     <button class="nav-item"        id="nav-bookings"     onclick="switchPage('bookings',this)"><span class="nav-icon">🛎️</span> Bookings</button>
     <div class="nav-group">
       <button class="nav-item nav-group-toggle" id="nav-team-toggle" onclick="toggleTeamNav(this)">
-        <span class="nav-icon">👥</span> Staff DB <span class="nav-chevron">▾</span>
+        <span class="nav-icon">👥</span> Team <span class="nav-chevron">▾</span>
       </button>
       <div class="nav-sub-group" id="team-sub-group">
-        <button class="nav-item nav-sub" id="nav-team-members" onclick="switchPage('team-members',this)"><span class="nav-icon">👤</span> Staff DB</button>
+        <button class="nav-item nav-sub" id="nav-team-members" onclick="switchPage('team-members',this)"><span class="nav-icon">👤</span> Team members</button>
         <button class="nav-item nav-sub" id="nav-shifts"       onclick="switchPage('shifts',this)"><span class="nav-icon">📆</span> Scheduled shifts</button>
         <button class="nav-item nav-sub" id="nav-timesheets"   onclick="switchPage('timesheets',this)"><span class="nav-icon">⏱️</span> Timesheets</button>
         <button class="nav-item nav-sub" id="nav-sales"        onclick="switchPage('sales',this)"><span class="nav-icon">💰</span> Sales</button>
@@ -1342,7 +1342,7 @@
       <div class="home-widget">
         <div class="home-widget-head">
           <div>
-            <div class="home-widget-title">Top Staff DB member</div>
+            <div class="home-widget-title">Top team member</div>
             <div class="home-widget-sub">This month's bookings</div>
           </div>
           <button class="home-widget-link" onclick="switchPage('productivity',document.getElementById('nav-productivity'))">Insights</button>
@@ -1512,7 +1512,7 @@
     <div class="team-toolbar">
       <div class="team-search">
         <span class="team-search-icon">🔍</span>
-        <input type="text" id="tm-search" placeholder="Search Staff DB members…" oninput="filterTeamMembers()" />
+        <input type="text" id="tm-search" placeholder="Search team members…" oninput="filterTeamMembers()" />
       </div>
       <button class="btn-add admin-only" onclick="openAddMember()">＋ Add member</button>
     </div>
@@ -3169,7 +3169,7 @@
   <!-- ══════════════════ ADD TEAM MEMBER OVERLAY ══════════════════ -->
   <div class="am-overlay" id="am-overlay">
     <div class="am-topbar">
-      <div class="am-topbar-title" id="am-topbar-title">Add Staff DB member</div>
+      <div class="am-topbar-title" id="am-topbar-title">Add team member</div>
       <div class="am-topbar-actions">
         <button class="am-close-btn" onclick="closeAddMember()">Close</button>
         <button class="am-add-btn" id="am-add-btn" onclick="saveNewMember()">Add</button>
@@ -3204,7 +3204,7 @@
         <!-- PROFILE -->
         <div class="am-section active" id="am-profile">
           <div class="am-section-title">Profile</div>
-          <div class="am-section-sub">Manage this Staff DB member's personal profile</div>
+          <div class="am-section-sub">Manage your team member's personal profile</div>
           <div class="am-avatar-wrap">
             <div class="am-avatar" id="am-avatar" style="background:#1D9E75">?</div>
             <div class="am-avatar-edit" onclick="toggleColorPicker()" title="Change colour">✏️</div>
@@ -3290,7 +3290,7 @@
         <!-- ADDRESSES -->
         <div class="am-section" id="am-addresses">
           <div class="am-section-title">Addresses</div>
-          <div class="am-section-sub">Staff DB member's residential address</div>
+          <div class="am-section-sub">Team member's residential address</div>
           <div class="am-form-row single">
             <div class="am-field"><label>Address line 1</label><input class="am-input" id="am-addr1" type="text" placeholder="Street address" /></div>
           </div>
@@ -3345,7 +3345,7 @@
         <!-- SERVICES -->
         <div class="am-section" id="am-services">
           <div class="am-section-title">Services</div>
-          <div class="am-section-sub">Select which services this Staff DB member can perform</div>
+          <div class="am-section-sub">Select which services this team member can perform</div>
           <div class="am-check-list" id="am-svc-list">
             <div style="color:var(--muted);font-size:14px;padding:12px">Loading services…</div>
           </div>
@@ -3354,7 +3354,7 @@
         <!-- SETTINGS -->
         <div class="am-section" id="am-settings">
           <div class="am-section-title">Settings</div>
-          <div class="am-section-sub">Control this Staff DB member's access and employment type</div>
+          <div class="am-section-sub">Control this team member's access and employment type</div>
           <div class="am-field" style="margin-bottom:24px">
             <label style="margin-bottom:10px;font-size:14px;font-weight:700">Permission level</label>
             <div class="am-radio-group">
@@ -3363,8 +3363,8 @@
                 <div><div class="am-radio-label">Admin</div><div class="am-radio-sub">Full access to settings, staff and reports</div></div>
               </label>
               <label class="am-radio-item">
-                <input type="radio" name="am-permission" value="Staff DB member" onchange="selectRadioGroup(this)" />
-                <div><div class="am-radio-label">Staff DB member</div><div class="am-radio-sub">Can view schedule and their own bookings only</div></div>
+                <input type="radio" name="am-permission" value="Team member" onchange="selectRadioGroup(this)" />
+                <div><div class="am-radio-label">Team member</div><div class="am-radio-sub">Can view schedule and their own bookings only</div></div>
               </label>
               <label class="am-radio-item">
                 <input type="radio" name="am-permission" value="No access" onchange="selectRadioGroup(this)" />
@@ -3391,7 +3391,7 @@
         <!-- WAGES & TIMESHEETS -->
         <div class="am-section" id="am-wages">
           <div class="am-section-title">Wages and timesheets</div>
-          <div class="am-section-sub">Set pay rates for this Staff DB member</div>
+          <div class="am-section-sub">Set pay rates for this team member</div>
           <div class="am-form-row">
             <div class="am-field"><label>Hourly rate (₹)</label><input class="am-input" id="am-hourly" type="number" placeholder="0.00" min="0" step="0.01" /></div>
             <div class="am-field"><label>Pay frequency</label>
@@ -3410,19 +3410,19 @@
         <!-- COMMISSIONS -->
         <div class="am-section" id="am-commissions">
           <div class="am-section-title">Commissions</div>
-          <div class="am-section-sub">Set commission percentage on sales for this Staff DB member</div>
+          <div class="am-section-sub">Set commission percentage on sales for this team member</div>
           <div class="am-form-row">
             <div class="am-field"><label>Commission rate (%)</label><input class="am-input" id="am-commission" type="number" placeholder="0" min="0" max="100" step="0.1" /></div>
           </div>
           <div style="background:var(--bg);border-radius:12px;padding:16px;font-size:13px;color:var(--muted);line-height:1.6;margin-top:8px">
-            Commission is calculated as a percentage of the confirmed booking value assigned to this Staff DB member. It will appear in the Sales section under Pay.
+            Commission is calculated as a percentage of the confirmed booking value assigned to this team member. It will appear in the Sales section under Pay.
           </div>
         </div>
 
         <!-- PAY RUNS -->
         <div class="am-section" id="am-payruns">
           <div class="am-section-title">Pay runs</div>
-          <div class="am-section-sub">Configure how this Staff DB member gets paid</div>
+          <div class="am-section-sub">Configure how this team member gets paid</div>
           <div class="am-field" style="margin-bottom:20px">
             <label style="margin-bottom:10px;font-size:14px;font-weight:700">Payment method</label>
             <div class="am-radio-group">
@@ -4941,7 +4941,7 @@
     amEditingId = null;
     resetAddMemberForm();
     document.getElementById('am-overlay').classList.add('open');
-    document.getElementById('am-topbar-title').textContent = 'Add Staff DB member';
+    document.getElementById('am-topbar-title').textContent = 'Add team member';
     document.getElementById('am-add-btn').textContent = 'Add';
     document.body.style.overflow = 'hidden';
     loadAmServices();
@@ -4981,7 +4981,7 @@
     updateAvatar();
 
     document.getElementById('am-overlay').classList.add('open');
-    document.getElementById('am-topbar-title').textContent = 'Edit Staff DB member';
+    document.getElementById('am-topbar-title').textContent = 'Edit team member';
     document.getElementById('am-add-btn').textContent = 'Save';
     document.body.style.overflow = 'hidden';
     loadAmServices();
@@ -5105,7 +5105,7 @@
     const role      = document.getElementById('am-role').value.trim() || 'Therapist';
     const commission= parseFloat(document.getElementById('am-commission').value) || 0;
     const hourly    = parseFloat(document.getElementById('am-hourly').value) || 0;
-    const permission= document.querySelector('input[name=am-permission]:checked')?.value || 'Staff DB member';
+    const permission= document.querySelector('input[name=am-permission]:checked')?.value || 'Team member';
 
     const btn = document.getElementById('am-add-btn');
     btn.disabled = true; btn.textContent = 'Saving…';
@@ -5173,7 +5173,7 @@
   }
 
   /* ── PAGE_TITLES extension ── */
-  PAGE_TITLES['team-members']    = 'Staff DB';
+  PAGE_TITLES['team-members']    = 'Team members';
   PAGE_TITLES['shifts']          = 'Scheduled shifts';
   PAGE_TITLES['timesheets']      = 'Timesheets';
   PAGE_TITLES['sales']           = 'Sales';
@@ -5210,14 +5210,14 @@
     if (!list.length) {
       tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:48px;color:var(--muted)">
         <div style="font-size:32px;margin-bottom:10px">👤</div>
-        <div style="font-weight:700;font-size:15px;color:var(--text)">No Staff DB members yet</div>
+        <div style="font-weight:700;font-size:15px;color:var(--text)">No team members yet</div>
         <div style="font-size:13px;margin-top:4px">Click ＋ Add member to get started</div>
       </td></tr>`;
       return;
     }
     tbody.innerHTML = list.map(s => {
       const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-      const permLabel = s.role === 'Admin' ? 'Admin' : 'Staff DB member';
+      const permLabel = s.role === 'Admin' ? 'Admin' : 'Team member';
       const permClass = s.role === 'Admin' ? 'admin' : '';
       return `<tr style="${s.active ? '' : 'opacity:.5'}">
         <td><input type="checkbox" /></td>
@@ -5295,7 +5295,7 @@
   function renderShiftsGrid(dates) {
     const active = currentStaff.filter(s => s.active);
     if (!active.length) {
-      document.getElementById('shifts-grid-wrap').innerHTML = '<div class="empty-state">Add Staff DB members in Setup first.</div>';
+      document.getElementById('shifts-grid-wrap').innerHTML = '<div class="empty-state">Add team members in Setup first.</div>';
       return;
     }
     const rMap = {};
@@ -5314,7 +5314,7 @@
     document.getElementById('shifts-grid-wrap').innerHTML = `
       <table class="shifts-grid">
         <thead><tr>
-          <th style="min-width:220px">Staff DB member</th>
+          <th style="min-width:220px">Team member</th>
           ${dates.map((d, i) => `<th>
             <div class="th-day-name">${SHIFT_DAYS[i]}, ${d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</div>
             <div class="th-day-hrs">${colHrs[i] ? colHrs[i] + ' hr' : '0 hr'}</div>
@@ -5422,7 +5422,7 @@
   function renderTimesheets(dates) {
     const active = currentStaff.filter(s => s.active);
     if (!active.length) {
-      document.getElementById('ts-grid-wrap').innerHTML = '<div class="empty-state">Add Staff DB members in Setup first.</div>';
+      document.getElementById('ts-grid-wrap').innerHTML = '<div class="empty-state">Add team members in Setup first.</div>';
       return;
     }
     const rMap = {};
@@ -5431,7 +5431,7 @@
     document.getElementById('ts-grid-wrap').innerHTML = `
       <table class="timesheet-grid">
         <thead><tr>
-          <th>Staff DB member</th>
+          <th>Team member</th>
           ${SHIFT_DAYS.map((d,i) => `<th>${d}<br><span style="font-size:10px;font-weight:500">${dates[i].toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</span></th>`).join('')}
           <th>Total</th>
         </tr></thead>
@@ -5517,7 +5517,7 @@
       <div class="payrun-total-cell"><button class="pay-team-btn" onclick="alert('Pay run feature coming soon!')">Pay team</button></div>`;
 
     if (!data.length) {
-      document.getElementById('sales-staff-list').innerHTML = '<div class="empty-state">No Staff DB members found.</div>';
+      document.getElementById('sales-staff-list').innerHTML = '<div class="empty-state">No team members found.</div>';
       return;
     }
     document.getElementById('sales-staff-list').innerHTML = data.map(r => {
