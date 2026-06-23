@@ -1838,10 +1838,10 @@
 
       <!-- Charges -->
       <div class="bill-charges-row">
-        <div class="bill-charge-field">
+        <div class="bill-charge-field" style="flex:2">
           <label style="display:flex;align-items:center;justify-content:space-between">
             Reward Points
-            <span id="bill-reward-avail" style="font-size:11px;color:var(--muted);font-weight:500"></span>
+            <span id="bill-reward-avail" style="font-size:11px;font-weight:500"></span>
           </label>
           <input type="number" class="bill-charge-input" id="bill-redeem-pts-charge"
             placeholder="0 pts" min="0" step="1"
@@ -1849,19 +1849,19 @@
             style="background:var(--white)" />
           <span id="bill-redeem-rs-charge" style="font-size:11px;color:#059669;font-weight:600;margin-top:3px;display:block"></span>
         </div>
-        <div class="bill-charge-field">
-          <label>Ex Charges</label>
+        <div class="bill-charge-field" style="flex:1.2">
+          <label>Extra charges</label>
           <input type="number" class="bill-charge-input" id="bill-ex-charges" placeholder="0" min="0" step="0.01" oninput="recalcBill()" />
         </div>
-        <div class="bill-charge-field" style="flex:2">
+        <div class="bill-charge-field" style="flex:1">
           <label>Discount</label>
           <input type="number" class="bill-charge-input" id="bill-discount" placeholder="0" min="0" oninput="recalcBill()" />
         </div>
-        <div class="bill-charge-field" style="flex:2">
-          <label>Discount Type</label>
+        <div class="bill-charge-field" style="flex:1">
+          <label>Type</label>
           <select class="bill-charge-sel" id="bill-discount-type" onchange="recalcBill()">
-            <option value="pct">Percentage (%)</option>
-            <option value="fixed">Fixed Amount (₹)</option>
+            <option value="pct">% off</option>
+            <option value="fixed">₹ off</option>
           </select>
         </div>
         <div class="bill-charge-field">
@@ -5390,15 +5390,17 @@
 
     // Charges-row reward field — always enabled for registered clients
     if (availEl) {
+    const maxRedeemable = Math.floor(billClientBalance * 0.5); // 50% cap
+    if (availEl) {
       availEl.textContent = billClientBalance > 0
-        ? `${billClientBalance.toLocaleString('en-IN')} pts available`
+        ? `${billClientBalance.toLocaleString('en-IN')} pts (max ${maxRedeemable} redeemable)`
         : '0 pts — no balance yet';
       availEl.style.color = billClientBalance > 0 ? 'var(--green)' : 'var(--muted)';
     }
     if (redeemEl) {
       redeemEl.disabled    = false;
-      redeemEl.max         = billClientBalance;
-      redeemEl.placeholder = billClientBalance > 0 ? `max ${billClientBalance} pts` : '0';
+      redeemEl.max         = maxRedeemable;
+      redeemEl.placeholder = billClientBalance > 0 ? `max ${maxRedeemable} pts` : '0';
       redeemEl.value       = '';
     }
     if (redeemRsEl) redeemRsEl.textContent = '';
@@ -5406,9 +5408,10 @@
   }
 
   function onRedeemChargeInput(input) {
+    const maxRedeemable = Math.floor(billClientBalance * 0.5);
     const raw   = parseFloat(input.value) || 0;
-    const pts   = Math.min(raw, billClientBalance);
-    if (raw > billClientBalance) input.value = billClientBalance; // clamp
+    const pts   = Math.min(raw, maxRedeemable);
+    if (raw > maxRedeemable) input.value = maxRedeemable; // clamp to 50%
     const rs    = pts * loyaltyConfig.point_value;
     const rsEl  = document.getElementById('bill-redeem-rs-charge');
     if (rsEl) rsEl.textContent = pts > 0 ? `= ₹${rs.toFixed(2)} discount` : '';
@@ -5418,7 +5421,8 @@
   function getRedeemPts() {
     const el = document.getElementById('bill-redeem-pts-charge');
     if (!el || el.disabled) return 0;
-    return Math.min(parseFloat(el.value)||0, billClientBalance);
+    const maxRedeemable = Math.floor(billClientBalance * 0.5);
+    return Math.min(parseFloat(el.value)||0, maxRedeemable);
   }
   function getRedeemAmount() {
     return getRedeemPts() * loyaltyConfig.point_value;
