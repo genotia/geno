@@ -4627,6 +4627,7 @@
     document.getElementById('form-err').classList.remove('show');
 
     if (deal) {
+      buildTimeOptions();
       document.getElementById('f-title').value      = deal.title;
       document.getElementById('f-category').value   = deal.category;
       document.getElementById('f-emoji').value      = deal.emoji;
