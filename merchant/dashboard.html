@@ -4647,8 +4647,10 @@
 
   function renderStaffList() {
     const count = currentStaff.filter(s => s.active).length;
-    document.getElementById('staff-count').textContent = count + ' active';
+    const countEl = document.getElementById('staff-count');
+    if (countEl) countEl.textContent = count + ' active';
     const ul = document.getElementById('staff-list');
+    if (!ul) return;
     if (!currentStaff.length) { ul.innerHTML = '<li class="setup-item" style="color:var(--muted);padding:14px 16px">No therapists yet — add your first one above.</li>'; return; }
     ul.innerHTML = currentStaff.map(s => `
       <li class="setup-item ${s.active ? '' : 'inactive-row'}">
