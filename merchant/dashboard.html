@@ -1709,7 +1709,6 @@
     <!-- Tab bar -->
     <div class="sl-tabs" style="margin-bottom:24px">
       <button class="sl-tab active" id="sales-tab-dashboard"    onclick="switchSalesTab('dashboard',this)">Dashboard</button>
-      <button class="sl-tab"        id="sales-tab-payruns"      onclick="switchSalesTab('payruns',this)">Sales by Staff</button>
       <button class="sl-tab"        id="sales-tab-productivity" onclick="switchSalesTab('productivity',this)">Staff Productivity</button>
     </div>
 
@@ -1752,37 +1751,6 @@
     </div>
 
     <!-- ── Sales by Staff ── -->
-    <div class="sl-page" id="sales-page-payruns">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
-        <div>
-          <h2 style="font-size:20px;font-weight:800;margin:0">Sales by Staff</h2>
-          <p style="font-size:13px;color:var(--muted);margin:4px 0 0">Breakdown of bookings and earnings per team member.</p>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <button class="sd-period-btn active" id="sbs-btn-week"   onclick="setSbsPeriod('week',this)">This Week</button>
-          <button class="sd-period-btn"        id="sbs-btn-month"  onclick="setSbsPeriod('month',this)">This Month</button>
-          <button class="sd-period-btn"        id="sbs-btn-year"   onclick="setSbsPeriod('year',this)">This Year</button>
-          <button class="sd-period-btn"        id="sbs-btn-custom" onclick="setSbsPeriod('custom',this)">Custom</button>
-        </div>
-      </div>
-      <!-- Custom date range (hidden until Custom is selected) -->
-      <div id="sbs-custom-range" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px">
-        <label style="font-size:12px;font-weight:600;color:var(--muted)">From</label>
-        <input type="date" id="sbs-from" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none" />
-        <label style="font-size:12px;font-weight:600;color:var(--muted)">To</label>
-        <input type="date" id="sbs-to" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;outline:none" />
-        <button class="sd-period-btn active" onclick="applySbsCustom()" style="margin-left:4px">Apply</button>
-      </div>
-      <div class="payrun-toolbar" style="margin-bottom:12px">
-        <span class="payrun-week-label" id="sales-week-label" style="font-size:13px;color:var(--muted);font-weight:600;border:none;background:none;padding:0"></span>
-        <div class="payrun-search" style="margin-left:auto">
-          <span style="color:var(--muted)">🔍</span>
-          <input type="text" id="sales-search" placeholder="Search by name" oninput="filterSalesRows()" />
-        </div>
-      </div>
-      <div class="payrun-totals" id="sales-totals"></div>
-      <div id="sales-staff-list"><div class="loading-state">Loading…</div></div>
-    </div>
     <!-- ── Staff Productivity ── -->
     <div class="sl-page" id="sales-page-productivity">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
@@ -5902,12 +5870,7 @@
   /* ════════════════════════════════════════════
      SALES / PAY RUNS
   ════════════════════════════════════════════ */
-  let salesWeekOffset = 0;
-  let allSalesData    = [];
-  let sdPeriod        = 'week';
-  let sbsPeriod       = 'week';
-  let sbsCustomFrom   = '';
-  let sbsCustomTo     = '';
+  let sdPeriod = 'week';
 
   function switchSalesTab(tab, btn) {
     document.querySelectorAll('#tab-sales .sl-tab').forEach(t => t.classList.remove('active'));
@@ -5915,7 +5878,6 @@
     document.querySelectorAll('#tab-sales .sl-page').forEach(p => p.classList.remove('show'));
     document.getElementById('sales-page-' + tab).classList.add('show');
     if (tab === 'dashboard') loadSalesDashboard();
-    if (tab === 'payruns')      loadSales();
     if (tab === 'productivity') loadStaffProductivity();
   }
 
@@ -6161,124 +6123,6 @@
     </div>`).join('');
   }
 
-  function salesNav(d) { salesWeekOffset += d; loadSales(); }
-
-  function setSbsPeriod(period, btn) {
-    sbsPeriod = period;
-    document.querySelectorAll('#sales-page-payruns .sd-period-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const customRange = document.getElementById('sbs-custom-range');
-    if (period === 'custom') {
-      customRange.style.display = 'flex';
-      const now = new Date();
-      document.getElementById('sbs-from').value = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
-      document.getElementById('sbs-to').value   = now.toISOString().slice(0,10);
-    } else {
-      customRange.style.display = 'none';
-      loadSales();
-    }
-  }
-
-  function applySbsCustom() {
-    sbsCustomFrom = document.getElementById('sbs-from').value;
-    sbsCustomTo   = document.getElementById('sbs-to').value;
-    if (!sbsCustomFrom || !sbsCustomTo) return;
-    document.getElementById('sbs-custom-range').style.display = 'none';
-    loadSales();
-  }
-
-  async function loadSales() {
-    const now = new Date();
-    let weekStart, weekEnd;
-    if (sbsPeriod === 'week') {
-      const dates = getWeekDates(salesWeekOffset);
-      weekStart = dates[0].toISOString().slice(0,10);
-      weekEnd   = dates[6].toISOString().slice(0,10);
-      document.getElementById('sales-week-label').textContent = weekLabel(dates);
-    } else if (sbsPeriod === 'month') {
-      weekStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0,10);
-      weekEnd   = new Date(now.getFullYear(), now.getMonth()+1, 0).toISOString().slice(0,10);
-      document.getElementById('sales-week-label').textContent = now.toLocaleDateString('en-IN',{month:'long',year:'numeric'});
-    } else if (sbsPeriod === 'year') {
-      weekStart = new Date(now.getFullYear(), 0, 1).toISOString().slice(0,10);
-      weekEnd   = new Date(now.getFullYear(), 11, 31).toISOString().slice(0,10);
-      document.getElementById('sales-week-label').textContent = String(now.getFullYear());
-    } else {
-      weekStart = sbsCustomFrom;
-      weekEnd   = sbsCustomTo;
-      document.getElementById('sales-week-label').textContent = weekStart + ' → ' + weekEnd;
-    }
-    if (!currentStaff.length) await loadStaff();
-
-    const { data: bks } = await db.from('bookings')
-      .select('*, assigned_staff:staff_id(id,name,color,role,commission_pct)')
-      .eq('merchant_id', currentMerchant.id)
-      .gte('booking_date', weekStart).lte('booking_date', weekEnd)
-      .eq('status', 'confirmed');
-
-    const bookings = bks || [];
-    const active   = currentStaff.filter(s => s.active);
-
-    // Build per-staff earnings
-    allSalesData = active.map(s => {
-      const myBks   = bookings.filter(b => b.staff_id === s.id);
-      const commPct = s.commission_pct || 0;
-      // Earnings = booking count × commission (₹0 until rate is set)
-      const earnings = 0; // placeholder — no price data on bookings yet
-      return { staff: s, bookings: myBks, count: myBks.length, earnings, other: 0, paid: 0 };
-    });
-
-    renderSales(allSalesData);
-  }
-
-  function renderSales(data) {
-    const totEarnings = data.reduce((s, r) => s + r.earnings, 0);
-    const totOther    = data.reduce((s, r) => s + r.other, 0);
-    const totPaid     = data.reduce((s, r) => s + r.paid, 0);
-    const totTotal    = totEarnings + totOther;
-    const totToPay    = totTotal - totPaid;
-    const fmt = n => '₹' + Number(n).toLocaleString('en-IN', { minimumFractionDigits: 2 });
-
-    document.getElementById('sales-totals').innerHTML = `
-      <div class="payrun-total-cell"><div class="payrun-total-label">Earnings</div><div class="payrun-total-amt">${fmt(totEarnings)}</div></div>
-      <div class="payrun-total-cell"><div class="payrun-total-label">Other</div><div class="payrun-total-amt">${fmt(totOther)}</div></div>
-      <div class="payrun-total-cell"><div class="payrun-total-label">Total</div><div class="payrun-total-amt">${fmt(totTotal)}</div></div>
-      <div class="payrun-total-cell"><div class="payrun-total-label">Paid</div><div class="payrun-total-amt">${fmt(totPaid)}</div></div>
-      <div class="payrun-total-cell"><div class="payrun-total-label">To pay</div><div class="payrun-total-amt topay">${fmt(totToPay)}</div></div>
-    `;
-
-    if (!data.length) {
-      document.getElementById('sales-staff-list').innerHTML = '<div class="empty-state">No team members found.</div>';
-      return;
-    }
-    document.getElementById('sales-staff-list').innerHTML = data.map(r => {
-      const s        = r.staff;
-      const initials = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-      const toPay    = r.earnings + r.other - r.paid;
-      const fmt      = n => '₹' + Number(n).toLocaleString('en-IN', { minimumFractionDigits: 2 });
-      return `<div class="payrun-staff-card" id="pr-${s.id}">
-        <div class="payrun-staff-row">
-          <div class="payrun-staff-identity">
-            <div class="team-avatar" style="background:${s.color};width:44px;height:44px;font-size:16px">${initials}</div>
-            <div>
-              <div style="font-weight:700;font-size:14px">${s.name}</div>
-              <div style="font-size:12px;color:var(--green);margin-top:2px;cursor:pointer">Actions ▾</div>
-            </div>
-          </div>
-          <div class="payrun-field"><div class="payrun-field-label">Earnings</div><div class="payrun-field-amt">${fmt(r.earnings)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">${r.count} booking${r.count===1?'':'s'}</div></div>
-          <div class="payrun-field"><div class="payrun-field-label">Other</div><div class="payrun-field-amt">${fmt(r.other)}</div></div>
-          <div class="payrun-field"><div class="payrun-field-label">Total</div><div class="payrun-field-amt">${fmt(r.earnings + r.other)}</div></div>
-          <div class="payrun-field"><div class="payrun-field-label">Paid</div><div class="payrun-field-amt">${fmt(r.paid)}</div></div>
-          <div class="payrun-field"><div class="payrun-field-label">To pay</div><div class="payrun-field-amt topay">${fmt(toPay)}</div></div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  function filterSalesRows() {
-    const q = document.getElementById('sales-search').value.toLowerCase();
-    renderSales(allSalesData.filter(r => r.staff.name.toLowerCase().includes(q)));
-  }
 
   /* ── LAZY-LOAD ON FIRST VISIT ── */
   const tabLoaded = {};
