@@ -982,8 +982,15 @@
     .sl-action-menu.open { display:block; }
     .sl-action-menu div { padding:9px 12px; font-size:13px; font-weight:600; cursor:pointer; border-radius:6px; color:var(--text); }
     .sl-action-menu div:hover { background:var(--bg); }
-    .sl-three-dot  { background:none; border:1.5px solid var(--border); border-radius:6px; padding:3px 10px; font-size:15px; letter-spacing:2px; cursor:pointer; color:var(--muted); font-family:inherit; transition:all .15s; }
+    .sl-three-dot  { background:none; border:1.5px solid var(--border); border-radius:6px; padding:3px 10px; font-size:15px; letter-spacing:2px; cursor:pointer; color:var(--muted); font-family:inherit; transition:all .15s; position:relative; }
     .sl-three-dot:hover { background:var(--bg); border-color:var(--text); color:var(--text); }
+    .sl-row-menu   { position:fixed; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:6px; min-width:180px; box-shadow:0 8px 24px rgba(0,0,0,.14); z-index:500; display:none; }
+    .sl-row-menu.open { display:block; }
+    .sl-row-menu-item { display:flex; align-items:center; gap:10px; padding:9px 12px; font-size:13px; font-weight:600; cursor:pointer; border-radius:7px; color:var(--text); white-space:nowrap; }
+    .sl-row-menu-item:hover { background:var(--bg); }
+    .sl-row-menu-item.danger { color:#DC2626; }
+    .sl-row-menu-item.danger:hover { background:#FEF2F2; }
+    .sl-row-menu-divider { height:1px; background:var(--border); margin:4px 8px; }
     .sl-att-drop   { border:2px dashed var(--border); border-radius:12px; padding:36px; text-align:center; margin-bottom:16px; transition:border-color .2s; }
     .sl-att-drop:hover { border-color:var(--green); }
     /* ── ADD TEAM MEMBER OVERLAY ── */
@@ -1555,7 +1562,6 @@
     <!-- Tab bar -->
     <div class="sl-tabs">
       <button class="sl-tab active" id="sltab-list"       onclick="switchStaffTab('list',this)">Staff List</button>
-      <button class="sl-tab"        id="sltab-add"        onclick="openAddMember()">Add Staff</button>
       <button class="sl-tab"        id="sltab-schedule"   onclick="switchStaffTab('schedule',this)">Staff Schedule</button>
       <button class="sl-tab"        id="sltab-attendance" onclick="switchStaffTab('attendance',this)">Upload Attendance</button>
       <button class="sl-tab"        id="sltab-inactive"   onclick="switchStaffTab('inactive',this)">Inactive Staff</button>
@@ -1586,12 +1592,14 @@
             <th>Email</th>
             <th>Salary</th>
             <th>Designation</th>
+            <th>Manager</th>
+            <th>Reporting Structure</th>
             <th>Status</th>
             <th>Joining Date</th>
             <th>Action</th>
           </tr></thead>
           <tbody id="tm-tbody">
-            <tr><td colspan="9" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr>
+            <tr><td colspan="11" style="text-align:center;padding:40px;color:var(--muted)">Loading…</td></tr>
           </tbody>
         </table>
       </div>
@@ -5339,29 +5347,34 @@
     const slice  = staffFiltered.slice(start, start + staffPerPage);
 
     if (!total) {
-      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:48px;color:var(--muted)">
+      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:48px;color:var(--muted)">
         <div style="font-size:36px;margin-bottom:10px">👤</div>
         <div style="font-weight:700;font-size:15px;color:var(--text)">No staff members yet</div>
-        <div style="font-size:13px;margin-top:4px">Click <strong>Add Staff</strong> to get started</div>
+        <div style="font-size:13px;margin-top:4px">Click <strong>Action → Add Staff</strong> to get started</div>
       </td></tr>`;
     } else {
-      tbody.innerHTML = slice.map((s, i) => {
-        const initials   = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-        const staffId    = s.staff_id || ('SPAE' + String(allTeamMembers.indexOf(s) + 1).padStart(5,'0'));
-        const salary     = s.pay_rate != null ? '₹' + Number(s.pay_rate).toLocaleString('en-IN') : '0';
-        const designation= s.role || '—';
-        const joined     = s.joining_date
+      tbody.innerHTML = slice.map((s) => {
+        const initials        = s.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+        const staffId         = s.staff_id || ('SPAE' + String(allTeamMembers.indexOf(s) + 1).padStart(5,'0'));
+        const salary          = s.pay_rate != null ? '₹' + Number(s.pay_rate).toLocaleString('en-IN') : '0';
+        const designation     = s.role || '—';
+        const managerName     = s.manager_name || (allTeamMembers.find(m => m.id === s.manager_id)?.name) || '—';
+        const reportingLevel  = s.reporting_level || (s.role === 'Admin' ? 'Senior Management' : s.role === 'Manager' ? 'Middle Management' : 'Individual Contributor');
+        const joined          = s.joining_date
           ? new Date(s.joining_date).toLocaleDateString('en-GB').replace(/\//g,'-')
           : s.created_at
             ? new Date(s.created_at).toLocaleDateString('en-GB').replace(/\//g,'-')
             : '—';
+        const statusBadge = s.active === false
+          ? '<span class="status-badge status-cancelled">Inactive</span>'
+          : '<span class="status-badge status-confirmed">Active</span>';
+        const activeLabel = s.active === false ? 'Mark Active' : 'Mark Inactive';
+        const activeIcon  = s.active === false ? '✅' : '⛔';
         return `<tr>
           <td>
             <div class="team-member-cell">
               <div class="team-avatar" style="background:${s.color||'var(--green)'}">${initials}</div>
-              <div>
-                <div class="team-member-name">${s.name}</div>
-              </div>
+              <div class="team-member-name">${s.name}</div>
             </div>
           </td>
           <td style="font-size:13px">${s.phone||'—'}</td>
@@ -5369,10 +5382,12 @@
           <td style="font-size:13px">${s.email||'—'}</td>
           <td style="font-size:13px">${salary}</td>
           <td style="font-size:13px">${designation}</td>
-          <td><span class="status-badge status-confirmed">Active</span></td>
+          <td style="font-size:13px">${managerName}</td>
+          <td style="font-size:12px;color:var(--muted)">${reportingLevel}</td>
+          <td>${statusBadge}</td>
           <td style="font-size:13px;color:var(--muted)">${joined}</td>
-          <td>
-            <button class="sl-three-dot" onclick="openStaffActionRow('${s.id}',this)">•••</button>
+          <td style="position:relative">
+            <button class="sl-three-dot" onclick="toggleStaffRowMenu('${s.id}',this,${s.active!==false})">•••</button>
           </td>
         </tr>`;
       }).join('');
@@ -5462,9 +5477,74 @@
     document.getElementById('sl-action-menu')?.classList.remove('open');
   }
 
-  function openStaffActionRow(staffId, btn) {
-    // Simple: jump to edit
+  // Floating row-action menu (shared singleton)
+  (function() {
+    const el = document.createElement('div');
+    el.id = 'sl-row-menu';
+    el.className = 'sl-row-menu';
+    document.body.appendChild(el);
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.sl-three-dot') && !e.target.closest('#sl-row-menu')) {
+        el.classList.remove('open');
+      }
+    });
+  })();
+
+  function toggleStaffRowMenu(staffId, btn, isActive) {
+    const menu = document.getElementById('sl-row-menu');
+    const rect = btn.getBoundingClientRect();
+    const activeLabel = isActive ? 'Mark Inactive' : 'Mark Active';
+    const activeIcon  = isActive ? '⛔' : '✅';
+    menu.innerHTML = `
+      <div class="sl-row-menu-item" onclick="openEditMember('${staffId}');menu_close()">✏️ Edit</div>
+      <div class="sl-row-menu-item" onclick="staffResetPassword('${staffId}');menu_close()">🔑 Reset Password</div>
+      <div class="sl-row-menu-item" onclick="staffAssignServices('${staffId}');menu_close()">🔧 Assign to Services</div>
+      <div class="sl-row-menu-item" onclick="staffToggleActive('${staffId}',${isActive});menu_close()">${activeIcon} ${activeLabel}</div>
+      <div class="sl-row-menu-divider"></div>
+      <div class="sl-row-menu-item danger" onclick="staffDelete('${staffId}');menu_close()">🗑️ Delete</div>
+    `;
+    // Position below the button
+    const top  = rect.bottom + window.scrollY + 4;
+    const left = Math.min(rect.left + window.scrollX - 100, window.innerWidth - 210);
+    menu.style.top  = top + 'px';
+    menu.style.left = Math.max(8, left) + 'px';
+    menu.classList.toggle('open');
+  }
+
+  function menu_close() { document.getElementById('sl-row-menu')?.classList.remove('open'); }
+
+  async function staffToggleActive(staffId, currentlyActive) {
+    const newVal = !currentlyActive;
+    await db.from('staff').update({ active: newVal }).eq('id', staffId);
+    await loadTeamMembers();
+  }
+
+  async function staffDelete(staffId) {
+    if (!confirm('Delete this staff member? This cannot be undone.')) return;
+    await db.from('staff').delete().eq('id', staffId);
+    allTeamMembers = allTeamMembers.filter(s => s.id !== staffId);
+    staffFiltered  = staffFiltered.filter(s => s.id !== staffId);
+    renderStaffTable();
+    renderInactiveStaff();
+  }
+
+  function staffResetPassword(staffId) {
+    const s = allTeamMembers.find(m => m.id === staffId);
+    const email = s?.email;
+    if (!email) { alert('No email address found for this staff member.'); return; }
+    db.auth.resetPasswordForEmail(email).then(({ error }) => {
+      if (error) alert('Error: ' + error.message);
+      else alert(`Password reset email sent to ${email}`);
+    });
+  }
+
+  function staffAssignServices(staffId) {
+    // Open the edit overlay and jump to the services section
     openEditMember(staffId);
+    setTimeout(() => {
+      const svcSection = document.querySelector('#am-overlay [data-section="services"]');
+      if (svcSection) svcSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
   }
 
   function exportStaffCsv() {
