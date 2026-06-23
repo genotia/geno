@@ -698,6 +698,26 @@
     .nana-channel-tabs { display:flex; gap:8px; margin-bottom:16px; }
     .nana-tab { background:var(--white); border:1.5px solid var(--border); border-radius:8px; padding:7px 16px; font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .15s; }
     .nana-tab.active { background:var(--text); color:#fff; border-color:var(--text); }
+    /* Tab action bar (New Template / New Segment buttons) */
+    .notif-tab-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .notif-tab-bar-title { font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
+    .ntab-new-btn { background:var(--green); color:#fff; border:none; border-radius:9px; padding:9px 18px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; transition:opacity .15s; }
+    .ntab-new-btn:hover { opacity:.85; }
+    /* Segment rule builder */
+    .seg-rule-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+    .seg-rule-row .am-input { margin:0; padding:9px 11px; }
+    .seg-rule-del { background:none; border:none; font-size:20px; color:var(--muted); cursor:pointer; padding:0 4px; line-height:1; flex-shrink:0; }
+    .seg-rule-del:hover { color:#DC2626; }
+    /* Color swatches */
+    .seg-color-swatch { width:28px; height:28px; border-radius:50%; border:3px solid transparent; cursor:pointer; transition:transform .1s,border-color .15s; flex-shrink:0; }
+    .seg-color-swatch:hover { transform:scale(1.15); }
+    .seg-color-swatch.selected { border-color:var(--text); transform:scale(1.1); }
+    /* Template cards — extra action row */
+    .ntmpl-actions { display:flex; gap:8px; }
+    .ntmpl-edit { flex:0 0 auto; background:var(--bg); border:1.5px solid var(--border); color:var(--text); border-radius:8px; padding:8px 14px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; }
+    .ntmpl-edit:hover { border-color:var(--green); background:#F0FDF9; }
+    .ntmpl-del  { flex:0 0 auto; background:none; border:none; color:var(--muted); font-size:14px; cursor:pointer; padding:4px 6px; }
+    .ntmpl-del:hover  { color:#DC2626; }
     /* Invoice preview */
     .inv-preview { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 680px; margin: 0 auto; }
     .inv-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
@@ -2310,6 +2330,107 @@
         </table>
       </div>
     </div>
+  </div>
+
+  <!-- ══════════════════ TEMPLATE OVERLAY ══════════════════ -->
+  <div class="am-overlay" id="tmpl-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title" id="tmpl-overlay-title">New Template</div>
+      <div class="am-topbar-actions">
+        <button class="am-close-btn" onclick="closeTmplOverlay()">Close</button>
+        <button class="am-add-btn" id="tmpl-save-btn" onclick="saveTmplOverlay()">Save Template</button>
+      </div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:640px">
+      <div class="am-err" id="tmpl-err"></div>
+      <div class="am-form-row">
+        <div class="am-field" style="flex:2">
+          <label>Template name <span class="req">*</span></label>
+          <input class="am-input" id="tmpl-name" type="text" placeholder="e.g. Welcome offer" />
+        </div>
+        <div class="am-field" style="flex:1">
+          <label>Channel <span class="req">*</span></label>
+          <select class="am-input" id="tmpl-channel" onchange="onTmplChannelChange()">
+            <option value="whatsapp">💬 WhatsApp</option>
+            <option value="email">📧 Email</option>
+            <option value="sms">📱 SMS</option>
+          </select>
+        </div>
+      </div>
+      <div class="am-field" id="tmpl-subject-row" style="display:none">
+        <label>Subject line <span class="req">*</span></label>
+        <input class="am-input" id="tmpl-subject" type="text" placeholder="e.g. A special offer just for you" />
+      </div>
+      <div class="am-field">
+        <label>Message body <span class="req">*</span></label>
+        <div class="notif-vars" style="margin-bottom:8px">
+          Insert: <span class="notif-var-chip" onclick="tmplInsertVar('{{name}}')">{{name}}</span>
+          <span class="notif-var-chip" onclick="tmplInsertVar('{{phone}}')">{{phone}}</span>
+          <span class="notif-var-chip" onclick="tmplInsertVar('{{business}}')">{{business}}</span>
+        </div>
+        <textarea class="am-input" id="tmpl-body" rows="7" placeholder="Hi {{name}}, we have a special offer for you at {{business}}…"></textarea>
+        <div class="notif-char-count" id="tmpl-char-count"></div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ══════════════════ SEGMENT OVERLAY ══════════════════ -->
+  <div class="am-overlay" id="seg-cust-overlay">
+    <div class="am-topbar">
+      <div class="am-topbar-title" id="seg-overlay-title">New Segment</div>
+      <div class="am-topbar-actions">
+        <button class="am-close-btn" onclick="closeSegOverlay()">Close</button>
+        <button class="am-add-btn" id="seg-save-btn" onclick="saveSegOverlay()">Save Segment</button>
+      </div>
+    </div>
+    <div class="am-body"><div class="am-content" style="max-width:700px">
+      <div class="am-err" id="seg-cust-err"></div>
+      <div class="am-form-row">
+        <div class="am-field" style="flex:1">
+          <label>Segment name <span class="req">*</span></label>
+          <input class="am-input" id="seg-cust-name" type="text" placeholder="e.g. VIP Members" />
+        </div>
+        <div class="am-field" style="flex:0 0 110px">
+          <label>Icon (emoji)</label>
+          <input class="am-input" id="seg-cust-icon" type="text" placeholder="🎯" style="text-align:center;font-size:20px;padding:9px 8px" />
+        </div>
+      </div>
+      <div class="am-field">
+        <label>Color</label>
+        <div id="seg-color-swatches" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"></div>
+        <input type="hidden" id="seg-cust-color" value="#8B5CF6" />
+      </div>
+      <div class="am-field">
+        <label>Description / criteria</label>
+        <input class="am-input" id="seg-cust-desc" type="text" placeholder="e.g. Clients with 5+ visits in the last 6 months" />
+      </div>
+      <div class="am-field">
+        <label>Sample campaign message</label>
+        <input class="am-input" id="seg-cust-sample" type="text" placeholder="e.g. Exclusive offer for our VIP members!" />
+      </div>
+      <div class="am-section-title" style="margin:20px 0 10px">Filter rules</div>
+      <div style="display:flex;gap:16px;margin-bottom:14px;align-items:center">
+        <span style="font-size:13px;font-weight:700;color:var(--muted)">Match</span>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;font-family:inherit">
+          <input type="radio" name="seg-match" value="all" checked /> ALL conditions
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;font-family:inherit">
+          <input type="radio" name="seg-match" value="any" /> ANY condition
+        </label>
+      </div>
+      <div id="seg-rules-list"></div>
+      <button onclick="addSegRule()" style="background:none;border:1.5px dashed var(--border);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;width:100%;margin-top:8px;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border)'">+ Add condition</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;background:#F0FDF9;border:1.5px solid #A7F3D0;border-radius:10px;padding:12px 16px;margin-top:16px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--muted)">Preview</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Clients matching current rules</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:24px;font-weight:900;color:var(--green)" id="seg-preview-count">—</span>
+          <button onclick="previewSegFilter()" style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Run preview</button>
+        </div>
+      </div>
+    </div></div>
   </div>
 
   <!-- ══════════════════ COMPOSE CAMPAIGN OVERLAY (shared) ══════════════════ -->
@@ -6894,10 +7015,77 @@
   }
 
   /* ─────────────── PAGE 1: Segments ─────────────── */
+  /* ── DB state for custom templates + segments ── */
+  let _dbTemplates   = [];
+  let _dbSegments    = [];
+  let _tmplEditingId = null;  // null = new, string = DB id to update
+  let _segEditingId  = null;
+
+  const SEG_COLORS = ['#8B5CF6','#3B82F6','#10B981','#F59E0B','#EAB308','#6366F1','#EC4899','#F97316','#F43F5E','#14B8A6','#84CC16','#0EA5E9','#7C3AED'];
+
+  const SEG_FIELDS = [
+    { value:'_daysSince',        label:'Joined (days ago)'       },
+    { value:'_pastBookings',     label:'Past bookings (total)'   },
+    { value:'_bookings5m',       label:'Bookings in last 6 months'},
+    { value:'_bookings12m',      label:'Bookings in last 12 months'},
+    { value:'_lastBooking',      label:'Last booking (days ago)' },
+    { value:'_upcomingBookings', label:'Upcoming bookings'       },
+    { value:'_spend12m',         label:'Annual spend (₹)'       },
+  ];
+  const SEG_OPS = [
+    { value:'gte', label:'≥ (at least)' },
+    { value:'lte', label:'≤ (at most)'  },
+    { value:'gt',  label:'> (more than)'},
+    { value:'lt',  label:'< (less than)'},
+    { value:'eq',  label:'= (exactly)'  },
+    { value:'not_null', label:'has any value'},
+    { value:'is_null',  label:'has no value' },
+  ];
+
+  function buildFilterFromRules(rules) {
+    if (!rules || !rules.conditions || !rules.conditions.length) return () => true;
+    return (c) => {
+      const results = rules.conditions.map(cond => {
+        const val = c[cond.field];
+        const num = parseFloat(cond.value);
+        if (cond.op === 'is_null')  return val === null || val === undefined;
+        if (cond.op === 'not_null') return val !== null && val !== undefined;
+        if (val === null || val === undefined) return false;
+        switch (cond.op) {
+          case 'gte': return val >= num;
+          case 'lte': return val <= num;
+          case 'gt':  return val >  num;
+          case 'lt':  return val <  num;
+          case 'eq':  return val === num;
+        }
+        return false;
+      });
+      return rules.match === 'any' ? results.some(Boolean) : results.every(Boolean);
+    };
+  }
+
+  async function loadDbSegments() {
+    const { data, error } = await db.from('client_segments')
+      .select('*').eq('merchant_id', currentMerchant.id).order('created_at');
+    if (error && error.code !== '42P01') console.warn('client_segments:', error.message);
+    _dbSegments = (data || []).map(s => ({
+      ...s,
+      filter: buildFilterFromRules(s.rules),
+    }));
+  }
+
+  async function loadDbTemplates() {
+    const { data, error } = await db.from('campaign_templates')
+      .select('*').eq('merchant_id', currentMerchant.id).order('created_at');
+    if (error && error.code !== '42P01') console.warn('campaign_templates:', error.message);
+    _dbTemplates = data || [];
+  }
+
+  /* ─────────────── PAGE 1: Segments ─────────────── */
   async function loadNotifSegmentCards() {
     const grid = document.getElementById('notif-seg-grid');
     grid.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);grid-column:1/-1">Loading…</div>';
-    await ensureSegData();
+    await Promise.all([ensureSegData(), loadDbSegments()]);
     const totalCount = segClientData.length;
 
     const OBJECTIVES = {
@@ -6910,26 +7098,42 @@
       'nearby':'Hyperlocal targeting',
     };
 
-    grid.innerHTML = SEGMENTS.map(seg => {
+    const renderCard = (seg, isCustom) => {
       const count = segClientData.filter(seg.filter).length;
       const pct   = totalCount ? Math.round(count/totalCount*100) : 0;
-      const obj   = OBJECTIVES[seg.id] || '';
+      const obj   = OBJECTIVES[seg.id] || seg.obj || '';
+      const editBtn = isCustom
+        ? `<button class="ntmpl-edit" onclick="openSegOverlay('${seg.id}')">Edit</button>`
+        : `<button class="ntmpl-edit" onclick="cloneSegToOverlay('${seg.id}')">Edit</button>`;
+      const delBtn = isCustom
+        ? `<button class="ntmpl-del" title="Delete" onclick="deleteSeg('${seg.id}')">🗑️</button>` : '';
       return `<div class="nseg-card">
         <div class="nseg-card-head">
           <div class="nseg-card-icon" style="background:${seg.color}18">${seg.icon}</div>
-          <div>
+          <div style="flex:1">
             <div class="nseg-card-title">${seg.name}</div>
             <div class="nseg-card-count">${count} client${count!==1?'s':''} · ${pct}%</div>
           </div>
+          ${isCustom ? '<span style="font-size:10px;font-weight:700;background:#EDE9FE;color:#6D28D9;padding:2px 7px;border-radius:20px;white-space:nowrap">Custom</span>' : ''}
         </div>
-        <div class="nseg-card-criteria">${seg.desc}</div>
+        <div class="nseg-card-criteria">${seg.desc || ''}</div>
         ${obj ? `<div class="nseg-card-obj">🎯 ${obj}</div>` : ''}
-        <div class="nseg-card-sample">"${seg.sample}"</div>
+        ${seg.sample ? `<div class="nseg-card-sample">"${seg.sample}"</div>` : ''}
         <div class="nseg-card-actions">
           <button class="nseg-use-btn" onclick="useSegInCampaign('${seg.id}')">📣 Create campaign</button>
+          ${editBtn}${delBtn}
         </div>
       </div>`;
-    }).join('');
+    };
+
+    const builtInCards = SEGMENTS.map(seg => renderCard(seg, false)).join('');
+    const customCards  = _dbSegments.map(seg => renderCard(seg, true)).join('');
+    const newBtn = `<div class="nseg-card" style="border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:160px;cursor:pointer;background:none" onclick="openSegOverlay(null)">
+      <div style="font-size:32px">➕</div>
+      <div style="font-size:13px;font-weight:700;color:var(--muted)">New segment</div>
+      <div style="font-size:12px;color:var(--muted);text-align:center;max-width:180px">Create a custom segment with your own filter rules</div>
+    </div>`;
+    grid.innerHTML = builtInCards + customCards + newBtn;
   }
 
   function useSegInCampaign(segId) {
@@ -6952,24 +7156,44 @@
   }
 
   /* ─────────────── PAGE 2: Templates ─────────────── */
-  function renderTemplates(filterChannel) {
+  async function renderTemplates(filterChannel) {
     document.querySelectorAll('.ntmpl-filter-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('ntf-' + filterChannel).classList.add('active');
-    const list = filterChannel === 'all' ? NOTIF_TEMPLATES : NOTIF_TEMPLATES.filter(t => t.channel === filterChannel);
+    await loadDbTemplates();
+    const allTemplates = [
+      ...NOTIF_TEMPLATES.map(t => ({ ...t, _isBuiltIn: true })),
+      ..._dbTemplates.map(t => ({ ...t, _isBuiltIn: false })),
+    ];
+    const list = filterChannel === 'all' ? allTemplates : allTemplates.filter(t => t.channel === filterChannel);
     const channelLabels = { whatsapp:'WhatsApp', email:'Email', sms:'SMS' };
-    document.getElementById('notif-tmpl-grid').innerHTML = list.map(t => `
-      <div class="ntmpl-card">
+
+    const newCard = `<div class="ntmpl-card" style="border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:160px;cursor:pointer;background:none" onclick="openTmplOverlay(null)">
+      <div style="font-size:30px">➕</div>
+      <div style="font-size:13px;font-weight:700;color:var(--muted)">New template</div>
+      <div style="font-size:12px;color:var(--muted);text-align:center;max-width:180px">Create a reusable message template</div>
+    </div>`;
+
+    document.getElementById('notif-tmpl-grid').innerHTML = newCard + list.map(t => {
+      const editBtn = t._isBuiltIn
+        ? `<button class="ntmpl-edit" onclick="cloneTmplToOverlay('${t.id}')">Edit copy</button>`
+        : `<button class="ntmpl-edit" onclick="openTmplOverlay('${t.id}')">Edit</button>`;
+      const delBtn = t._isBuiltIn ? '' : `<button class="ntmpl-del" title="Delete" onclick="deleteTmpl('${t.id}')">🗑️</button>`;
+      const customBadge = t._isBuiltIn ? '' : '<span style="font-size:10px;font-weight:700;background:#EDE9FE;color:#6D28D9;padding:2px 7px;border-radius:20px">Custom</span>';
+      return `<div class="ntmpl-card">
         <div class="ntmpl-card-head">
-          <div style="font-size:20px">${t.icon}</div>
+          <div style="font-size:20px">${t.icon || '📝'}</div>
           <div class="ntmpl-name">${t.name}</div>
+          ${customBadge}
           <span class="ntmpl-channel-badge ${t.channel}">${channelLabels[t.channel]}</span>
         </div>
-        ${t.subject ? `<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Subject: ${t.subject}</div>` : ''}
+        ${t.subject ? `<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:4px">Subject: ${t.subject}</div>` : ''}
         <div class="ntmpl-preview">${t.body}</div>
         <div class="ntmpl-actions">
-          <button class="ntmpl-use" onclick="useTemplate('${t.id}')">Use this template</button>
+          <button class="ntmpl-use" onclick="useTemplate('${t.id}')">Use template</button>
+          ${editBtn}${delBtn}
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
 
   function filterTemplates(channel, btn) {
@@ -6977,7 +7201,7 @@
   }
 
   function useTemplate(tmplId) {
-    const t = NOTIF_TEMPLATES.find(x => x.id === tmplId);
+    const t = [...NOTIF_TEMPLATES, ..._dbTemplates].find(x => x.id === tmplId);
     if (!t) return;
     const btn = document.getElementById('nptab-campaign');
     switchNotifPage('campaign', btn);
@@ -6987,6 +7211,269 @@
       if (t.subject) document.getElementById('ncmp-subject').value = t.subject;
       cmpCharCount();
     }, 50);
+  }
+
+  /* ──────────────────────────────────────────
+     TEMPLATE OVERLAY — Create / Edit
+  ────────────────────────────────────────── */
+  function openTmplOverlay(dbId) {
+    _tmplEditingId = dbId;
+    const isEdit = !!dbId;
+    document.getElementById('tmpl-overlay-title').textContent = isEdit ? 'Edit Template' : 'New Template';
+    document.getElementById('tmpl-save-btn').textContent = isEdit ? 'Save changes' : 'Save Template';
+    document.getElementById('tmpl-err').classList.remove('show');
+    document.getElementById('tmpl-char-count').textContent = '';
+
+    if (isEdit) {
+      const t = _dbTemplates.find(x => x.id === dbId);
+      if (!t) return;
+      document.getElementById('tmpl-name').value    = t.name || '';
+      document.getElementById('tmpl-channel').value = t.channel || 'whatsapp';
+      document.getElementById('tmpl-body').value    = t.body || '';
+      document.getElementById('tmpl-subject').value = t.subject || '';
+    } else {
+      document.getElementById('tmpl-name').value    = '';
+      document.getElementById('tmpl-channel').value = 'whatsapp';
+      document.getElementById('tmpl-body').value    = '';
+      document.getElementById('tmpl-subject').value = '';
+    }
+    onTmplChannelChange();
+    document.getElementById('tmpl-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function cloneTmplToOverlay(builtInId) {
+    const t = NOTIF_TEMPLATES.find(x => x.id === builtInId);
+    if (!t) return;
+    _tmplEditingId = null;
+    document.getElementById('tmpl-overlay-title').textContent = 'New Template (copy)';
+    document.getElementById('tmpl-save-btn').textContent = 'Save Template';
+    document.getElementById('tmpl-err').classList.remove('show');
+    document.getElementById('tmpl-name').value    = t.name + ' (copy)';
+    document.getElementById('tmpl-channel').value = t.channel;
+    document.getElementById('tmpl-body').value    = t.body;
+    document.getElementById('tmpl-subject').value = t.subject || '';
+    onTmplChannelChange();
+    document.getElementById('tmpl-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeTmplOverlay() {
+    document.getElementById('tmpl-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function onTmplChannelChange() {
+    const ch = document.getElementById('tmpl-channel').value;
+    document.getElementById('tmpl-subject-row').style.display = ch === 'email' ? '' : 'none';
+  }
+
+  function tmplInsertVar(v) {
+    const ta = document.getElementById('tmpl-body');
+    const s = ta.selectionStart, e = ta.selectionEnd;
+    ta.value = ta.value.slice(0,s) + v + ta.value.slice(e);
+    ta.selectionStart = ta.selectionEnd = s + v.length;
+    ta.focus();
+    document.getElementById('tmpl-char-count').textContent = ta.value.length + ' characters';
+  }
+
+  async function saveTmplOverlay() {
+    const errEl = document.getElementById('tmpl-err'); errEl.classList.remove('show');
+    const name    = document.getElementById('tmpl-name').value.trim();
+    const channel = document.getElementById('tmpl-channel').value;
+    const body    = document.getElementById('tmpl-body').value.trim();
+    const subject = channel === 'email' ? document.getElementById('tmpl-subject').value.trim() : null;
+    if (!name) { errEl.textContent='Template name is required.'; errEl.classList.add('show'); return; }
+    if (!body) { errEl.textContent='Message body is required.';  errEl.classList.add('show'); return; }
+    if (channel === 'email' && !subject) { errEl.textContent='Subject is required for email templates.'; errEl.classList.add('show'); return; }
+
+    const btn = document.getElementById('tmpl-save-btn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+
+    const payload = { merchant_id: currentMerchant.id, name, channel, body, subject, icon: '📝' };
+    let error;
+    if (_tmplEditingId) {
+      ({ error } = await db.from('campaign_templates').update(payload).eq('id', _tmplEditingId));
+    } else {
+      ({ error } = await db.from('campaign_templates').insert(payload));
+    }
+    btn.disabled = false; btn.textContent = _tmplEditingId ? 'Save changes' : 'Save Template';
+    if (error) { errEl.textContent = error.message; errEl.classList.add('show'); return; }
+    closeTmplOverlay();
+    renderTemplates('all');
+  }
+
+  async function deleteTmpl(id) {
+    if (!confirm('Delete this template?')) return;
+    await db.from('campaign_templates').delete().eq('id', id);
+    renderTemplates('all');
+  }
+
+  /* ──────────────────────────────────────────
+     SEGMENT OVERLAY — Create / Edit
+  ────────────────────────────────────────── */
+  let _segSelectedColor = '#8B5CF6';
+
+  function openSegOverlay(dbId) {
+    _segEditingId = dbId;
+    _segSelectedColor = '#8B5CF6';
+    const isEdit = !!dbId;
+    document.getElementById('seg-overlay-title').textContent = isEdit ? 'Edit Segment' : 'New Segment';
+    document.getElementById('seg-save-btn').textContent = isEdit ? 'Save changes' : 'Save Segment';
+    document.getElementById('seg-cust-err').classList.remove('show');
+    document.getElementById('seg-preview-count').textContent = '—';
+
+    if (isEdit) {
+      const s = _dbSegments.find(x => x.id === dbId);
+      if (!s) return;
+      document.getElementById('seg-cust-name').value   = s.name || '';
+      document.getElementById('seg-cust-icon').value   = s.icon || '🎯';
+      document.getElementById('seg-cust-desc').value   = s.desc || '';
+      document.getElementById('seg-cust-sample').value = s.sample || '';
+      _segSelectedColor = s.color || '#8B5CF6';
+      document.getElementById('seg-cust-color').value  = _segSelectedColor;
+      const matchVal = s.rules?.match || 'all';
+      document.querySelectorAll('[name=seg-match]').forEach(r => r.checked = r.value === matchVal);
+      renderSegRules(s.rules?.conditions || []);
+    } else {
+      document.getElementById('seg-cust-name').value   = '';
+      document.getElementById('seg-cust-icon').value   = '🎯';
+      document.getElementById('seg-cust-desc').value   = '';
+      document.getElementById('seg-cust-sample').value = '';
+      document.querySelectorAll('[name=seg-match]').forEach(r => r.checked = r.value === 'all');
+      renderSegRules([]);
+      addSegRule();
+    }
+    renderColorSwatches();
+    document.getElementById('seg-cust-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function cloneSegToOverlay(builtInId) {
+    const s = SEGMENTS.find(x => x.id === builtInId);
+    if (!s) return;
+    _segEditingId = null;
+    _segSelectedColor = s.color || '#8B5CF6';
+    document.getElementById('seg-overlay-title').textContent = 'New Segment (based on ' + s.name + ')';
+    document.getElementById('seg-save-btn').textContent = 'Save Segment';
+    document.getElementById('seg-cust-err').classList.remove('show');
+    document.getElementById('seg-preview-count').textContent = '—';
+    document.getElementById('seg-cust-name').value   = s.name + ' (custom)';
+    document.getElementById('seg-cust-icon').value   = s.icon || '🎯';
+    document.getElementById('seg-cust-desc').value   = s.desc || '';
+    document.getElementById('seg-cust-sample').value = s.sample || '';
+    document.getElementById('seg-cust-color').value  = _segSelectedColor;
+    renderColorSwatches();
+    renderSegRules([]);
+    addSegRule();
+    document.getElementById('seg-cust-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSegOverlay() {
+    document.getElementById('seg-cust-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function renderColorSwatches() {
+    const container = document.getElementById('seg-color-swatches');
+    container.innerHTML = SEG_COLORS.map(c =>
+      `<div class="seg-color-swatch ${c===_segSelectedColor?'selected':''}" style="background:${c}" onclick="selectSegColor('${c}',this)" title="${c}"></div>`
+    ).join('');
+  }
+
+  function selectSegColor(color, el) {
+    _segSelectedColor = color;
+    document.getElementById('seg-cust-color').value = color;
+    document.querySelectorAll('.seg-color-swatch').forEach(s => s.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function renderSegRules(conditions) {
+    const list = document.getElementById('seg-rules-list');
+    list.innerHTML = conditions.map((cond, i) => buildRuleRow(cond)).join('');
+  }
+
+  function buildRuleRow(cond) {
+    const fieldOpts = SEG_FIELDS.map(f =>
+      `<option value="${f.value}" ${cond?.field===f.value?'selected':''}>${f.label}</option>`
+    ).join('');
+    const opOpts = SEG_OPS.map(o =>
+      `<option value="${o.value}" ${cond?.op===o.value?'selected':''}>${o.label}</option>`
+    ).join('');
+    const hideVal = cond?.op==='is_null'||cond?.op==='not_null';
+    return `<div class="seg-rule-row">
+      <select class="am-input seg-rule-field" style="flex:2;margin:0" onchange="onRuleOpChange(this)">${fieldOpts}</select>
+      <select class="am-input seg-rule-op"    style="flex:1.2;margin:0" onchange="onRuleOpChange(this)">${opOpts}</select>
+      <input  class="am-input seg-rule-val"   style="flex:1;margin:0;${hideVal?'display:none':''}" type="number" placeholder="value" value="${cond?.value??''}" />
+      <button class="seg-rule-del" onclick="removeSegRule(this)">×</button>
+    </div>`;
+  }
+
+  function addSegRule() {
+    const list = document.getElementById('seg-rules-list');
+    list.insertAdjacentHTML('beforeend', buildRuleRow(null));
+  }
+
+  function removeSegRule(btn) {
+    btn.closest('.seg-rule-row').remove();
+  }
+
+  function onRuleOpChange(sel) {
+    const row = sel.closest('.seg-rule-row');
+    const op  = row.querySelector('.seg-rule-op').value;
+    const valEl = row.querySelector('.seg-rule-val');
+    valEl.style.display = (op==='is_null'||op==='not_null') ? 'none' : '';
+  }
+
+  function previewSegFilter() {
+    const rules = collectSegRules();
+    const filter = buildFilterFromRules(rules);
+    const count  = segClientData.filter(filter).length;
+    document.getElementById('seg-preview-count').textContent = count + ' client' + (count!==1?'s':'');
+  }
+
+  function collectSegRules() {
+    const match = document.querySelector('[name=seg-match]:checked')?.value || 'all';
+    const rows  = document.querySelectorAll('#seg-rules-list .seg-rule-row');
+    const conditions = [...rows].map(row => ({
+      field: row.querySelector('.seg-rule-field').value,
+      op:    row.querySelector('.seg-rule-op').value,
+      value: row.querySelector('.seg-rule-val').value,
+    })).filter(c => c.op==='is_null'||c.op==='not_null'||c.value!=='');
+    return { match, conditions };
+  }
+
+  async function saveSegOverlay() {
+    const errEl = document.getElementById('seg-cust-err'); errEl.classList.remove('show');
+    const name   = document.getElementById('seg-cust-name').value.trim();
+    const icon   = document.getElementById('seg-cust-icon').value.trim() || '🎯';
+    const color  = document.getElementById('seg-cust-color').value || '#8B5CF6';
+    const desc   = document.getElementById('seg-cust-desc').value.trim();
+    const sample = document.getElementById('seg-cust-sample').value.trim();
+    const rules  = collectSegRules();
+    if (!name) { errEl.textContent='Segment name is required.'; errEl.classList.add('show'); return; }
+    if (!rules.conditions.length) { errEl.textContent='Add at least one filter condition.'; errEl.classList.add('show'); return; }
+
+    const btn = document.getElementById('seg-save-btn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    const payload = { merchant_id: currentMerchant.id, name, icon, color, desc, sample, rules };
+    let error;
+    if (_segEditingId) {
+      ({ error } = await db.from('client_segments').update(payload).eq('id', _segEditingId));
+    } else {
+      ({ error } = await db.from('client_segments').insert(payload));
+    }
+    btn.disabled = false; btn.textContent = _segEditingId ? 'Save changes' : 'Save Segment';
+    if (error) { errEl.textContent = error.message; errEl.classList.add('show'); return; }
+    closeSegOverlay();
+    loadNotifSegmentCards();
+  }
+
+  async function deleteSeg(id) {
+    if (!confirm('Delete this custom segment?')) return;
+    await db.from('client_segments').delete().eq('id', id);
+    loadNotifSegmentCards();
   }
 
   /* ─────────────── PAGE 3: Campaign ─────────────── */
@@ -7013,8 +7500,10 @@
     document.getElementById('ncmp-all-count').textContent = `All ${totalCount} client${totalCount!==1?'s':''} in your list`;
     document.getElementById('ncmp-reach').textContent = '0';
 
+    await loadDbSegments();
+    const allSegs = [...SEGMENTS, ..._dbSegments];
     const listEl = document.getElementById('ncmp-seg-list');
-    listEl.innerHTML = SEGMENTS.map(seg => {
+    listEl.innerHTML = allSegs.map(seg => {
       const count = segClientData.filter(seg.filter).length;
       return `<div class="ncmp-seg-item" data-segid="${seg.id}" onclick="toggleCmpSeg('${seg.id}',this)">
         <div class="ncmp-seg-cb"></div>
@@ -7099,9 +7588,10 @@
     if (notifSelectedSegs.has('__all__')) {
       count = segClientData.length;
     } else {
+      const allSegs = [...SEGMENTS, ..._dbSegments];
       const matched = new Set();
       notifSelectedSegs.forEach(segId => {
-        const seg = SEGMENTS.find(s => s.id === segId);
+        const seg = allSegs.find(s => s.id === segId);
         if (seg) segClientData.filter(seg.filter).forEach(c => matched.add(c.id || c.phone));
       });
       count = matched.size;
