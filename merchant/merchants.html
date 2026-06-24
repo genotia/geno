@@ -51,7 +51,7 @@
       flex-shrink: 0;
     }
     .logo span { color: var(--green); }
-    .nav-links { display: flex; gap: 4px; list-style: none; }
+    .nav-links { display: flex; gap: 4px; list-style: none; align-items: center; }
     .nav-links a {
       text-decoration: none;
       font-size: 15px;
@@ -59,9 +59,72 @@
       color: var(--text);
       padding: 8px 16px;
       border-radius: 8px;
-      transition: background .15s;
+      transition: background .15s, color .15s;
+      display: block;
     }
     .nav-links a:hover { background: var(--bg); }
+    .nav-links a.biz-active { color: #7C3AED; font-weight: 600; }
+
+    /* ── BUSINESS TYPES DROPDOWN ── */
+    .biz-wrap { position: relative; }
+    .biz-toggle {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 15px; font-weight: 500; color: var(--text);
+      padding: 8px 16px; border-radius: 8px; cursor: pointer;
+      background: none; border: none; font-family: inherit;
+      transition: background .15s, color .15s;
+    }
+    .biz-toggle:hover, .biz-toggle.open { background: var(--bg); }
+    .biz-toggle.open { color: #7C3AED; font-weight: 600; }
+    .biz-toggle svg { transition: transform .2s; }
+    .biz-toggle.open svg { transform: rotate(180deg); }
+    .biz-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      width: 560px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.13);
+      z-index: 600;
+      overflow: hidden;
+    }
+    .biz-dropdown.open { display: flex; }
+    .biz-cats {
+      width: 220px;
+      flex-shrink: 0;
+      padding: 10px 0;
+      border-right: 1px solid var(--border);
+    }
+    .biz-cat-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px;
+      font-size: 15px; font-weight: 500; color: var(--text);
+      cursor: pointer; transition: background .12s;
+      border-radius: 0;
+    }
+    .biz-cat-item:hover, .biz-cat-item.active { background: var(--bg); font-weight: 600; }
+    .biz-cat-arrow { color: var(--muted); font-size: 12px; }
+    .biz-subs {
+      flex: 1;
+      padding: 16px 20px;
+    }
+    .biz-sub-head {
+      font-size: 11px; font-weight: 700; letter-spacing: .6px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 12px; padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .biz-sub-list { display: flex; flex-direction: column; gap: 2px; }
+    .biz-sub-item {
+      padding: 9px 12px; font-size: 14px; color: var(--text);
+      border-radius: 8px; cursor: pointer; transition: background .12s;
+      font-weight: 400;
+    }
+    .biz-sub-item:hover { background: var(--bg); font-weight: 500; }
+
     .nav-right { display: flex; align-items: center; gap: 8px; }
     .btn-marketplace {
       display: inline-flex; align-items: center; gap: 7px;
@@ -402,7 +465,16 @@
       <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">AI Operating System for Local Businesses</span>
     </div>
     <ul class="nav-links">
-      <li><a href="#business-types">Business Types</a></li>
+      <li class="biz-wrap">
+        <button class="biz-toggle" id="biz-toggle" onclick="toggleBizTypes(event)">
+          Business Types
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="biz-dropdown" id="biz-dropdown">
+          <div class="biz-cats" id="biz-cats"></div>
+          <div class="biz-subs" id="biz-subs"></div>
+        </div>
+      </li>
       <li><a href="#features">Features</a></li>
       <li><a href="#pricing">Pricing</a></li>
     </ul>
@@ -678,12 +750,73 @@
 </footer>
 
 <script>
+  /* ── BUSINESS TYPES DROPDOWN ── */
+  const BIZ_TYPES = [
+    { cat: 'Beauty & Wellness',    subs: ['Salons', 'Spa', 'MedSpa', 'Beauty Parlors', 'Nail Studios', 'Laser Clinics', 'Skin Care Clinics'] },
+    { cat: 'Fitness & Sports',     subs: ['Gyms', 'Yoga Studios', 'Pilates Studios', 'CrossFit Centers', 'Personal Trainers'] },
+    { cat: 'Health & Medical',     subs: ['Clinics', 'Dentists', 'Dermatologists', 'Physiotherapists', 'Family Physicians'] },
+    { cat: 'Diagnostics',          subs: ['Blood Test Labs', 'Pathology Labs', 'MRI Centers', 'CT Scan Centers', 'X-Ray Centers', 'Ultrasound Centers'] },
+    { cat: 'Hospitals',            subs: ['Multi-Specialty Hospitals', 'Specialty Hospitals', 'Day-Care Hospitals'] },
+    { cat: 'Restaurants & Food',   subs: ['Restaurants', 'Cafes', 'Fine Dining', 'Buffet Restaurants'] },
+    { cat: 'Hospitality',          subs: ['Hotels', 'Resorts', 'Boutique Hotels', 'Business Hotels'] },
+    { cat: 'Shared Spaces',        subs: ['Co-working Spaces', 'Meeting Rooms', 'Conference Rooms'] },
+    { cat: 'Sports Facilities',    subs: ['Badminton Courts', 'Tennis Courts', 'Football Turf', 'Cricket Nets', 'Swimming Pools'] },
+  ];
+
+  let activeBizCat = 0;
+
+  function renderBizCats() {
+    document.getElementById('biz-cats').innerHTML = BIZ_TYPES.map((b, i) =>
+      `<div class="biz-cat-item${i === activeBizCat ? ' active' : ''}" onmouseenter="selectBizCat(${i})" onclick="selectBizCat(${i})">
+        ${b.cat}
+        <span class="biz-cat-arrow">›</span>
+      </div>`
+    ).join('');
+  }
+
+  function renderBizSubs(idx) {
+    const b = BIZ_TYPES[idx];
+    document.getElementById('biz-subs').innerHTML =
+      `<div class="biz-sub-head">${b.cat}</div>
+       <div class="biz-sub-list">${b.subs.map(s =>
+         `<div class="biz-sub-item">${s}</div>`
+       ).join('')}</div>`;
+  }
+
+  function selectBizCat(idx) {
+    activeBizCat = idx;
+    renderBizCats();
+    renderBizSubs(idx);
+  }
+
+  function toggleBizTypes(e) {
+    e.stopPropagation();
+    const dropdown = document.getElementById('biz-dropdown');
+    const toggle   = document.getElementById('biz-toggle');
+    const isOpen   = dropdown.classList.contains('open');
+    closeBizTypes();
+    if (!isOpen) {
+      dropdown.classList.add('open');
+      toggle.classList.add('open');
+      renderBizCats();
+      renderBizSubs(activeBizCat);
+    }
+  }
+
+  function closeBizTypes() {
+    document.getElementById('biz-dropdown').classList.remove('open');
+    document.getElementById('biz-toggle').classList.remove('open');
+  }
+
   function toggleMenu() {
     document.getElementById('menu-dropdown').classList.toggle('open');
   }
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.menu-dropdown-wrap')) {
       document.getElementById('menu-dropdown').classList.remove('open');
+    }
+    if (!e.target.closest('.biz-wrap')) {
+      closeBizTypes();
     }
   });
 
