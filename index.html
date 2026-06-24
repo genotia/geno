@@ -131,24 +131,66 @@
     .menu-icon { display: flex; flex-direction: column; gap: 4px; }
     .menu-icon span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; }
     .hamburger { display: none; }
-    .mobile-menu {
+    /* ── MENU DROPDOWN ── */
+    .menu-dropdown-wrap { position: relative; }
+    .menu-dropdown {
       display: none;
-      flex-direction: column;
-      gap: 0;
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 260px;
       background: var(--white);
-      border-bottom: 1px solid var(--border);
-      padding: 8px 24px 16px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 16px 48px rgba(0,0,0,.12);
+      z-index: 500;
+      overflow: hidden;
+      padding: 8px 0;
     }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a {
-      text-decoration: none;
-      font-size: 15px;
+    .menu-dropdown.open { display: block; }
+    .menu-section-head {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      padding: 14px 20px 8px;
+    }
+    .menu-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 20px;
+      font-size: 14px;
       font-weight: 500;
-      color: var(--muted);
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      transition: background .12s;
     }
-    .mobile-menu a:last-child { border-bottom: none; }
+    .menu-link:hover { background: var(--bg); }
+    .menu-link.highlight { color: var(--green); font-weight: 600; }
+    .menu-link .menu-link-icon { font-size: 16px; width: 20px; flex-shrink: 0; }
+    .menu-link .menu-link-arrow { margin-left: auto; color: var(--muted); font-size: 13px; }
+    .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
+    .menu-section-biz {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .12s;
+    }
+    .menu-section-biz:hover { background: var(--bg); }
+    /* legacy mobile-menu kept for narrow breakpoints */
+    .mobile-menu { display: none; }
 
     /* ── URGENCY BAR ── */
     .urgency-bar {
@@ -1210,20 +1252,37 @@
     <div class="nav-right">
       <button class="btn-login">Log in</button>
       <button class="btn-pill">List your business</button>
-      <button class="btn-pill-menu" onclick="toggleMenu()" aria-label="Menu">
-        Menu
-        <div class="menu-icon"><span></span><span></span><span></span></div>
-      </button>
+      <div class="menu-dropdown-wrap">
+        <button class="btn-pill-menu" onclick="toggleMenu()" aria-label="Menu" id="menu-toggle-btn">
+          Menu
+          <div class="menu-icon"><span></span><span></span><span></span></div>
+        </button>
+        <div class="menu-dropdown" id="menu-dropdown">
+          <!-- For customers -->
+          <div class="menu-section-head">For customers</div>
+          <a href="#" class="menu-link highlight">
+            <span class="menu-link-icon">👤</span> Log in or sign up
+          </a>
+          <a href="#" class="menu-link">
+            <span class="menu-link-icon">📱</span> Download the app
+          </a>
+          <a href="#" class="menu-link">
+            <span class="menu-link-icon">🛟</span> Help and support
+          </a>
+          <button class="menu-link">
+            <span class="menu-link-icon">🌐</span> English (IN)
+          </button>
+          <!-- Divider -->
+          <div class="menu-divider"></div>
+          <!-- For businesses -->
+          <a href="merchants.html" class="menu-section-biz">
+            For businesses <span>→</span>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="#deals" style="color:#1D9E75;font-weight:700;">⚡ Off-Peak Deals</a>
-    <a href="negotiate.html">🤝 AI Negotiator</a>
-    <a href="booking.html">🛎️ BookNow</a>
-    <a href="merchants.html">💼 Merchant OS</a>
-    <a href="ai-agents.html" style="color:#8B5CF6;font-weight:700;">🤖 AI Agents</a>
-    <a href="#">Log in</a>
-  </div>
+  <div class="mobile-menu" id="mobile-menu"></div>
 </nav>
 
 <div class="trust-bar">
@@ -1560,8 +1619,14 @@
 <script>
   /* ── Mobile menu ── */
   function toggleMenu() {
-    document.getElementById('mobile-menu').classList.toggle('open');
+    document.getElementById('menu-dropdown').classList.toggle('open');
   }
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.menu-dropdown-wrap')) {
+      document.getElementById('menu-dropdown').classList.remove('open');
+    }
+  });
 
   /* ── Category pills ── */
   function setActive(el, cat) {
