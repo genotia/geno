@@ -82,45 +82,55 @@
     .mega-chip { padding:4px 10px; border-radius:20px; background:var(--bg); font-size:11px; font-weight:500; color:var(--text); border:1px solid var(--border); }
     .mega-cta { display:inline-flex; align-items:center; gap:5px; margin-top:14px; font-size:13px; font-weight:700; color:var(--green); text-decoration:none; }
     .mega-cta:hover { text-decoration:underline; }
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .btn-ghost {
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .btn-login {
       font-size: 14px;
       font-weight: 500;
       color: var(--text);
       background: none;
       border: none;
       cursor: pointer;
-      padding: 8px 4px;
+      padding: 8px 12px;
+      text-decoration: none;
+      transition: color .15s;
+      font-family: inherit;
     }
-    .btn-primary {
+    .btn-login:hover { color: var(--green); }
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
       font-size: 14px;
       font-weight: 600;
-      color: var(--white);
-      background: var(--green);
-      border: none;
-      border-radius: 8px;
-      padding: 9px 20px;
+      color: var(--text);
+      background: var(--white);
+      border: 1.5px solid var(--text);
+      border-radius: 40px;
+      padding: 9px 22px;
       cursor: pointer;
       white-space: nowrap;
-      transition: opacity .15s;
+      transition: background .15s, color .15s;
+      font-family: inherit;
     }
-    .btn-primary:hover { opacity: .88; }
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      background: none;
-      border: none;
+    .btn-pill:hover { background: var(--text); color: var(--white); }
+    .btn-pill-menu {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--white);
+      border: 1.5px solid #D1D5DB;
+      border-radius: 40px;
+      padding: 9px 18px;
       cursor: pointer;
-      padding: 4px;
+      transition: border-color .15s, background .15s;
+      font-family: inherit;
     }
-    .hamburger span {
-      display: block;
-      width: 22px;
-      height: 2px;
-      background: var(--text);
-      border-radius: 2px;
-    }
+    .btn-pill-menu:hover { border-color: var(--text); background: var(--bg); }
+    .menu-icon { display: flex; flex-direction: column; gap: 4px; }
+    .menu-icon span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; }
+    .hamburger { display: none; }
     .mobile-menu {
       display: none;
       flex-direction: column;
@@ -1040,7 +1050,7 @@
       .stats-inner { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr; }
       .footer-bottom { flex-direction: column; text-align: center; }
-      .nav-right .btn-ghost { display: none; }
+      .nav-right .btn-login, .nav-right .btn-pill { display: none; }
       /* Trust bar: show badge only, hide steps */
       .trust-step { display: none; }
       .trust-arrow { display: none; }
@@ -1198,10 +1208,11 @@
       </li>
     </ul>
     <div class="nav-right">
-      <button class="btn-ghost">Log in</button>
-      <button class="btn-primary">Sign up free</button>
-      <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
-        <span></span><span></span><span></span>
+      <button class="btn-login">Log in</button>
+      <button class="btn-pill">List your business</button>
+      <button class="btn-pill-menu" onclick="toggleMenu()" aria-label="Menu">
+        Menu
+        <div class="menu-icon"><span></span><span></span><span></span></div>
       </button>
     </div>
   </div>
