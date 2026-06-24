@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create your account — Genoti AI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #1D9E75;
+      --dark-green: #085041;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --white: #ffffff;
+      --error: #EF4444;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: #f8f4ff;
+      background-image:
+        radial-gradient(ellipse at 0% 0%, rgba(167,139,250,.35) 0%, transparent 55%),
+        radial-gradient(ellipse at 100% 0%, rgba(251,191,151,.30) 0%, transparent 50%),
+        radial-gradient(ellipse at 100% 100%, rgba(253,186,116,.22) 0%, transparent 50%),
+        radial-gradient(ellipse at 0% 100%, rgba(167,243,208,.28) 0%, transparent 50%);
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border-radius: 22px;
+      box-shadow: 0 8px 48px rgba(0,0,0,.10);
+      padding: 44px 48px 40px;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    /* ── LOGO ── */
+    .logo-wrap {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .logo span { color: var(--green); }
+    .logo-sub { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: .2px; }
+
+    /* ── HEADING ── */
+    .card-title {
+      text-align: center;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .card-sub {
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    /* ── FORM GRID ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 13px 16px;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color .15s;
+      font-family: inherit;
+      appearance: none;
+    }
+    .form-group input::placeholder { color: #9CA3AF; }
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--green); }
+    .form-group input.error { border-color: var(--error); }
+
+    /* phone row */
+    .phone-row {
+      display: flex;
+      align-items: center;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color .15s;
+    }
+    .phone-row:focus-within { border-color: var(--green); }
+    .phone-flag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 13px 12px;
+      font-size: 14px;
+      color: var(--text);
+      white-space: nowrap;
+      border-right: 1.5px solid var(--border);
+      flex-shrink: 0;
+      background: var(--white);
+    }
+    .flag-img { font-size: 18px; line-height: 1; }
+    .phone-row input {
+      border: none;
+      border-radius: 0;
+      padding: 13px 14px;
+      flex: 1;
+    }
+    .phone-row input:focus { border-color: transparent; }
+
+    /* password toggle */
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 44px; }
+    .pw-toggle {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+    .pw-toggle:hover { color: var(--text); }
+
+    /* captcha */
+    .captcha-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      background: var(--white);
+    }
+    .captcha-left { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--text); font-weight: 500; }
+    .captcha-check {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: border-color .15s, background .15s;
+    }
+    .captcha-check.checked { background: var(--green); border-color: var(--green); }
+    .captcha-right { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .captcha-logo {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, #4285F4 0%, #EA4335 33%, #FBBC04 66%, #34A853 100%);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+      color: white;
+      letter-spacing: -0.5px;
+    }
+    .captcha-label { font-size: 9px; color: #9CA3AF; letter-spacing: .3px; }
+
+    /* submit */
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: var(--text);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 18px;
+      font-family: inherit;
+      transition: opacity .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-submit:hover { opacity: .87; }
+    .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* footer link */
+    .card-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .card-footer a { color: var(--green); font-weight: 600; text-decoration: none; }
+    .card-footer a:hover { text-decoration: underline; }
+
+    /* error / success banners */
+    .banner {
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .banner.error { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; display: block; }
+    .banner.success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; display: block; }
+
+    /* responsive */
+    @media (max-width: 560px) {
+      .card { padding: 32px 20px 28px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <a href="index.html" class="logo">✨ Genoti <span>AI</span></a>
+    <div class="logo-sub">Discover, Book here, Save more</div>
+  </div>
+
+  <h1 class="card-title">Let's create your account</h1>
+  <p class="card-sub">Sign up with Genoti and manage your business</p>
+
+  <div class="banner" id="banner"></div>
+
+  <form id="signup-form" novalidate>
+    <div class="form-grid">
+
+      <!-- Full Name -->
+      <div class="form-group">
+        <input type="text" id="f-name" placeholder="Full Name" autocomplete="name" required />
+      </div>
+
+      <!-- Business Name -->
+      <div class="form-group">
+        <input type="text" id="f-biz" placeholder="Business Name" required />
+      </div>
+
+      <!-- Address -->
+      <div class="form-group">
+        <input type="text" id="f-address" placeholder="Address" />
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <input type="email" id="f-email" placeholder="Email" autocomplete="email" required />
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <div class="phone-row">
+          <div class="phone-flag">
+            <span class="flag-img">🇮🇳</span>
+            <span>+91</span>
+          </div>
+          <input type="tel" id="f-phone" placeholder="98765 43210" autocomplete="tel" />
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <div class="pw-wrap">
+          <input type="password" id="f-password" placeholder="Password" autocomplete="new-password" required />
+          <button type="button" class="pw-toggle" onclick="togglePw()" aria-label="Show/hide password">
+            <svg id="pw-eye" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- No. of Branches -->
+      <div class="form-group">
+        <input type="number" id="f-branches" placeholder="No. of branches" min="1" />
+      </div>
+
+      <!-- No. of Staff -->
+      <div class="form-group">
+        <input type="number" id="f-staff" placeholder="No. of staff" min="1" />
+      </div>
+
+      <!-- CAPTCHA -->
+      <div class="form-group">
+        <div class="captcha-box">
+          <div class="captcha-left">
+            <div class="captcha-check" id="captcha-check" onclick="toggleCaptcha()"></div>
+            I'm not a robot
+          </div>
+          <div class="captcha-right">
+            <div class="captcha-logo">rC</div>
+            <div class="captcha-label">reCAPTCHA</div>
+            <div class="captcha-label">Privacy · Terms</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /form-grid -->
+
+    <button type="submit" class="btn-submit" id="submit-btn">
+      <div class="spinner" id="spinner"></div>
+      <span id="submit-label">Sign Up for Free</span>
+    </button>
+  </form>
+
+  <p class="card-footer">Already have an account? <a href="merchant/index.html">Log In</a></p>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const sb = supabase.createClient(
+    'https://ijsxmgkzwvamwctbkgjo.supabase.co',
+    'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ'
+  );
+
+  let captchaChecked = false;
+
+  function toggleCaptcha() {
+    captchaChecked = !captchaChecked;
+    const el = document.getElementById('captcha-check');
+    if (captchaChecked) {
+      el.classList.add('checked');
+      el.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><polyline points="2,7 5,10 11,3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    } else {
+      el.classList.remove('checked');
+      el.innerHTML = '';
+    }
+  }
+
+  function togglePw() {
+    const inp = document.getElementById('f-password');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  function showBanner(msg, type) {
+    const b = document.getElementById('banner');
+    b.textContent = msg;
+    b.className = 'banner ' + type;
+  }
+
+  function setLoading(on) {
+    document.getElementById('spinner').style.display = on ? 'block' : 'none';
+    document.getElementById('submit-label').textContent = on ? 'Creating account…' : 'Sign Up for Free';
+    document.getElementById('submit-btn').disabled = on;
+  }
+
+  document.getElementById('signup-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const name     = document.getElementById('f-name').value.trim();
+    const biz      = document.getElementById('f-biz').value.trim();
+    const address  = document.getElementById('f-address').value.trim();
+    const email    = document.getElementById('f-email').value.trim();
+    const phone    = document.getElementById('f-phone').value.trim();
+    const password = document.getElementById('f-password').value;
+    const branches = document.getElementById('f-branches').value || 1;
+    const staff    = document.getElementById('f-staff').value || 1;
+
+    if (!name)     return showBanner('Please enter your full name.', 'error');
+    if (!biz)      return showBanner('Please enter your business name.', 'error');
+    if (!email)    return showBanner('Please enter your email.', 'error');
+    if (!password || password.length < 8) return showBanner('Password must be at least 8 characters.', 'error');
+    if (!captchaChecked) return showBanner('Please confirm you\'re not a robot.', 'error');
+
+    setLoading(true);
+
+    const { data, error } = await sb.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name:       name,
+          business_name:   biz,
+          address:         address,
+          phone:           phone ? '+91' + phone.replace(/\s/g, '') : '',
+          num_branches:    parseInt(branches),
+          num_staff:       parseInt(staff),
+        }
+      }
+    });
+
+    if (error) {
+      setLoading(false);
+      return showBanner(error.message, 'error');
+    }
+
+    showBanner('Account created! Check your email to confirm, then log in.', 'success');
+    setLoading(false);
+    document.getElementById('signup-form').reset();
+    captchaChecked = false;
+    document.getElementById('captcha-check').classList.remove('checked');
+    document.getElementById('captcha-check').innerHTML = '';
+
+    setTimeout(() => { window.location.href = 'merchant/index.html'; }, 2500);
+  });
+</script>
+</body>
+</html>
