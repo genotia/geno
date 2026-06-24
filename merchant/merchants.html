@@ -163,21 +163,35 @@
     .hamburger { display: none; }
     .menu-dropdown-wrap { position: relative; }
     .menu-dropdown {
-      display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 280px;
+      display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px;
       background: var(--white); border: 1px solid var(--border); border-radius: 18px;
-      box-shadow: 0 16px 48px rgba(0,0,0,.12); z-index: 500; overflow: hidden; padding: 8px 0;
+      box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500; overflow: hidden;
     }
     .menu-dropdown.open { display: block; }
-    .menu-section-head { font-size: 13px; font-weight: 800; color: var(--text); padding: 14px 20px 8px; }
+    .menu-section-head {
+      font-size: 13px; font-weight: 800; color: var(--text);
+      padding: 18px 20px 10px; letter-spacing: -.1px;
+    }
     .menu-link {
-      display: flex; align-items: center; gap: 10px; padding: 11px 20px; font-size: 14px;
-      font-weight: 500; color: var(--text); text-decoration: none; cursor: pointer;
-      background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px; font-size: 15px; font-weight: 400;
+      color: var(--text); text-decoration: none; cursor: pointer;
+      background: none; border: none; width: 100%; text-align: left;
+      font-family: inherit; transition: background .12s;
     }
     .menu-link:hover { background: var(--bg); }
-    .menu-link.highlight { color: #1D9E75; font-weight: 600; }
-    .menu-link-icon { font-size: 16px; width: 20px; flex-shrink: 0; }
-    .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
+    .menu-link.highlight { color: var(--green); font-weight: 600; }
+    .menu-link-arrow { font-size: 17px; color: var(--muted); }
+    .menu-divider { height: 1px; background: var(--border); margin: 4px 0; }
+    .menu-for-customers {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; font-size: 15px; font-weight: 700;
+      color: var(--text); text-decoration: none; cursor: pointer;
+      background: none; border: none; width: 100%; font-family: inherit;
+      transition: background .12s; border-top: 1px solid var(--border);
+      margin-top: 4px;
+    }
+    .menu-for-customers:hover { background: var(--bg); }
     .mobile-menu { display: none; }
 
     /* ── HERO ── */
@@ -490,14 +504,17 @@
           <div class="menu-icon"><span></span><span></span><span></span></div>
         </button>
         <div class="menu-dropdown" id="menu-dropdown">
-          <div class="menu-section-head">For customers</div>
-          <a href="#" class="menu-link highlight"><span class="menu-link-icon">👤</span> Log in or sign up</a>
-          <a href="../download-the-app.html" class="menu-link"><span class="menu-link-icon">📱</span> Download the app</a>
-          <a href="#" class="menu-link"><span class="menu-link-icon">🛟</span> Help and support</a>
-          <div class="menu-divider"></div>
           <div class="menu-section-head">For businesses</div>
-          <a href="merchants.html" class="menu-link"><span class="menu-link-icon">📊</span> Merchant OS</a>
-          <a href="ai-agents.html" class="menu-link"><span class="menu-link-icon">🤖</span> AI Agents Platform</a>
+          <a href="merchants.html" class="menu-link">Merchant OS</a>
+          <a href="ai-agents.html" class="menu-link">AI Agents Platform</a>
+          <div class="menu-divider"></div>
+          <a href="index.html" class="menu-link highlight">Log in or sign up</a>
+          <a href="../download-the-app.html" class="menu-link">Download the app</a>
+          <a href="#" class="menu-link">Help and support</a>
+          <a href="../index.html" class="menu-for-customers">
+            For customers
+            <span class="menu-link-arrow">→</span>
+          </a>
         </div>
       </div>
     </div>
