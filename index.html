@@ -233,7 +233,21 @@
       align-items: center;
       justify-content: center;
     }
-    .hero-eyebrow { display: none; }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.7);
+      color: var(--dark-green);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      border: 1px solid rgba(29,158,117,.2);
+    }
     .hero h1 {
       font-size: clamp(36px, 6vw, 64px);
       font-weight: 800;
@@ -1328,8 +1342,12 @@
 
 <!-- ══ HERO ══ -->
 <section class="hero">
-  <h1>Book local selfcare services</h1>
-  <p class="hero-sub">Discover top-rated salons, spas, wellness studios and beauty experts — with steep off-peak deals updated every 15 min.</p>
+  <div class="hero-eyebrow">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="6"/></svg>
+    Hyperlocal deals · Updated every 15 min
+  </div>
+  <h1>Fill the idle hours.<br><em>Save big,</em> today.</h1>
+  <p class="hero-sub">Merchants unlock steep off-peak discounts. You grab them before they expire.</p>
 
   <div class="search-bar">
     <div class="field">
