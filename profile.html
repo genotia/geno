@@ -350,6 +350,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/md5@2.3.0/dist/md5.min.js"></script>
 <script>
   const sb = supabase.createClient(
     'https://ijsxmgkzwvamwctbkgjo.supabase.co',
@@ -359,6 +360,22 @@
   let currentUser = null;
   let editMode    = false;
 
+  function probeImage(url) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload  = () => resolve(url);
+      img.onerror = () => resolve(null);
+      img.src = url;
+    });
+  }
+
+  async function resolveAvatar(user) {
+    const meta = user.user_metadata || {};
+    if (meta.avatar_url) return meta.avatar_url;
+    const hash = md5(user.email.trim().toLowerCase());
+    return await probeImage(`https://www.gravatar.com/avatar/${hash}?s=200&d=404`);
+  }
+
   /* ── LOAD USER ── */
   async function loadUser() {
     const { data: { session } } = await sb.auth.getSession();
@@ -367,28 +384,31 @@
     renderProfile(currentUser);
   }
 
-  function renderProfile(user) {
-    const m    = user.user_metadata || {};
+  async function renderProfile(user) {
+    const m      = user.user_metadata || {};
     const first  = m.first_name || '';
     const last   = m.last_name  || '';
-    const full   = m.full_name  || (first + ' ' + last).trim() || user.email.split('@')[0];
-    const phone  = m.phone || '';
-    const dob    = m.dob   || '';
+    const full   = (m.full_name || (first + ' ' + last).trim() || user.email.split('@')[0]).trim();
+    const phone  = m.phone  || '';
+    const dob    = m.dob    || '';
     const gender = m.gender || '';
-    const avatar = m.avatar_url || null;
     const email  = user.email || '';
 
     // Sidebar + full name
-    document.getElementById('sidebar-name').textContent = full || email;
-    document.getElementById('profile-fullname').textContent = full || email;
+    document.getElementById('sidebar-name').textContent      = full || email;
+    document.getElementById('profile-fullname').textContent  = full || email;
 
-    // Avatar
+    // Show initial immediately
     const initial = (full[0] || email[0] || '?').toUpperCase();
     document.getElementById('avatar-initial').textContent = initial;
-    if (avatar) {
-      document.getElementById('avatar-circle').innerHTML =
-        `<img src="${avatar}" alt="${full}" />`;
-    }
+
+    // Probe for photo (Gravatar or saved avatar) async — swap in when ready
+    resolveAvatar(user).then(avatarUrl => {
+      if (avatarUrl) {
+        document.getElementById('avatar-circle').innerHTML =
+          `<img src="${avatarUrl}" alt="${full}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+      }
+    });
 
     // Field values
     setValue('first',  first,  '—');

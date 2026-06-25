@@ -1252,6 +1252,7 @@
     .bk-done-btn:hover { border-color: var(--muted); }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/md5@2.3.0/dist/md5.min.js"></script>
 </head>
 <body>
 
@@ -1714,33 +1715,49 @@
     'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ'
   );
 
-  function setNavLoggedIn(user) {
-    const meta      = user.user_metadata || {};
-    const fullName  = meta.full_name || meta.first_name
-                      ? (meta.first_name || '') + ' ' + (meta.last_name || '')
-                      : user.email.split('@')[0];
-    const initial   = fullName.trim()[0]?.toUpperCase() || '?';
-    const avatarUrl = meta.avatar_url || null;
+  function probeImage(url) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload  = () => resolve(url);
+      img.onerror = () => resolve(null);
+      img.src = url;
+    });
+  }
+
+  async function resolveAvatar(user) {
+    const meta = user.user_metadata || {};
+    // 1. Saved avatar (social login photo or manual upload)
+    if (meta.avatar_url) return meta.avatar_url;
+    // 2. Gravatar by email hash
+    const hash    = md5(user.email.trim().toLowerCase());
+    const gravUrl = `https://www.gravatar.com/avatar/${hash}?s=200&d=404`;
+    return await probeImage(gravUrl);
+  }
+
+  async function setNavLoggedIn(user) {
+    const meta     = user.user_metadata || {};
+    const first    = meta.first_name || '';
+    const last     = meta.last_name  || '';
+    const fullName = (meta.full_name || (first + ' ' + last).trim() || user.email.split('@')[0]).trim();
+    const initial  = fullName[0]?.toUpperCase() || '?';
 
     // Swap Menu pill → Avatar pill
-    document.getElementById('menu-toggle-btn').style.display  = 'none';
-    document.getElementById('menu-dropdown').style.display    = 'none';
-    const avatarBtn = document.getElementById('avatar-toggle-btn');
-    avatarBtn.style.display = 'inline-flex';
-
-    // Populate avatar
-    const avatarEl = document.getElementById('nav-avatar');
-    if (avatarUrl) {
-      avatarEl.innerHTML = `<img src="${avatarUrl}" alt="${fullName}" />`;
-    } else {
-      document.getElementById('nav-avatar-initial').textContent = initial;
-    }
+    document.getElementById('menu-toggle-btn').style.display = 'none';
+    document.getElementById('menu-dropdown').style.display   = 'none';
+    document.getElementById('avatar-toggle-btn').style.display = 'inline-flex';
 
     // Populate name in dropdown
-    document.getElementById('profile-name').textContent = fullName.trim() || user.email;
+    document.getElementById('profile-name').textContent = fullName || user.email;
 
-    // Hide "List your business" for logged-in customers (optional: keep for merchants)
-    // document.getElementById('nav-list-biz').style.display = 'none';
+    // Show initial immediately while we probe for photo
+    document.getElementById('nav-avatar-initial').textContent = initial;
+
+    // Then swap in photo if found
+    const avatarUrl = await resolveAvatar(user);
+    const avatarEl  = document.getElementById('nav-avatar');
+    if (avatarUrl) {
+      avatarEl.innerHTML = `<img src="${avatarUrl}" alt="${fullName}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
+    }
   }
 
   function setNavGuest() {
