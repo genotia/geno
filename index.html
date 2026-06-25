@@ -206,8 +206,9 @@
     .profile-plain {
       display: flex; align-items: center; gap: 14px;
       padding: 11px 20px; font-size: 14px; font-weight: 500; color: var(--text);
-      cursor: default;
+      cursor: pointer; text-decoration: none;
     }
+    .profile-plain:hover { background: var(--bg); }
     .profile-plain svg { flex-shrink: 0; color: var(--muted); }
 
     /* ── URGENCY BAR ── */
@@ -1343,9 +1344,11 @@
           </button>
           <div class="menu-divider"></div>
           <a href="download-the-app.html" class="profile-plain">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
             Download the app
           </a>
           <a href="#" class="profile-plain">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             Help and support
           </a>
           <div class="menu-divider"></div>
