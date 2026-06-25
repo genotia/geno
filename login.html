@@ -8,7 +8,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --green: #1D9E75;
-      --dark-green: #085041;
       --text: #111827;
       --muted: #6B7280;
       --border: #E5E7EB;
@@ -27,31 +26,23 @@
 
     /* ── TOP BAR ── */
     .top-bar {
-      height: 56px;
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-      flex-shrink: 0;
+      height: 56px; display: flex; align-items: center;
+      padding: 0 20px; flex-shrink: 0;
     }
     .back-btn {
-      display: flex; align-items: center; justify-content: center;
       width: 36px; height: 36px; border-radius: 50%;
       background: none; border: none; cursor: pointer;
-      color: var(--text); transition: background .15s;
-      font-size: 20px;
+      color: var(--text); font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
     }
     .back-btn:hover { background: var(--bg); }
 
-    /* ── MAIN CONTENT ── */
+    /* ── MAIN ── */
     .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 24px 20px 0;
-      max-width: 480px;
-      width: 100%;
-      margin: 0 auto;
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; padding: 24px 20px 0;
+      max-width: 480px; width: 100%; margin: 0 auto;
     }
 
     /* ── SCREENS ── */
@@ -60,114 +51,157 @@
 
     .screen-title {
       font-size: 24px; font-weight: 800; letter-spacing: -.5px;
-      text-align: center; margin-bottom: 8px; color: var(--text);
+      text-align: center; margin-bottom: 8px;
     }
     .screen-sub {
       font-size: 14px; color: var(--muted); text-align: center;
-      line-height: 1.6; margin-bottom: 32px; max-width: 340px;
-      align-self: center;
+      line-height: 1.6; margin-bottom: 32px;
+      max-width: 360px; align-self: center;
     }
 
-    /* ── CHOICE CARDS (Screen 1) ── */
+    /* ── CHOICE CARDS ── */
     .choice-card {
       display: flex; align-items: center; justify-content: space-between;
       padding: 20px 22px; border: 1.5px solid var(--border);
-      border-radius: 14px; cursor: pointer; text-decoration: none;
-      transition: border-color .15s, box-shadow .15s; margin-bottom: 12px;
-      background: var(--white);
+      border-radius: 14px; cursor: pointer; margin-bottom: 12px;
+      background: var(--white); transition: border-color .15s, box-shadow .15s;
     }
     .choice-card:hover { border-color: #9CA3AF; box-shadow: 0 2px 12px rgba(0,0,0,.07); }
-    .choice-card-text { display: flex; flex-direction: column; gap: 3px; }
-    .choice-card-title { font-size: 16px; font-weight: 700; color: var(--text); }
-    .choice-card-sub { font-size: 13px; color: var(--muted); }
-    .choice-arrow { font-size: 20px; color: var(--text); }
+    .choice-card-title { font-size: 16px; font-weight: 700; }
+    .choice-card-sub { font-size: 13px; color: var(--muted); margin-top: 3px; }
+    .choice-arrow { font-size: 20px; }
 
-    /* ── LOGIN FORM (Screen 2) ── */
+    /* ── FORM ELEMENTS ── */
     .form-label {
-      font-size: 14px; font-weight: 600; color: var(--text);
-      margin-bottom: 8px; display: block;
+      font-size: 14px; font-weight: 600; display: block; margin-bottom: 8px;
     }
     .form-input {
       width: 100%; padding: 14px 16px; font-size: 15px;
       border: 1.5px solid var(--border); border-radius: 10px;
       outline: none; font-family: inherit; color: var(--text);
-      transition: border-color .15s; background: var(--white);
+      background: var(--white); transition: border-color .15s;
     }
     .form-input:focus { border-color: var(--text); }
-    .form-input.error { border-color: var(--error); }
+    .form-input:disabled { background: var(--bg); color: var(--muted); cursor: default; }
+    .form-input.err { border-color: var(--error); }
     .form-hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
-    .form-group { margin-bottom: 20px; width: 100%; }
+    .form-group { margin-bottom: 18px; width: 100%; }
 
-    .btn-continue {
-      width: 100%; padding: 15px; background: var(--text); color: var(--white);
-      border: none; border-radius: 50px; font-size: 16px; font-weight: 700;
-      cursor: pointer; font-family: inherit; transition: opacity .15s;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+    /* phone row */
+    .phone-row {
+      display: flex; border: 1.5px solid var(--border);
+      border-radius: 10px; overflow: hidden; transition: border-color .15s;
     }
-    .btn-continue:hover { opacity: .85; }
-    .btn-continue:disabled { opacity: .5; cursor: not-allowed; }
+    .phone-row:focus-within { border-color: var(--text); }
+    .phone-flag {
+      display: flex; align-items: center; gap: 6px;
+      padding: 14px 12px; font-size: 14px; white-space: nowrap;
+      border-right: 1.5px solid var(--border); flex-shrink: 0;
+      background: var(--white); cursor: pointer; position: relative;
+    }
+    .phone-flag select {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%;
+    }
+    .phone-row .form-input {
+      border: none; border-radius: 0; padding: 14px;
+    }
+    .phone-row .form-input:focus { border-color: transparent; }
+
+    /* password */
+    .pw-wrap { position: relative; }
+    .pw-wrap .form-input { padding-right: 46px; }
+    .pw-toggle {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: var(--muted);
+      display: flex; align-items: center; padding: 0;
+    }
+    .pw-toggle:hover { color: var(--text); }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      width: 100%; padding: 15px; border: none; border-radius: 50px;
+      font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit;
+      transition: opacity .15s; display: flex; align-items: center;
+      justify-content: center; gap: 8px;
+      background: var(--text); color: var(--white);
+    }
+    .btn-primary:hover:not(:disabled) { opacity: .85; }
+    .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
 
     .or-divider {
-      display: flex; align-items: center; gap: 12px;
-      margin: 22px 0; width: 100%;
+      display: flex; align-items: center; gap: 12px; margin: 22px 0; width: 100%;
     }
     .or-divider::before, .or-divider::after {
       content: ''; flex: 1; height: 1px; background: var(--border);
     }
-    .or-text { font-size: 12px; color: var(--muted); font-weight: 500; letter-spacing: .3px; }
+    .or-text { font-size: 12px; color: var(--muted); font-weight: 500; }
 
     .btn-social {
       width: 100%; padding: 14px 22px; background: var(--white);
       border: 1.5px solid var(--border); border-radius: 50px;
       font-size: 15px; font-weight: 700; color: var(--text);
-      cursor: pointer; font-family: inherit; transition: border-color .15s, box-shadow .15s;
+      cursor: pointer; font-family: inherit; margin-bottom: 10px;
       display: flex; align-items: center; justify-content: center; gap: 12px;
-      margin-bottom: 10px; text-decoration: none;
+      transition: border-color .15s, box-shadow .15s;
     }
     .btn-social:hover { border-color: #9CA3AF; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
-    .btn-social-icon { width: 22px; height: 22px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .social-icon { width: 22px; height: 22px; flex-shrink: 0; display: flex; align-items: center; }
 
     .biz-link-row {
       width: 100%; border-top: 1px solid var(--border);
       margin-top: 24px; padding-top: 24px; text-align: center;
     }
-    .biz-link-row p { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .biz-link-row p { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
     .biz-link-row a { font-size: 14px; color: var(--green); font-weight: 600; text-decoration: none; }
     .biz-link-row a:hover { text-decoration: underline; }
 
-    /* ── OTP SCREEN (Screen 3) ── */
-    .otp-email-display {
-      font-size: 15px; font-weight: 600; color: var(--text);
-      background: var(--bg); border-radius: 10px; padding: 12px 16px;
-      text-align: center; margin-bottom: 24px; width: 100%;
-    }
+    /* ── OTP BOXES ── */
     .otp-inputs {
       display: flex; gap: 10px; justify-content: center;
-      width: 100%; margin-bottom: 20px;
+      width: 100%; margin: 28px 0 22px;
     }
     .otp-digit {
       width: 52px; height: 60px; border: 1.5px solid var(--border);
       border-radius: 12px; font-size: 24px; font-weight: 700;
       text-align: center; font-family: inherit; color: var(--text);
-      outline: none; transition: border-color .15s;
+      outline: none; transition: border-color .15s; background: var(--white);
     }
     .otp-digit:focus { border-color: var(--text); }
+    .otp-digit.filled { border-color: #9CA3AF; }
+
     .resend-row {
-      text-align: center; font-size: 13px; color: var(--muted);
-      margin-bottom: 20px; width: 100%;
+      text-align: center; font-size: 14px; color: var(--muted);
+      margin-top: 18px; width: 100%;
     }
     .resend-row button {
-      background: none; border: none; color: var(--green); font-weight: 600;
-      cursor: pointer; font-size: 13px; font-family: inherit; padding: 0;
+      background: none; border: none; color: #6366F1; font-weight: 600;
+      cursor: pointer; font-size: 14px; font-family: inherit; padding: 0;
     }
     .resend-row button:hover { text-decoration: underline; }
+
+    /* ── CHECKBOX ── */
+    .check-row {
+      display: flex; align-items: flex-start; gap: 12px;
+      margin-bottom: 24px; cursor: pointer; width: 100%;
+    }
+    .check-box {
+      width: 20px; height: 20px; border: 1.5px solid var(--border);
+      border-radius: 5px; flex-shrink: 0; margin-top: 1px;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .15s, background .15s; background: var(--white);
+    }
+    .check-row input[type=checkbox] { display: none; }
+    .check-row input:checked + .check-box {
+      background: var(--text); border-color: var(--text);
+    }
+    .check-label { font-size: 14px; color: var(--text); line-height: 1.5; }
 
     /* ── BANNER ── */
     .banner {
       border-radius: 10px; padding: 11px 14px; font-size: 13px;
-      font-weight: 500; margin-bottom: 16px; width: 100%; display: none;
+      font-weight: 500; margin-bottom: 14px; width: 100%; display: none;
     }
-    .banner.error { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; display: block; }
+    .banner.error  { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; display: block; }
     .banner.success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; display: block; }
 
     /* ── SPINNER ── */
@@ -181,8 +215,7 @@
     /* ── FOOTER ── */
     .page-footer {
       display: flex; align-items: center; justify-content: center;
-      gap: 24px; padding: 24px 20px 32px; flex-shrink: 0;
-      flex-wrap: wrap;
+      gap: 24px; padding: 24px 20px 32px; flex-shrink: 0; flex-wrap: wrap;
     }
     .footer-link {
       display: flex; align-items: center; gap: 6px;
@@ -193,29 +226,27 @@
 </head>
 <body>
 
-<!-- Top bar -->
 <div class="top-bar">
-  <button class="back-btn" id="back-btn" onclick="goBack()" aria-label="Go back">←</button>
+  <button class="back-btn" onclick="goBack()">←</button>
 </div>
 
-<!-- Main -->
 <div class="main">
 
   <!-- ── SCREEN 1: CHOOSE ── -->
   <div class="screen active" id="screen-choose">
     <div class="screen-title">Sign up / log in</div>
-    <div class="screen-sub" style="margin-bottom:28px"></div>
+    <div style="height:20px"></div>
 
-    <div class="choice-card" onclick="showCustomerLogin()">
-      <div class="choice-card-text">
+    <div class="choice-card" onclick="showScreen('customer')">
+      <div>
         <div class="choice-card-title">Genoti for customers</div>
         <div class="choice-card-sub">Discover and book off-peak deals near you</div>
       </div>
       <span class="choice-arrow">→</span>
     </div>
 
-    <div class="choice-card" onclick="window.location.href='register.html'">
-      <div class="choice-card-text">
+    <div class="choice-card" onclick="location.href='register.html'">
+      <div>
         <div class="choice-card-title">Genoti for professionals</div>
         <div class="choice-card-sub">Manage and grow your business</div>
       </div>
@@ -223,42 +254,43 @@
     </div>
   </div>
 
-  <!-- ── SCREEN 2: CUSTOMER LOGIN ── -->
+  <!-- ── SCREEN 2: EMAIL ── -->
   <div class="screen" id="screen-customer">
     <div class="screen-title">Genoti for customers</div>
     <p class="screen-sub">Create an account or log in to book and manage your appointments</p>
 
-    <div class="banner" id="banner-customer"></div>
+    <div class="banner" id="banner-email"></div>
 
     <div class="form-group">
       <label class="form-label" for="login-email">Email</label>
-      <input type="email" id="login-email" class="form-input" placeholder="" autocomplete="email" />
+      <input type="email" id="login-email" class="form-input" autocomplete="email"
+             onkeydown="if(event.key==='Enter') sendOtp()" />
       <div class="form-hint">We'll send you a verification code</div>
     </div>
 
-    <button class="btn-continue" id="btn-continue" onclick="sendOtp()">
-      <div class="spinner" id="spinner-otp"></div>
-      <span id="continue-label">Continue</span>
+    <button class="btn-primary" id="btn-send" onclick="sendOtp()">
+      <div class="spinner" id="sp-send"></div>
+      <span id="lbl-send">Continue</span>
     </button>
 
     <div class="or-divider"><span class="or-text">OR</span></div>
 
     <button class="btn-social" onclick="continueWithPhone()">
-      <div class="btn-social-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+      <div class="social-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
       </div>
       Continue with mobile
     </button>
 
-    <button class="btn-social" onclick="continueWithFacebook()">
-      <div class="btn-social-icon">
+    <button class="btn-social" onclick="continueWith('facebook')">
+      <div class="social-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
       </div>
       Continue with Facebook
     </button>
 
-    <button class="btn-social" onclick="continueWithGoogle()">
-      <div class="btn-social-icon">
+    <button class="btn-social" onclick="continueWith('google')">
+      <div class="social-icon">
         <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
       </div>
       Continue with Google
@@ -270,11 +302,10 @@
     </div>
   </div>
 
-  <!-- ── SCREEN 3: OTP VERIFY ── -->
+  <!-- ── SCREEN 3: CONFIRM EMAIL OTP ── -->
   <div class="screen" id="screen-otp">
-    <div class="screen-title">Check your email</div>
-    <p class="screen-sub">Enter the 6-digit code we sent to</p>
-    <div class="otp-email-display" id="otp-email-display"></div>
+    <div class="screen-title">Confirm your email</div>
+    <p class="screen-sub" id="otp-sub">We sent you a code to</p>
 
     <div class="banner" id="banner-otp"></div>
 
@@ -287,19 +318,83 @@
       <input class="otp-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" />
     </div>
 
+    <button class="btn-primary" id="btn-verify" onclick="verifyOtp()" disabled>
+      <div class="spinner" id="sp-verify"></div>
+      <span id="lbl-verify">Continue</span>
+    </button>
+
     <div class="resend-row">
-      Didn't receive it? <button onclick="resendOtp()">Resend code</button>
+      Didn't receive a code? <button onclick="resendOtp()">Resend</button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 4: FINISH SIGNING UP (new users) ── -->
+  <div class="screen" id="screen-signup">
+    <div class="screen-title">Finish signing up</div>
+    <p class="screen-sub">We need a couple more details from you</p>
+
+    <div class="banner" id="banner-signup"></div>
+
+    <div class="form-group">
+      <label class="form-label" for="f-first">First name</label>
+      <input type="text" id="f-first" class="form-input" autocomplete="given-name" />
     </div>
 
-    <button class="btn-continue" id="btn-verify" onclick="verifyOtp()">
-      <div class="spinner" id="spinner-verify"></div>
-      <span id="verify-label">Verify</span>
+    <div class="form-group">
+      <label class="form-label" for="f-last">Last name</label>
+      <input type="text" id="f-last" class="form-input" autocomplete="family-name" />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Phone number</label>
+      <div class="phone-row">
+        <div class="phone-flag">
+          <span id="flag-display">🇮🇳 +91</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          <select id="phone-code" onchange="updateFlag()">
+            <option value="+91" data-flag="🇮🇳">🇮🇳 India +91</option>
+            <option value="+1"  data-flag="🇺🇸">🇺🇸 USA +1</option>
+            <option value="+44" data-flag="🇬🇧">🇬🇧 UK +44</option>
+            <option value="+971" data-flag="🇦🇪">🇦🇪 UAE +971</option>
+            <option value="+65" data-flag="🇸🇬">🇸🇬 Singapore +65</option>
+            <option value="+61" data-flag="🇦🇺">🇦🇺 Australia +61</option>
+          </select>
+        </div>
+        <input type="tel" id="f-phone" class="form-input" placeholder="98765 43210" autocomplete="tel" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="f-email-ro">Email</label>
+      <input type="email" id="f-email-ro" class="form-input" disabled />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="f-password">Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="f-password" class="form-input" autocomplete="new-password" />
+        <button type="button" class="pw-toggle" onclick="togglePw()" aria-label="Toggle password visibility">
+          <svg id="pw-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <label class="check-row">
+      <input type="checkbox" id="marketing-check" />
+      <div class="check-box" id="check-visual">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:none" id="check-tick"><polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="check-label">I agree to receive marketing notifications with offers and news</span>
+    </label>
+
+    <button class="btn-primary" id="btn-create" onclick="createAccount()">
+      <div class="spinner" id="sp-create"></div>
+      <span id="lbl-create">Agree and create account</span>
     </button>
   </div>
 
 </div><!-- /main -->
 
-<!-- Footer -->
 <div class="page-footer">
   <a href="#" class="footer-link">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
@@ -321,110 +416,180 @@
   let currentScreen = 'choose';
   let enteredEmail  = '';
 
-  const screens = {
-    choose:   document.getElementById('screen-choose'),
-    customer: document.getElementById('screen-customer'),
-    otp:      document.getElementById('screen-otp'),
-  };
+  const SCREENS = ['choose','customer','otp','signup'];
 
   function showScreen(name) {
-    Object.values(screens).forEach(s => s.classList.remove('active'));
-    screens[name].classList.add('active');
+    SCREENS.forEach(s => {
+      document.getElementById('screen-' + s).classList.toggle('active', s === name);
+    });
     currentScreen = name;
   }
 
-  function showCustomerLogin() { showScreen('customer'); }
-
   function goBack() {
-    if (currentScreen === 'customer') showScreen('choose');
-    else if (currentScreen === 'otp')  showScreen('customer');
-    else window.location.href = 'index.html';
+    const prev = { customer:'choose', otp:'customer', signup:'choose' };
+    prev[currentScreen] ? showScreen(prev[currentScreen]) : location.href = 'index.html';
   }
 
   function showBanner(id, msg, type) {
     const b = document.getElementById(id);
     b.textContent = msg;
-    b.className = 'banner ' + type;
+    b.className = 'banner' + (msg ? ' ' + type : '');
   }
 
-  function setLoading(btnId, spinnerId, labelId, text, loading) {
-    document.getElementById(spinnerId).style.display = loading ? 'block' : 'none';
-    document.getElementById(labelId).textContent = loading ? text : (labelId === 'continue-label' ? 'Continue' : 'Verify');
-    document.getElementById(btnId).disabled = loading;
+  function setLoading(btnId, spId, lblId, loadingText, on) {
+    const defaults = { 'lbl-send':'Continue', 'lbl-verify':'Continue', 'lbl-create':'Agree and create account' };
+    document.getElementById(spId).style.display  = on ? 'block' : 'none';
+    document.getElementById(lblId).textContent   = on ? loadingText : defaults[lblId];
+    document.getElementById(btnId).disabled      = on;
   }
 
-  /* ── SEND OTP ── */
+  /* ─ SEND OTP ─ */
   async function sendOtp() {
     const email = document.getElementById('login-email').value.trim();
-    if (!email || !email.includes('@')) {
-      document.getElementById('login-email').classList.add('error');
-      return showBanner('banner-customer', 'Please enter a valid email address.', 'error');
+    const inp   = document.getElementById('login-email');
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      inp.classList.add('err');
+      return showBanner('banner-email', 'Please enter a valid email address.', 'error');
     }
-    document.getElementById('login-email').classList.remove('error');
-    setLoading('btn-continue', 'spinner-otp', 'continue-label', 'Sending…', true);
+    inp.classList.remove('err');
+    setLoading('btn-send','sp-send','lbl-send','Sending…', true);
 
     const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+    setLoading('btn-send','sp-send','lbl-send','', false);
 
-    setLoading('btn-continue', 'spinner-otp', 'continue-label', '', false);
-    if (error) return showBanner('banner-customer', error.message, 'error');
+    if (error) return showBanner('banner-email', error.message, 'error');
 
     enteredEmail = email;
-    document.getElementById('otp-email-display').textContent = email;
-    showBanner('banner-customer', '', '');
+    document.getElementById('otp-sub').textContent = 'We sent you a code to ' + email;
+    showBanner('banner-email','','');
     showScreen('otp');
-    setupOtpInputs();
-    document.querySelectorAll('.otp-digit')[0].focus();
+    initOtpInputs();
   }
 
-  /* ── OTP INPUT NAVIGATION ── */
-  function setupOtpInputs() {
-    const digits = document.querySelectorAll('.otp-digit');
+  /* ─ OTP INPUT WIRING ─ */
+  function initOtpInputs() {
+    const digits = [...document.querySelectorAll('.otp-digit')];
+    digits.forEach(d => { d.value = ''; d.classList.remove('filled'); });
+    document.getElementById('btn-verify').disabled = true;
+    digits[0].focus();
+
     digits.forEach((el, i) => {
-      el.value = '';
-      el.addEventListener('input', () => {
-        el.value = el.value.replace(/\D/g, '').slice(-1);
-        if (el.value && i < digits.length - 1) digits[i + 1].focus();
-        if ([...digits].every(d => d.value)) verifyOtp();
-      });
-      el.addEventListener('keydown', e => {
-        if (e.key === 'Backspace' && !el.value && i > 0) digits[i - 1].focus();
-      });
+      el.oninput = () => {
+        el.value = el.value.replace(/\D/g,'').slice(-1);
+        el.classList.toggle('filled', !!el.value);
+        if (el.value && i < digits.length - 1) digits[i+1].focus();
+        document.getElementById('btn-verify').disabled = !digits.every(d => d.value);
+      };
+      el.onkeydown = e => {
+        if (e.key === 'Backspace' && !el.value && i > 0) {
+          digits[i-1].value = '';
+          digits[i-1].classList.remove('filled');
+          digits[i-1].focus();
+        }
+        if (e.key === 'Enter' && digits.every(d => d.value)) verifyOtp();
+      };
+      el.onpaste = e => {
+        const text = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
+        if (text.length >= 6) {
+          e.preventDefault();
+          digits.forEach((d, j) => { d.value = text[j] || ''; d.classList.toggle('filled', !!d.value); });
+          document.getElementById('btn-verify').disabled = false;
+          digits[5].focus();
+        }
+      };
     });
   }
 
-  /* ── VERIFY OTP ── */
+  /* ─ VERIFY OTP ─ */
   async function verifyOtp() {
     const token = [...document.querySelectorAll('.otp-digit')].map(d => d.value).join('');
-    if (token.length < 6) return showBanner('banner-otp', 'Please enter the full 6-digit code.', 'error');
+    if (token.length < 6) return;
 
-    setLoading('btn-verify', 'spinner-verify', 'verify-label', 'Verifying…', true);
+    setLoading('btn-verify','sp-verify','lbl-verify','Verifying…', true);
+    const { data, error } = await sb.auth.verifyOtp({ email: enteredEmail, token, type: 'email' });
+    setLoading('btn-verify','sp-verify','lbl-verify','', false);
 
-    const { error } = await sb.auth.verifyOtp({ email: enteredEmail, token, type: 'email' });
-
-    setLoading('btn-verify', 'spinner-verify', 'verify-label', '', false);
     if (error) return showBanner('banner-otp', error.message, 'error');
 
-    showBanner('banner-otp', 'Logged in! Redirecting…', 'success');
-    setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+    const meta = data.user?.user_metadata || {};
+    if (!meta.first_name) {
+      document.getElementById('f-email-ro').value = enteredEmail;
+      showScreen('signup');
+    } else {
+      showBanner('banner-otp','Welcome back! Redirecting…','success');
+      setTimeout(() => { location.href = 'index.html'; }, 1000);
+    }
   }
 
-  /* ── RESEND ── */
+  /* ─ RESEND OTP ─ */
   async function resendOtp() {
+    showBanner('banner-otp','','');
     await sb.auth.signInWithOtp({ email: enteredEmail, options: { shouldCreateUser: true } });
-    showBanner('banner-otp', 'Code resent — check your inbox.', 'success');
-    setupOtpInputs();
+    showBanner('banner-otp','Code resent — check your inbox.','success');
+    initOtpInputs();
   }
 
-  /* ── SOCIAL AUTH ── */
-  async function continueWithGoogle() {
-    await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/index.html' } });
+  /* ─ CREATE ACCOUNT (finish signup) ─ */
+  async function createAccount() {
+    const first = document.getElementById('f-first').value.trim();
+    const last  = document.getElementById('f-last').value.trim();
+    const phone = document.getElementById('f-phone').value.trim();
+    const code  = document.getElementById('phone-code').value;
+    const pass  = document.getElementById('f-password').value;
+
+    if (!first) return showBanner('banner-signup','Please enter your first name.','error');
+    if (!last)  return showBanner('banner-signup','Please enter your last name.','error');
+    if (pass && pass.length < 8) return showBanner('banner-signup','Password must be at least 8 characters.','error');
+
+    setLoading('btn-create','sp-create','lbl-create','Creating account…', true);
+
+    const updatePayload = {
+      data: {
+        first_name: first,
+        last_name:  last,
+        full_name:  first + ' ' + last,
+        phone:      phone ? code + phone.replace(/\s/g,'') : '',
+        marketing_opt_in: document.getElementById('marketing-check').checked,
+      }
+    };
+    if (pass) updatePayload.password = pass;
+
+    const { error } = await sb.auth.updateUser(updatePayload);
+    setLoading('btn-create','sp-create','lbl-create','', false);
+
+    if (error) return showBanner('banner-signup', error.message, 'error');
+
+    showBanner('banner-signup','Account created! Redirecting…','success');
+    setTimeout(() => { location.href = 'index.html'; }, 1200);
   }
-  async function continueWithFacebook() {
-    await sb.auth.signInWithOAuth({ provider: 'facebook', options: { redirectTo: window.location.origin + '/index.html' } });
+
+  /* ─ SOCIAL ─ */
+  async function continueWith(provider) {
+    await sb.auth.signInWithOAuth({ provider, options: { redirectTo: location.origin + '/index.html' } });
   }
   function continueWithPhone() {
-    showBanner('banner-customer', 'Mobile login coming soon.', 'error');
+    showBanner('banner-email','Mobile login coming soon.','error');
   }
+
+  /* ─ PHONE FLAG ─ */
+  function updateFlag() {
+    const sel  = document.getElementById('phone-code');
+    const opt  = sel.options[sel.selectedIndex];
+    document.getElementById('flag-display').textContent = opt.getAttribute('data-flag') + ' ' + sel.value;
+  }
+
+  /* ─ PASSWORD TOGGLE ─ */
+  function togglePw() {
+    const inp = document.getElementById('f-password');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  /* ─ MARKETING CHECKBOX ─ */
+  document.getElementById('marketing-check').addEventListener('change', function() {
+    document.getElementById('check-visual').style.background   = this.checked ? 'var(--text)' : '';
+    document.getElementById('check-visual').style.borderColor  = this.checked ? 'var(--text)' : '';
+    document.getElementById('check-tick').style.display        = this.checked ? 'block' : 'none';
+  });
 </script>
 </body>
 </html>
