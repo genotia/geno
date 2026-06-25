@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Favourites — Genoti AI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #1D9E75;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F3F4F6;
+      --white: #ffffff;
+      --active-bg: #FFF0F5;
+      --active-text: #DB2777;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg); color: var(--text); min-height: 100vh; display: flex;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 260px; flex-shrink: 0; background: var(--white);
+      border-right: 1px solid var(--border); padding: 32px 16px;
+      position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 8px; font-size: 18px;
+      font-weight: 800; color: var(--text); text-decoration: none;
+      margin-bottom: 28px; padding: 0 8px;
+    }
+    .sidebar-logo span { color: var(--green); }
+    .sidebar-username { font-size: 18px; font-weight: 800; padding: 0 12px; margin-bottom: 16px; }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 12px; padding: 11px 12px;
+      border-radius: 10px; font-size: 15px; font-weight: 500; color: var(--text);
+      text-decoration: none; transition: background .12s;
+    }
+    .sidebar-link:hover { background: var(--bg); }
+    .sidebar-link.active { background: var(--active-bg); color: var(--active-text); font-weight: 600; }
+    .sidebar-link.active svg { stroke: var(--active-text); }
+    .sidebar-link svg { flex-shrink: 0; width: 20px; height: 20px; }
+
+    /* ── MAIN ── */
+    .main { flex: 1; padding: 40px 40px 60px; overflow-y: auto; }
+
+    .page-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px;
+    }
+    .page-title { font-size: 28px; font-weight: 800; letter-spacing: -.5px; }
+    .close-btn {
+      width: 38px; height: 38px; border-radius: 50%; background: none;
+      border: 1.5px solid var(--border); display: flex; align-items: center;
+      justify-content: center; cursor: pointer; color: var(--muted); font-size: 18px;
+      text-decoration: none; transition: background .15s, color .15s, border-color .15s;
+    }
+    .close-btn:hover { background: var(--text); color: var(--white); border-color: var(--text); }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px; gap: 12px; flex-wrap: wrap;
+    }
+    .filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-tab {
+      padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit; border: 1.5px solid var(--border);
+      background: var(--white); color: var(--text); transition: all .15s;
+    }
+    .filter-tab.active { background: var(--text); color: var(--white); border-color: var(--text); }
+    .filter-tab:hover:not(.active) { border-color: #9CA3AF; }
+    .sort-btn {
+      display: flex; align-items: center; gap: 6px; padding: 8px 16px;
+      border-radius: 50px; font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: inherit; border: 1.5px solid var(--border); background: var(--white);
+      color: var(--text); transition: all .15s;
+    }
+    .sort-btn:hover { border-color: #9CA3AF; }
+    .sort-btn svg { width: 14px; height: 14px; }
+
+    /* ── GRID ── */
+    .favs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    /* ── MERCHANT CARD ── */
+    .merch-card {
+      background: var(--white); border-radius: 18px; overflow: hidden;
+      border: 1px solid var(--border); transition: box-shadow .2s, transform .2s;
+      cursor: pointer;
+    }
+    .merch-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.1); transform: translateY(-2px); }
+
+    .card-cover {
+      position: relative; height: 160px; overflow: hidden;
+    }
+    .card-cover-img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .card-cover-placeholder {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 40px;
+    }
+    .card-heart-btn {
+      position: absolute; top: 12px; right: 12px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: white; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15); transition: transform .15s;
+    }
+    .card-heart-btn:hover { transform: scale(1.15); }
+    .card-heart-btn svg { width: 17px; height: 17px; }
+    .card-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--white); color: var(--text); font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    }
+    .card-badge.open  { color: #065F46; background: #ECFDF5; }
+    .card-badge.closed{ color: #B91C1C; background: #FEF2F2; }
+
+    .card-body { padding: 16px 18px 18px; }
+    .card-name { font-size: 16px; font-weight: 800; margin-bottom: 4px; color: var(--text); }
+    .card-cat  { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    .card-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .card-rating {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 13px; font-weight: 700; color: var(--text);
+    }
+    .star-icon { color: #F59E0B; font-size: 13px; }
+    .card-reviews { font-size: 12px; color: var(--muted); }
+    .card-loc {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 12px; color: var(--muted);
+    }
+    .card-loc svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .card-price { font-size: 13px; color: var(--muted); }
+    .card-price strong { color: var(--text); font-weight: 700; }
+    .btn-book {
+      padding: 9px 22px; border-radius: 50px; font-size: 13px; font-weight: 700;
+      background: var(--text); color: var(--white); border: none; cursor: pointer;
+      font-family: inherit; transition: background .15s; text-decoration: none;
+      display: inline-block;
+    }
+    .btn-book:hover { background: var(--green); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center; padding: 100px 20px;
+    }
+    .empty-icon { margin-bottom: 24px; }
+    .empty-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .empty-sub { font-size: 15px; color: var(--muted); margin-bottom: 28px; }
+    .btn-start {
+      padding: 12px 32px; border-radius: 50px; font-size: 15px; font-weight: 700;
+      background: var(--white); color: var(--text); border: 1.5px solid var(--border);
+      cursor: pointer; font-family: inherit; text-decoration: none; display: inline-block;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .btn-start:hover { background: var(--text); color: var(--white); border-color: var(--text); }
+
+    /* ── REMOVE TOAST ── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--text); color: var(--white); padding: 12px 24px; border-radius: 50px;
+      font-size: 14px; font-weight: 600; box-shadow: 0 8px 30px rgba(0,0,0,.2);
+      transition: transform .3s ease; z-index: 999; white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { padding: 24px 16px 60px; }
+    }
+    @media (max-width: 600px) {
+      .favs-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .card-cover { height: 120px; }
+    }
+    @media (max-width: 400px) {
+      .favs-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<div class="sidebar">
+  <a href="index.html" class="sidebar-logo">✨ Genoti <span>AI</span></a>
+  <div class="sidebar-username" id="sidebar-name">—</div>
+  <nav class="sidebar-nav">
+    <a href="profile.html" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </a>
+    <a href="activity.html" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Activity
+    </a>
+    <a href="wallet.html" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Rewards &amp; Loyalty
+    </a>
+    <a href="messages.html" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Messages
+    </a>
+    <a href="favourites.html" class="sidebar-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Favourites
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Forms
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+  </nav>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <div class="page-header">
+    <div class="page-title">Favourites</div>
+    <a href="index.html" class="close-btn" title="Close">✕</a>
+  </div>
+
+  <!-- Filter bar (shown when there are results) -->
+  <div class="filter-bar" id="filter-bar" style="display:none">
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterFavs('all', this)">All</button>
+      <button class="filter-tab" onclick="filterFavs('salon', this)">Hair &amp; Beauty</button>
+      <button class="filter-tab" onclick="filterFavs('spa', this)">Spa &amp; Wellness</button>
+      <button class="filter-tab" onclick="filterFavs('barber', this)">Barbershop</button>
+      <button class="filter-tab" onclick="filterFavs('nail', this)">Nails</button>
+    </div>
+    <button class="sort-btn" onclick="toggleSort()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="8" y2="18"/></svg>
+      Sort
+    </button>
+  </div>
+
+  <!-- Favourites grid -->
+  <div class="favs-grid" id="favs-grid" style="display:none"></div>
+
+  <!-- Empty state -->
+  <div class="empty-state" id="empty-state">
+    <!-- Gradient heart SVG (matching Fresha purple style) -->
+    <div class="empty-icon">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+        <defs>
+          <linearGradient id="heart-grad" x1="10" y1="10" x2="70" y2="70" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#A5B4FC"/>
+            <stop offset="50%" stop-color="#8B5CF6"/>
+            <stop offset="100%" stop-color="#6D28D9"/>
+          </linearGradient>
+          <linearGradient id="heart-shine" x1="20" y1="15" x2="45" y2="45" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="rgba(255,255,255,.5)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+        </defs>
+        <!-- Shadow -->
+        <ellipse cx="40" cy="72" rx="22" ry="5" fill="#C4B5FD" opacity=".25"/>
+        <!-- Heart shape -->
+        <path d="M40 65 C40 65 12 46 12 27 C12 18 18.5 13 25 13 C31 13 36 17 40 22 C44 17 49 13 55 13 C61.5 13 68 18 68 27 C68 46 40 65 40 65Z" fill="url(#heart-grad)"/>
+        <!-- Shine overlay -->
+        <path d="M40 65 C40 65 12 46 12 27 C12 18 18.5 13 25 13 C31 13 36 17 40 22 C44 17 49 13 55 13 C61.5 13 68 18 68 27 C68 46 40 65 40 65Z" fill="url(#heart-shine)"/>
+        <!-- Gloss highlight -->
+        <ellipse cx="28" cy="22" rx="7" ry="5" fill="white" opacity=".2" transform="rotate(-20 28 22)"/>
+      </svg>
+    </div>
+    <div class="empty-title">No favourites yet</div>
+    <div class="empty-sub">Your favourite merchants and local businesses will appear here.<br>Let's fill it up!</div>
+    <a href="index.html" class="btn-start">Start searching</a>
+  </div>
+
+</div><!-- /main -->
+
+<!-- Remove toast -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const sb = supabase.createClient(
+    'https://ijsxmgkzwvamwctbkgjo.supabase.co',
+    'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ'
+  );
+
+  let currentUser = null;
+  let allFavs     = [];
+  let activeFilter = 'all';
+
+  /* ── CATEGORY META ── */
+  const CAT_META = {
+    salon:  { label: 'Hair & Beauty',   emoji: '💇', gradient: 'linear-gradient(135deg,#FDE68A,#F59E0B)' },
+    spa:    { label: 'Spa & Wellness',  emoji: '🧖', gradient: 'linear-gradient(135deg,#A5F3FC,#0891B2)' },
+    barber: { label: 'Barbershop',      emoji: '💈', gradient: 'linear-gradient(135deg,#FCA5A5,#DC2626)' },
+    nail:   { label: 'Nails',           emoji: '💅', gradient: 'linear-gradient(135deg,#FBCFE8,#DB2777)' },
+    gym:    { label: 'Gym & Fitness',   emoji: '🏋️', gradient: 'linear-gradient(135deg,#BBF7D0,#1D9E75)' },
+    yoga:   { label: 'Yoga & Pilates',  emoji: '🧘', gradient: 'linear-gradient(135deg,#DDD6FE,#7C3AED)' },
+    tattoo: { label: 'Tattoo',          emoji: '🎨', gradient: 'linear-gradient(135deg,#1E293B,#475569)' },
+    other:  { label: 'Other',           emoji: '🏪', gradient: 'linear-gradient(135deg,#E5E7EB,#9CA3AF)' },
+  };
+
+  /* ── INIT ── */
+  sb.auth.getSession().then(async ({ data: { session } }) => {
+    if (!session) { location.href = 'login.html'; return; }
+    currentUser = session.user;
+    const m = currentUser.user_metadata || {};
+    document.getElementById('sidebar-name').textContent =
+      (m.full_name || ((m.first_name||'')+' '+(m.last_name||'')).trim() || currentUser.email.split('@')[0]).trim();
+    await loadFavourites();
+  });
+
+  /* ── LOAD ── */
+  async function loadFavourites() {
+    const { data, error } = await sb
+      .from('favourites')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false });
+
+    if (error || !data || data.length === 0) {
+      showEmpty(); return;
+    }
+
+    allFavs = data;
+    renderGrid(allFavs);
+  }
+
+  /* ── RENDER ── */
+  function renderGrid(favs) {
+    if (favs.length === 0) {
+      if (activeFilter === 'all') { showEmpty(); return; }
+      document.getElementById('favs-grid').innerHTML =
+        `<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:60px 0;font-size:14px">
+          No favourites in this category yet.
+         </div>`;
+      document.getElementById('favs-grid').style.display = 'grid';
+      document.getElementById('empty-state').style.display  = 'none';
+      document.getElementById('filter-bar').style.display   = 'flex';
+      return;
+    }
+
+    document.getElementById('empty-state').style.display  = 'none';
+    document.getElementById('favs-grid').style.display    = 'grid';
+    document.getElementById('filter-bar').style.display   = 'flex';
+
+    const html = favs.map(f => buildCard(f)).join('');
+    document.getElementById('favs-grid').innerHTML = html;
+  }
+
+  function showEmpty() {
+    document.getElementById('empty-state').style.display  = 'flex';
+    document.getElementById('favs-grid').style.display    = 'none';
+    document.getElementById('filter-bar').style.display   = 'none';
+  }
+
+  function buildCard(f) {
+    const cat  = CAT_META[f.category] || CAT_META.other;
+    const open = isOpen(f.hours);
+    const stars = Number(f.rating || 4.5).toFixed(1);
+    const reviews = f.review_count ? `(${f.review_count})` : '';
+    const dist = f.distance ? `${f.distance} km away` : f.location || '';
+
+    const coverHtml = f.image_url
+      ? `<img class="card-cover-img" src="${f.image_url}" alt="${f.merchant_name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+        + `<div class="card-cover-placeholder" style="background:${cat.gradient};display:none">${cat.emoji}</div>`
+      : `<div class="card-cover-placeholder" style="background:${cat.gradient}">${cat.emoji}</div>`;
+
+    return `
+      <div class="merch-card" id="card-${f.id}">
+        <div class="card-cover">
+          ${coverHtml}
+          <span class="card-badge ${open?'open':'closed'}">${open?'Open':'Closed'}</span>
+          <button class="card-heart-btn" onclick="removeFav('${f.id}','${escHtml(f.merchant_name)}',event)" title="Remove from favourites">
+            <svg viewBox="0 0 24 24" fill="#DB2777" stroke="#DB2777" stroke-width="1.5">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="card-name">${escHtml(f.merchant_name)}</div>
+          <div class="card-cat">${cat.label}</div>
+          <div class="card-meta">
+            <div class="card-rating">
+              <span class="star-icon">★</span>
+              ${stars}
+              <span class="card-reviews">${reviews}</span>
+            </div>
+            ${dist ? `<div class="card-loc">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${escHtml(dist)}
+            </div>` : ''}
+          </div>
+          <div class="card-footer">
+            ${f.starting_price
+              ? `<div class="card-price">From <strong>₹${f.starting_price}</strong></div>`
+              : `<div></div>`}
+            <a href="index.html" class="btn-book">Book now</a>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  /* ── REMOVE FAV ── */
+  async function removeFav(id, name, e) {
+    e.stopPropagation();
+    const card = document.getElementById('card-' + id);
+    if (card) { card.style.opacity = '.4'; card.style.pointerEvents = 'none'; }
+
+    const { error } = await sb.from('favourites').delete().eq('id', id).eq('user_id', currentUser.id);
+
+    if (error) {
+      if (card) { card.style.opacity = '1'; card.style.pointerEvents = ''; }
+      showToast('Could not remove. Try again.'); return;
+    }
+
+    allFavs = allFavs.filter(f => f.id !== id);
+    showToast(`Removed ${name} from favourites`);
+    setTimeout(() => {
+      renderGrid(activeFilter === 'all' ? allFavs : allFavs.filter(f => f.category === activeFilter));
+    }, 400);
+  }
+
+  /* ── FILTER ── */
+  function filterFavs(cat, btn) {
+    activeFilter = cat;
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filtered = cat === 'all' ? allFavs : allFavs.filter(f => f.category === cat);
+    renderGrid(filtered);
+  }
+
+  /* ── SORT (placeholder) ── */
+  function toggleSort() {
+    const sorted = [...allFavs].sort((a, b) => (b.rating||0) - (a.rating||0));
+    renderGrid(sorted);
+    showToast('Sorted by rating');
+  }
+
+  /* ── HELPERS ── */
+  function isOpen(hours) {
+    if (!hours) return true;
+    const now = new Date();
+    const day = now.getDay();
+    const h = now.getHours() * 60 + now.getMinutes();
+    try {
+      const wd = JSON.parse(hours)[day];
+      if (!wd || !wd.open) return false;
+      const [oh, om] = wd.open.split(':').map(Number);
+      const [ch, cm] = wd.close.split(':').map(Number);
+      return h >= oh*60+om && h <= ch*60+cm;
+    } catch { return true; }
+  }
+  function escHtml(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  /* ── EXPOSE addFavourite for use from index.html ── */
+  window.addFavourite = async function(merchant) {
+    if (!currentUser) return;
+    const { error } = await sb.from('favourites').upsert({
+      user_id: currentUser.id,
+      merchant_name: merchant.name,
+      category: merchant.category || 'other',
+      rating: merchant.rating,
+      review_count: merchant.reviewCount,
+      location: merchant.location,
+      distance: merchant.distance,
+      image_url: merchant.imageUrl,
+      starting_price: merchant.startingPrice,
+      hours: merchant.hours ? JSON.stringify(merchant.hours) : null,
+    }, { onConflict: 'user_id,merchant_name' });
+    return !error;
+  };
+</script>
+</body>
+</html>
