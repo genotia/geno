@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign up / Log in — Genoti AI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #1D9E75;
+      --dark-green: #085041;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --white: #ffffff;
+      --error: #EF4444;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--white);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TOP BAR ── */
+    .top-bar {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      flex-shrink: 0;
+    }
+    .back-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: none; border: none; cursor: pointer;
+      color: var(--text); transition: background .15s;
+      font-size: 20px;
+    }
+    .back-btn:hover { background: var(--bg); }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 20px 0;
+      max-width: 480px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* ── SCREENS ── */
+    .screen { display: none; width: 100%; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    .screen-title {
+      font-size: 24px; font-weight: 800; letter-spacing: -.5px;
+      text-align: center; margin-bottom: 8px; color: var(--text);
+    }
+    .screen-sub {
+      font-size: 14px; color: var(--muted); text-align: center;
+      line-height: 1.6; margin-bottom: 32px; max-width: 340px;
+      align-self: center;
+    }
+
+    /* ── CHOICE CARDS (Screen 1) ── */
+    .choice-card {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 22px; border: 1.5px solid var(--border);
+      border-radius: 14px; cursor: pointer; text-decoration: none;
+      transition: border-color .15s, box-shadow .15s; margin-bottom: 12px;
+      background: var(--white);
+    }
+    .choice-card:hover { border-color: #9CA3AF; box-shadow: 0 2px 12px rgba(0,0,0,.07); }
+    .choice-card-text { display: flex; flex-direction: column; gap: 3px; }
+    .choice-card-title { font-size: 16px; font-weight: 700; color: var(--text); }
+    .choice-card-sub { font-size: 13px; color: var(--muted); }
+    .choice-arrow { font-size: 20px; color: var(--text); }
+
+    /* ── LOGIN FORM (Screen 2) ── */
+    .form-label {
+      font-size: 14px; font-weight: 600; color: var(--text);
+      margin-bottom: 8px; display: block;
+    }
+    .form-input {
+      width: 100%; padding: 14px 16px; font-size: 15px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      outline: none; font-family: inherit; color: var(--text);
+      transition: border-color .15s; background: var(--white);
+    }
+    .form-input:focus { border-color: var(--text); }
+    .form-input.error { border-color: var(--error); }
+    .form-hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .form-group { margin-bottom: 20px; width: 100%; }
+
+    .btn-continue {
+      width: 100%; padding: 15px; background: var(--text); color: var(--white);
+      border: none; border-radius: 50px; font-size: 16px; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: opacity .15s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-continue:hover { opacity: .85; }
+    .btn-continue:disabled { opacity: .5; cursor: not-allowed; }
+
+    .or-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 22px 0; width: 100%;
+    }
+    .or-divider::before, .or-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .or-text { font-size: 12px; color: var(--muted); font-weight: 500; letter-spacing: .3px; }
+
+    .btn-social {
+      width: 100%; padding: 14px 22px; background: var(--white);
+      border: 1.5px solid var(--border); border-radius: 50px;
+      font-size: 15px; font-weight: 700; color: var(--text);
+      cursor: pointer; font-family: inherit; transition: border-color .15s, box-shadow .15s;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      margin-bottom: 10px; text-decoration: none;
+    }
+    .btn-social:hover { border-color: #9CA3AF; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .btn-social-icon { width: 22px; height: 22px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+
+    .biz-link-row {
+      width: 100%; border-top: 1px solid var(--border);
+      margin-top: 24px; padding-top: 24px; text-align: center;
+    }
+    .biz-link-row p { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .biz-link-row a { font-size: 14px; color: var(--green); font-weight: 600; text-decoration: none; }
+    .biz-link-row a:hover { text-decoration: underline; }
+
+    /* ── OTP SCREEN (Screen 3) ── */
+    .otp-email-display {
+      font-size: 15px; font-weight: 600; color: var(--text);
+      background: var(--bg); border-radius: 10px; padding: 12px 16px;
+      text-align: center; margin-bottom: 24px; width: 100%;
+    }
+    .otp-inputs {
+      display: flex; gap: 10px; justify-content: center;
+      width: 100%; margin-bottom: 20px;
+    }
+    .otp-digit {
+      width: 52px; height: 60px; border: 1.5px solid var(--border);
+      border-radius: 12px; font-size: 24px; font-weight: 700;
+      text-align: center; font-family: inherit; color: var(--text);
+      outline: none; transition: border-color .15s;
+    }
+    .otp-digit:focus { border-color: var(--text); }
+    .resend-row {
+      text-align: center; font-size: 13px; color: var(--muted);
+      margin-bottom: 20px; width: 100%;
+    }
+    .resend-row button {
+      background: none; border: none; color: var(--green); font-weight: 600;
+      cursor: pointer; font-size: 13px; font-family: inherit; padding: 0;
+    }
+    .resend-row button:hover { text-decoration: underline; }
+
+    /* ── BANNER ── */
+    .banner {
+      border-radius: 10px; padding: 11px 14px; font-size: 13px;
+      font-weight: 500; margin-bottom: 16px; width: 100%; display: none;
+    }
+    .banner.error { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; display: block; }
+    .banner.success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; display: block; }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin .7s linear infinite; display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      display: flex; align-items: center; justify-content: center;
+      gap: 24px; padding: 24px 20px 32px; flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+    .footer-link {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--green); text-decoration: none; font-weight: 500;
+    }
+    .footer-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="top-bar">
+  <button class="back-btn" id="back-btn" onclick="goBack()" aria-label="Go back">←</button>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- ── SCREEN 1: CHOOSE ── -->
+  <div class="screen active" id="screen-choose">
+    <div class="screen-title">Sign up / log in</div>
+    <div class="screen-sub" style="margin-bottom:28px"></div>
+
+    <div class="choice-card" onclick="showCustomerLogin()">
+      <div class="choice-card-text">
+        <div class="choice-card-title">Genoti for customers</div>
+        <div class="choice-card-sub">Discover and book off-peak deals near you</div>
+      </div>
+      <span class="choice-arrow">→</span>
+    </div>
+
+    <div class="choice-card" onclick="window.location.href='register.html'">
+      <div class="choice-card-text">
+        <div class="choice-card-title">Genoti for professionals</div>
+        <div class="choice-card-sub">Manage and grow your business</div>
+      </div>
+      <span class="choice-arrow">→</span>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2: CUSTOMER LOGIN ── -->
+  <div class="screen" id="screen-customer">
+    <div class="screen-title">Genoti for customers</div>
+    <p class="screen-sub">Create an account or log in to book and manage your appointments</p>
+
+    <div class="banner" id="banner-customer"></div>
+
+    <div class="form-group">
+      <label class="form-label" for="login-email">Email</label>
+      <input type="email" id="login-email" class="form-input" placeholder="" autocomplete="email" />
+      <div class="form-hint">We'll send you a verification code</div>
+    </div>
+
+    <button class="btn-continue" id="btn-continue" onclick="sendOtp()">
+      <div class="spinner" id="spinner-otp"></div>
+      <span id="continue-label">Continue</span>
+    </button>
+
+    <div class="or-divider"><span class="or-text">OR</span></div>
+
+    <button class="btn-social" onclick="continueWithPhone()">
+      <div class="btn-social-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+      </div>
+      Continue with mobile
+    </button>
+
+    <button class="btn-social" onclick="continueWithFacebook()">
+      <div class="btn-social-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+      </div>
+      Continue with Facebook
+    </button>
+
+    <button class="btn-social" onclick="continueWithGoogle()">
+      <div class="btn-social-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      </div>
+      Continue with Google
+    </button>
+
+    <div class="biz-link-row">
+      <p>Have a business account?</p>
+      <a href="register.html">Go to Genoti for professionals</a>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 3: OTP VERIFY ── -->
+  <div class="screen" id="screen-otp">
+    <div class="screen-title">Check your email</div>
+    <p class="screen-sub">Enter the 6-digit code we sent to</p>
+    <div class="otp-email-display" id="otp-email-display"></div>
+
+    <div class="banner" id="banner-otp"></div>
+
+    <div class="otp-inputs" id="otp-inputs">
+      <input class="otp-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" />
+      <input class="otp-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" />
+      <input class="otp-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" />
+      <input class="otp-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" />
+      <input class="otp-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" />
+      <input class="otp-digit" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" />
+    </div>
+
+    <div class="resend-row">
+      Didn't receive it? <button onclick="resendOtp()">Resend code</button>
+    </div>
+
+    <button class="btn-continue" id="btn-verify" onclick="verifyOtp()">
+      <div class="spinner" id="spinner-verify"></div>
+      <span id="verify-label">Verify</span>
+    </button>
+  </div>
+
+</div><!-- /main -->
+
+<!-- Footer -->
+<div class="page-footer">
+  <a href="#" class="footer-link">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    English (IN)
+  </a>
+  <a href="#" class="footer-link">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17.01"/></svg>
+    Help and support
+  </a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const sb = supabase.createClient(
+    'https://ijsxmgkzwvamwctbkgjo.supabase.co',
+    'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ'
+  );
+
+  let currentScreen = 'choose';
+  let enteredEmail  = '';
+
+  const screens = {
+    choose:   document.getElementById('screen-choose'),
+    customer: document.getElementById('screen-customer'),
+    otp:      document.getElementById('screen-otp'),
+  };
+
+  function showScreen(name) {
+    Object.values(screens).forEach(s => s.classList.remove('active'));
+    screens[name].classList.add('active');
+    currentScreen = name;
+  }
+
+  function showCustomerLogin() { showScreen('customer'); }
+
+  function goBack() {
+    if (currentScreen === 'customer') showScreen('choose');
+    else if (currentScreen === 'otp')  showScreen('customer');
+    else window.location.href = 'index.html';
+  }
+
+  function showBanner(id, msg, type) {
+    const b = document.getElementById(id);
+    b.textContent = msg;
+    b.className = 'banner ' + type;
+  }
+
+  function setLoading(btnId, spinnerId, labelId, text, loading) {
+    document.getElementById(spinnerId).style.display = loading ? 'block' : 'none';
+    document.getElementById(labelId).textContent = loading ? text : (labelId === 'continue-label' ? 'Continue' : 'Verify');
+    document.getElementById(btnId).disabled = loading;
+  }
+
+  /* ── SEND OTP ── */
+  async function sendOtp() {
+    const email = document.getElementById('login-email').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('login-email').classList.add('error');
+      return showBanner('banner-customer', 'Please enter a valid email address.', 'error');
+    }
+    document.getElementById('login-email').classList.remove('error');
+    setLoading('btn-continue', 'spinner-otp', 'continue-label', 'Sending…', true);
+
+    const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+
+    setLoading('btn-continue', 'spinner-otp', 'continue-label', '', false);
+    if (error) return showBanner('banner-customer', error.message, 'error');
+
+    enteredEmail = email;
+    document.getElementById('otp-email-display').textContent = email;
+    showBanner('banner-customer', '', '');
+    showScreen('otp');
+    setupOtpInputs();
+    document.querySelectorAll('.otp-digit')[0].focus();
+  }
+
+  /* ── OTP INPUT NAVIGATION ── */
+  function setupOtpInputs() {
+    const digits = document.querySelectorAll('.otp-digit');
+    digits.forEach((el, i) => {
+      el.value = '';
+      el.addEventListener('input', () => {
+        el.value = el.value.replace(/\D/g, '').slice(-1);
+        if (el.value && i < digits.length - 1) digits[i + 1].focus();
+        if ([...digits].every(d => d.value)) verifyOtp();
+      });
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !el.value && i > 0) digits[i - 1].focus();
+      });
+    });
+  }
+
+  /* ── VERIFY OTP ── */
+  async function verifyOtp() {
+    const token = [...document.querySelectorAll('.otp-digit')].map(d => d.value).join('');
+    if (token.length < 6) return showBanner('banner-otp', 'Please enter the full 6-digit code.', 'error');
+
+    setLoading('btn-verify', 'spinner-verify', 'verify-label', 'Verifying…', true);
+
+    const { error } = await sb.auth.verifyOtp({ email: enteredEmail, token, type: 'email' });
+
+    setLoading('btn-verify', 'spinner-verify', 'verify-label', '', false);
+    if (error) return showBanner('banner-otp', error.message, 'error');
+
+    showBanner('banner-otp', 'Logged in! Redirecting…', 'success');
+    setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+  }
+
+  /* ── RESEND ── */
+  async function resendOtp() {
+    await sb.auth.signInWithOtp({ email: enteredEmail, options: { shouldCreateUser: true } });
+    showBanner('banner-otp', 'Code resent — check your inbox.', 'success');
+    setupOtpInputs();
+  }
+
+  /* ── SOCIAL AUTH ── */
+  async function continueWithGoogle() {
+    await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/index.html' } });
+  }
+  async function continueWithFacebook() {
+    await sb.auth.signInWithOAuth({ provider: 'facebook', options: { redirectTo: window.location.origin + '/index.html' } });
+  }
+  function continueWithPhone() {
+    showBanner('banner-customer', 'Mobile login coming soon.', 'error');
+  }
+</script>
+</body>
+</html>
