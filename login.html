@@ -37,6 +37,16 @@
       transition: background .15s;
     }
     .back-btn:hover { background: var(--bg); }
+    .back-home-btn {
+      position: fixed; top: 20px; right: 24px; z-index: 100;
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 14px; font-weight: 600; color: var(--text);
+      background: var(--white); border: 1.5px solid #D1D5DB;
+      border-radius: 40px; padding: 9px 18px; cursor: pointer;
+      text-decoration: none; transition: border-color .15s, background .15s;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    }
+    .back-home-btn:hover { border-color: var(--text); background: var(--bg); }
 
     /* ── MAIN ── */
     .main {
@@ -225,6 +235,8 @@
   </style>
 </head>
 <body>
+
+<a href="index.html" class="back-home-btn">← Back to Genoti</a>
 
 <div class="top-bar">
   <button class="back-btn" onclick="goBack()">←</button>
