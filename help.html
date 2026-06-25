@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help & Support — Genoti AI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #1D9E75;
+      --dark-green: #085041;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --white: #ffffff;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text); background: var(--white); line-height: 1.5; }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--white); border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto; padding: 0 24px;
+      height: 64px; display: flex; align-items: center; gap: 32px;
+    }
+    .logo {
+      font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+      color: var(--text); text-decoration: none; flex-shrink: 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .logo span { color: var(--green); }
+    .logo-help {
+      font-size: 14px; font-weight: 500; color: var(--muted);
+      padding-left: 10px; margin-left: 10px;
+      border-left: 1px solid var(--border);
+    }
+    .nav-links { display: flex; gap: 2px; list-style: none; align-items: center; flex: 1; }
+    .nav-links a {
+      text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted);
+      padding: 7px 14px; border-radius: 8px; transition: background .15s, color .15s;
+    }
+    .nav-links a:hover { background: var(--bg); color: var(--text); }
+    .nav-links a.active { color: var(--text); font-weight: 600; }
+
+    .nav-search-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 40px; padding: 8px 18px; cursor: pointer;
+      width: 220px; transition: border-color .15s, box-shadow .15s;
+      font-size: 14px; color: var(--muted);
+    }
+    .nav-search-pill:hover { border-color: #9CA3AF; box-shadow: 0 0 0 3px rgba(29,158,117,.08); }
+    .nav-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+    .btn-menu {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600; color: var(--text);
+      background: var(--white); border: 1.5px solid #D1D5DB;
+      border-radius: 40px; padding: 8px 18px; cursor: pointer;
+      transition: border-color .15s, background .15s; font-family: inherit;
+    }
+    .btn-menu:hover { border-color: var(--text); background: var(--bg); }
+    .menu-icon { display: flex; flex-direction: column; gap: 3.5px; }
+    .menu-icon span { display: block; width: 15px; height: 1.5px; background: var(--text); border-radius: 2px; }
+
+    /* ── SEARCH MODAL ── */
+    .search-overlay {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
+      align-items: flex-start; justify-content: center; padding-top: 80px;
+    }
+    .search-overlay.open { display: flex; }
+    .search-box {
+      background: var(--white); border-radius: 18px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.22);
+      width: 100%; max-width: 640px; overflow: hidden;
+    }
+    .search-input-wrap {
+      display: flex; align-items: center; gap: 12px;
+      padding: 18px 22px; border-bottom: 1px solid var(--border);
+    }
+    .search-input-wrap input {
+      flex: 1; border: none; outline: none;
+      font-size: 17px; color: var(--text); font-family: inherit;
+      background: transparent;
+    }
+    .search-input-wrap input::placeholder { color: var(--muted); }
+    .search-suggestions { padding: 12px 0 8px; }
+    .search-group-label {
+      font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+      color: var(--muted); padding: 6px 22px 4px;
+    }
+    .search-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 22px; font-size: 14px; color: var(--text);
+      cursor: pointer; transition: background .12s;
+    }
+    .search-item:hover { background: var(--bg); }
+    .search-item svg { color: var(--muted); flex-shrink: 0; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 72px 24px 56px;
+      background: var(--bg);
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 52px); font-weight: 800;
+      letter-spacing: -1.5px; color: var(--text); margin-bottom: 14px;
+    }
+    .hero-sub {
+      font-size: 16px; color: var(--muted); max-width: 440px;
+      margin: 0 auto 40px; line-height: 1.65;
+    }
+
+    /* ── HERO SEARCH ── */
+    .hero-search {
+      max-width: 560px; margin: 0 auto 56px;
+      display: flex; align-items: center; gap: 12px;
+      background: var(--white); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 14px 20px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.07);
+      cursor: pointer; transition: border-color .15s, box-shadow .15s;
+    }
+    .hero-search:hover { border-color: var(--green); box-shadow: 0 4px 24px rgba(29,158,117,.12); }
+    .hero-search span { font-size: 15px; color: var(--muted); }
+
+    /* ── SUPPORT CARDS ── */
+    .support-cards {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 20px; max-width: 800px; margin: 0 auto;
+    }
+    .support-card {
+      border-radius: 20px; overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--white);
+      text-decoration: none; color: var(--text);
+      transition: transform .2s, box-shadow .2s;
+      display: block;
+    }
+    .support-card:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,.1); }
+    .card-visual {
+      height: 180px; display: flex; align-items: center; justify-content: center;
+      font-size: 64px; position: relative; overflow: hidden;
+    }
+    .card-visual.customer {
+      background: linear-gradient(135deg, #1D9E75 0%, #0d6b4f 60%, #0a4d38 100%);
+    }
+    .card-visual.merchant {
+      background: linear-gradient(135deg, #111827 0%, #1f2937 60%, #374151 100%);
+    }
+    .card-visual-emoji {
+      font-size: 72px; filter: drop-shadow(0 4px 16px rgba(0,0,0,.3));
+      animation: float 3s ease-in-out infinite;
+    }
+    .card-visual.merchant .card-visual-emoji { animation-delay: .5s; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .card-body { padding: 22px 24px 20px; }
+    .card-body h2 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+    .card-body p { font-size: 14px; color: var(--muted); line-height: 1.5; margin-bottom: 16px; }
+    .card-arrow {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1.5px solid var(--border); display: flex;
+      align-items: center; justify-content: center;
+      transition: background .15s, border-color .15s;
+    }
+    .support-card:hover .card-arrow { background: var(--text); border-color: var(--text); }
+    .support-card:hover .card-arrow svg { stroke: #fff; }
+
+    /* ── POPULAR TOPICS ── */
+    .section { padding: 64px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
+    .section-title { font-size: 26px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 6px; }
+    .section-sub { font-size: 15px; color: var(--muted); margin-bottom: 36px; }
+
+    .topics-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .topic-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 14px; padding: 20px 22px;
+      text-decoration: none; color: var(--text);
+      transition: background .15s, border-color .15s, transform .15s;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .topic-card:hover { background: var(--white); border-color: var(--green); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(29,158,117,.1); }
+    .topic-icon {
+      width: 42px; height: 42px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .topic-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+    .topic-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .topic-count { font-size: 11px; color: var(--green); font-weight: 600; margin-top: 6px; }
+
+    /* ── CATEGORIES ── */
+    .cats-section { background: var(--bg); padding: 64px 24px; border-top: 1px solid var(--border); }
+    .cats-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .cat-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 14px; padding: 22px 20px; text-align: center;
+      text-decoration: none; color: var(--text);
+      transition: border-color .15s, box-shadow .15s, transform .15s;
+    }
+    .cat-card:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(29,158,117,.1); }
+    .cat-emoji { font-size: 32px; margin-bottom: 10px; display: block; }
+    .cat-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .cat-count { font-size: 12px; color: var(--muted); }
+
+    /* ── CONTACT STRIP ── */
+    .contact-strip {
+      background: linear-gradient(135deg, var(--dark-green) 0%, #0f5c42 100%);
+      padding: 56px 24px; text-align: center;
+    }
+    .contact-strip h2 { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -.5px; margin-bottom: 10px; }
+    .contact-strip p { font-size: 15px; color: rgba(255,255,255,.65); margin-bottom: 32px; }
+    .contact-options { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .contact-btn {
+      display: inline-flex; align-items: center; gap: 9px;
+      font-size: 14px; font-weight: 700; border-radius: 12px;
+      padding: 13px 24px; cursor: pointer; text-decoration: none;
+      transition: opacity .15s; font-family: inherit; border: none;
+    }
+    .contact-btn.primary { background: var(--white); color: var(--dark-green); }
+    .contact-btn.primary:hover { opacity: .9; }
+    .contact-btn.outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.3); }
+    .contact-btn.outline:hover { border-color: rgba(255,255,255,.7); }
+
+    /* ── FOOTER ── */
+    footer { background: #111827; color: rgba(255,255,255,.55); padding: 36px 24px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { font-size: 18px; font-weight: 800; color: #fff; text-decoration: none; }
+    .footer-logo span { color: var(--green); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 13px; color: rgba(255,255,255,.45); text-decoration: none; }
+    .footer-links a:hover { color: #fff; }
+
+    @media (max-width: 640px) {
+      .support-cards { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .cats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      ✨ Genoti <span>AI</span>
+      <span class="logo-help">Help center</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="help.html" class="active">Home</a></li>
+      <li><a href="#">Knowledge base</a></li>
+      <li><a href="#">Genoti Academy</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="nav-search-pill" onclick="openSearch()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Search our help center
+      </button>
+      <button class="btn-menu" onclick="window.location='index.html'">
+        ← Back to Genoti
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ SEARCH MODAL ══ -->
+<div class="search-overlay" id="search-overlay" onclick="closeSearch(event)">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search-input" type="text" placeholder="Search our help center…" oninput="filterSearch(this.value)" />
+      <svg onclick="closeSearch()" style="cursor:pointer;color:var(--muted)" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </div>
+    <div class="search-suggestions" id="search-results">
+      <div class="search-group-label">Popular articles</div>
+      <div class="search-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        How to book an appointment
+      </div>
+      <div class="search-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        How to cancel or reschedule
+      </div>
+      <div class="search-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Redeeming rewards & gift cards
+      </div>
+      <div class="search-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        How to list your business on Genoti
+      </div>
+      <div class="search-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Setting up AI agents for your business
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="section-label">Help center</div>
+  <h1>Get support</h1>
+  <p class="hero-sub">Find answers, explore guides, or reach our team — we're here to help you get the most out of Genoti AI.</p>
+
+  <div class="hero-search" onclick="openSearch()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Search our help center…</span>
+  </div>
+
+  <div class="support-cards">
+    <a href="#customers" class="support-card">
+      <div class="card-visual customer">
+        <span class="card-visual-emoji">🛍️</span>
+      </div>
+      <div class="card-body">
+        <h2>For customers</h2>
+        <p>Help with discovering and booking local services through Genoti AI.</p>
+        <div class="card-arrow">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+      </div>
+    </a>
+    <a href="#merchants" class="support-card">
+      <div class="card-visual merchant">
+        <span class="card-visual-emoji">🏪</span>
+      </div>
+      <div class="card-body">
+        <h2>For merchants</h2>
+        <p>Support with running and growing your business on Genoti AI.</p>
+        <div class="card-arrow">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ══ CUSTOMER TOPICS ══ -->
+<section class="section" id="customers">
+  <div class="section-inner">
+    <div class="section-label">For customers</div>
+    <div class="section-title">Booking & account help</div>
+    <div class="section-sub">Everything you need to book, manage, and enjoy services on Genoti.</div>
+    <div class="topics-grid">
+      <a href="#" class="topic-card">
+        <div class="topic-icon" style="background:rgba(29,158,117,.1);">📅</div>
+        <div>
+          <div class="topic-title">Bookings & appointments</div>
+          <div class="topic-desc">How to book, reschedule, cancel, and manage your appointments.</div>
+          <div class="topic-count">8 articles</div>
+        </div>
+      </a>
+      <a href="#" class="topic-card">
+        <div class="topic-icon" style="background:rgba(245,158,11,.1);">🎁</div>
+        <div>
+          <div class="topic-title">Rewards & gift cards</div>
+          <div class="topic-desc">Earning and redeeming points, using gift cards, and loyalty tiers.</div>
+          <div class="topic-count">6 articles</div>
+        </div>
+      </a>
+      <a href="#" class="topic-card">
+        <div class="topic-icon" style="background:rgba(59,130,246,.1);">💳</div>
+        <div>
+          <div class="topic-title">Payments & refunds</div>
+          <div class="topic-desc">Accepted payment methods, how refunds work, and billing queries.</div>
+          <div class="topic-count">7 articles</div>
+        </div>
+      </a>
+      <a href="#" class="topic-card">
+        <div class="topic-icon" style="background:rgba(139,92,246,.1);">👤</div>
+        <div>
+          <div class="topic-title">Account & profile</div>
+          <div class="topic-desc">Updating your profile, changing your password, and managing preferences.</div>
+          <div class="topic-count">5 articles</div>
+        </div>
+      </a>
+      <a href="#" class="topic-card">
+        <div class="topic-icon" style="background:rgba(236,72,153,.1);">❤️</div>
+        <div>
+          <div class="topic-title">Favourites & reviews</div>
+          <div class="topic-desc">Saving your go-to businesses and leaving reviews after visits.</div>
+          <div class="topic-count">4 articles</div>
+        </div>
+      </a>
+      <a href="#" class="topic-card">
+        <div class="topic-icon" style="background:rgba(16,185,129,.1);">💬</div>
+        <div>
+          <div class="topic-title">AI Negotiator</div>
+          <div class="topic-desc">Using the AI Negotiator to get the best deal from merchants.</div>
+          <div class="topic-count">3 articles</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MERCHANT TOPICS ══ -->
+<section class="section" id="merchants" style="background:var(--bg);border-top:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-label">For merchants</div>
+    <div class="section-title">Running your business</div>
+    <div class="section-sub">Guides to help you set up, manage, and grow with Genoti AI.</div>
+    <div class="topics-grid">
+      <a href="#" class="topic-card" style="background:var(--white);">
+        <div class="topic-icon" style="background:rgba(29,158,117,.1);">🚀</div>
+        <div>
+          <div class="topic-title">Getting started</div>
+          <div class="topic-desc">Listing your business, setting up your profile, and onboarding guide.</div>
+          <div class="topic-count">10 articles</div>
+        </div>
+      </a>
+      <a href="#" class="topic-card" style="background:var(--white);">
+        <div class="topic-icon" style="background:rgba(59,130,246,.1);">📅</div>
+        <div>
+          <div class="topic-title">Booking management</div>
+          <div class="topic-desc">Managing your calendar, staff schedules, and appointment slots.</div>
+          <div class="topic-count">12 articles</div>
+        </div>
+      </a>
+      <a href="#" class="topic-card" style="background:var(--white);">
+        <div class="topic-icon" style="background:rgba(139,92,246,.1);">🤖</div>
+        <div>
+          <div class="topic-title">AI Agents setup</div>
+          <div class="topic-desc">Activating and configuring your AI receptionist, upsell, and marketing agents.</div>
+          <div class="topic-count">9 articles</div>
+        </div>
+      </a>
+      <a href="#" class="topic-card" style="background:var(--white);">
+        <div class="topic-icon" style="background:rgba(245,158,11,.1);">📣</div>
+        <div>
+          <div class="topic-title">Marketing & campaigns</div>
+          <div class="topic-desc">Running WhatsApp campaigns, off-peak deals, and loyalty programs.</div>
+          <div class="topic-count">8 articles</div>
+        </div>
+      </a>
+      <a href="#" class="topic-card" style="background:var(--white);">
+        <div class="topic-icon" style="background:rgba(20,184,166,.1);">📊</div>
+        <div>
+          <div class="topic-title">Analytics & reports</div>
+          <div class="topic-desc">Understanding your revenue, bookings, and customer insights dashboard.</div>
+          <div class="topic-count">6 articles</div>
+        </div>
+      </a>
+      <a href="#" class="topic-card" style="background:var(--white);">
+        <div class="topic-icon" style="background:rgba(239,68,68,.1);">💰</div>
+        <div>
+          <div class="topic-title">Billing & pricing</div>
+          <div class="topic-desc">Your subscription plan, invoices, and upgrading or downgrading.</div>
+          <div class="topic-count">5 articles</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GENOTI ACADEMY ══ -->
+<section class="section" style="border-top:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-label">Genoti Academy</div>
+    <div class="section-title">Learn at your own pace</div>
+    <div class="section-sub">Video guides and walkthroughs to master every feature.</div>
+    <div class="cats-grid">
+      <a href="#" class="cat-card">
+        <span class="cat-emoji">🎬</span>
+        <div class="cat-name">Quick start videos</div>
+        <div class="cat-count">6 videos</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-emoji">🤖</span>
+        <div class="cat-name">AI Agents training</div>
+        <div class="cat-count">8 videos</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-emoji">📈</span>
+        <div class="cat-name">Grow your revenue</div>
+        <div class="cat-count">5 videos</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-emoji">📣</span>
+        <div class="cat-name">Marketing mastery</div>
+        <div class="cat-count">7 videos</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-emoji">⭐</span>
+        <div class="cat-name">Reputation management</div>
+        <div class="cat-count">4 videos</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-emoji">💡</span>
+        <div class="cat-name">Tips & best practices</div>
+        <div class="cat-count">9 videos</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT STRIP ══ -->
+<div class="contact-strip">
+  <h2>Still need help?</h2>
+  <p>Our support team is available 7 days a week to get you sorted fast.</p>
+  <div class="contact-options">
+    <a href="#" class="contact-btn primary">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Chat with us
+    </a>
+    <a href="mailto:support@genoti.ai" class="contact-btn outline">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Email support
+    </a>
+    <a href="https://wa.me/919999999999" class="contact-btn outline">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      WhatsApp us
+    </a>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">✨ Genoti <span>AI</span></a>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Status</a>
+      <a href="index.html">Back to marketplace</a>
+    </div>
+    <span style="font-size:12px;">© 2026 OffPeak Technologies Pvt. Ltd.</span>
+  </div>
+</footer>
+
+<script>
+  function openSearch() {
+    document.getElementById('search-overlay').classList.add('open');
+    setTimeout(() => document.getElementById('search-input').focus(), 50);
+  }
+  function closeSearch(e) {
+    if (!e || e.target === document.getElementById('search-overlay') || e.currentTarget?.tagName === 'svg') {
+      document.getElementById('search-overlay').classList.remove('open');
+    }
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('search-overlay').classList.remove('open'); });
+
+  const ARTICLES = [
+    'How to book an appointment',
+    'How to cancel or reschedule',
+    'Redeeming rewards & gift cards',
+    'How to list your business on Genoti',
+    'Setting up AI agents for your business',
+    'Managing your loyalty points',
+    'Updating your profile and password',
+    'How refunds work',
+    'Using the AI Negotiator',
+    'Saving favourite businesses',
+    'Running WhatsApp campaigns',
+    'Setting up your booking calendar',
+  ];
+
+  function filterSearch(q) {
+    const results = document.getElementById('search-results');
+    if (!q.trim()) {
+      results.innerHTML = `<div class="search-group-label">Popular articles</div>` +
+        ARTICLES.slice(0,5).map(a => searchItem(a)).join('');
+      return;
+    }
+    const matches = ARTICLES.filter(a => a.toLowerCase().includes(q.toLowerCase()));
+    results.innerHTML = matches.length
+      ? `<div class="search-group-label">Results for "${q}"</div>` + matches.map(a => searchItem(a)).join('')
+      : `<div style="padding:20px 22px;font-size:14px;color:var(--muted)">No results found for "<strong>${q}</strong>"</div>`;
+  }
+
+  function searchItem(text) {
+    return `<div class="search-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      ${text}
+    </div>`;
+  }
+</script>
+</body>
+</html>
