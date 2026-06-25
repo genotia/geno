@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Activity — Genoti AI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #1D9E75;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F3F4F6;
+      --white: #ffffff;
+      --active-bg: #ECFDF5;
+      --active-text: #1D9E75;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 260px; min-height: 100vh; flex-shrink: 0;
+      background: var(--white); border-right: 1px solid var(--border);
+      padding: 32px 16px; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 18px; font-weight: 800; color: var(--text);
+      text-decoration: none; margin-bottom: 28px; padding: 0 8px;
+    }
+    .sidebar-logo span { color: var(--green); }
+    .sidebar-username {
+      font-size: 18px; font-weight: 800; color: var(--text);
+      padding: 0 12px; margin-bottom: 16px;
+    }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 12px; border-radius: 10px; font-size: 15px;
+      font-weight: 500; color: var(--text); text-decoration: none;
+      cursor: pointer; background: none; border: none; width: 100%;
+      text-align: left; font-family: inherit; transition: background .12s;
+    }
+    .sidebar-link:hover { background: var(--bg); }
+    .sidebar-link.active { background: var(--active-bg); color: var(--active-text); font-weight: 600; }
+    .sidebar-link svg { flex-shrink: 0; width: 20px; height: 20px; }
+    .sidebar-link.active svg { stroke: var(--active-text); }
+
+    /* ── MAIN ── */
+    .main { flex: 1; padding: 40px 36px; overflow-y: auto; min-height: 100vh; }
+
+    .page-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .page-title { font-size: 28px; font-weight: 800; letter-spacing: -.5px; }
+    .icon-btn {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: none; border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--muted); transition: background .15s, border-color .15s, color .15s;
+      text-decoration: none; flex-shrink: 0;
+    }
+    .icon-btn:hover { background: var(--text); border-color: var(--text); color: var(--white); }
+    .icon-btn svg { width: 17px; height: 17px; }
+
+    /* ── FILTER TABS ── */
+    .filter-tabs {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 40px;
+    }
+    .tab-btn {
+      padding: 9px 20px; border-radius: 50px; font-size: 14px; font-weight: 600;
+      cursor: pointer; font-family: inherit; border: 1.5px solid var(--border);
+      background: var(--white); color: var(--text); transition: all .15s;
+    }
+    .tab-btn:hover { border-color: #9CA3AF; }
+    .tab-btn.active {
+      background: var(--text); color: var(--white); border-color: var(--text);
+    }
+
+    /* ── CONTENT PANELS ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 80px 20px; text-align: center;
+    }
+    .empty-icon {
+      width: 72px; height: 72px; margin-bottom: 20px;
+    }
+    .empty-title {
+      font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 8px;
+    }
+    .empty-sub {
+      font-size: 14px; color: var(--muted); margin-bottom: 28px; max-width: 300px; line-height: 1.6;
+    }
+    .btn-search-venues {
+      padding: 11px 28px; border-radius: 50px; font-size: 14px; font-weight: 600;
+      cursor: pointer; font-family: inherit; border: 1.5px solid var(--border);
+      background: var(--white); color: var(--text); transition: all .15s;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-search-venues:hover { background: var(--text); color: var(--white); border-color: var(--text); }
+
+    /* ── APPOINTMENT CARDS (when data exists) ── */
+    .appt-card {
+      background: var(--white); border-radius: 16px; padding: 20px 22px;
+      margin-bottom: 12px; display: flex; align-items: center; gap: 18px;
+      border: 1px solid var(--border); transition: box-shadow .15s;
+    }
+    .appt-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); }
+    .appt-date-box {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 52px; height: 56px; border-radius: 12px; flex-shrink: 0;
+      background: var(--active-bg); color: var(--green);
+    }
+    .appt-date-day { font-size: 20px; font-weight: 800; line-height: 1; }
+    .appt-date-mon { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+    .appt-info { flex: 1; }
+    .appt-service { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .appt-venue   { font-size: 13px; color: var(--muted); }
+    .appt-badge {
+      font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 50px;
+    }
+    .appt-badge.upcoming { background: #ECFDF5; color: #065F46; }
+    .appt-badge.completed { background: var(--bg); color: var(--muted); }
+    .appt-badge.cancelled { background: #FEF2F2; color: #B91C1C; }
+
+    /* search overlay */
+    .search-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4);
+      z-index: 900; align-items: flex-start; justify-content: center; padding-top: 80px;
+    }
+    .search-overlay.open { display: flex; }
+    .search-box {
+      background: var(--white); border-radius: 16px; padding: 8px 8px 8px 20px;
+      width: 100%; max-width: 520px; display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    }
+    .search-input {
+      flex: 1; border: none; outline: none; font-size: 16px;
+      font-family: inherit; color: var(--text); background: none;
+    }
+    .search-close {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--bg); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: var(--muted); flex-shrink: 0;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { padding: 24px 16px; }
+    }
+    @media (max-width: 600px) {
+      .filter-tabs { gap: 6px; }
+      .tab-btn { padding: 8px 14px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<div class="sidebar">
+  <a href="index.html" class="sidebar-logo">✨ Genoti <span>AI</span></a>
+  <div class="sidebar-username" id="sidebar-name">—</div>
+  <nav class="sidebar-nav">
+    <a href="profile.html" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </a>
+    <a href="activity.html" class="sidebar-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Activity
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M7 15h.01M12 15h.01"/></svg>
+      Wallet
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Messages
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Favourites
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Forms
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+  </nav>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">Activity</div>
+    <div style="display:flex;gap:10px">
+      <button class="icon-btn" onclick="openSearch()" title="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <a href="index.html" class="icon-btn" title="Close">✕</a>
+    </div>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="filter-tabs">
+    <button class="tab-btn active" onclick="switchTab('appointments', this)">Appointments</button>
+    <button class="tab-btn" onclick="switchTab('giftcards', this)">Gift Cards</button>
+    <button class="tab-btn" onclick="switchTab('memberships', this)">Memberships</button>
+    <button class="tab-btn" onclick="switchTab('products', this)">Products</button>
+    <button class="tab-btn" onclick="switchTab('packages', this)">Packages</button>
+  </div>
+
+  <!-- ── APPOINTMENTS TAB ── -->
+  <div class="tab-panel active" id="tab-appointments">
+    <div id="appt-list"></div>
+    <div class="empty-state" id="appt-empty" style="display:none">
+      <!-- Gradient calendar SVG -->
+      <svg class="empty-icon" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <linearGradient id="cal-grad" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#818CF8"/>
+            <stop offset="100%" stop-color="#6366F1"/>
+          </linearGradient>
+        </defs>
+        <rect x="6" y="14" width="60" height="52" rx="10" fill="url(#cal-grad)" opacity=".15"/>
+        <rect x="6" y="14" width="60" height="22" rx="10" fill="url(#cal-grad)"/>
+        <rect x="6" y="26" width="60" height="10" fill="url(#cal-grad)"/>
+        <rect x="6" y="26" width="60" height="40" rx="10" fill="white" opacity=".95"/>
+        <rect x="6" y="26" width="60" height="40" rx="10" fill="url(#cal-grad)" opacity=".08"/>
+        <line x1="22" y1="8" x2="22" y2="22" stroke="#818CF8" stroke-width="4" stroke-linecap="round"/>
+        <line x1="50" y1="8" x2="50" y2="22" stroke="#818CF8" stroke-width="4" stroke-linecap="round"/>
+        <rect x="18" y="38" width="12" height="12" rx="3" fill="url(#cal-grad)" opacity=".6"/>
+        <rect x="36" y="38" width="12" height="12" rx="3" fill="url(#cal-grad)" opacity=".3"/>
+        <rect x="18" y="54" width="12" height="6" rx="3" fill="url(#cal-grad)" opacity=".2"/>
+      </svg>
+      <div class="empty-title">No appointments</div>
+      <div class="empty-sub">Your upcoming and past appointments will appear here</div>
+      <a href="index.html" class="btn-search-venues">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Search venues
+      </a>
+    </div>
+  </div>
+
+  <!-- ── GIFT CARDS TAB ── -->
+  <div class="tab-panel" id="tab-giftcards">
+    <div class="empty-state">
+      <svg class="empty-icon" viewBox="0 0 72 72" fill="none">
+        <defs><linearGradient id="gift-grad" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#34D399"/><stop offset="100%" stop-color="#1D9E75"/></linearGradient></defs>
+        <rect x="8" y="24" width="56" height="38" rx="8" fill="url(#gift-grad)" opacity=".15"/>
+        <rect x="8" y="24" width="56" height="38" rx="8" stroke="url(#gift-grad)" stroke-width="2.5"/>
+        <line x1="36" y1="24" x2="36" y2="62" stroke="url(#gift-grad)" stroke-width="2" stroke-dasharray="4 3"/>
+        <path d="M36 24c0 0-6-10 0-14 4-2.5 8 2 6 7" stroke="url(#gift-grad)" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M36 24c0 0 6-10 0-14-4-2.5-8 2-6 7" stroke="url(#gift-grad)" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div class="empty-title">No gift cards</div>
+      <div class="empty-sub">Gift cards you purchase or receive will appear here</div>
+      <a href="index.html" class="btn-search-venues">Search venues</a>
+    </div>
+  </div>
+
+  <!-- ── MEMBERSHIPS TAB ── -->
+  <div class="tab-panel" id="tab-memberships">
+    <div class="empty-state">
+      <svg class="empty-icon" viewBox="0 0 72 72" fill="none">
+        <defs><linearGradient id="mem-grad" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#F472B6"/><stop offset="100%" stop-color="#A855F7"/></linearGradient></defs>
+        <circle cx="36" cy="36" r="28" fill="url(#mem-grad)" opacity=".12"/>
+        <circle cx="36" cy="36" r="20" fill="url(#mem-grad)" opacity=".2"/>
+        <path d="M36 20l3.6 7.4 8.1 1.2-5.9 5.7 1.4 8.1L36 38.5l-7.2 3.8 1.4-8.1-5.9-5.7 8.1-1.2z" fill="url(#mem-grad)"/>
+      </svg>
+      <div class="empty-title">No memberships</div>
+      <div class="empty-sub">Your active and past memberships will show here</div>
+      <a href="index.html" class="btn-search-venues">Search venues</a>
+    </div>
+  </div>
+
+  <!-- ── PRODUCTS TAB ── -->
+  <div class="tab-panel" id="tab-products">
+    <div class="empty-state">
+      <svg class="empty-icon" viewBox="0 0 72 72" fill="none">
+        <defs><linearGradient id="prod-grad" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FBBF24"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs>
+        <rect x="14" y="28" width="44" height="34" rx="8" fill="url(#prod-grad)" opacity=".15"/>
+        <path d="M24 28V22a12 12 0 0 1 24 0v6" stroke="url(#prod-grad)" stroke-width="3" stroke-linecap="round"/>
+        <rect x="14" y="28" width="44" height="34" rx="8" stroke="url(#prod-grad)" stroke-width="2.5"/>
+        <circle cx="36" cy="45" r="5" fill="url(#prod-grad)" opacity=".7"/>
+      </svg>
+      <div class="empty-title">No products</div>
+      <div class="empty-sub">Products you've ordered will appear here</div>
+      <a href="index.html" class="btn-search-venues">Search venues</a>
+    </div>
+  </div>
+
+  <!-- ── PACKAGES TAB ── -->
+  <div class="tab-panel" id="tab-packages">
+    <div class="empty-state">
+      <svg class="empty-icon" viewBox="0 0 72 72" fill="none">
+        <defs><linearGradient id="pkg-grad" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#60A5FA"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient></defs>
+        <rect x="10" y="32" width="52" height="30" rx="8" fill="url(#pkg-grad)" opacity=".15"/>
+        <rect x="10" y="32" width="52" height="30" rx="8" stroke="url(#pkg-grad)" stroke-width="2.5"/>
+        <path d="M22 32V24a14 14 0 0 1 28 0v8" stroke="url(#pkg-grad)" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="10" y1="44" x2="62" y2="44" stroke="url(#pkg-grad)" stroke-width="2" opacity=".4"/>
+        <rect x="29" y="38" width="14" height="12" rx="4" fill="url(#pkg-grad)" opacity=".6"/>
+      </svg>
+      <div class="empty-title">No packages</div>
+      <div class="empty-sub">Packages you've purchased will show here</div>
+      <a href="index.html" class="btn-search-venues">Search venues</a>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ── SEARCH OVERLAY ── -->
+<div class="search-overlay" id="search-overlay" onclick="closeSearchOnBg(event)">
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="search-input" id="search-input" placeholder="Search venues, services…" />
+    <button class="search-close" onclick="closeSearch()">✕</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/md5@2.3.0/dist/md5.min.js"></script>
+<script>
+  const sb = supabase.createClient(
+    'https://ijsxmgkzwvamwctbkgjo.supabase.co',
+    'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ'
+  );
+
+  /* ── AUTH GUARD + LOAD NAME ── */
+  sb.auth.getSession().then(({ data: { session } }) => {
+    if (!session) { location.href = 'login.html'; return; }
+    const m    = session.user.user_metadata || {};
+    const name = (m.full_name || ((m.first_name || '') + ' ' + (m.last_name || '')).trim()
+                  || session.user.email.split('@')[0]).trim();
+    document.getElementById('sidebar-name').textContent = name;
+    loadAppointments(session.user.id);
+  });
+
+  /* ── TABS ── */
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+  }
+
+  /* ── LOAD APPOINTMENTS FROM SUPABASE ── */
+  async function loadAppointments(userId) {
+    const { data, error } = await sb
+      .from('appointments')
+      .select('*')
+      .eq('user_id', userId)
+      .order('date', { ascending: false });
+
+    const list  = document.getElementById('appt-list');
+    const empty = document.getElementById('appt-empty');
+
+    if (error || !data || data.length === 0) {
+      list.style.display  = 'none';
+      empty.style.display = 'flex';
+      empty.style.flexDirection = 'column';
+      return;
+    }
+
+    empty.style.display = 'none';
+    list.innerHTML = data.map(a => {
+      const dt  = new Date(a.date);
+      const day = dt.getDate();
+      const mon = dt.toLocaleString('en-IN', { month: 'short' });
+      const badge = a.status === 'upcoming'  ? 'upcoming'
+                  : a.status === 'cancelled' ? 'cancelled' : 'completed';
+      const label = badge[0].toUpperCase() + badge.slice(1);
+      return `
+        <div class="appt-card">
+          <div class="appt-date-box">
+            <div class="appt-date-day">${day}</div>
+            <div class="appt-date-mon">${mon}</div>
+          </div>
+          <div class="appt-info">
+            <div class="appt-service">${a.service || 'Appointment'}</div>
+            <div class="appt-venue">${a.venue || ''}</div>
+          </div>
+          <span class="appt-badge ${badge}">${label}</span>
+        </div>`;
+    }).join('');
+  }
+
+  /* ── SEARCH ── */
+  function openSearch() {
+    document.getElementById('search-overlay').classList.add('open');
+    setTimeout(() => document.getElementById('search-input').focus(), 80);
+  }
+  function closeSearch() {
+    document.getElementById('search-overlay').classList.remove('open');
+    document.getElementById('search-input').value = '';
+  }
+  function closeSearchOnBg(e) {
+    if (e.target === document.getElementById('search-overlay')) closeSearch();
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
+</script>
+</body>
+</html>
