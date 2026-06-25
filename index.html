@@ -338,6 +338,7 @@
       cursor: pointer;
       transition: border-color .15s, box-shadow .15s;
       font-family: inherit;
+      text-decoration: none;
     }
     .btn-get-app:hover { border-color: #9CA3AF; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
 
@@ -1340,10 +1341,10 @@
 
   <p class="hero-stats"><strong id="deal-count-hero">1,247</strong> appointments booked today</p>
 
-  <button class="btn-get-app">
+  <a href="download-the-app.html" class="btn-get-app">
     Get the app
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h.01M14 17h3v3M17 14h3"/></svg>
-  </button>
+  </a>
 
   <div class="categories" style="margin-top:36px">
     <button class="pill active" data-cat="All" onclick="setActive(this, 'All')">🏷️ All</button>
