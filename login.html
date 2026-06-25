@@ -408,10 +408,20 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-  const sb = supabase.createClient(
-    'https://ijsxmgkzwvamwctbkgjo.supabase.co',
-    'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ'
-  );
+  const SUPABASE_URL = 'https://ijsxmgkzwvamwctbkgjo.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ';
+  const EDGE        = SUPABASE_URL + '/functions/v1';
+
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  async function callEdge(path, body) {
+    const res = await fetch(EDGE + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+      body: JSON.stringify(body),
+    });
+    return res.json();
+  }
 
   let currentScreen = 'choose';
   let enteredEmail  = '';
@@ -443,7 +453,7 @@
     document.getElementById(btnId).disabled      = on;
   }
 
-  /* ─ SEND OTP ─ */
+  /* ─ SEND OTP via Mailgun edge function ─ */
   async function sendOtp() {
     const email = document.getElementById('login-email').value.trim();
     const inp   = document.getElementById('login-email');
@@ -454,10 +464,10 @@
     inp.classList.remove('err');
     setLoading('btn-send','sp-send','lbl-send','Sending…', true);
 
-    const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+    const res = await callEdge('/send-otp', { email });
     setLoading('btn-send','sp-send','lbl-send','', false);
 
-    if (error) return showBanner('banner-email', error.message, 'error');
+    if (res.error) return showBanner('banner-email', res.error, 'error');
 
     enteredEmail = email;
     document.getElementById('otp-sub').textContent = 'We sent you a code to ' + email;
@@ -500,19 +510,30 @@
     });
   }
 
-  /* ─ VERIFY OTP ─ */
+  /* ─ VERIFY OTP via edge function, then establish Supabase session ─ */
   async function verifyOtp() {
-    const token = [...document.querySelectorAll('.otp-digit')].map(d => d.value).join('');
-    if (token.length < 6) return;
+    const code = [...document.querySelectorAll('.otp-digit')].map(d => d.value).join('');
+    if (code.length < 6) return;
 
     setLoading('btn-verify','sp-verify','lbl-verify','Verifying…', true);
-    const { data, error } = await sb.auth.verifyOtp({ email: enteredEmail, token, type: 'email' });
+
+    const res = await callEdge('/verify-otp', { email: enteredEmail, code });
+
+    if (res.error) {
+      setLoading('btn-verify','sp-verify','lbl-verify','', false);
+      return showBanner('banner-otp', res.error, 'error');
+    }
+
+    // Exchange the token_hash for a real Supabase session
+    const { data, error: sessErr } = await sb.auth.verifyOtp({
+      token_hash: res.token_hash,
+      type: 'magiclink',
+    });
     setLoading('btn-verify','sp-verify','lbl-verify','', false);
 
-    if (error) return showBanner('banner-otp', error.message, 'error');
+    if (sessErr) return showBanner('banner-otp', sessErr.message, 'error');
 
-    const meta = data.user?.user_metadata || {};
-    if (!meta.first_name) {
+    if (res.is_new_user) {
       document.getElementById('f-email-ro').value = enteredEmail;
       showScreen('signup');
     } else {
@@ -524,7 +545,8 @@
   /* ─ RESEND OTP ─ */
   async function resendOtp() {
     showBanner('banner-otp','','');
-    await sb.auth.signInWithOtp({ email: enteredEmail, options: { shouldCreateUser: true } });
+    const res = await callEdge('/send-otp', { email: enteredEmail });
+    if (res.error) return showBanner('banner-otp', res.error, 'error');
     showBanner('banner-otp','Code resent — check your inbox.','success');
     initOtpInputs();
   }
