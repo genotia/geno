@@ -1282,6 +1282,7 @@
         </div></li>
     </ul>
     <div class="nav-right">
+      <a href="login.html" class="btn-login" id="nav-login-link">Log in</a>
       <a href="register.html" class="btn-pill" id="nav-list-biz">List your business</a>
       <div class="menu-dropdown-wrap">
 
@@ -1737,10 +1738,11 @@
     const fullName = (meta.full_name || (first + ' ' + last).trim() || user.email.split('@')[0]).trim();
     const initial  = fullName[0]?.toUpperCase() || '?';
 
-    // Swap Menu pill → Avatar pill
-    document.getElementById('menu-toggle-btn').style.display = 'none';
-    document.getElementById('menu-dropdown').style.display   = 'none';
+    // Swap Menu pill → Avatar pill; hide Log in link
+    document.getElementById('menu-toggle-btn').style.display  = 'none';
+    document.getElementById('menu-dropdown').style.display    = 'none';
     document.getElementById('avatar-toggle-btn').style.display = 'inline-flex';
+    document.getElementById('nav-login-link').style.display   = 'none';
 
     // Populate name in dropdown
     document.getElementById('profile-name').textContent = fullName || user.email;
@@ -1758,6 +1760,7 @@
 
   function setNavGuest() {
     document.getElementById('menu-toggle-btn').style.display  = '';
+    document.getElementById('nav-login-link').style.display   = '';
     document.getElementById('avatar-toggle-btn').style.display = 'none';
     document.getElementById('profile-dropdown').classList.remove('open');
   }
