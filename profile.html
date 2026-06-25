@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — Genoti AI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #1D9E75;
+      --dark-green: #085041;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F3F4F6;
+      --white: #ffffff;
+      --active-bg: #ECFDF5;
+      --active-text: #1D9E75;
+      --error: #EF4444;
+      --icon-bg: #EEF2FF;
+      --icon-color: #6366F1;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 260px; min-height: 100vh; flex-shrink: 0;
+      background: var(--white); border-right: 1px solid var(--border);
+      padding: 32px 16px; position: sticky; top: 0; height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 18px; font-weight: 800; color: var(--text);
+      text-decoration: none; margin-bottom: 28px; padding: 0 8px;
+    }
+    .sidebar-logo span { color: var(--green); }
+    .sidebar-username {
+      font-size: 18px; font-weight: 800; color: var(--text);
+      padding: 0 12px; margin-bottom: 16px; line-height: 1.3;
+    }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 12px; border-radius: 10px; font-size: 15px;
+      font-weight: 500; color: var(--text); text-decoration: none;
+      cursor: pointer; background: none; border: none; width: 100%;
+      text-align: left; font-family: inherit; transition: background .12s;
+    }
+    .sidebar-link:hover { background: var(--bg); }
+    .sidebar-link.active {
+      background: var(--active-bg); color: var(--active-text); font-weight: 600;
+    }
+    .sidebar-link svg { flex-shrink: 0; width: 20px; height: 20px; }
+    .sidebar-link.active svg { stroke: var(--active-text); }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      flex: 1; padding: 40px 36px; overflow-y: auto; min-height: 100vh;
+    }
+    .page-title {
+      font-size: 28px; font-weight: 800; letter-spacing: -.5px;
+      margin-bottom: 28px; color: var(--text);
+    }
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(340px, 560px) minmax(280px, 1fr);
+      gap: 20px; align-items: start;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--white); border-radius: 18px;
+      padding: 28px 28px 32px; position: relative;
+    }
+
+    /* ── PROFILE CARD ── */
+    .edit-btn {
+      position: absolute; top: 24px; right: 24px;
+      font-size: 14px; font-weight: 600; color: var(--green);
+      background: none; border: none; cursor: pointer; font-family: inherit;
+      padding: 4px 8px; border-radius: 6px; transition: background .12s;
+    }
+    .edit-btn:hover { background: var(--active-bg); }
+
+    .avatar-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      margin-bottom: 20px; position: relative; width: fit-content;
+      margin-left: auto; margin-right: auto;
+    }
+    .avatar-circle {
+      width: 88px; height: 88px; border-radius: 50%; background: var(--green);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px; font-weight: 800; color: #fff; overflow: hidden;
+      position: relative; flex-shrink: 0;
+    }
+    .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar-edit-btn {
+      position: absolute; bottom: 2px; right: -4px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--white); border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.12);
+      transition: background .12s;
+    }
+    .avatar-edit-btn:hover { background: var(--bg); }
+    .avatar-edit-btn svg { width: 13px; height: 13px; color: var(--text); }
+    #avatar-upload { display: none; }
+
+    .profile-name-display {
+      font-size: 22px; font-weight: 800; text-align: center;
+      margin-bottom: 20px; letter-spacing: -.3px;
+    }
+    .profile-divider { height: 1px; background: var(--border); margin-bottom: 24px; }
+
+    /* fields */
+    .field-row { margin-bottom: 20px; }
+    .field-label { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .field-value { font-size: 14px; color: var(--muted); }
+    .field-value.empty { color: #D1D5DB; }
+    .field-input {
+      width: 100%; padding: 10px 14px; font-size: 14px;
+      border: 1.5px solid var(--border); border-radius: 10px;
+      outline: none; font-family: inherit; color: var(--text);
+      background: var(--white); transition: border-color .15s; display: none;
+    }
+    .field-input:focus { border-color: var(--green); }
+
+    .edit-actions {
+      display: none; gap: 10px; margin-top: 24px;
+    }
+    .btn-save {
+      flex: 1; padding: 12px; background: var(--text); color: var(--white);
+      border: none; border-radius: 10px; font-size: 14px; font-weight: 700;
+      cursor: pointer; font-family: inherit; transition: opacity .15s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-save:hover { opacity: .85; }
+    .btn-cancel {
+      flex: 1; padding: 12px; background: none; color: var(--text);
+      border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px;
+      font-weight: 600; cursor: pointer; font-family: inherit; transition: background .12s;
+    }
+    .btn-cancel:hover { background: var(--bg); }
+
+    /* ── ADDRESSES CARD ── */
+    .card-title {
+      font-size: 18px; font-weight: 800; margin-bottom: 18px; color: var(--text);
+    }
+    .address-item {
+      display: flex; align-items: center; gap: 14px;
+      border: 1.5px solid var(--border); border-radius: 14px;
+      padding: 16px 18px; margin-bottom: 10px; cursor: pointer;
+      transition: border-color .15s; text-decoration: none; color: var(--text);
+    }
+    .address-item:hover { border-color: #9CA3AF; }
+    .address-icon {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--icon-bg); display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0;
+    }
+    .address-icon svg { width: 20px; height: 20px; color: var(--icon-color); }
+    .address-text-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .address-text-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .btn-add-address {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1.5px solid var(--text); border-radius: 50px;
+      padding: 9px 20px; font-size: 14px; font-weight: 600;
+      cursor: pointer; background: none; font-family: inherit;
+      margin-top: 6px; transition: background .12s, color .12s;
+      color: var(--text);
+    }
+    .btn-add-address:hover { background: var(--text); color: var(--white); }
+
+    /* ── BANNER ── */
+    .banner {
+      border-radius: 10px; padding: 10px 14px; font-size: 13px;
+      font-weight: 500; margin-bottom: 14px; display: none;
+    }
+    .banner.error   { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; display: block; }
+    .banner.success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; display: block; }
+
+    .spinner {
+      width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin .7s linear infinite; display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { padding: 24px 16px; }
+      .content-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .main { padding: 20px 12px; }
+      .card { padding: 20px 18px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<div class="sidebar">
+  <a href="index.html" class="sidebar-logo">✨ Genoti <span>AI</span></a>
+  <div class="sidebar-username" id="sidebar-name">—</div>
+  <nav class="sidebar-nav">
+    <a href="profile.html" class="sidebar-link active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Activity
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M7 15h.01M12 15h.01"/></svg>
+      Wallet
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Messages
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Favourites
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Forms
+    </a>
+    <a href="#" class="sidebar-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+  </nav>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+  <div class="page-title">Profile</div>
+
+  <div class="content-grid">
+
+    <!-- ── PROFILE CARD ── -->
+    <div class="card">
+      <button class="edit-btn" id="edit-btn" onclick="toggleEdit()">Edit</button>
+
+      <div class="banner" id="banner"></div>
+
+      <!-- Avatar -->
+      <div class="avatar-wrap">
+        <div class="avatar-circle" id="avatar-circle">
+          <span id="avatar-initial">?</span>
+        </div>
+        <label class="avatar-edit-btn" for="avatar-upload" title="Change photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </label>
+        <input type="file" id="avatar-upload" accept="image/*" onchange="uploadAvatar(this)" />
+      </div>
+
+      <div class="profile-name-display" id="profile-fullname">—</div>
+      <div class="profile-divider"></div>
+
+      <!-- Fields -->
+      <div class="field-row">
+        <div class="field-label">First name</div>
+        <div class="field-value" id="v-first">—</div>
+        <input class="field-input" id="i-first" type="text" placeholder="First name" />
+      </div>
+      <div class="field-row">
+        <div class="field-label">Last name</div>
+        <div class="field-value" id="v-last">—</div>
+        <input class="field-input" id="i-last" type="text" placeholder="Last name" />
+      </div>
+      <div class="field-row">
+        <div class="field-label">Phone number</div>
+        <div class="field-value" id="v-phone">—</div>
+        <input class="field-input" id="i-phone" type="tel" placeholder="+91 98765 43210" />
+      </div>
+      <div class="field-row">
+        <div class="field-label">Email</div>
+        <div class="field-value" id="v-email">—</div>
+        <input class="field-input" id="i-email" type="email" placeholder="Email" />
+      </div>
+      <div class="field-row">
+        <div class="field-label">Date of birth</div>
+        <div class="field-value" id="v-dob">—</div>
+        <input class="field-input" id="i-dob" type="date" />
+      </div>
+      <div class="field-row">
+        <div class="field-label">Gender</div>
+        <div class="field-value" id="v-gender">—</div>
+        <select class="field-input" id="i-gender">
+          <option value="">Select</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="non-binary">Non-binary</option>
+          <option value="prefer-not">Prefer not to say</option>
+        </select>
+      </div>
+
+      <div class="edit-actions" id="edit-actions">
+        <button class="btn-cancel" onclick="cancelEdit()">Cancel</button>
+        <button class="btn-save" id="btn-save" onclick="saveProfile()">
+          <div class="spinner" id="sp-save"></div>
+          <span id="lbl-save">Save</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── ADDRESSES CARD ── -->
+    <div class="card">
+      <div class="card-title">My addresses</div>
+
+      <div class="address-item" onclick="">
+        <div class="address-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div>
+          <div class="address-text-title">Home</div>
+          <div class="address-text-sub" id="addr-home">Add a home address</div>
+        </div>
+      </div>
+
+      <div class="address-item" onclick="">
+        <div class="address-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        </div>
+        <div>
+          <div class="address-text-title">Work</div>
+          <div class="address-text-sub" id="addr-work">Add a work address</div>
+        </div>
+      </div>
+
+      <button class="btn-add-address">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Add
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const sb = supabase.createClient(
+    'https://ijsxmgkzwvamwctbkgjo.supabase.co',
+    'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ'
+  );
+
+  let currentUser = null;
+  let editMode    = false;
+
+  /* ── LOAD USER ── */
+  async function loadUser() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { location.href = 'login.html'; return; }
+    currentUser = session.user;
+    renderProfile(currentUser);
+  }
+
+  function renderProfile(user) {
+    const m    = user.user_metadata || {};
+    const first  = m.first_name || '';
+    const last   = m.last_name  || '';
+    const full   = m.full_name  || (first + ' ' + last).trim() || user.email.split('@')[0];
+    const phone  = m.phone || '';
+    const dob    = m.dob   || '';
+    const gender = m.gender || '';
+    const avatar = m.avatar_url || null;
+    const email  = user.email || '';
+
+    // Sidebar + full name
+    document.getElementById('sidebar-name').textContent = full || email;
+    document.getElementById('profile-fullname').textContent = full || email;
+
+    // Avatar
+    const initial = (full[0] || email[0] || '?').toUpperCase();
+    document.getElementById('avatar-initial').textContent = initial;
+    if (avatar) {
+      document.getElementById('avatar-circle').innerHTML =
+        `<img src="${avatar}" alt="${full}" />`;
+    }
+
+    // Field values
+    setValue('first',  first,  '—');
+    setValue('last',   last,   '—');
+    setValue('phone',  phone,  '—');
+    setValue('email',  email,  '—');
+    setValue('dob',    dob ? formatDate(dob) : '', '—');
+    setValue('gender', gender ? capitalise(gender) : '', '—');
+
+    // Populate inputs
+    document.getElementById('i-first').value  = first;
+    document.getElementById('i-last').value   = last;
+    document.getElementById('i-phone').value  = phone;
+    document.getElementById('i-email').value  = email;
+    document.getElementById('i-dob').value    = dob;
+    document.getElementById('i-gender').value = gender;
+  }
+
+  function setValue(key, val, fallback) {
+    const el = document.getElementById('v-' + key);
+    el.textContent = val || fallback;
+    el.classList.toggle('empty', !val);
+  }
+
+  function formatDate(d) {
+    if (!d) return '';
+    const dt = new Date(d);
+    return isNaN(dt) ? d : dt.toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+  }
+
+  function capitalise(s) { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
+
+  /* ── EDIT TOGGLE ── */
+  function toggleEdit() {
+    editMode = !editMode;
+    const fields = ['first','last','phone','dob','gender'];
+    fields.forEach(k => {
+      document.getElementById('v-' + k).style.display    = editMode ? 'none' : '';
+      document.getElementById('i-' + k).style.display    = editMode ? 'block' : 'none';
+    });
+    // Email is read-only always
+    document.getElementById('v-email').style.display = '';
+    document.getElementById('i-email').style.display = 'none';
+
+    document.getElementById('edit-btn').textContent      = editMode ? '✕' : 'Edit';
+    document.getElementById('edit-actions').style.display = editMode ? 'flex' : 'none';
+    if (editMode) document.getElementById('i-first').focus();
+    showBanner('','');
+  }
+
+  function cancelEdit() {
+    editMode = false;
+    renderProfile(currentUser);
+    // Hide all inputs, show values
+    ['first','last','phone','dob','gender','email'].forEach(k => {
+      document.getElementById('v-' + k).style.display = '';
+      document.getElementById('i-' + k).style.display = 'none';
+    });
+    document.getElementById('edit-btn').textContent       = 'Edit';
+    document.getElementById('edit-actions').style.display = 'none';
+    showBanner('','');
+  }
+
+  /* ── SAVE ── */
+  async function saveProfile() {
+    const first  = document.getElementById('i-first').value.trim();
+    const last   = document.getElementById('i-last').value.trim();
+    const phone  = document.getElementById('i-phone').value.trim();
+    const dob    = document.getElementById('i-dob').value;
+    const gender = document.getElementById('i-gender').value;
+
+    if (!first) return showBanner('First name is required.', 'error');
+
+    document.getElementById('sp-save').style.display  = 'block';
+    document.getElementById('lbl-save').textContent   = 'Saving…';
+    document.getElementById('btn-save').disabled      = true;
+
+    const { data, error } = await sb.auth.updateUser({
+      data: {
+        first_name: first,
+        last_name:  last,
+        full_name:  (first + ' ' + last).trim(),
+        phone,
+        dob,
+        gender,
+      }
+    });
+
+    document.getElementById('sp-save').style.display  = 'none';
+    document.getElementById('lbl-save').textContent   = 'Save';
+    document.getElementById('btn-save').disabled      = false;
+
+    if (error) return showBanner(error.message, 'error');
+
+    currentUser = data.user;
+    showBanner('Profile saved!', 'success');
+    setTimeout(() => { cancelEdit(); }, 1000);
+  }
+
+  /* ── AVATAR UPLOAD ── */
+  async function uploadAvatar(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) return showBanner('Photo must be under 2 MB.', 'error');
+
+    // Preview immediately
+    const reader = new FileReader();
+    reader.onload = e => {
+      document.getElementById('avatar-circle').innerHTML =
+        `<img src="${e.target.result}" alt="avatar" />`;
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to Supabase Storage
+    const path = `avatars/${currentUser.id}/${Date.now()}.${file.name.split('.').pop()}`;
+    const { error: upErr } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+    if (upErr) return showBanner('Upload failed: ' + upErr.message, 'error');
+
+    const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
+    const { error: updErr } = await sb.auth.updateUser({ data: { avatar_url: urlData.publicUrl } });
+    if (updErr) return showBanner('Could not save photo: ' + updErr.message, 'error');
+
+    showBanner('Photo updated!', 'success');
+    setTimeout(() => showBanner('',''), 2000);
+  }
+
+  /* ── BANNER ── */
+  function showBanner(msg, type) {
+    const b = document.getElementById('banner');
+    b.textContent = msg;
+    b.className   = 'banner' + (msg ? ' ' + type : '');
+  }
+
+  // Init
+  loadUser();
+</script>
+</body>
+</html>
