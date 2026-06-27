@@ -1252,6 +1252,7 @@
       cursor: pointer; transition: border-color .15s; font-family: inherit;
     }
     .bk-done-btn:hover { border-color: var(--muted); }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/md5@2.3.0/dist/md5.min.js"></script>
@@ -1266,22 +1267,22 @@
       <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover, Book here, Save more</span>
     </div>
     <ul class="nav-links">
-      <li>
-        <div style="display:flex;flex-direction:column;line-height:1.1">
-          <a href="#deals" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px">⚡ Off-Peak Deals</a>
-          <span style="font-size:10px;color:#6B7280;margin-top:1px">Save up to 75%</span>
-        </div>
-      </li>
-      <li>
-        <div style="display:flex;flex-direction:column;line-height:1.1">
-          <a href="negotiate.html" style="color:#6B7280;font-weight:600;font-size:14px;text-decoration:none;display:flex;align-items:center;gap:4px">🤝 AI Negotiator</a>
-          <span style="font-size:10px;color:#6B7280;margin-top:1px">Personal AI agent</span>
-        </div>
-      </li>
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
-          <a href="booking.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">🛎️ BookNow</a>
-          <span style="font-size:10px;color:#6B7280;margin-top:1px">Zero commission</span>
-        </div></li>
+        <a href="deals.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">⚡ Off-Peak Deals</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Save up to 75%</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="negotiate.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">🤝 AI Negotiator</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Personal AI agent</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="booking.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">🛎️ BookNow</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Zero commission</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="notify.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">🔔 Notify Me</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Never miss a deal</span>
+      </div></li>
     </ul>
     <div class="nav-right">
       <a href="login.html" class="btn-login" id="nav-login-link">Log in</a>
@@ -1294,6 +1295,24 @@
           <div class="menu-icon"><span></span><span></span><span></span></div>
         </button>
         <div class="menu-dropdown" id="menu-dropdown">
+          <div class="menu-main-item">Explore</div>
+          <a href="deals.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            ⚡ Off-Peak Deals
+          </a>
+          <a href="negotiate.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            🤝 AI Negotiator
+          </a>
+          <a href="booking.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            🛎️ BookNow
+          </a>
+          <a href="notify.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            🔔 Notify Me
+          </a>
+          <div class="menu-divider"></div>
           <div class="menu-main-item">For customers</div>
           <a href="login.html" class="menu-sub-item highlight">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -2344,6 +2363,7 @@
       `Show this code at ${currentDeal.merchant} between ${currentDeal.time}. Pay ₹${selectedPriceTarget} at the counter.`;
     showScreen('booked');
   }
+
 </script>
 </body>
 </html>
