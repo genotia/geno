@@ -66,65 +66,6 @@
     .nav-links a.biz-active { color: #7C3AED; font-weight: 600; }
 
     /* ── BUSINESS TYPES DROPDOWN ── */
-    .biz-wrap { position: relative; }
-    .biz-toggle {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 15px; font-weight: 500; color: var(--text);
-      padding: 8px 16px; border-radius: 8px; cursor: pointer;
-      background: none; border: none; font-family: inherit;
-      transition: background .15s, color .15s;
-    }
-    .biz-toggle:hover, .biz-toggle.open { background: var(--bg); }
-    .biz-toggle.open { color: #7C3AED; font-weight: 600; }
-    .biz-toggle svg { transition: transform .2s; }
-    .biz-toggle.open svg { transform: rotate(180deg); }
-    .biz-dropdown {
-      display: none;
-      position: absolute;
-      top: calc(100% + 10px);
-      left: 0;
-      width: 560px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.13);
-      z-index: 600;
-      overflow: hidden;
-    }
-    .biz-dropdown.open { display: flex; }
-    .biz-cats {
-      width: 220px;
-      flex-shrink: 0;
-      padding: 10px 0;
-      border-right: 1px solid var(--border);
-    }
-    .biz-cat-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 20px;
-      font-size: 15px; font-weight: 500; color: var(--text);
-      cursor: pointer; transition: background .12s;
-      border-radius: 0;
-    }
-    .biz-cat-item:hover, .biz-cat-item.active { background: var(--bg); font-weight: 600; }
-    .biz-cat-arrow { color: var(--muted); font-size: 12px; }
-    .biz-subs {
-      flex: 1;
-      padding: 16px 20px;
-    }
-    .biz-sub-head {
-      font-size: 11px; font-weight: 700; letter-spacing: .6px;
-      text-transform: uppercase; color: var(--muted);
-      margin-bottom: 12px; padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-    .biz-sub-list { display: flex; flex-direction: column; gap: 2px; }
-    .biz-sub-item {
-      padding: 9px 12px; font-size: 14px; color: var(--text);
-      border-radius: 8px; cursor: pointer; transition: background .12s;
-      font-weight: 400;
-    }
-    .biz-sub-item:hover { background: var(--bg); font-weight: 500; }
-
     .nav-right { display: flex; align-items: center; gap: 8px; }
     .btn-marketplace {
       display: inline-flex; align-items: center; gap: 7px;
@@ -380,51 +321,6 @@
     .ac-name { font-size: 13px; font-weight: 700; color: #F0FDF8; margin-bottom: 4px; }
     .ac-desc { font-size: 11px; color: rgba(240,253,248,.45); line-height: 1.5; }
 
-    /* ── PRICING ── */
-    .pricing-section {
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 72px 24px;
-    }
-    .pricing-inner { max-width: 1200px; margin: 0 auto; }
-    .sec-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
-    .sec-title { font-size: 28px; font-weight: 800; letter-spacing: -.6px; margin-bottom: 6px; }
-    .sec-sub { font-size: 15px; color: var(--muted); margin-bottom: 36px; }
-    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-    .pricing-card {
-      background: var(--white); border: 1.5px solid var(--border);
-      border-radius: 16px; padding: 28px; position: relative;
-    }
-    .pricing-card.featured {
-      border-color: var(--green);
-      box-shadow: 0 0 0 4px rgba(29,158,117,.08);
-    }
-    .popular-badge {
-      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-      background: var(--green); color: var(--white);
-      font-size: 11px; font-weight: 700; padding: 3px 12px;
-      border-radius: 20px; white-space: nowrap; letter-spacing: .3px;
-    }
-    .plan-name { font-size: 14px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
-    .plan-price { font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 4px; }
-    .plan-price span { font-size: 16px; font-weight: 500; color: var(--muted); }
-    .plan-desc { font-size: 13px; color: var(--muted); margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-    .plan-sec { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin: 12px 0 7px; }
-    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 4px; }
-    .plan-features li { font-size: 13px; color: var(--text); display: flex; gap: 8px; align-items: flex-start; }
-    .plan-features li .tick { color: var(--green); font-size: 14px; flex-shrink: 0; }
-    .plan-features li .cross { color: #D1D5DB; font-size: 14px; flex-shrink: 0; }
-    .btn-plan {
-      width: 100%; border: none; border-radius: 10px;
-      padding: 12px; font-size: 14px; font-weight: 700;
-      cursor: pointer; transition: opacity .15s; margin-top: 16px;
-    }
-    .btn-plan.primary { background: var(--green); color: var(--white); }
-    .btn-plan.primary:hover { opacity: .88; }
-    .btn-plan.outline { background: var(--white); color: var(--text); border: 1.5px solid var(--border); }
-    .btn-plan.outline:hover { border-color: var(--text); }
-
     /* ── BOTTOM CTA ── */
     .bottom-cta { background: var(--dark-green); padding: 72px 24px; text-align: center; }
     .bottom-cta h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; color: var(--white); letter-spacing: -.8px; margin-bottom: 12px; }
@@ -475,22 +371,13 @@
 <nav>
   <div class="nav-inner">
     <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
-      <a href="merchants.html" class="logo">✨ Genoti <span>AI</span></a>
+      <a href="merchants.html" class="logo"><img src="../genoti_icon_dark.svg" alt="" style="width:28px;height:28px;border-radius:7px;vertical-align:middle;margin-right:6px">Genoti</a>
       <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">AI Operating System for Local Businesses</span>
     </div>
     <ul class="nav-links">
-      <li class="biz-wrap">
-        <button class="biz-toggle" id="biz-toggle" onclick="toggleBizTypes(event)">
-          Business Types
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="biz-dropdown" id="biz-dropdown">
-          <div class="biz-cats" id="biz-cats"></div>
-          <div class="biz-subs" id="biz-subs"></div>
-        </div>
-      </li>
-      <li><a href="#features">Features</a></li>
-      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="business-types.html">Business Types</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
     </ul>
     <div class="nav-right">
       <a href="../index.html" class="btn-marketplace">
@@ -508,6 +395,10 @@
           <a href="merchants.html" class="menu-sub-item">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             Merchant OS
+          </a>
+          <a href="business-types.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            Business Types
           </a>
           <a href="ai-agents.html" class="menu-sub-item">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M12 2a3 3 0 0 1 3 3v6H9V5a3 3 0 0 1 3-3z"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/><path d="M8 2v2M16 2v2"/></svg>
@@ -648,84 +539,6 @@
 </div>
 </div><!-- /split-section-bg -->
 
-<!-- ══ PRICING ══ -->
-<div class="pricing-section" id="pricing">
-  <div class="pricing-inner">
-    <div class="sec-label">Pricing</div>
-    <div class="sec-title">Simple, honest pricing</div>
-    <div class="sec-sub">Start free. Upgrade when you're ready. OS and AI agents bundled together.</div>
-    <div class="pricing-grid">
-
-      <div class="pricing-card">
-        <div class="plan-name">Starter</div>
-        <div class="plan-price">Free <span>/ forever</span></div>
-        <div class="plan-desc">For businesses just getting started with online bookings.</div>
-        <div class="plan-sec">🏪 Merchant OS</div>
-        <ul class="plan-features">
-          <li><span class="tick">✓</span> Bookings (up to 50/month)</li>
-          <li><span class="tick">✓</span> Basic staff calendar</li>
-          <li><span class="tick">✓</span> WhatsApp reminders (50/month)</li>
-          <li><span class="tick">✓</span> OffPeak deal listing (1 active)</li>
-          <li><span class="cross">✗</span> Membership &amp; packages</li>
-          <li><span class="cross">✗</span> Marketing automation</li>
-        </ul>
-        <div class="plan-sec">🤖 AI Agents</div>
-        <ul class="plan-features">
-          <li><span class="cross">✗</span> No AI agents on Starter</li>
-        </ul>
-        <button class="btn-plan outline">Get started free</button>
-      </div>
-
-      <div class="pricing-card featured">
-        <div class="popular-badge">Most popular</div>
-        <div class="plan-name">Growth</div>
-        <div class="plan-price">₹1,999 <span>/ month</span></div>
-        <div class="plan-desc">Full Merchant OS + core AI agents. Ready to scale.</div>
-        <div class="plan-sec">🏪 Merchant OS</div>
-        <ul class="plan-features">
-          <li><span class="tick">✓</span> Unlimited bookings</li>
-          <li><span class="tick">✓</span> Membership &amp; packages</li>
-          <li><span class="tick">✓</span> WhatsApp campaigns (unlimited)</li>
-          <li><span class="tick">✓</span> Loyalty &amp; referrals</li>
-          <li><span class="tick">✓</span> Analytics + reputation mgmt</li>
-        </ul>
-        <div class="plan-sec">🤖 AI Agents</div>
-        <ul class="plan-features">
-          <li><span class="tick">✓</span> AI Receptionist</li>
-          <li><span class="tick">✓</span> AI Review Agent</li>
-          <li><span class="tick">✓</span> AI Upsell Agent</li>
-          <li><span class="tick">✓</span> AI Retention Agent</li>
-          <li><span class="tick">✓</span> AI Campaign Manager</li>
-        </ul>
-        <button class="btn-plan primary">Start 14-day free trial</button>
-      </div>
-
-      <div class="pricing-card">
-        <div class="plan-name">Pro</div>
-        <div class="plan-price">₹4,999 <span>/ month</span></div>
-        <div class="plan-desc">All 11 OS modules + all 22 AI agents. Full power.</div>
-        <div class="plan-sec">🏪 Merchant OS</div>
-        <ul class="plan-features">
-          <li><span class="tick">✓</span> Everything in Growth</li>
-          <li><span class="tick">✓</span> Multi-location management</li>
-          <li><span class="tick">✓</span> Employee management</li>
-          <li><span class="tick">✓</span> Inventory management</li>
-          <li><span class="tick">✓</span> AI support suite</li>
-        </ul>
-        <div class="plan-sec">🤖 AI Agents</div>
-        <ul class="plan-features">
-          <li><span class="tick">✓</span> All 22 AI agents</li>
-          <li><span class="tick">✓</span> AI voice receptionist</li>
-          <li><span class="tick">✓</span> AI forecasting &amp; intelligence</li>
-          <li><span class="tick">✓</span> Dedicated account manager</li>
-        </ul>
-        <button class="btn-plan outline">Talk to sales</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
 <!-- ══ BOTTOM CTA ══ -->
 <div class="bottom-cta">
   <h2>Ready to fill every slot<br>and grow faster?</h2>
@@ -741,7 +554,7 @@
   <div class="footer-inner">
     <div class="footer-top">
       <div class="footer-brand">
-        <a href="../index.html" class="logo">✨ Genoti <span>AI</span></a>
+        <a href="../index.html" class="logo"><img src="../genoti_icon_dark.svg" alt="" style="width:28px;height:28px;border-radius:7px;vertical-align:middle;margin-right:6px">Genoti</a>
         <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
       </div>
       <div class="footer-col">
@@ -785,72 +598,12 @@
 
 <script>
   /* ── BUSINESS TYPES DROPDOWN ── */
-  const BIZ_TYPES = [
-    { cat: 'Beauty & Wellness',    subs: ['Salons', 'Spa', 'MedSpa', 'Beauty Parlors', 'Nail Studios', 'Laser Clinics', 'Skin Care Clinics'] },
-    { cat: 'Fitness & Sports',     subs: ['Gyms', 'Yoga Studios', 'Pilates Studios', 'CrossFit Centers', 'Personal Trainers'] },
-    { cat: 'Health & Medical',     subs: ['Clinics', 'Dentists', 'Dermatologists', 'Physiotherapists', 'Family Physicians'] },
-    { cat: 'Diagnostics',          subs: ['Blood Test Labs', 'Pathology Labs', 'MRI Centers', 'CT Scan Centers', 'X-Ray Centers', 'Ultrasound Centers'] },
-    { cat: 'Hospitals',            subs: ['Multi-Specialty Hospitals', 'Specialty Hospitals', 'Day-Care Hospitals'] },
-    { cat: 'Restaurants & Food',   subs: ['Restaurants', 'Cafes', 'Fine Dining', 'Buffet Restaurants'] },
-    { cat: 'Hospitality',          subs: ['Hotels', 'Resorts', 'Boutique Hotels', 'Business Hotels'] },
-    { cat: 'Shared Spaces',        subs: ['Co-working Spaces', 'Meeting Rooms', 'Conference Rooms'] },
-    { cat: 'Sports Facilities',    subs: ['Badminton Courts', 'Tennis Courts', 'Football Turf', 'Cricket Nets', 'Swimming Pools'] },
-  ];
-
-  let activeBizCat = 0;
-
-  function renderBizCats() {
-    document.getElementById('biz-cats').innerHTML = BIZ_TYPES.map((b, i) =>
-      `<div class="biz-cat-item${i === activeBizCat ? ' active' : ''}" onmouseenter="selectBizCat(${i})" onclick="selectBizCat(${i})">
-        ${b.cat}
-        <span class="biz-cat-arrow">›</span>
-      </div>`
-    ).join('');
-  }
-
-  function renderBizSubs(idx) {
-    const b = BIZ_TYPES[idx];
-    document.getElementById('biz-subs').innerHTML =
-      `<div class="biz-sub-head">${b.cat}</div>
-       <div class="biz-sub-list">${b.subs.map(s =>
-         `<div class="biz-sub-item">${s}</div>`
-       ).join('')}</div>`;
-  }
-
-  function selectBizCat(idx) {
-    activeBizCat = idx;
-    renderBizCats();
-    renderBizSubs(idx);
-  }
-
-  function toggleBizTypes(e) {
-    e.stopPropagation();
-    const dropdown = document.getElementById('biz-dropdown');
-    const toggle   = document.getElementById('biz-toggle');
-    const isOpen   = dropdown.classList.contains('open');
-    closeBizTypes();
-    if (!isOpen) {
-      dropdown.classList.add('open');
-      toggle.classList.add('open');
-      renderBizCats();
-      renderBizSubs(activeBizCat);
-    }
-  }
-
-  function closeBizTypes() {
-    document.getElementById('biz-dropdown').classList.remove('open');
-    document.getElementById('biz-toggle').classList.remove('open');
-  }
-
   function toggleMenu() {
     document.getElementById('menu-dropdown').classList.toggle('open');
   }
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.menu-dropdown-wrap')) {
       document.getElementById('menu-dropdown').classList.remove('open');
-    }
-    if (!e.target.closest('.biz-wrap')) {
-      closeBizTypes();
     }
   });
 
