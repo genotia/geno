@@ -401,14 +401,32 @@
     .saved-item-chip.pending { background: #FEF3C7; color: #92400E; border-color: #FDE68A; }
     .saved-remove { background: none; border: none; color: #D1D5DB; cursor: pointer; font-size: 20px; padding: 4px 6px; line-height: 1; transition: color .15s; flex-shrink: 0; border-radius: 8px; }
     .saved-remove:hover { color: #EF4444; background: #FEF2F2; }
+    .srch-results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; min-height: 32px; }
+    .srch-results-count { font-size: 13px; color: var(--muted); font-weight: 500; }
+    .srch-map-toggle { display: flex; align-items: center; gap: 6px; padding: 7px 16px; border: 1.5px solid var(--border); border-radius: 20px; background: var(--white); font-size: 13px; font-weight: 600; color: var(--text); cursor: pointer; font-family: inherit; transition: all .15s; white-space: nowrap; }
+    .srch-map-toggle:hover { border-color: var(--green); color: var(--green); }
+    .srch-map-toggle.active { border-color: var(--green); background: #F0FDF4; color: var(--dark-green); }
+    .srch-content-wrap { display: block; }
+    .srch-content-wrap.with-map { display: grid; grid-template-columns: 1fr 440px; gap: 20px; align-items: start; }
+    .srch-content-wrap.with-map .srch-results { grid-template-columns: 1fr 1fr; }
+    .srch-map-wrap { border-radius: 16px; overflow: hidden; border: 1.5px solid var(--border); position: sticky; top: 76px; display: none; }
+    #srch-map { height: 580px; }
+    @media (max-width: 1100px) {
+      .srch-content-wrap.with-map { grid-template-columns: 1fr; }
+      .srch-content-wrap.with-map .srch-results { grid-template-columns: 1fr 1fr; }
+      .srch-map-wrap { position: static; }
+      #srch-map { height: 340px; }
+    }
     @media (max-width: 900px) {
       .srch-bar-wrap { grid-template-columns: 1fr; }
       .srch-results { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) { .srch-results { grid-template-columns: 1fr; } }
   </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/md5@2.3.0/dist/md5.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -597,11 +615,20 @@
         <div class="srch-cat" data-cat="yoga" onclick="selectSrchCat(this)">🧘 Yoga</div>
       </div>
 
-      <div id="srch-results" class="srch-results">
-        <div class="srch-placeholder">
-          <div class="srch-placeholder-icon">🔍</div>
-          <div class="srch-placeholder-title">Find businesses near you</div>
-          <div>Search above to discover nearby merchants and set deal alerts.</div>
+      <div class="srch-results-header">
+        <div id="srch-results-count" class="srch-results-count"></div>
+        <button class="srch-map-toggle" id="srch-map-toggle" onclick="toggleSearchMap()">🗺️ Show map</button>
+      </div>
+      <div class="srch-content-wrap" id="srch-content-wrap">
+        <div id="srch-results" class="srch-results">
+          <div class="srch-placeholder">
+            <div class="srch-placeholder-icon">🔍</div>
+            <div class="srch-placeholder-title">Find businesses near you</div>
+            <div>Select a category and press Search.</div>
+          </div>
+        </div>
+        <div class="srch-map-wrap" id="srch-map-wrap">
+          <div id="srch-map"></div>
         </div>
       </div>
     </div>
@@ -1003,6 +1030,61 @@
   /* ── SEARCH & DISCOVER ── */
   const GOOGLE_PLACES_KEY = 'AIzaSyD_wG3tD4o_7Hon-YF0YwYmWQeFbAJGRKY';
 
+  /* ── Map ── */
+  let _map = null, _mapMarkers = [], _mapVisible = false;
+
+  function toggleSearchMap() {
+    _mapVisible = !_mapVisible;
+    const wrap   = document.getElementById('srch-content-wrap');
+    const mapDiv = document.getElementById('srch-map-wrap');
+    const btn    = document.getElementById('srch-map-toggle');
+    mapDiv.style.display = _mapVisible ? 'block' : 'none';
+    wrap.classList.toggle('with-map', _mapVisible);
+    btn.classList.toggle('active', _mapVisible);
+    btn.textContent = _mapVisible ? '🗺️ Hide map' : '🗺️ Show map';
+    if (_mapVisible) {
+      if (!_map) _initMap();
+      else setTimeout(() => _map.invalidateSize(), 50);
+      _updateMapMarkers(Object.values(_srchMap));
+    }
+  }
+
+  function _initMap() {
+    const chip = document.querySelector('#srch-pincode .srch-pincode-chip.on');
+    const lat  = chip ? parseFloat(chip.dataset.lat) : 12.8406;
+    const lng  = chip ? parseFloat(chip.dataset.lng) : 77.6603;
+    _map = L.map('srch-map', { zoomControl: true }).setView([lat, lng], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19
+    }).addTo(_map);
+  }
+
+  function _updateMapMarkers(results) {
+    if (!_map) return;
+    _mapMarkers.forEach(m => m.remove());
+    _mapMarkers = [];
+    const chip    = document.querySelector('#srch-pincode .srch-pincode-chip.on');
+    const baseLat = chip ? parseFloat(chip.dataset.lat) : 12.8406;
+    const baseLng = chip ? parseFloat(chip.dataset.lng) : 77.6603;
+    const bounds  = [];
+    results.forEach((m, i) => {
+      const lat = m.lat || (baseLat + (((i % 5) - 2) * 0.003));
+      const lng = m.lng || (baseLng + (((Math.floor(i / 5)) - 1) * 0.004));
+      const icon = L.divIcon({
+        className: '',
+        html: '<div style="background:#085041;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,.25);border:2px solid #fff">' + (m.emoji || '📍') + '</div>',
+        iconSize: [32, 32], iconAnchor: [16, 16]
+      });
+      const marker = L.marker([lat, lng], { icon })
+        .addTo(_map)
+        .bindPopup('<b>' + m.name + '</b><br><span style="font-size:12px;color:#6B7280">' + (m.addr || '') + '</span>' + (m.rating ? '<br>★ ' + m.rating : ''));
+      _mapMarkers.push(marker);
+      bounds.push([lat, lng]);
+    });
+    if (bounds.length) _map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
+  }
+
 
   let _srchMap = {};
   let _bookmarks = JSON.parse(localStorage.getItem('genoti_bm') || '[]');
@@ -1143,7 +1225,7 @@
     try {
       const res  = await fetch('https://places.googleapis.com/v1/places:searchText', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': GOOGLE_PLACES_KEY, 'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.primaryTypeDisplayName' },
+        headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': GOOGLE_PLACES_KEY, 'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.primaryTypeDisplayName,places.location' },
         body: JSON.stringify(body)
       });
       const json = await res.json();
@@ -1151,6 +1233,7 @@
         id: 'gp_' + p.id, name: p.displayName?.text || 'Unknown', category: q,
         addr: p.formattedAddress || '', dist: '?', rating: p.rating || '—',
         listed: false, emoji: '📍', alerts: [],
+        lat: p.location?.latitude, lng: p.location?.longitude,
       }));
       _srchMap = {};
       places.forEach(m => { _srchMap[m.id] = m; });
@@ -1162,8 +1245,10 @@
   function _distStr(d) { return d < 1 ? Math.round(d * 1000) + ' m' : d + ' km'; }
 
   function _renderResults(list) {
-    const el = document.getElementById('srch-results');
+    const el    = document.getElementById('srch-results');
+    const count = document.getElementById('srch-results-count');
     if (!el) return;
+    if (count) count.textContent = list.length ? list.length + ' place' + (list.length > 1 ? 's' : '') + ' found' : '';
     if (!list.length) {
       el.innerHTML = '<div class="srch-placeholder"><div class="srch-placeholder-icon">🤷</div><div class="srch-placeholder-title">No matches found</div><div>Try a different keyword, wider radius, or category.</div></div>';
       return;
@@ -1192,6 +1277,7 @@
         + '</button>'
         + '</div>';
     }).join('');
+    if (_mapVisible) _updateMapMarkers(list);
   }
 
   function _renderSaved() {
