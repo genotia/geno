@@ -50,7 +50,11 @@
       color: var(--text);
       text-decoration: none;
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
+    .logo img { width: 32px; height: 32px; border-radius: 8px; display: block; }
     .logo span { color: var(--green); }
     .nav-links {
       display: flex;
@@ -1263,7 +1267,7 @@
 <nav>
   <div class="nav-inner">
     <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
-      <a href="#" class="logo">✨ Genoti <span>AI</span></a>
+      <a href="#" class="logo"><img src="genoti_icon_dark.svg" alt="Genoti">Genoti</a>
       <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover, Book here, Save more</span>
     </div>
     <ul class="nav-links">
@@ -1532,7 +1536,7 @@
   <div class="footer-inner">
     <div class="footer-top">
       <div class="footer-brand">
-        <a href="#" class="logo">✨ Genoti <span>AI</span></a>
+        <a href="#" class="logo"><img src="genoti_icon_dark.svg" alt="Genoti">Genoti</a>
         <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
       </div>
       <div class="footer-col">
