@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notify Me — Never Miss a Great Deal · Genoti AI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #1D9E75;
+      --dark-green: #085041;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --white: #ffffff;
+    }
+
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text); background: var(--white); line-height: 1.5; }
+
+    /* ── NAVBAR ── */
+    nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted); transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--green); font-weight: 700; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .btn-login { font-size: 14px; font-weight: 500; color: var(--text); background: none; border: none; cursor: pointer; padding: 8px 12px; text-decoration: none; transition: color .15s; font-family: inherit; }
+    .btn-login:hover { color: var(--green); }
+    .btn-pill {
+      display: inline-flex; align-items: center; font-size: 14px; font-weight: 600;
+      color: var(--text); background: var(--white); border: 1.5px solid var(--text);
+      border-radius: 40px; padding: 9px 22px; cursor: pointer; white-space: nowrap;
+      transition: background .15s, color .15s; text-decoration: none; font-family: inherit;
+    }
+    .btn-pill:hover { background: var(--text); color: var(--white); }
+    .btn-pill-menu {
+      display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600;
+      color: var(--text); background: var(--white); border: 1.5px solid #D1D5DB;
+      border-radius: 40px; padding: 9px 18px; cursor: pointer;
+      transition: border-color .15s, background .15s; font-family: inherit;
+    }
+    .btn-pill-menu:hover { border-color: var(--text); background: var(--bg); }
+    .menu-icon { display: flex; flex-direction: column; gap: 4px; }
+    .menu-icon span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; }
+    .menu-dropdown-wrap { position: relative; }
+    .menu-dropdown {
+      display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px;
+      background: var(--white); border: 1px solid var(--border); border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500; padding: 8px 0;
+    }
+    .menu-dropdown.open { display: block; }
+    .menu-main-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; font-size: 16px; font-weight: 700; color: var(--text); text-decoration: none; cursor: default; font-family: inherit; }
+    .menu-sub-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 20px;
+      font-size: 14px; font-weight: 400; color: #374151; text-decoration: none;
+      cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s;
+    }
+    .menu-sub-item:hover { background: var(--bg); }
+    .menu-sub-item.highlight { color: var(--green); font-weight: 600; }
+    .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(160deg, #051a12 0%, #0b2d1e 55%, #071710 100%);
+      padding: 72px 24px 64px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.1); color: rgba(255,255,255,.8);
+      font-size: 11px; font-weight: 700; padding: 5px 14px;
+      border-radius: 20px; margin-bottom: 20px; letter-spacing: .6px; text-transform: uppercase;
+    }
+    .hero h1 { font-size: clamp(30px, 4.5vw, 52px); font-weight: 800; letter-spacing: -2px; line-height: 1.1; color: #fff; margin-bottom: 16px; }
+    .hero h1 em { font-style: normal; color: #4ADEAB; }
+    .hero-sub { font-size: 17px; color: rgba(255,255,255,.6); max-width: 560px; margin: 0 auto 36px; line-height: 1.65; }
+    .hero-channels {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+      border-radius: 50px; padding: 10px 20px; margin-bottom: 36px;
+    }
+    .hero-channel { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,.8); }
+    .hero-channel-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ADEAB; }
+    .hero-channel-sep { color: rgba(255,255,255,.2); }
+    .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero-btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--green); color: white; font-size: 15px; font-weight: 700;
+      border: none; border-radius: 12px; padding: 14px 28px; cursor: pointer;
+      text-decoration: none; transition: opacity .15s; font-family: inherit;
+    }
+    .hero-btn-primary:hover { opacity: .88; }
+    .hero-btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,.1); color: white; font-size: 15px; font-weight: 600;
+      border: 1.5px solid rgba(255,255,255,.2); border-radius: 12px; padding: 13px 28px;
+      cursor: pointer; text-decoration: none; transition: background .15s; font-family: inherit;
+    }
+    .hero-btn-secondary:hover { background: rgba(255,255,255,.15); }
+
+    /* ── SHARED ── */
+    .page-section { max-width: 1200px; margin: 0 auto; padding: 64px 24px; }
+    .section-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #CCFBEF; color: #065F46;
+      font-size: 11px; font-weight: 700; padding: 4px 14px;
+      border-radius: 20px; margin-bottom: 14px; letter-spacing: .6px; text-transform: uppercase;
+    }
+    .section-title { font-size: clamp(22px, 2.5vw, 32px); font-weight: 800; letter-spacing: -.8px; color: var(--text); margin-bottom: 10px; }
+    .section-sub { font-size: 15px; color: var(--muted); max-width: 520px; line-height: 1.65; }
+
+    /* ── FEATURES ── */
+    .nm-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
+    .nm-feat { background: var(--white); border: 1px solid #D1FAE5; border-radius: 18px; padding: 28px 24px; }
+    .nm-feat-icon { width: 48px; height: 48px; border-radius: 14px; background: #D1FAE5; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px; }
+    .nm-feat-title { font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: -.3px; margin-bottom: 6px; }
+    .nm-feat-desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+    .nm-bullets { display: flex; flex-direction: column; gap: 8px; }
+    .nm-bullet { font-size: 13px; color: #374151; display: flex; align-items: center; gap: 8px; }
+    .nm-bullet::before {
+      content: '';
+      display: block; width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+      background: #D1FAE5 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/12px no-repeat;
+    }
+    .nm-price-box { background: var(--bg); border-radius: 12px; padding: 14px 16px; border: 1px solid var(--border); }
+    .nm-price-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+    .nm-price-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .nm-price-service { font-size: 13px; font-weight: 700; color: var(--text); }
+    .nm-price-old { font-size: 13px; color: #9CA3AF; text-decoration: line-through; }
+    .nm-price-divider { height: 1px; background: var(--border); margin: 8px 0; }
+    .nm-price-target-row { display: flex; align-items: center; justify-content: space-between; }
+    .nm-price-target-label { font-size: 13px; color: var(--muted); }
+    .nm-price-target-val { font-size: 15px; font-weight: 800; color: var(--green); }
+
+    /* ── SETUP + PREVIEWS ── */
+    .nm-divider-section { background: #F0FDF9; border-top: 1px solid #C6F6E8; border-bottom: 1px solid #C6F6E8; }
+    .nm-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .nm-setup-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 22px; padding: 32px;
+      box-shadow: 0 6px 28px rgba(0,0,0,.07);
+    }
+    .nm-setup-head { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -.5px; margin-bottom: 4px; }
+    .nm-setup-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+    .nm-field-label { font-size: 11px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 10px; }
+    .nm-channels { display: flex; gap: 10px; margin-bottom: 26px; }
+    .nm-channel {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 13px 8px 11px; border-radius: 14px; border: 2px solid var(--border);
+      background: var(--white); cursor: pointer; transition: all .15s;
+      font-size: 12px; font-weight: 600; color: #9CA3AF; user-select: none;
+    }
+    .nm-channel.on { border-color: var(--green); background: #F0FDF4; color: var(--dark-green); }
+    .nm-channel-icon { font-size: 24px; }
+    .nm-toggles { display: flex; flex-direction: column; gap: 8px; margin-bottom: 26px; }
+    .nm-toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border);
+      background: var(--white); cursor: pointer; transition: all .15s; user-select: none;
+    }
+    .nm-toggle-row.on { border-color: #A7F3D0; background: #F0FDF4; }
+    .nm-toggle-left { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 500; color: var(--text); }
+    .nm-toggle-emoji { font-size: 18px; width: 24px; text-align: center; }
+    .nm-switch {
+      width: 40px; height: 22px; border-radius: 11px; background: #D1D5DB;
+      position: relative; transition: background .15s; flex-shrink: 0;
+    }
+    .nm-switch.on { background: var(--green); }
+    .nm-switch::after {
+      content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%;
+      background: white; top: 2px; left: 2px; transition: left .15s;
+      box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    }
+    .nm-switch.on::after { left: 20px; }
+    .nm-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
+    .nm-pill {
+      padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border);
+      background: var(--white); font-size: 13px; font-weight: 500; color: #6B7280;
+      cursor: pointer; transition: all .15s; user-select: none;
+    }
+    .nm-pill.on { border-color: var(--green); background: #F0FDF4; color: var(--dark-green); font-weight: 600; }
+    .nm-cta {
+      width: 100%; background: var(--green); color: white; border: none;
+      border-radius: 14px; padding: 15px; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: opacity .15s; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px;
+    }
+    .nm-cta:hover { opacity: .88; }
+    .nm-cta:disabled { opacity: .75; cursor: default; }
+    .nm-cta.success { background: #059669; }
+
+    /* ── NOTIFICATION PREVIEWS ── */
+    .nm-previews { display: flex; flex-direction: column; gap: 16px; }
+    .nm-previews-head { font-size: 19px; font-weight: 800; color: var(--text); letter-spacing: -.4px; margin-bottom: 4px; }
+    .nm-previews-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; line-height: 1.55; }
+    .nm-notif {
+      background: var(--white); border: 1px solid var(--border); border-radius: 16px;
+      padding: 16px 18px; box-shadow: 0 2px 12px rgba(0,0,0,.05); position: relative; overflow: hidden;
+    }
+    .nm-notif::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+    .nm-notif.wa::before { background: #25D366; }
+    .nm-notif.push::before { background: var(--green); }
+    .nm-notif.email::before { background: #3B82F6; }
+    .nm-notif-header { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+    .nm-notif-appicon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+    .nm-notif.wa .nm-notif-appicon { background: #DCFCE7; }
+    .nm-notif.push .nm-notif-appicon { background: #D1FAE5; }
+    .nm-notif.email .nm-notif-appicon { background: #DBEAFE; }
+    .nm-notif-meta { flex: 1; }
+    .nm-notif-app { font-size: 11px; font-weight: 600; color: var(--muted); }
+    .nm-notif-time { font-size: 11px; color: #9CA3AF; }
+    .nm-notif-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .nm-notif-body { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .nm-notif-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .nm-notif-btn { flex: 1; text-align: center; padding: 8px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; }
+    .nm-notif-btn.primary { background: var(--green); color: white; }
+    .nm-notif-btn.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+
+    /* ── PREFERENCE TABLE ── */
+    .nm-prefs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
+    .nm-pref-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 24px; }
+    .nm-pref-icon { font-size: 28px; margin-bottom: 12px; }
+    .nm-pref-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .nm-pref-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+    .nm-pref-options { display: flex; flex-wrap: wrap; gap: 6px; }
+    .nm-pref-chip {
+      padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--border);
+      font-size: 12px; font-weight: 500; color: var(--muted); background: var(--white);
+    }
+    .nm-pref-chip.active { border-color: var(--green); color: var(--dark-green); background: #F0FDF4; font-weight: 600; }
+
+    /* ── MERCHANT CALLOUT ── */
+    .nm-merchant-callout {
+      background: var(--dark-green); border-radius: 20px;
+      padding: 40px 44px; display: flex; align-items: center; justify-content: space-between; gap: 28px;
+      margin-top: 0;
+    }
+    .nm-mc-left { flex: 1; }
+    .nm-mc-eyebrow { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.55); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; }
+    .nm-mc-title { font-size: 24px; font-weight: 800; color: white; letter-spacing: -.6px; margin-bottom: 10px; line-height: 1.3; }
+    .nm-mc-desc { font-size: 14px; color: rgba(255,255,255,.7); line-height: 1.65; max-width: 520px; }
+    .nm-mc-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+    .nm-mc-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,.12); color: rgba(255,255,255,.9); font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 20px; }
+    .nm-mc-right { flex-shrink: 0; text-align: center; }
+    .nm-mc-btn {
+      display: inline-flex; align-items: center; gap: 8px; background: white; color: var(--dark-green);
+      font-size: 15px; font-weight: 700; border: none; border-radius: 12px; padding: 14px 28px;
+      cursor: pointer; text-decoration: none; transition: opacity .15s; font-family: inherit; white-space: nowrap; margin-bottom: 10px;
+    }
+    .nm-mc-btn:hover { opacity: .9; }
+    .nm-mc-note { font-size: 12px; color: rgba(255,255,255,.5); }
+
+    /* ── FLOW DIAGRAM ── */
+    .nm-flow { display: flex; align-items: flex-start; gap: 0; margin-top: 40px; }
+    .nm-flow-step { flex: 1; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; }
+    .nm-flow-step:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      right: -16px;
+      top: 20px;
+      font-size: 18px;
+      color: var(--muted);
+      font-weight: 300;
+    }
+    .nm-flow-num {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: #D1FAE5; color: var(--dark-green); font-size: 18px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 14px; flex-shrink: 0;
+    }
+    .nm-flow-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .nm-flow-desc { font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 160px; margin: 0 auto; }
+
+    /* ── FOOTER ── */
+    footer { background: #111827; color: rgba(255,255,255,.6); padding: 48px 24px 32px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .footer-brand .logo { color: var(--white); font-size: 20px; display: block; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; line-height: 1.6; max-width: 240px; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,.55); text-decoration: none; transition: color .15s; }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; font-size: 12px; }
+    .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
+    .footer-bottom a:hover { color: rgba(255,255,255,.7); }
+    .footer-socials { display: flex; gap: 20px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nm-panel { grid-template-columns: 1fr; }
+      .nm-merchant-callout { flex-direction: column; align-items: flex-start; padding: 32px; }
+      .nm-prefs-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 48px 16px 44px; }
+      .hero-channels { flex-wrap: wrap; gap: 8px; }
+      .page-section { padding: 48px 16px; }
+      .nm-features { grid-template-columns: 1fr; gap: 14px; }
+      .nm-prefs-grid { grid-template-columns: 1fr; }
+      .nm-flow { flex-direction: column; gap: 24px; }
+      .nm-flow-step:not(:last-child)::after { content: '↓'; right: auto; top: auto; bottom: -20px; left: 50%; transform: translateX(-50%); }
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+
+    /* ── AUTH NAV ── */
+    .btn-login { font-size: 14px; font-weight: 500; color: var(--text); background: none; border: none; cursor: pointer; padding: 8px 12px; text-decoration: none; transition: color .15s; font-family: inherit; }
+    .btn-login:hover { color: var(--green); }
+    .btn-avatar-pill { display: none; align-items: center; gap: 10px; background: var(--white); border: 1.5px solid #D1D5DB; border-radius: 40px; padding: 6px 14px 6px 6px; cursor: pointer; font-family: inherit; transition: border-color .15s, background .15s; }
+    .btn-avatar-pill:hover { border-color: var(--text); background: var(--bg); }
+    .avatar-img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: var(--green); color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+    .avatar-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .avatar-caret { font-size: 11px; color: var(--muted); margin-left: 2px; }
+    .profile-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500; padding: 4px 0 8px; }
+    .profile-dropdown.open { display: block; }
+    .profile-name { font-size: 18px; font-weight: 800; color: var(--text); padding: 16px 20px 10px; }
+    .profile-link { display: flex; align-items: center; gap: 14px; padding: 11px 20px; font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s; }
+    .profile-link:hover { background: var(--bg); }
+    .profile-link svg { flex-shrink: 0; color: var(--muted); }
+    .profile-link.logout { color: var(--text); font-weight: 500; }
+    .profile-link.biz-row { font-weight: 700; font-size: 15px; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+    .profile-plain { display: flex; align-items: center; gap: 14px; padding: 11px 20px; font-size: 14px; font-weight: 500; color: var(--text); cursor: pointer; text-decoration: none; }
+    .profile-plain:hover { background: var(--bg); }
+    .profile-plain svg { flex-shrink: 0; color: var(--muted); }
+    .menu-main-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; font-size: 16px; font-weight: 700; color: var(--text); text-decoration: none; cursor: default; font-family: inherit; }
+    .menu-main-item.clickable { cursor: pointer; transition: background .12s; }
+    .menu-main-item.clickable:hover { background: var(--bg); }
+    .menu-main-arrow { font-size: 18px; color: var(--muted); font-weight: 400; }
+    .menu-sub-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; font-weight: 400; color: #374151; text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s; }
+    .menu-sub-item:hover { background: var(--bg); }
+    .menu-sub-item.highlight { color: var(--green); font-weight: 600; }
+    .menu-sub-item svg { flex-shrink: 0; color: var(--muted); }
+
+    /* ── SEARCH & DISCOVER ── */
+    .srch-section { background: var(--white); border-bottom: 1px solid var(--border); }
+    .srch-inner { max-width: 1200px; margin: 0 auto; padding: 40px 24px 48px; }
+    .srch-tabs { display: flex; gap: 0; margin-bottom: 28px; border-bottom: 1px solid var(--border); }
+    .srch-tab { background: none; border: none; padding: 10px 22px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2.5px solid transparent; margin-bottom: -1px; font-family: inherit; transition: color .15s, border-color .15s; display: flex; align-items: center; gap: 7px; }
+    .srch-tab.active { color: var(--green); border-bottom-color: var(--green); }
+    .saved-count-badge { background: var(--green); color: white; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 20px; }
+    .srch-bar-wrap { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 14px; }
+    .srch-pincode-chip { padding: 5px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--white); font-size: 13px; font-weight: 500; color: var(--text); cursor: pointer; transition: all .15s; white-space: nowrap; }
+    .srch-pincode-chip.on { border-color: var(--green); background: #F0FDF4; color: var(--dark-green); font-weight: 600; }
+    .srch-pincode-chip.soon { opacity: .4; cursor: not-allowed; font-style: italic; }
+    .srch-input-wrap { position: relative; }
+    .srch-input-wrap svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+    .srch-input-wrap input { width: 100%; padding: 12px 16px 12px 40px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 14px; font-family: inherit; outline: none; transition: border-color .15s; background: var(--bg); color: var(--text); }
+    .srch-input-wrap input:focus { border-color: var(--green); background: var(--white); }
+    .srch-btn { background: var(--green); color: white; border: none; border-radius: 12px; padding: 12px 28px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: opacity .15s; white-space: nowrap; }
+    .srch-btn:hover { opacity: .88; }
+    .srch-radius-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+    .srch-row-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
+    .srch-chips { display: flex; gap: 7px; flex-wrap: wrap; }
+    .srch-chip { padding: 5px 14px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all .15s; background: var(--white); user-select: none; }
+    .srch-chip.on { border-color: var(--green); background: #F0FDF4; color: var(--dark-green); font-weight: 600; }
+    .srch-loc-btn { font-size: 12px; font-weight: 600; color: var(--green); background: none; border: 1.5px solid #A7F3D0; border-radius: 20px; padding: 5px 14px; cursor: pointer; font-family: inherit; white-space: nowrap; transition: background .15s; }
+    .srch-loc-btn:hover { background: #F0FDF4; }
+    .srch-cats { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 28px; }
+    .srch-cat { padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all .15s; background: var(--white); user-select: none; }
+    .srch-cat.on { border-color: var(--green); background: #F0FDF4; color: var(--dark-green); font-weight: 600; }
+    .srch-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .srch-placeholder { grid-column: 1/-1; text-align: center; padding: 56px 24px; color: var(--muted); }
+    .srch-placeholder-icon { font-size: 44px; margin-bottom: 14px; }
+    .srch-placeholder-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .merch-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 0; transition: border-color .15s, box-shadow .15s; }
+    .merch-card:hover { border-color: #A7F3D0; box-shadow: 0 4px 20px rgba(0,0,0,.07); }
+    .merch-card-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+    .merch-emoji { width: 46px; height: 46px; border-radius: 13px; background: #D1FAE5; display: flex; align-items: center; justify-content: center; font-size: 23px; flex-shrink: 0; }
+    .merch-info { flex: 1; min-width: 0; }
+    .merch-name { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .merch-cat-dist { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .merch-dist-val { color: var(--green); font-weight: 600; }
+    .merch-addr { font-size: 12px; color: var(--muted); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .merch-rating-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .merch-stars { font-size: 12px; font-weight: 600; color: #B45309; }
+    .merch-status { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; }
+    .merch-status.listed { background: #D1FAE5; color: #065F46; }
+    .merch-status.unlisted { background: #FEF3C7; color: #92400E; }
+    .merch-alert-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; }
+    .merch-alert-chip { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+    .merch-bm-btn { margin-top: auto; width: 100%; display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; border: 1.5px solid var(--border); background: var(--white); color: var(--text); transition: all .15s; }
+    .merch-bm-btn:hover { border-color: var(--green); color: var(--green); background: #F0FDF4; }
+    .merch-bm-btn.watching { background: #F0FDF4; border-color: var(--green); color: var(--green); }
+    .saved-list { display: flex; flex-direction: column; gap: 12px; }
+    .saved-empty { text-align: center; padding: 56px 24px; color: var(--muted); }
+    .saved-empty-icon { font-size: 44px; margin-bottom: 14px; }
+    .saved-empty-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .saved-item { display: flex; align-items: center; gap: 16px; background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 16px 20px; transition: border-color .15s; }
+    .saved-item:hover { border-color: #A7F3D0; }
+    .saved-item-emoji { width: 46px; height: 46px; border-radius: 13px; background: #D1FAE5; display: flex; align-items: center; justify-content: center; font-size: 23px; flex-shrink: 0; }
+    .saved-item-body { flex: 1; min-width: 0; }
+    .saved-item-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .saved-item-addr { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .saved-item-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .saved-item-chip { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+    .saved-item-chip.pending { background: #FEF3C7; color: #92400E; border-color: #FDE68A; }
+    .saved-remove { background: none; border: none; color: #D1D5DB; cursor: pointer; font-size: 20px; padding: 4px 6px; line-height: 1; transition: color .15s; flex-shrink: 0; border-radius: 8px; }
+    .saved-remove:hover { color: #EF4444; background: #FEF2F2; }
+    @media (max-width: 900px) {
+      .srch-bar-wrap { grid-template-columns: 1fr; }
+      .srch-results { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) { .srch-results { grid-template-columns: 1fr; } }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/md5@2.3.0/dist/md5.min.js"></script>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="nav-inner">
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
+      <a href="index.html" class="logo">✨ Genoti <span>AI</span></a>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover, Book here, Save more</span>
+    </div>
+    <ul class="nav-links">
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="deals.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">⚡ Off-Peak Deals</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Save up to 75%</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="negotiate.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">🤝 AI Negotiator</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Personal AI agent</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="booking.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">🛎️ BookNow</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Zero commission</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="notify.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px">🔔 Notify Me</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Never miss a deal</span>
+      </div></li>
+    </ul>
+    <div class="nav-right">
+      <a href="login.html" class="btn-login" id="nav-login-link">Log in</a>
+      <a href="register.html" class="btn-pill" id="nav-list-biz">List your business</a>
+      <div class="menu-dropdown-wrap">
+        <button class="btn-pill-menu" onclick="toggleMenu()" aria-label="Menu" id="menu-toggle-btn">
+          Menu
+          <div class="menu-icon"><span></span><span></span><span></span></div>
+        </button>
+        <div class="menu-dropdown" id="menu-dropdown">
+          <div class="menu-main-item">For customers</div>
+          <a href="login.html" class="menu-sub-item highlight">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Log in or sign up
+          </a>
+          <a href="download-the-app.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Download the app
+          </a>
+          <a href="help.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Help and support
+          </a>
+          <div class="menu-divider"></div>
+          <a href="merchant/merchants.html" class="menu-main-item clickable">
+            <span style="display:flex;align-items:center;gap:10px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              For businesses
+            </span>
+            <span class="menu-main-arrow">→</span>
+          </a>
+        </div>
+        <button class="btn-avatar-pill" onclick="toggleProfile()" aria-label="Account" id="avatar-toggle-btn">
+          <div class="avatar-img" id="nav-avatar"><span id="nav-avatar-initial">?</span></div>
+          <span class="avatar-caret" id="avatar-caret">&#9660;</span>
+        </button>
+        <div class="profile-dropdown" id="profile-dropdown">
+          <div class="profile-name" id="profile-name">&#8212;</div>
+          <div class="menu-divider" style="margin:0 0 4px"></div>
+          <a href="profile.html" class="profile-link" style="font-size:15px;font-weight:700;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Profile
+          </a>
+          <a href="activity.html" class="profile-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Activity
+          </a>
+          <a href="wallet.html" class="profile-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Rewards &amp; Loyalty
+          </a>
+          <a href="messages.html" class="profile-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Messages
+          </a>
+          <a href="favourites.html" class="profile-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Favourites
+          </a>
+          <a href="settings.html" class="profile-link" style="font-size:15px;font-weight:700;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+          </a>
+          <button class="profile-link logout" onclick="signOut()" style="font-size:15px;font-weight:700;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Log out
+          </button>
+          <div class="menu-divider"></div>
+          <a href="download-the-app.html" class="profile-plain">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            Download the app
+          </a>
+          <a href="help.html" class="profile-plain">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Help and support
+          </a>
+          <div class="menu-divider"></div>
+          <a href="merchant/merchants.html" class="profile-link biz-row">
+            <span style="display:flex;align-items:center;gap:10px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9h18v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9z"/><path d="M3 9l2.5-6h13L21 9"/><path d="M9 21v-5h6v5"/><rect x="6" y="12" width="3" height="3" rx=".5"/><rect x="15" y="12" width="3" height="3" rx=".5"/></svg>
+              For businesses
+            </span>
+            <span>&#8594;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-eyebrow">🔔 Notify Me</div>
+  <h1>Never miss a<br><em>great deal</em> again</h1>
+  <p style="font-size:15px;font-weight:500;color:rgba(255,255,255,.55);margin-bottom:12px">Tell us what you're looking for, and our AI agents alert you when the perfect deal is available.</p>
+  <div class="hero-channels">
+    <div class="hero-channel"><span>💬</span> WhatsApp</div>
+    <div class="hero-channel-sep">·</div>
+    <div class="hero-channel"><span>🔔</span> Push</div>
+    <div class="hero-channel-sep">·</div>
+    <div class="hero-channel"><span>✉️</span> Email</div>
+  </div>
+  <div class="hero-cta">
+    <a href="#setup" class="hero-btn-primary">🔔 Set Up My Alerts</a>
+    <a href="#how-it-works" class="hero-btn-secondary">See how it works</a>
+  </div>
+</div>
+
+<!-- ══ SEARCH & DISCOVER ══ -->
+<div class="srch-section">
+  <div class="srch-inner">
+
+    <!-- Tabs -->
+    <div class="srch-tabs">
+      <button class="srch-tab active" onclick="switchSrchTab('search')">🔍 Search &amp; Discover</button>
+      <button class="srch-tab" onclick="switchSrchTab('saved')" id="saved-tab-btn">
+        🔖 My Saved Alerts
+        <span class="saved-count-badge" id="saved-count" style="display:none">0</span>
+      </button>
+    </div>
+
+    <!-- Search panel -->
+    <div id="tab-search">
+      <div class="srch-bar-wrap">
+        <div class="srch-input-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="srch-query" placeholder="Search spa, restaurant, gym, salon…" onkeydown="if(event.key==='Enter')doSearch()" />
+        </div>
+        <button class="srch-btn" onclick="doSearch()">Search</button>
+      </div>
+
+      <div class="srch-radius-row">
+        <span class="srch-row-label">📍 Pincode</span>
+        <div class="srch-chips" id="srch-pincode">
+          <div class="srch-pincode-chip on"
+               data-loc="560100 Bengaluru" data-lat="12.9716" data-lng="77.5946"
+               onclick="selectSrchPincode(this)">560100 · Bengaluru</div>
+          <div class="srch-pincode-chip soon" title="More areas coming soon">+ More coming soon</div>
+        </div>
+      </div>
+
+      <div class="srch-radius-row">
+        <span class="srch-row-label">Radius</span>
+        <div class="srch-chips" id="srch-radius">
+          <div class="srch-chip" data-val="500" onclick="selectSrchChip(this,'srch-radius')">500 m</div>
+          <div class="srch-chip" data-val="1000" onclick="selectSrchChip(this,'srch-radius')">1 km</div>
+          <div class="srch-chip" data-val="3000" onclick="selectSrchChip(this,'srch-radius')">3 km</div>
+          <div class="srch-chip on" data-val="5000" onclick="selectSrchChip(this,'srch-radius')">5 km</div>
+        </div>
+      </div>
+
+      <div class="srch-cats" id="srch-cats">
+        <div class="srch-cat on" data-cat="" onclick="selectSrchCat(this)">All</div>
+        <div class="srch-cat" data-cat="spa" onclick="selectSrchCat(this)">🛁 Spa</div>
+        <div class="srch-cat" data-cat="restaurant" onclick="selectSrchCat(this)">🍽️ Restaurant</div>
+        <div class="srch-cat" data-cat="gym" onclick="selectSrchCat(this)">💪 Gym</div>
+        <div class="srch-cat" data-cat="salon" onclick="selectSrchCat(this)">✂️ Salon</div>
+        <div class="srch-cat" data-cat="buffet" onclick="selectSrchCat(this)">🍳 Buffet</div>
+        <div class="srch-cat" data-cat="cafe" onclick="selectSrchCat(this)">☕ Café</div>
+        <div class="srch-cat" data-cat="yoga" onclick="selectSrchCat(this)">🧘 Yoga</div>
+      </div>
+
+      <div id="srch-results" class="srch-results">
+        <div class="srch-placeholder">
+          <div class="srch-placeholder-icon">🔍</div>
+          <div class="srch-placeholder-title">Find businesses near you</div>
+          <div>Search above to discover nearby merchants and set deal alerts.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved panel -->
+    <div id="tab-saved" style="display:none">
+      <div id="saved-list" class="saved-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ WHAT YOU GET ══ -->
+<div class="page-section" id="features">
+  <div class="section-eyebrow">What you get</div>
+  <div class="section-title">Three ways to never miss a deal</div>
+  <p class="section-sub">Whether you follow a merchant or hunt a specific price, Genoti AI keeps watch so you don't have to.</p>
+  <div class="nm-features">
+    <div class="nm-feat">
+      <div class="nm-feat-icon">🏪</div>
+      <div class="nm-feat-title">Follow Businesses</div>
+      <div class="nm-feat-desc">Stay in the loop with every merchant you love — the moment they publish anything new.</div>
+      <div class="nm-bullets">
+        <div class="nm-bullet">Off-Peak Deals</div>
+        <div class="nm-bullet">Discounts &amp; Promotions</div>
+        <div class="nm-bullet">Flash Sales</div>
+        <div class="nm-bullet">New Services</div>
+        <div class="nm-bullet">Membership Offers</div>
+      </div>
+    </div>
+    <div class="nm-feat">
+      <div class="nm-feat-icon">🎯</div>
+      <div class="nm-feat-title">Price Alerts</div>
+      <div class="nm-feat-desc">Save any service with your target price. We monitor it and alert you the moment it drops.</div>
+      <div class="nm-price-box">
+        <div class="nm-price-label">Your saved alert</div>
+        <div class="nm-price-row">
+          <span class="nm-price-service">Thai Massage · 60 min</span>
+          <span class="nm-price-old">₹1,800</span>
+        </div>
+        <div class="nm-price-divider"></div>
+        <div class="nm-price-target-row">
+          <span class="nm-price-target-label">Alert me below</span>
+          <span class="nm-price-target-val">₹1,200 🔔</span>
+        </div>
+      </div>
+    </div>
+    <div class="nm-feat">
+      <div class="nm-feat-icon">⚡</div>
+      <div class="nm-feat-title">Flash Sales &amp; More</div>
+      <div class="nm-feat-desc">Be first in line when limited-time slots open up — AI picks the best matches for you.</div>
+      <div class="nm-bullets">
+        <div class="nm-bullet">Limited-time flash deals</div>
+        <div class="nm-bullet">Slot availability alerts</div>
+        <div class="nm-bullet">Early-access offers</div>
+        <div class="nm-bullet">AI-personalised picks</div>
+        <div class="nm-bullet">Nearby hidden gems</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HOW IT WORKS ══ -->
+<div style="background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="page-section" id="how-it-works" style="padding-bottom:56px">
+    <div class="section-eyebrow">How it works</div>
+    <div class="section-title">Set once. Let AI do the rest.</div>
+    <p class="section-sub">No polling apps, no missed deals. Genoti monitors everything and reaches you instantly.</p>
+    <div class="nm-flow">
+      <div class="nm-flow-step">
+        <div class="nm-flow-num">1</div>
+        <div class="nm-flow-title">Follow or set a target</div>
+        <div class="nm-flow-desc">Follow a merchant or save a service with your desired price.</div>
+      </div>
+      <div class="nm-flow-step">
+        <div class="nm-flow-num">2</div>
+        <div class="nm-flow-title">Choose your channels</div>
+        <div class="nm-flow-desc">Pick WhatsApp, Push, or Email — and your preferred time window.</div>
+      </div>
+      <div class="nm-flow-step">
+        <div class="nm-flow-num">3</div>
+        <div class="nm-flow-title">AI watches 24/7</div>
+        <div class="nm-flow-desc">Genoti AI monitors prices, deals, and slot availability continuously.</div>
+      </div>
+      <div class="nm-flow-step">
+        <div class="nm-flow-num">4</div>
+        <div class="nm-flow-title">You get pinged first</div>
+        <div class="nm-flow-desc">Alert fires the instant a match is found — with a one-tap Book button.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SETUP + PREVIEWS ══ -->
+<div class="page-section" id="setup">
+  <div class="nm-panel">
+
+    <!-- Setup card -->
+    <div class="nm-setup-card">
+      <div class="nm-setup-head">Set up in 30 seconds</div>
+      <div class="nm-setup-sub">Choose what to hear about — and exactly how.</div>
+
+      <div class="nm-field-label">Notify me via</div>
+      <div class="nm-channels">
+        <div class="nm-channel on" onclick="nmToggleChannel(this)">
+          <span class="nm-channel-icon">💬</span>
+          WhatsApp
+        </div>
+        <div class="nm-channel on" onclick="nmToggleChannel(this)">
+          <span class="nm-channel-icon">🔔</span>
+          Push
+        </div>
+        <div class="nm-channel" onclick="nmToggleChannel(this)">
+          <span class="nm-channel-icon">✉️</span>
+          Email
+        </div>
+      </div>
+
+      <div class="nm-field-label">Alert me when</div>
+      <div class="nm-toggles">
+        <div class="nm-toggle-row on" onclick="nmToggleAlert(this)">
+          <div class="nm-toggle-left"><span class="nm-toggle-emoji">⚡</span>Off-Peak Deal drops</div>
+          <div class="nm-switch on"></div>
+        </div>
+        <div class="nm-toggle-row on" onclick="nmToggleAlert(this)">
+          <div class="nm-toggle-left"><span class="nm-toggle-emoji">💸</span>Price drops to my target</div>
+          <div class="nm-switch on"></div>
+        </div>
+        <div class="nm-toggle-row on" onclick="nmToggleAlert(this)">
+          <div class="nm-toggle-left"><span class="nm-toggle-emoji">🔥</span>Flash sale goes live</div>
+          <div class="nm-switch on"></div>
+        </div>
+        <div class="nm-toggle-row" onclick="nmToggleAlert(this)">
+          <div class="nm-toggle-left"><span class="nm-toggle-emoji">🆕</span>New service available</div>
+          <div class="nm-switch"></div>
+        </div>
+      </div>
+
+      <div class="nm-field-label">Preferred booking time</div>
+      <div class="nm-pills" id="nm-time-pills">
+        <div class="nm-pill" onclick="nmSelectPill(this,'nm-time-pills')">🌅 Morning</div>
+        <div class="nm-pill on" onclick="nmSelectPill(this,'nm-time-pills')">☀️ Afternoon</div>
+        <div class="nm-pill" onclick="nmSelectPill(this,'nm-time-pills')">🌆 Evening</div>
+      </div>
+
+      <div class="nm-field-label">Search radius</div>
+      <div class="nm-pills" id="nm-radius-pills">
+        <div class="nm-pill on" onclick="nmSelectPill(this,'nm-radius-pills')">3 km</div>
+        <div class="nm-pill" onclick="nmSelectPill(this,'nm-radius-pills')">5 km</div>
+        <div class="nm-pill" onclick="nmSelectPill(this,'nm-radius-pills')">10 km</div>
+        <div class="nm-pill" onclick="nmSelectPill(this,'nm-radius-pills')">Anywhere</div>
+      </div>
+
+      <button class="nm-cta" id="nm-cta-btn" onclick="nmActivate()">
+        🔔 Start Getting Alerts
+      </button>
+    </div>
+
+    <!-- Previews -->
+    <div class="nm-previews">
+      <div class="nm-previews-head">What you'll receive</div>
+      <div class="nm-previews-sub">Real-time alerts across WhatsApp, Push &amp; Email — the moment a matching deal goes live.</div>
+
+      <div class="nm-notif wa">
+        <div class="nm-notif-header">
+          <div class="nm-notif-appicon">💬</div>
+          <div class="nm-notif-meta">
+            <div class="nm-notif-app">WhatsApp · Genoti AI</div>
+          </div>
+          <div class="nm-notif-time">just now</div>
+        </div>
+        <div class="nm-notif-title">⚡ Deal Alert — Bliss Spa, Indiranagar</div>
+        <div class="nm-notif-body">Your saved "Swedish Massage" just dropped to <strong>₹999</strong> (was ₹1,800). Only 3 slots left today!</div>
+        <div class="nm-notif-actions">
+          <button class="nm-notif-btn primary">Book Now</button>
+          <button class="nm-notif-btn secondary">View Deal</button>
+        </div>
+      </div>
+
+      <div class="nm-notif push">
+        <div class="nm-notif-header">
+          <div class="nm-notif-appicon">✨</div>
+          <div class="nm-notif-meta">
+            <div class="nm-notif-app">Genoti AI · Push Notification</div>
+          </div>
+          <div class="nm-notif-time">2 min ago</div>
+        </div>
+        <div class="nm-notif-title">Flash Sale — 45% off at FitZone Gym</div>
+        <div class="nm-notif-body">3-month membership ₹2,499 (was ₹4,500). Off-peak slots: 6–9 AM. Offer expires in 2 hrs.</div>
+        <div class="nm-notif-actions">
+          <button class="nm-notif-btn primary">Grab It</button>
+          <button class="nm-notif-btn secondary">Remind Me</button>
+        </div>
+      </div>
+
+      <div class="nm-notif email">
+        <div class="nm-notif-header">
+          <div class="nm-notif-appicon">✉️</div>
+          <div class="nm-notif-meta">
+            <div class="nm-notif-app">deals@genoti.ai · Morning Digest</div>
+          </div>
+          <div class="nm-notif-time">8:14 AM</div>
+        </div>
+        <div class="nm-notif-title">Your morning deal digest is ready ☀️</div>
+        <div class="nm-notif-body">4 deals near Koramangala match your preferences — 30–55% off today only. Tap to see your picks.</div>
+        <div class="nm-notif-actions">
+          <button class="nm-notif-btn primary">See My Deals</button>
+          <button class="nm-notif-btn secondary">Manage Alerts</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NOTIFICATION PREFERENCES ══ -->
+<div style="background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="page-section">
+    <div class="section-eyebrow">Preferences</div>
+    <div class="section-title">Alerts on your terms</div>
+    <p class="section-sub">Fine-tune exactly when and how you hear about deals — no noise, only what matters to you.</p>
+    <div class="nm-prefs-grid">
+      <div class="nm-pref-card">
+        <div class="nm-pref-icon">💬</div>
+        <div class="nm-pref-title">Notification Channels</div>
+        <div class="nm-pref-desc">Pick where you want to be notified. Mix and match — some customers prefer WhatsApp for flash deals and email for digests.</div>
+        <div class="nm-pref-options">
+          <div class="nm-pref-chip active">WhatsApp</div>
+          <div class="nm-pref-chip active">Push</div>
+          <div class="nm-pref-chip">Email</div>
+        </div>
+      </div>
+      <div class="nm-pref-card">
+        <div class="nm-pref-icon">🕐</div>
+        <div class="nm-pref-title">Preferred Booking Time</div>
+        <div class="nm-pref-desc">We only surface deals that have available slots in your preferred time window, so alerts are always actionable.</div>
+        <div class="nm-pref-options">
+          <div class="nm-pref-chip">🌅 Morning</div>
+          <div class="nm-pref-chip active">☀️ Afternoon</div>
+          <div class="nm-pref-chip">🌆 Evening</div>
+        </div>
+      </div>
+      <div class="nm-pref-card">
+        <div class="nm-pref-icon">📍</div>
+        <div class="nm-pref-title">Search Radius</div>
+        <div class="nm-pref-desc">Limit alerts to deals within your comfortable travel distance. Expand when you want to explore further afield.</div>
+        <div class="nm-pref-options">
+          <div class="nm-pref-chip active">3 km</div>
+          <div class="nm-pref-chip">5 km</div>
+          <div class="nm-pref-chip">10 km</div>
+          <div class="nm-pref-chip">Anywhere</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MERCHANT CALLOUT ══ -->
+<div class="page-section">
+  <div class="nm-merchant-callout">
+    <div class="nm-mc-left">
+      <div class="nm-mc-eyebrow">For Merchants</div>
+      <div class="nm-mc-title">Reach customers the moment they're ready to book</div>
+      <div class="nm-mc-desc">Publish a deal, promotion, or flash sale — Genoti AI instantly notifies your followers, matches price-alert customers, and surfaces your offer to nearby buyers based on their preferences and AI match score.</div>
+      <div class="nm-mc-badges">
+        <span class="nm-mc-badge">⚡ Off-Peak Deals</span>
+        <span class="nm-mc-badge">🎁 Promotions</span>
+        <span class="nm-mc-badge">🔥 Flash Sales</span>
+        <span class="nm-mc-badge">🆕 New Services</span>
+        <span class="nm-mc-badge">📍 Location Match</span>
+        <span class="nm-mc-badge">🤖 AI Scored</span>
+      </div>
+    </div>
+    <div class="nm-mc-right">
+      <a href="merchant/merchants.html" class="nm-mc-btn">Publish a deal →</a>
+      <div class="nm-mc-note">Zero commission for first 3 months</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">✨ Genoti <span>AI</span></a>
+        <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="index.html">Browse deals</a></li>
+          <li><a href="negotiate.html">AI Negotiator</a></li>
+          <li><a href="notify.html">Notify Me</a></li>
+          <li><a href="download-the-app.html">Download app</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Merchants</h4>
+        <ul>
+          <li><a href="register.html">List your business</a></li>
+          <li><a href="merchant/merchants.html">Merchant portal</a></li>
+          <li><a href="merchant/pricing.html">Pricing</a></li>
+          <li><a href="merchant/features.html">Features</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+      <div class="footer-socials">
+        <a href="#">Twitter</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── Auth ── */
+  const _sb = supabase.createClient(
+    'https://ijsxmgkzwvamwctbkgjo.supabase.co',
+    'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ'
+  );
+  function probeImage(url) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload  = () => resolve(url);
+      img.onerror = () => resolve(null);
+      img.src = url;
+    });
+  }
+  async function resolveAvatar(user) {
+    const meta = user.user_metadata || {};
+    if (meta.avatar_url) return meta.avatar_url;
+    const hash = md5(user.email.trim().toLowerCase());
+    return await probeImage('https://www.gravatar.com/avatar/' + hash + '?s=200&d=404');
+  }
+  async function setNavLoggedIn(user) {
+    const meta     = user.user_metadata || {};
+    const first    = meta.first_name || '';
+    const last     = meta.last_name  || '';
+    const fullName = (meta.full_name || (first + ' ' + last).trim() || user.email.split('@')[0]).trim();
+    const initial  = fullName[0]?.toUpperCase() || '?';
+    document.getElementById('menu-toggle-btn').style.display   = 'none';
+    document.getElementById('menu-dropdown').style.display     = 'none';
+    document.getElementById('avatar-toggle-btn').style.display = 'inline-flex';
+    document.getElementById('nav-login-link').style.display    = 'none';
+    document.getElementById('nav-list-biz').style.display      = 'none';
+    document.getElementById('profile-name').textContent        = fullName || user.email;
+    document.getElementById('nav-avatar-initial').textContent  = initial;
+    const avatarUrl = await resolveAvatar(user);
+    if (avatarUrl) {
+      document.getElementById('nav-avatar').innerHTML =
+        '<img src="' + avatarUrl + '" alt="' + fullName + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />';
+    }
+  }
+  function setNavGuest() {
+    document.getElementById('menu-toggle-btn').style.display   = '';
+    document.getElementById('nav-login-link').style.display    = '';
+    document.getElementById('nav-list-biz').style.display      = '';
+    document.getElementById('avatar-toggle-btn').style.display = 'none';
+    document.getElementById('profile-dropdown').classList.remove('open');
+  }
+  _sb.auth.getSession().then(({ data }) => {
+    if (data.session?.user) setNavLoggedIn(data.session.user);
+  });
+  _sb.auth.onAuthStateChange(function(_ev, session) {
+    if (session?.user) setNavLoggedIn(session.user);
+    else setNavGuest();
+  });
+  async function signOut() {
+    await _sb.auth.signOut();
+    document.getElementById('profile-dropdown').classList.remove('open');
+  }
+  function toggleMenu() { document.getElementById('menu-dropdown').classList.toggle('open'); }
+  function toggleProfile() {
+    const dd    = document.getElementById('profile-dropdown');
+    const caret = document.getElementById('avatar-caret');
+    const open  = dd.classList.toggle('open');
+    caret.textContent = open ? '▲' : '▼';
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.menu-dropdown-wrap')) {
+      document.getElementById('menu-dropdown').classList.remove('open');
+      document.getElementById('profile-dropdown').classList.remove('open');
+      document.getElementById('avatar-caret').textContent = '▼';
+    }
+  });
+
+  /* ── SEARCH & DISCOVER ── */
+  const GOOGLE_PLACES_KEY = 'AIzaSyD_wG3tD4o_7Hon-YF0YwYmWQeFbAJGRKY';
+
+
+  let _srchMap = {};
+  let _bookmarks = JSON.parse(localStorage.getItem('genoti_bm') || '[]');
+
+  function _saveBM() {
+    localStorage.setItem('genoti_bm', JSON.stringify(_bookmarks));
+    _updateBMCount();
+  }
+  function _updateBMCount() {
+    const n = _bookmarks.length;
+    const el = document.getElementById('saved-count');
+    if (!el) return;
+    el.textContent = n;
+    el.style.display = n ? '' : 'none';
+  }
+  function _isBM(id) { return _bookmarks.some(b => b.id === id); }
+
+  function toggleBM(id) {
+    const m = _srchMap[id];
+    if (!m) return;
+    if (_isBM(id)) {
+      _bookmarks = _bookmarks.filter(b => b.id !== id);
+    } else {
+      _bookmarks.push({ ...m, savedAt: Date.now() });
+    }
+    _saveBM();
+    _renderResults(Object.values(_srchMap));
+    if (document.getElementById('tab-saved') && document.getElementById('tab-saved').style.display !== 'none') _renderSaved();
+  }
+
+  function removeBM(id) {
+    _bookmarks = _bookmarks.filter(b => b.id !== id);
+    _saveBM();
+    _renderSaved();
+  }
+
+  function switchSrchTab(tab) {
+    document.querySelectorAll('.srch-tab').forEach(t => t.classList.remove('active'));
+    const searchPanel = document.getElementById('tab-search');
+    const savedPanel  = document.getElementById('tab-saved');
+    const tabs = document.querySelectorAll('.srch-tab');
+    if (tab === 'search') {
+      searchPanel.style.display = '';
+      savedPanel.style.display  = 'none';
+      tabs[0].classList.add('active');
+    } else {
+      searchPanel.style.display = 'none';
+      savedPanel.style.display  = '';
+      tabs[1].classList.add('active');
+      _renderSaved();
+    }
+  }
+
+  function selectSrchChip(el, groupId) {
+    document.querySelectorAll('#' + groupId + ' .srch-chip').forEach(c => c.classList.remove('on'));
+    el.classList.add('on');
+    doSearch();
+  }
+  function selectSrchPincode(el) {
+    if (el.classList.contains('soon')) return;
+    document.querySelectorAll('#srch-pincode .srch-pincode-chip').forEach(c => c.classList.remove('on'));
+    el.classList.add('on');
+    doSearch();
+  }
+  function selectSrchCat(el) {
+    document.querySelectorAll('#srch-cats .srch-cat').forEach(c => c.classList.remove('on'));
+    el.classList.add('on');
+    doSearch();
+  }
+
+  function useMyLocation() {
+    if (!navigator.geolocation) return alert('Geolocation not supported by your browser.');
+    navigator.geolocation.getCurrentPosition(
+      pos => { document.getElementById('srch-location').value = pos.coords.latitude.toFixed(4) + ', ' + pos.coords.longitude.toFixed(4); doSearch(); },
+      ()  => { document.getElementById('srch-location').value = 'Unable to get location'; }
+    );
+  }
+
+  async function doSearch() {
+    const q     = (document.getElementById('srch-query').value || '').trim();
+    const cat   = (document.querySelector('#srch-cats .srch-cat.on') || {}).dataset.cat || '';
+    const radKm = parseInt((document.querySelector('#srch-radius .srch-chip.on') || {}).dataset.val || '1000') / 1000;
+    const el    = document.getElementById('srch-results');
+
+    el.innerHTML = '<div class="srch-placeholder"><div style="font-size:28px">⏳</div><div>Searching…</div></div>';
+
+    try {
+      let qb = _sb.from('merchants')
+        .select('id, name, category, address, distance_km, rating, listed, emoji, alerts')
+        .order('distance_km', { nullsFirst: false })
+        .limit(15);
+      if (cat) qb = qb.eq('category', cat);
+      if (q)   qb = qb.ilike('name', '%' + q + '%');
+
+      const { data, error } = await qb;
+      if (error) throw error;
+
+      const raw = data || [];
+      const results = raw
+        .filter(m => m.distance_km == null || m.distance_km <= radKm)
+        .map(m => ({
+          ...m,
+          addr:   m.address   || '',
+          dist:   m.distance_km || 0,
+          alerts: Array.isArray(m.alerts) ? m.alerts : [],
+        }));
+
+      if (!results.length && GOOGLE_PLACES_KEY) {
+        el.innerHTML = '<div class="srch-placeholder"><div style="font-size:28px">🌐</div><div>No Genoti merchants found — searching Google Places…</div></div>';
+        await _searchGooglePlaces(q || cat, radKm);
+        return;
+      }
+
+      if (!results.length) {
+        el.innerHTML = '<div class="srch-placeholder"><div style="font-size:32px">🤷</div><div style="font-weight:700;margin-bottom:6px">No matches found</div><div style="font-size:13px;color:#6B7280;max-width:340px;text-align:center">Try a different keyword, wider radius, or category.</div></div>';
+        return;
+      }
+
+      _srchMap = {};
+      results.forEach(m => { _srchMap[m.id] = m; });
+      _renderResults(results);
+    } catch (err) {
+      el.innerHTML = '<div class="srch-placeholder"><div style="font-size:28px">⚠️</div><div style="font-weight:700;margin-bottom:6px">Search error</div><div style="font-size:13px;color:#EF4444">' + err.message + '</div></div>';
+      console.error('doSearch error:', err);
+    }
+  }
+
+  async function _searchGooglePlaces(q, radKm) {
+    const chip = document.querySelector('#srch-pincode .srch-pincode-chip.on');
+    const loc  = chip ? chip.dataset.loc : '560100 Bengaluru';
+    const lat  = chip ? parseFloat(chip.dataset.lat) : 12.9716;
+    const lng  = chip ? parseFloat(chip.dataset.lng) : 77.5946;
+    const body = {
+      textQuery: q + ' ' + loc,
+      maxResultCount: 15,
+      locationBias: { circle: { center: { latitude: lat, longitude: lng }, radius: 10000 } }
+    };
+    try {
+      const res  = await fetch('https://places.googleapis.com/v1/places:searchText', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Goog-Api-Key': GOOGLE_PLACES_KEY, 'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.rating,places.primaryTypeDisplayName' },
+        body: JSON.stringify(body)
+      });
+      const json = await res.json();
+      const places = (json.places || []).map(p => ({
+        id: 'gp_' + p.id, name: p.displayName?.text || 'Unknown', category: q,
+        addr: p.formattedAddress || '', dist: '?', rating: p.rating || '—',
+        listed: false, emoji: '📍', alerts: [],
+      }));
+      _srchMap = {};
+      places.forEach(m => { _srchMap[m.id] = m; });
+      _renderResults(places);
+    } catch(e) { console.warn('Google Places error:', e); }
+  }
+
+  const _alertLabel = { offpeak: '⚡ Off-Peak Deals', pricedrop: '💸 Price Drops', flash: '🔥 Flash Sales' };
+  function _distStr(d) { return d < 1 ? Math.round(d * 1000) + ' m' : d + ' km'; }
+
+  function _renderResults(list) {
+    const el = document.getElementById('srch-results');
+    if (!el) return;
+    if (!list.length) {
+      el.innerHTML = '<div class="srch-placeholder"><div class="srch-placeholder-icon">🤷</div><div class="srch-placeholder-title">No matches found</div><div>Try a different keyword, wider radius, or category.</div></div>';
+      return;
+    }
+    el.innerHTML = list.map(m => {
+      const watching = _isBM(m.id);
+      const alertChips = m.listed && m.alerts.length
+        ? m.alerts.map(a => '<span class="merch-alert-chip">' + (_alertLabel[a]||a) + '</span>').join('')
+        : '';
+      return '<div class="merch-card">'
+        + '<div class="merch-card-top">'
+        +   '<div class="merch-emoji">' + m.emoji + '</div>'
+        +   '<div class="merch-info">'
+        +     '<div class="merch-name">' + m.name + '</div>'
+        +     '<div class="merch-cat-dist" style="text-transform:capitalize">' + m.category + ' &middot; <span class="merch-dist-val">' + _distStr(m.dist) + ' away</span></div>'
+        +   '</div>'
+        + '</div>'
+        + '<div class="merch-addr">📍 ' + m.addr + '</div>'
+        + '<div class="merch-rating-row">'
+        +   '<span class="merch-stars">★ ' + m.rating + '</span>'
+        +   '<span class="merch-status ' + (m.listed ? 'listed' : 'unlisted') + '">' + (m.listed ? '✓ On Genoti' : '⏳ Not listed yet') + '</span>'
+        + '</div>'
+        + (alertChips ? '<div class="merch-alert-chips">' + alertChips + '</div>' : '')
+        + '<button class="merch-bm-btn ' + (watching ? 'watching' : '') + '" onclick="toggleBM(this.dataset.id)" data-id="' + m.id + '">'
+        +   (watching ? '🔔 Watching' : (m.listed ? '🔔 Save & Get Alerts' : '🔔 Notify When They Join'))
+        + '</button>'
+        + '</div>';
+    }).join('');
+  }
+
+  function _renderSaved() {
+    const el = document.getElementById('saved-list');
+    if (!el) return;
+    if (!_bookmarks.length) {
+      el.innerHTML = '<div class="saved-empty"><div class="saved-empty-icon">🔖</div><div class="saved-empty-title">No saved alerts yet</div><div>Search for a business and tap "Save &amp; Get Alerts" to start watching it.</div></div>';
+      return;
+    }
+    el.innerHTML = _bookmarks.map(b => {
+      const chips = b.listed && b.alerts?.length
+        ? b.alerts.map(a => '<span class="saved-item-chip">' + (_alertLabel[a]||a) + '</span>').join('')
+        : '<span class="saved-item-chip pending">⏳ Notify when they join Genoti</span>';
+      return '<div class="saved-item">'
+        + '<div class="saved-item-emoji">' + b.emoji + '</div>'
+        + '<div class="saved-item-body">'
+        +   '<div class="saved-item-name">' + b.name + '</div>'
+        +   '<div class="saved-item-addr">📍 ' + b.addr + '</div>'
+        +   '<div class="saved-item-chips">' + chips + '</div>'
+        + '</div>'
+        + '<button class="saved-remove" onclick="removeBM(this.dataset.id)" data-id="' + b.id + '" title="Remove">&#10005;</button>'
+        + '</div>';
+    }).join('');
+  }
+
+  _updateBMCount();
+
+  function nmToggleChannel(el) {
+    el.classList.toggle('on');
+  }
+  function nmToggleAlert(el) {
+    el.classList.toggle('on');
+    el.querySelector('.nm-switch').classList.toggle('on');
+  }
+  function nmSelectPill(el, groupId) {
+    document.getElementById(groupId).querySelectorAll('.nm-pill').forEach(p => p.classList.remove('on'));
+    el.classList.add('on');
+  }
+  function nmActivate() {
+    const btn = document.getElementById('nm-cta-btn');
+    btn.classList.add('success');
+    btn.innerHTML = '✅ Alerts activated! You\'re all set.';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.classList.remove('success');
+      btn.innerHTML = '🔔 Start Getting Alerts';
+      btn.disabled = false;
+    }, 4000);
+  }
+</script>
+</body>
+</html>

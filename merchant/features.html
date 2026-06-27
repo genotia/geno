@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Features — Genoti AI for Merchants</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #1D9E75; --dark-green: #085041; --text: #111827;
+      --muted: #6B7280; --border: #E5E7EB; --bg: #F9FAFB;
+      --white: #ffffff;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text); background: var(--white); line-height: 1.5; }
+
+    /* ── NAVBAR ── */
+    nav { position: sticky; top: 0; z-index: 200; background: var(--white); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 4px; list-style: none; align-items: center; }
+    .nav-links a { text-decoration: none; font-size: 15px; font-weight: 500; color: var(--text); padding: 8px 16px; border-radius: 8px; transition: background .15s, color .15s; display: block; }
+    .nav-links a:hover { background: var(--bg); }
+    .nav-links a.active { color: var(--green); font-weight: 600; }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .btn-marketplace { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid var(--border); border-radius: 40px; padding: 9px 20px; cursor: pointer; text-decoration: none; transition: border-color .15s, background .15s; font-family: inherit; white-space: nowrap; }
+    .btn-marketplace:hover { border-color: #9CA3AF; background: var(--bg); }
+    .btn-signup { display: inline-flex; align-items: center; font-size: 14px; font-weight: 700; color: var(--white); background: var(--text); border: none; border-radius: 40px; padding: 10px 24px; cursor: pointer; text-decoration: none; transition: opacity .15s; font-family: inherit; white-space: nowrap; }
+    .btn-signup:hover { opacity: .82; }
+    .btn-pill-menu { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid #D1D5DB; border-radius: 40px; padding: 9px 18px; cursor: pointer; transition: border-color .15s, background .15s; font-family: inherit; }
+    .btn-pill-menu:hover { border-color: var(--text); background: var(--bg); }
+    .menu-icon { display: flex; flex-direction: column; gap: 4px; }
+    .menu-icon span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; }
+    .menu-dropdown-wrap { position: relative; }
+    .menu-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500; padding: 8px 0; }
+    .menu-dropdown.open { display: block; }
+    .menu-main-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; font-size: 16px; font-weight: 700; color: var(--text); text-decoration: none; cursor: default; font-family: inherit; }
+    .menu-main-item.clickable { cursor: pointer; transition: background .12s; }
+    .menu-main-item.clickable:hover { background: var(--bg); border-radius: 10px; }
+    .menu-main-arrow { font-size: 18px; color: var(--muted); font-weight: 400; }
+    .menu-sub-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; font-weight: 400; color: #374151; text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s; }
+    .menu-sub-item:hover { background: var(--bg); }
+    .menu-sub-item.highlight { color: var(--green); font-weight: 600; }
+    .menu-sub-item svg { flex-shrink: 0; color: var(--muted); }
+    .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+    /* ── HERO ── */
+    .hero { background: linear-gradient(160deg, #051a12 0%, #0b2d1e 55%, #071710 100%); padding: 72px 24px 64px; text-align: center; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.1); color: rgba(255,255,255,.8); font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; letter-spacing: .6px; text-transform: uppercase; }
+    .hero h1 { font-size: clamp(30px, 4.5vw, 54px); font-weight: 800; letter-spacing: -2px; line-height: 1.08; color: #fff; margin-bottom: 16px; }
+    .hero h1 em { font-style: normal; color: #4ADEAB; }
+    .hero-sub { font-size: 17px; color: rgba(255,255,255,.58); max-width: 560px; margin: 0 auto 40px; line-height: 1.65; }
+    .hero-stats { display: flex; gap: 0; justify-content: center; max-width: 640px; margin: 0 auto; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; overflow: hidden; }
+    .h-stat { flex: 1; padding: 16px 10px; text-align: center; border-right: 1px solid rgba(255,255,255,.08); }
+    .h-stat:last-child { border-right: none; }
+    .h-stat-v { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -.5px; }
+    .h-stat-v em { color: #4ADEAB; font-style: normal; }
+    .h-stat-l { font-size: 11px; color: rgba(255,255,255,.42); margin-top: 2px; }
+
+    /* ── SECTION NAV ── */
+    .section-nav { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 64px; z-index: 100; }
+    .section-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .section-nav-inner::-webkit-scrollbar { display: none; }
+    .snav-btn { padding: 16px 24px; font-size: 14px; font-weight: 700; color: var(--muted); background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; transition: all .15s; font-family: inherit; letter-spacing: -.1px; }
+    .snav-btn:hover { color: var(--text); }
+    .snav-btn.active { color: var(--green); border-bottom-color: var(--green); }
+
+    /* ── SHARED SECTION STYLES ── */
+    .page-section { padding: 72px 24px; }
+    .page-section + .page-section { border-top: 1px solid var(--border); }
+    .section-wrap { max-width: 1200px; margin: 0 auto; }
+    .sec-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
+    .sec-title { font-size: clamp(22px, 2.5vw, 30px); font-weight: 800; letter-spacing: -.6px; margin-bottom: 8px; }
+    .sec-sub { font-size: 15px; color: var(--muted); max-width: 600px; line-height: 1.65; }
+
+    /* ── OS MODULES ── */
+    .os-section { background: var(--bg); }
+    .os-header { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 20px; margin-bottom: 40px; }
+    .os-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .os-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 16px; padding: 24px; transition: box-shadow .2s, transform .2s; }
+    .os-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.08); transform: translateY(-2px); }
+    .os-card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .os-card-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(29,158,117,.08); border: 1px solid rgba(29,158,117,.15); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .os-card-name { font-size: 16px; font-weight: 700; letter-spacing: -.3px; }
+    .os-badge { margin-left: auto; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+    .os-badge.p1 { background: rgba(29,158,117,.1); color: var(--green); border: 1px solid rgba(29,158,117,.2); }
+    .os-badge.p2 { background: rgba(59,130,246,.1); color: #3B82F6; border: 1px solid rgba(59,130,246,.2); }
+    .os-badge.p3 { background: rgba(107,114,128,.1); color: #6B7280; border: 1px solid rgba(107,114,128,.2); }
+    .os-card-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+    .os-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .os-chip { font-size: 11px; padding: 3px 9px; border-radius: 20px; background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+
+    /* ── AI AGENTS SECTION ── */
+    .ai-section { background: #071f16; }
+    .ai-section .sec-label { color: #4ADEAB; }
+    .ai-section .sec-title { color: #fff; }
+    .ai-section .sec-sub { color: rgba(255,255,255,.5); }
+    .ai-cat-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 32px 0 24px; }
+    .ai-cat-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 16px; border-radius: 20px;
+      border: 1.5px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.05);
+      font-size: 13px; font-weight: 600; color: rgba(240,253,248,.55);
+      cursor: pointer; transition: all .15s; white-space: nowrap; font-family: inherit;
+    }
+    .ai-cat-btn:hover { border-color: rgba(255,255,255,.3); color: #F0FDF8; }
+    .ai-cat-btn.active { color: #fff; }
+    .ai-tab-count { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; background: rgba(255,255,255,.18); }
+    .ai-group { margin-bottom: 36px; }
+    .ai-group-label { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: rgba(240,253,248,.4); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .agents-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .agent-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 18px; transition: background .15s, transform .15s; }
+    .agent-card:hover { background: rgba(255,255,255,.09); transform: translateY(-1px); }
+    .ac-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .ac-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .ac-live { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+    .ac-live.live { background: rgba(29,158,117,.18); color: #4ADEAB; }
+    .ac-live.soon { background: rgba(255,255,255,.08); color: rgba(255,255,255,.4); }
+    .ac-name { font-size: 13px; font-weight: 700; color: #F0FDF8; margin-bottom: 5px; }
+    .ac-desc { font-size: 11.5px; color: rgba(240,253,248,.45); line-height: 1.55; }
+
+    /* ── PLATFORM HIGHLIGHTS ── */
+    .platform-section { background: var(--white); }
+    .highlights-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+    .highlight-card { border: 1.5px solid var(--border); border-radius: 16px; padding: 28px; }
+    .highlight-icon { font-size: 28px; margin-bottom: 14px; }
+    .highlight-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .highlight-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+    .highlight-list { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 7px; }
+    .highlight-list li { font-size: 13px; color: var(--muted); display: flex; gap: 8px; align-items: flex-start; }
+    .highlight-list li::before { content: "✓"; color: var(--green); flex-shrink: 0; font-weight: 700; margin-top: 1px; }
+
+    /* ── INTEGRATIONS ── */
+    .integrations-section { background: var(--bg); }
+    .int-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
+    .int-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 20px 16px; text-align: center; transition: box-shadow .15s; }
+    .int-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); }
+    .int-icon { font-size: 28px; margin-bottom: 8px; }
+    .int-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .int-desc { font-size: 11px; color: var(--muted); }
+
+    /* ── BOTTOM CTA ── */
+    .bottom-cta { background: var(--dark-green); padding: 72px 24px; text-align: center; }
+    .bottom-cta h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; color: #fff; letter-spacing: -.8px; margin-bottom: 12px; }
+    .bottom-cta p { font-size: 16px; color: rgba(255,255,255,.65); max-width: 460px; margin: 0 auto 32px; }
+    .bottom-cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-hero-primary { background: var(--white); color: var(--dark-green); font-size: 15px; font-weight: 700; border: none; border-radius: 10px; padding: 13px 28px; cursor: pointer; transition: opacity .15s; text-decoration: none; display: inline-block; }
+    .btn-hero-primary:hover { opacity: .9; }
+    .btn-hero-outline { background: transparent; color: #fff; font-size: 15px; font-weight: 600; border: 2px solid rgba(255,255,255,.3); border-radius: 10px; padding: 11px 28px; cursor: pointer; transition: border-color .15s; text-decoration: none; display: inline-block; }
+    .btn-hero-outline:hover { border-color: rgba(255,255,255,.7); }
+
+    /* ── FOOTER ── */
+    footer { background: #111827; color: rgba(255,255,255,.6); padding: 48px 24px 32px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .footer-brand .logo { color: var(--white); font-size: 20px; display: block; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; line-height: 1.6; max-width: 240px; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,.55); text-decoration: none; transition: color .15s; }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; font-size: 12px; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
+    .footer-socials { display: flex; gap: 16px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1000px) { .agents-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .os-grid { grid-template-columns: 1fr 1fr; }
+      .highlights-grid { grid-template-columns: 1fr 1fr; }
+      .int-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .os-grid { grid-template-columns: 1fr; }
+      .agents-grid { grid-template-columns: 1fr 1fr; }
+      .highlights-grid { grid-template-columns: 1fr; }
+      .int-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="nav-inner">
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
+      <a href="merchants.html" class="logo">✨ Genoti <span>AI</span></a>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">AI Operating System for Local Businesses</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="business-types.html">Business Types</a></li>
+      <li><a href="features.html" class="active">Features</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="../index.html" class="btn-marketplace">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Marketplace
+      </a>
+      <a href="../register.html" class="btn-signup">Sign up</a>
+      <div class="menu-dropdown-wrap">
+        <button class="btn-pill-menu" onclick="toggleMenu()" aria-label="Menu">
+          Menu
+          <div class="menu-icon"><span></span><span></span><span></span></div>
+        </button>
+        <div class="menu-dropdown" id="menu-dropdown">
+          <div class="menu-main-item">For businesses</div>
+          <a href="merchants.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Merchant OS
+          </a>
+          <a href="business-types.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            Business Types
+          </a>
+          <a href="features.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Features
+          </a>
+          <a href="ai-agents.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M12 2a3 3 0 0 1 3 3v6H9V5a3 3 0 0 1 3-3z"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/><path d="M8 2v2M16 2v2"/></svg>
+            AI Agents Platform
+          </a>
+          <a href="index.html" class="menu-sub-item highlight">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Log in or sign up
+          </a>
+          <a href="../download-the-app.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-width="2" stroke-linecap="round"/></svg>
+            Download the app
+          </a>
+          <a href="../help.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Help and support
+          </a>
+          <div class="menu-divider"></div>
+          <a href="../index.html" class="menu-main-item clickable">
+            <span style="display:flex;align-items:center;gap:10px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              For customers
+            </span>
+            <span class="menu-main-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-eyebrow">✨ Features</div>
+  <h1>Everything to run your business.<br><em>Nothing you don't need.</em></h1>
+  <p class="hero-sub">One platform combines a powerful SaaS operating system with 22+ AI agents working 24/7 — so you can focus on your customers, not admin.</p>
+  <div class="hero-stats">
+    <div class="h-stat"><div class="h-stat-v">11<em>+</em></div><div class="h-stat-l">OS modules</div></div>
+    <div class="h-stat"><div class="h-stat-v">22<em>+</em></div><div class="h-stat-l">AI agents</div></div>
+    <div class="h-stat"><div class="h-stat-v">5<em>+</em></div><div class="h-stat-l">Channels supported</div></div>
+    <div class="h-stat"><div class="h-stat-v">24<em>/7</em></div><div class="h-stat-l">AI always on</div></div>
+  </div>
+</section>
+
+<!-- ══ SECTION NAV ══ -->
+<div class="section-nav">
+  <div class="section-nav-inner">
+    <button class="snav-btn active" onclick="scrollToSection(this,'os')">🏪 Merchant OS</button>
+    <button class="snav-btn" onclick="scrollToSection(this,'ai')">🤖 AI Agents</button>
+    <button class="snav-btn" onclick="scrollToSection(this,'platform')">⚡ Platform</button>
+    <button class="snav-btn" onclick="scrollToSection(this,'integrations')">🔌 Integrations</button>
+  </div>
+</div>
+
+<!-- ══ MERCHANT OS ══ -->
+<section class="page-section os-section" id="os">
+  <div class="section-wrap">
+    <div class="os-header">
+      <div>
+        <div class="sec-label">SaaS Foundation</div>
+        <div class="sec-title">Merchant OS — 11+ modules</div>
+        <div class="sec-sub">The operational backbone of your business. Book, manage, market, and grow — all from one dashboard.</div>
+      </div>
+    </div>
+    <div class="os-grid" id="os-grid"></div>
+  </div>
+</section>
+
+<!-- ══ AI AGENTS ══ -->
+<section class="page-section ai-section" id="ai">
+  <div class="section-wrap">
+    <div class="sec-label">Intelligence Layer</div>
+    <div class="sec-title">AI Agents — 22+ working 24/7</div>
+    <div class="sec-sub">AI employees that never sleep. Each agent handles a specific job — from answering calls to running campaigns to predicting demand.</div>
+    <div class="ai-cat-tabs" id="ai-cat-tabs"></div>
+    <div id="ai-agents-wrap"></div>
+  </div>
+</section>
+
+<!-- ══ PLATFORM HIGHLIGHTS ══ -->
+<section class="page-section platform-section" id="platform">
+  <div class="section-wrap">
+    <div class="sec-label">Platform</div>
+    <div class="sec-title">Built for every local business</div>
+    <div class="sec-sub">Whether you run a single salon or a chain of clinics, Genoti adapts to how you work.</div>
+    <div class="highlights-grid">
+      <div class="highlight-card">
+        <div class="highlight-icon">📱</div>
+        <div class="highlight-title">Mobile-first management</div>
+        <div class="highlight-desc">Run your entire business from your phone. The Genoti merchant app puts your dashboard, calendar, and team in your pocket.</div>
+        <ul class="highlight-list">
+          <li>iOS and Android apps</li>
+          <li>Real-time booking notifications</li>
+          <li>Staff schedule on the go</li>
+          <li>Instant revenue snapshots</li>
+        </ul>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon">💬</div>
+        <div class="highlight-title">WhatsApp-first communication</div>
+        <div class="highlight-desc">Your customers live on WhatsApp. Genoti sends bookings, reminders, offers, and loyalty updates right where they are.</div>
+        <ul class="highlight-list">
+          <li>Automated booking confirmations</li>
+          <li>Reminder messages before appointments</li>
+          <li>Post-visit review requests</li>
+          <li>Marketing campaigns & deal alerts</li>
+        </ul>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon">🔒</div>
+        <div class="highlight-title">Secure and compliant</div>
+        <div class="highlight-desc">Enterprise-grade security for businesses of all sizes. Your data and your customers' data stays safe.</div>
+        <ul class="highlight-list">
+          <li>SOC 2-compliant infrastructure</li>
+          <li>Data encrypted at rest and in transit</li>
+          <li>Role-based staff access controls</li>
+          <li>GDPR & DPDP Act ready</li>
+        </ul>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon">📍</div>
+        <div class="highlight-title">Multi-location ready</div>
+        <div class="highlight-desc">Manage all your branches from one account. See consolidated reports, unified staff, and cross-location analytics.</div>
+        <ul class="highlight-list">
+          <li>Centralized multi-branch dashboard</li>
+          <li>Per-location staff & inventory</li>
+          <li>Cross-location booking transfers</li>
+          <li>Rollup analytics & reporting</li>
+        </ul>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon">⚡</div>
+        <div class="highlight-title">No setup hassle</div>
+        <div class="highlight-desc">Go live in under 30 minutes. No IT team needed. Our onboarding team imports your data and gets you set up.</div>
+        <ul class="highlight-list">
+          <li>30-minute guided onboarding</li>
+          <li>Import existing customer data</li>
+          <li>Staff training resources included</li>
+          <li>Dedicated support during go-live</li>
+        </ul>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-icon">📊</div>
+        <div class="highlight-title">Data you can actually use</div>
+        <div class="highlight-desc">Stop guessing. Every decision backed by real numbers — bookings, revenue, retention, staff productivity, and more.</div>
+        <ul class="highlight-list">
+          <li>Daily revenue & booking dashboards</li>
+          <li>Customer lifetime value tracking</li>
+          <li>Peak vs. off-peak analysis</li>
+          <li>Staff performance reports</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ INTEGRATIONS ══ -->
+<section class="page-section integrations-section" id="integrations">
+  <div class="section-wrap">
+    <div class="sec-label">Integrations</div>
+    <div class="sec-title">Works with the tools you already use</div>
+    <div class="sec-sub">Genoti connects with the platforms your customers, team, and business already rely on.</div>
+    <div class="int-grid">
+      <div class="int-card">
+        <div class="int-icon">💬</div>
+        <div class="int-name">WhatsApp Business</div>
+        <div class="int-desc">Bookings, reminders & campaigns</div>
+      </div>
+      <div class="int-card">
+        <div class="int-icon">🗺️</div>
+        <div class="int-name">Google Business</div>
+        <div class="int-desc">Reviews, maps & local SEO</div>
+      </div>
+      <div class="int-card">
+        <div class="int-icon">📸</div>
+        <div class="int-name">Instagram</div>
+        <div class="int-desc">AI social content & scheduling</div>
+      </div>
+      <div class="int-card">
+        <div class="int-icon">📘</div>
+        <div class="int-name">Facebook</div>
+        <div class="int-desc">Ads, pages & lead management</div>
+      </div>
+      <div class="int-card">
+        <div class="int-icon">🌟</div>
+        <div class="int-name">Zomato & Swiggy</div>
+        <div class="int-desc">Review monitoring & responses</div>
+      </div>
+      <div class="int-card">
+        <div class="int-icon">💳</div>
+        <div class="int-name">Razorpay / Cashfree</div>
+        <div class="int-desc">Online payments & billing</div>
+      </div>
+      <div class="int-card">
+        <div class="int-icon">📧</div>
+        <div class="int-name">Email</div>
+        <div class="int-desc">Transactional & marketing emails</div>
+      </div>
+      <div class="int-card">
+        <div class="int-icon">📱</div>
+        <div class="int-name">SMS / DLT</div>
+        <div class="int-desc">Reminders & OTP verification</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BOTTOM CTA ══ -->
+<div class="bottom-cta">
+  <h2>Start with all features.<br>Upgrade as you grow.</h2>
+  <p>Every plan comes with a 14-day free trial. No credit card required.</p>
+  <div class="bottom-cta-btns">
+    <a href="../register.html" class="btn-hero-primary">Start free trial →</a>
+    <a href="pricing.html" class="btn-hero-outline">View pricing</a>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo">✨ Genoti <span>AI</span></a>
+        <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Browse deals</a></li>
+          <li><a href="#">How it works</a></li>
+          <li><a href="#">Cities</a></li>
+          <li><a href="#">Download app</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Merchants</h4>
+        <ul>
+          <li><a href="merchants.html">Merchant OS</a></li>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="#">Success stories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="../help.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+      <div class="footer-socials">
+        <a href="#">Twitter</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── Business Types Dropdown ── */
+  function toggleMenu() { document.getElementById('menu-dropdown').classList.toggle('open'); }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.menu-dropdown-wrap')) document.getElementById('menu-dropdown').classList.remove('open');
+  });
+
+  /* ── Section scroll nav ── */
+  function scrollToSection(btn, id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelectorAll('.snav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  /* ── OS Modules ── */
+  const OS_MODULES = [
+    { p:'p1', icon:'📅', name:'Booking Management',    desc:'Core engine — online slot booking, table reservations, staff calendar, WhatsApp reminders, no-show handling.', chips:['Web + app booking','Table reservations','Staff calendar','WhatsApp reminders','Walk-in queue'] },
+    { p:'p1', icon:'🎟️', name:'Membership & Packages', desc:'Recurring revenue — monthly/annual plans, session packs, auto-renewal, package tracking.', chips:['Monthly / annual','Session packs','Auto-renewal','Expired nudges'] },
+    { p:'p1', icon:'⭐', name:'Reputation Management',  desc:'Automate Google review collection, monitor ratings, draft AI responses to feedback.', chips:['Review automation','AI responses','Rating trends','Negative alerts'] },
+    { p:'p2', icon:'📣', name:'Marketing Management',   desc:'Fill seats — hyperlocal deals, WhatsApp campaigns, AI offer generator, re-engagement.', chips:['WhatsApp campaigns','AI offer generator','Segmentation','Re-engagement'] },
+    { p:'p2', icon:'🎁', name:'Loyalty & Referrals',    desc:'Keep customers coming back — points, gift cards, referral rewards, birthday offers.', chips:['Points loyalty','Gift cards','Referral rewards','Birthday offers'] },
+    { p:'p2', icon:'📊', name:'Analytics Dashboard',    desc:'Revenue, bookings, LTV, staff utilisation and effort sizing — all in one view.', chips:['Revenue dashboard','Peak vs off-peak','Customer LTV','Staff utilisation'] },
+    { p:'p2', icon:'🌐', name:'Presence Management',    desc:'Google Business sync, near-me SEO, keyword rank tracking, social media posting.', chips:['Google Business sync','Near-me SEO','Keyword tracking','Social posting'] },
+    { p:'p3', icon:'💬', name:'Support Suite',           desc:'AI chat widget, AI voice receptionist, ticketing, FAQ auto-responder and escalation.', chips:['AI chat','AI voice','Ticketing','FAQ auto-responder'] },
+    { p:'p3', icon:'👥', name:'Employee Management',    desc:'Shift scheduling, commission tracking, performance reports, leave management.', chips:['Shift scheduling','Commission tracking','Performance','Leave mgmt'] },
+    { p:'p3', icon:'📦', name:'Inventory Management',   desc:'Product stock tracking, low-stock alerts, supplier management, retail POS integration.', chips:['Stock tracking','Low-stock alerts','Supplier mgmt','Retail POS'] },
+    { p:'p3', icon:'🎙️', name:'AI Voice Receptionist',  desc:'Answers inbound calls 24/7, books appointments and reservations via voice, sends missed-call SMS.', chips:['24/7 call handling','Voice booking','Call transcripts','Multilingual'] },
+  ];
+
+  document.getElementById('os-grid').innerHTML = OS_MODULES.map(m => `
+    <div class="os-card">
+      <div class="os-card-head">
+        <div class="os-card-icon">${m.icon}</div>
+        <div class="os-card-name">${m.name}</div>
+        <span class="os-badge ${m.p}">${m.p === 'p1' ? 'Core' : m.p === 'p2' ? 'Growth' : 'Scale'}</span>
+      </div>
+      <div class="os-card-desc">${m.desc}</div>
+      <div class="os-chips">${m.chips.map(c => `<span class="os-chip">${c}</span>`).join('')}</div>
+    </div>
+  `).join('');
+
+  /* ── AI Agents ── */
+  const CATS = [
+    { id:'revenue',   label:'Revenue',      icon:'💰', color:'#1D9E75', bg:'rgba(29,158,117,.18)',  count:5 },
+    { id:'cx',        label:'Customer Cx',  icon:'😊', color:'#8B5CF6', bg:'rgba(139,92,246,.18)',  count:5 },
+    { id:'ops',       label:'Operations',   icon:'⚙️', color:'#3B82F6', bg:'rgba(59,130,246,.18)',  count:5 },
+    { id:'marketing', label:'Marketing',    icon:'📣', color:'#F59E0B', bg:'rgba(245,158,11,.18)',  count:4 },
+    { id:'data',      label:'Intelligence', icon:'📊', color:'#14B8A6', bg:'rgba(20,184,166,.18)',  count:4 },
+  ];
+
+  const AGENTS = {
+    revenue: [
+      { icon:'💼', name:'AI Sales Agent',           desc:'Converts inquiries into confirmed bookings and table reservations via chat and voice, 24/7.' },
+      { icon:'⬆️', name:'AI Upsell Agent',          desc:'Recommends premium add-ons and upgrades at the right moment in the customer journey.' },
+      { icon:'💱', name:'AI Dynamic Pricing Agent', desc:'Adjusts prices in real-time based on demand, time of day, and slot occupancy.' },
+      { icon:'📈', name:'AI Yield Management Agent',desc:'Fills appointment and table gaps intelligently to maximise revenue per slot.' },
+      { icon:'🎟️', name:'AI Membership Agent',      desc:'Sells, manages, and auto-renews subscription plans effortlessly.' },
+    ],
+    cx: [
+      { icon:'📞', name:'AI Receptionist',          desc:'Handles calls, messages, and walk-ins 24/7 — never miss a customer or booking.' },
+      { icon:'🛎️', name:'AI Concierge Agent',       desc:'Guides patients or customers to the right service based on their needs and history.' },
+      { icon:'⭐', name:'AI Review Agent',           desc:'Collects and responds to reviews across Google, Zomato, and all platforms automatically.' },
+      { icon:'🎁', name:'AI Loyalty Agent',          desc:'Manages points, rewards, and repeat-visit incentives automatically.' },
+      { icon:'🔄', name:'AI Retention Agent',        desc:'Re-engages lapsed customers or patients with timely reminders and offers.' },
+    ],
+    ops: [
+      { icon:'📅', name:'AI Scheduler',             desc:'Optimises staff rosters, test slots, and resource allocation automatically.' },
+      { icon:'👥', name:'AI Workforce Manager',      desc:'Tracks attendance, performance, and team productivity in one view.' },
+      { icon:'📦', name:'AI Inventory Agent',        desc:'Monitors stock and triggers automatic reorders before you run out.' },
+      { icon:'🛒', name:'AI Procurement Agent',      desc:'Automates supplier orders with cost-optimised recommendations.' },
+      { icon:'🔍', name:'AI Expense Auditor',        desc:'Flags anomalies and generates expense reports in real time.' },
+    ],
+    marketing: [
+      { icon:'📣', name:'AI Campaign Manager',       desc:'Plans and executes targeted promotions across WhatsApp, SMS, email, and social.' },
+      { icon:'📱', name:'AI Social Media Agent',     desc:'Creates and publishes branded content to Instagram, Google, and Facebook.' },
+      { icon:'📍', name:'AI Local SEO Agent',        desc:'Boosts Google Maps ranking and local search visibility without paid ads.' },
+      { icon:'🤝', name:'AI Referral Agent',         desc:'Automates doctor and customer referral programs that consistently drive new bookings.' },
+    ],
+    data: [
+      { icon:'🗄️', name:'AI Customer Data Platform',desc:'Unifies data from bookings, payments, and reviews into one patient or customer profile.' },
+      { icon:'📊', name:'AI Business Analyst',       desc:'Delivers daily KPIs and insights — no spreadsheets needed.' },
+      { icon:'🔮', name:'AI Forecasting Agent',      desc:'Predicts appointment demand, test volumes, and revenue trends weeks in advance.' },
+      { icon:'🕵️', name:'AI Competitive Intelligence',desc:'Monitors competitor pricing and promotions in your local area.' },
+    ],
+  };
+
+  let activeCat = 'all';
+  const TOTAL = CATS.reduce((s, c) => s + c.count, 0);
+
+  function renderAiTabs() {
+    const allActive = activeCat === 'all';
+    document.getElementById('ai-cat-tabs').innerHTML =
+      `<button class="ai-cat-btn${allActive?' active':''}" style="${allActive?'background:#475569;border-color:#475569;color:#fff':''}" onclick="switchCat('all')">
+        🤖 All agents <span class="ai-tab-count">${TOTAL}</span>
+      </button>` +
+      CATS.map(c => `
+        <button class="ai-cat-btn${c.id===activeCat?' active':''}"
+          style="${c.id===activeCat?`background:${c.color};border-color:${c.color};color:#fff`:''}"
+          onclick="switchCat('${c.id}')">
+          ${c.icon} ${c.label} <span class="ai-tab-count">${c.count}</span>
+        </button>
+      `).join('');
+  }
+
+  function renderAgents() {
+    const wrap = document.getElementById('ai-agents-wrap');
+    if (activeCat === 'all') {
+      wrap.innerHTML = CATS.map(cat => `
+        <div class="ai-group">
+          <div class="ai-group-label"><span>${cat.icon}</span> ${cat.label}</div>
+          <div class="agents-grid">
+            ${AGENTS[cat.id].map((a, i) => agentCard(a, i, cat)).join('')}
+          </div>
+        </div>
+      `).join('');
+    } else {
+      const cat = CATS.find(c => c.id === activeCat);
+      wrap.innerHTML = `<div class="agents-grid">${AGENTS[activeCat].map((a, i) => agentCard(a, i, cat)).join('')}</div>`;
+    }
+  }
+
+  function agentCard(a, i, cat) {
+    return `<div class="agent-card">
+      <div class="ac-head">
+        <div class="ac-icon" style="background:${cat.bg}">${a.icon}</div>
+        <span class="ac-live ${i < 2 ? 'live' : 'soon'}">${i < 2 ? '● Live' : 'Soon'}</span>
+      </div>
+      <div class="ac-name">${a.name}</div>
+      <div class="ac-desc">${a.desc}</div>
+    </div>`;
+  }
+
+  function switchCat(id) { activeCat = id; renderAiTabs(); renderAgents(); }
+
+  renderAiTabs();
+  renderAgents();
+</script>
+</body>
+</html>

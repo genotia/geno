@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pricing — Genoti AI for Merchants</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #ffffff;
+      color: #1A1A18;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :root {
+      --green:       #1D9E75;
+      --green-dark:  #085041;
+      --green-deep:  #0F6E56;
+      --green-light: #E1F5EE;
+      --white: #ffffff;
+      --text:  #111827;
+      --muted: #6B7280;
+      --bg:    #F9FAFB;
+      --green-mid:   #9FE1CB;
+      --purple-bg:   #EEEDFE;
+      --purple-text: #3C3489;
+      --amber-bg:    #FAEEDA;
+      --amber-text:  #854F0B;
+      --gray-bg:     #F1EFE8;
+      --gray-text:   #5F5E5A;
+      --blue-bg:     #E6F1FB;
+      --blue-text:   #185FA5;
+      --border:      rgba(0,0,0,0.09);
+      --border-mid:  rgba(0,0,0,0.14);
+      --surface:     #fff;
+      --surface-2:   #F9FAFB;
+      --text-1:      #1A1A18;
+      --text-2:      #5F5E5A;
+      --text-3:      #888780;
+      --radius-sm:   6px;
+      --radius-md:   10px;
+      --radius-lg:   14px;
+      --radius-xl:   18px;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md:   0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+    }
+
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+    .section   { padding: 56px 0; }
+    .section + .section { border-top: 1px solid var(--border); }
+
+    /* ── NAVBAR ── */
+    nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid #E5E7EB; }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 4px; list-style: none; align-items: center; }
+    .nav-links a { text-decoration: none; font-size: 15px; font-weight: 500; color: var(--text); padding: 8px 16px; border-radius: 8px; transition: background .15s, color .15s; display: block; }
+    .nav-links a:hover { background: var(--bg); }
+    .nav-links a.active { color: var(--green); font-weight: 600; }
+    .nav-right { display: flex; align-items: center; gap: 8px; }
+    .btn-marketplace { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid #E5E7EB; border-radius: 40px; padding: 9px 20px; cursor: pointer; text-decoration: none; transition: border-color .15s, background .15s; font-family: inherit; white-space: nowrap; }
+    .btn-marketplace:hover { border-color: #9CA3AF; background: var(--bg); }
+    .btn-signup { display: inline-flex; align-items: center; font-size: 14px; font-weight: 700; color: var(--white); background: var(--text); border: none; border-radius: 40px; padding: 10px 24px; cursor: pointer; text-decoration: none; transition: opacity .15s; font-family: inherit; white-space: nowrap; }
+    .btn-signup:hover { opacity: .82; }
+    .btn-pill-menu { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid #D1D5DB; border-radius: 40px; padding: 9px 18px; cursor: pointer; transition: border-color .15s, background .15s; font-family: inherit; }
+    .btn-pill-menu:hover { border-color: var(--text); background: var(--bg); }
+    .menu-icon { display: flex; flex-direction: column; gap: 4px; }
+    .menu-icon span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; }
+    .menu-dropdown-wrap { position: relative; }
+    .menu-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--white); border: 1px solid #E5E7EB; border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500; padding: 8px 0; }
+    .menu-dropdown.open { display: block; }
+    .menu-main-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; font-size: 16px; font-weight: 700; color: var(--text); text-decoration: none; cursor: default; font-family: inherit; }
+    .menu-main-item.clickable { cursor: pointer; transition: background .12s; }
+    .menu-main-item.clickable:hover { background: var(--bg); border-radius: 10px; }
+    .menu-main-arrow { font-size: 18px; color: var(--muted); font-weight: 400; }
+    .menu-sub-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; font-weight: 400; color: #374151; text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s; }
+    .menu-sub-item:hover { background: var(--bg); }
+    .menu-sub-item.highlight { color: var(--green); font-weight: 600; }
+    .menu-sub-item svg { flex-shrink: 0; color: var(--muted); }
+    .menu-divider { height: 1px; background: #E5E7EB; margin: 8px 0; }
+
+    /* ── Hero ── */
+    .hero { background: linear-gradient(160deg, #051a12 0%, #0b2d1e 55%, #071710 100%); padding: 72px 0 64px; text-align: center; }
+    .eyebrow { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.8); background: rgba(255,255,255,.1); padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+    .hero-title { font-size: 40px; font-weight: 600; letter-spacing: -.03em; line-height: 1.15; margin-bottom: 14px; color: #fff; }
+    .hero-title em { font-style: normal; color: #4ADEAB; }
+    .hero-sub { font-size: 16px; color: rgba(255,255,255,.58); max-width: 540px; margin: 0 auto 32px; line-height: 1.65; }
+
+    /* ── Billing toggle ── */
+    .toggle-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 40px; }
+    .tog-label { font-size: 13px; color: rgba(255,255,255,.55); cursor: pointer; user-select: none; }
+    .tog-label.active { color: #fff; font-weight: 500; }
+    .tog-wrap { width: 44px; height: 24px; background: var(--green); border-radius: 12px; position: relative; cursor: pointer; border: none; transition: background .2s; }
+    .tog-wrap.off { background: #D0CFC9; }
+    .tog-knob { position: absolute; width: 18px; height: 18px; background: #fff; border-radius: 50%; top: 3px; right: 3px; transition: right .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    .tog-wrap.off .tog-knob { right: 23px; }
+    .save-badge { font-size: 11px; font-weight: 600; background: rgba(29,158,117,.25); color: #4ADEAB; padding: 3px 10px; border-radius: 100px; }
+
+    /* ── Plan cards ── */
+    .plans-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 48px; }
+    .plan-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 22px 16px; position: relative; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); transition: box-shadow .2s; }
+    .plan-card:hover { box-shadow: var(--shadow-md); }
+    .plan-card.featured { border: 2px solid var(--green); box-shadow: 0 0 0 4px var(--green-light), var(--shadow-md); }
+    .pop-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--green); color: #fff; font-size: 10px; font-weight: 600; padding: 3px 14px; border-radius: 100px; white-space: nowrap; letter-spacing: .02em; }
+    .plan-tier { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 100px; display: inline-block; margin-bottom: 10px; letter-spacing: .04em; text-transform: uppercase; }
+    .tier-1 { background: var(--gray-bg);    color: var(--gray-text); }
+    .tier-2 { background: var(--green-light); color: var(--green-deep); }
+    .tier-3 { background: var(--purple-bg);  color: var(--purple-text); }
+    .tier-4 { background: var(--amber-bg);   color: var(--amber-text); }
+    .plan-name    { font-size: 19px; font-weight: 600; letter-spacing: -.02em; margin-bottom: 5px; color: var(--text-1); }
+    .plan-tagline { font-size: 12px; color: var(--text-2); margin-bottom: 16px; line-height: 1.55; min-height: 36px; }
+    .price-num    { font-size: 32px; font-weight: 600; letter-spacing: -.03em; color: var(--green-dark); }
+    .price-per    { font-size: 13px; color: var(--text-3); }
+    .price-note   { font-size: 11px; color: var(--text-3); margin: 4px 0 16px; min-height: 16px; }
+    .btn { width: 100%; padding: 10px; border-radius: var(--radius-md); font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; border: none; margin-bottom: 8px; transition: opacity .15s, background .15s; }
+    .btn:hover { opacity: .88; }
+    .btn-primary { background: var(--green); color: #fff; }
+    .btn-outline  { background: transparent; color: var(--green); border: 1.5px solid var(--green) !important; }
+    .btn-dark     { background: var(--green-dark); color: #fff; }
+    .trial-note   { font-size: 10px; color: var(--text-3); text-align: center; margin-bottom: 16px; }
+    .plan-divider { height: 1px; background: var(--border); margin-bottom: 14px; }
+    .feat-group   { margin-bottom: 12px; }
+    .feat-group-label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--text-3); margin-bottom: 6px; }
+    .feat-item { display: flex; align-items: flex-start; gap: 6px; font-size: 11.5px; color: var(--text-2); padding: 2.5px 0; line-height: 1.45; }
+    .fi-y { color: var(--green); flex-shrink: 0; font-size: 13px; margin-top: .5px; }
+    .fi-n { color: #CCC; flex-shrink: 0; font-size: 13px; margin-top: .5px; }
+    .feat-item.dim { opacity: .3; }
+    .ai-chip { font-size: 8px; background: var(--purple-bg); color: var(--purple-text); padding: 1px 5px; border-radius: 3px; font-weight: 600; vertical-align: middle; margin-left: 2px; letter-spacing: .02em; }
+
+    /* ── Section titles ── */
+    .sec-title { font-size: 22px; font-weight: 600; letter-spacing: -.02em; margin-bottom: 6px; color: var(--text-1); }
+    .sec-sub   { font-size: 14px; color: var(--text-2); margin-bottom: 24px; line-height: 1.65; max-width: 600px; }
+
+    /* ── Communication section ── */
+    .comm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    .comm-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+    .comm-head { padding: 14px 16px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+    .comm-icon { font-size: 24px; margin-bottom: 6px; display: block; }
+    .comm-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .comm-desc { font-size: 11px; color: var(--text-2); line-height: 1.5; }
+    .comm-body { padding: 14px 16px; }
+    .comm-row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12px; gap: 8px; }
+    .comm-row:last-of-type { border-bottom: none; }
+    .comm-label { color: var(--text-2); flex: 1; }
+    .comm-val   { font-weight: 500; color: var(--text-1); white-space: nowrap; }
+    .comm-free  { color: var(--green); font-weight: 600; white-space: nowrap; }
+    .comm-note  { font-size: 11px; color: var(--text-2); background: var(--surface-2); border-radius: var(--radius-sm); padding: 9px 12px; margin-top: 12px; line-height: 1.55; border-left: 3px solid var(--green-light); }
+
+    /* ── Allowance table ── */
+    .allow-table { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 4px; background: var(--surface); box-shadow: var(--shadow-sm); }
+    .at-head { display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr 1fr; background: var(--green-dark); padding: 10px 16px; font-size: 11px; font-weight: 600; color: #fff; gap: 6px; }
+    .at-head > div:not(:first-child) { text-align: center; }
+    .at-row { display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr 1fr; padding: 9px 16px; font-size: 12px; gap: 6px; border-top: 1px solid var(--border); align-items: center; }
+    .at-row:nth-child(even) { background: var(--surface-2); }
+    .at-label { color: var(--text-2); display: flex; align-items: center; gap: 5px; }
+    .at-val   { font-weight: 500; color: var(--text-1); text-align: center; }
+    .at-free  { color: var(--green); font-weight: 600; text-align: center; }
+    .at-na    { color: #CCC; text-align: center; }
+
+    /* ── Compare table ── */
+    .compare-table { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); box-shadow: var(--shadow-sm); }
+    .ct-head { display: grid; grid-template-columns: 2.4fr 1fr 1fr 1fr 1fr; background: var(--green-dark); padding: 12px 16px; font-size: 12px; font-weight: 600; color: #fff; gap: 6px; }
+    .ct-head > div:not(:first-child) { text-align: center; }
+    .ct-row { display: grid; grid-template-columns: 2.4fr 1fr 1fr 1fr 1fr; padding: 9px 16px; font-size: 12px; gap: 6px; border-top: 1px solid var(--border); align-items: center; }
+    .ct-row:nth-child(even) { background: var(--surface-2); }
+    .ct-section { background: var(--surface-2); padding: 7px 16px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--text-3); border-top: 1px solid var(--border); }
+    .ct-feat { color: var(--text-2); }
+    .ct-y    { color: var(--green); text-align: center; font-size: 15px; }
+    .ct-n    { color: #CCC; text-align: center; font-size: 15px; }
+    .ct-v    { text-align: center; color: var(--text-1); font-weight: 500; font-size: 12px; }
+
+    /* ── FAQ ── */
+    .faq-list { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); box-shadow: var(--shadow-sm); }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 20px; background: none; border: none; cursor: pointer; font-family: inherit; text-align: left; }
+    .faq-btn:hover { background: var(--surface-2); }
+    .faq-q    { font-size: 14px; font-weight: 500; color: var(--text-1); }
+    .faq-icon { color: var(--text-3); font-size: 16px; flex-shrink: 0; transition: transform .2s; }
+    .faq-icon.open { transform: rotate(45deg); }
+    .faq-a { font-size: 13px; color: var(--text-2); line-height: 1.7; padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s ease; }
+    .faq-a.open { max-height: 300px; padding: 0 20px 16px; }
+
+    /* ── Bottom CTA ── */
+    .bottom-cta { background: var(--green-dark); border-radius: var(--radius-xl); padding: 48px 32px; text-align: center; }
+    .bc-title { font-size: 26px; font-weight: 600; color: #fff; letter-spacing: -.02em; margin-bottom: 8px; }
+    .bc-sub   { font-size: 14px; color: rgba(255,255,255,.65); margin-bottom: 24px; }
+    .bc-btn   { display: inline-block; padding: 13px 32px; background: var(--green); color: #fff; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; text-decoration: none; transition: background .15s; }
+    .bc-btn:hover { background: var(--green-deep); }
+    .bc-note  { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 10px; }
+
+    /* ── Footer ── */
+    footer { background: #111827; color: rgba(255,255,255,.6); padding: 48px 24px 32px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .footer-brand .logo { color: var(--white); font-size: 20px; display: block; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; line-height: 1.6; max-width: 240px; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,.55); text-decoration: none; transition: color .15s; }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; font-size: 12px; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
+    .footer-socials { display: flex; gap: 16px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .plans-grid { grid-template-columns: repeat(2, 1fr); }
+      .comm-grid  { grid-template-columns: 1fr; }
+      .ct-head, .ct-row { grid-template-columns: 2fr 1fr 1fr 1fr 1fr; font-size: 11px; padding: 8px 10px; }
+      .at-head, .at-row { grid-template-columns: 2fr 1fr 1fr 1fr 1fr; font-size: 11px; padding: 8px 10px; }
+    }
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .hero-title { font-size: 28px; }
+      .plans-grid { grid-template-columns: 1fr; }
+      .ct-head, .ct-row { font-size: 10px; padding: 7px 8px; gap: 4px; }
+      .at-head, .at-row { font-size: 10px; padding: 7px 8px; gap: 4px; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="nav-inner">
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
+      <a href="merchants.html" class="logo">✨ Genoti <span>AI</span></a>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">AI Operating System for Local Businesses</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="business-types.html">Business Types</a></li>
+      <li><a href="features.html">Features</a></li>
+      <li><a href="pricing.html" class="active">Pricing</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="../index.html" class="btn-marketplace">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Marketplace
+      </a>
+      <a href="../register.html" class="btn-signup">Sign up</a>
+      <div class="menu-dropdown-wrap">
+        <button class="btn-pill-menu" onclick="toggleMenu()" aria-label="Menu">
+          Menu
+          <div class="menu-icon"><span></span><span></span><span></span></div>
+        </button>
+        <div class="menu-dropdown" id="menu-dropdown">
+          <div class="menu-main-item">For businesses</div>
+          <a href="merchants.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Merchant OS
+          </a>
+          <a href="business-types.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            Business Types
+          </a>
+          <a href="ai-agents.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M12 2a3 3 0 0 1 3 3v6H9V5a3 3 0 0 1 3-3z"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/><path d="M8 2v2M16 2v2"/></svg>
+            AI Agents Platform
+          </a>
+          <a href="index.html" class="menu-sub-item highlight">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Log in or sign up
+          </a>
+          <a href="../download-the-app.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18" stroke-width="2" stroke-linecap="round"/></svg>
+            Download the app
+          </a>
+          <a href="../help.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Help and support
+          </a>
+          <div class="menu-divider"></div>
+          <a href="../index.html" class="menu-main-item clickable">
+            <span style="display:flex;align-items:center;gap:10px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              For customers
+            </span>
+            <span class="menu-main-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<header class="hero">
+  <div class="container">
+    <p class="eyebrow">Pricing</p>
+    <h1 class="hero-title">Simple, honest pricing<br>for every <em>business</em></h1>
+    <p class="hero-sub">Every plan includes your Genoti marketplace listing and the AI deal negotiation agent. Pay only for what you need as you grow.</p>
+
+    <div class="toggle-row" role="group" aria-label="Billing period">
+      <span class="tog-label" id="lbl-m" onclick="setBilling(false)">Monthly</span>
+      <button class="tog-wrap" id="tog" onclick="setBilling(!isAnnual)" aria-label="Toggle billing period" aria-pressed="true">
+        <div class="tog-knob"></div>
+      </button>
+      <span class="tog-label active" id="lbl-a" onclick="setBilling(true)">Annual</span>
+      <span class="save-badge">Save 20%</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ── Plan cards ── -->
+<section class="section" aria-label="Pricing plans">
+  <div class="container">
+    <div class="plans-grid" role="list">
+
+      <!-- Starter -->
+      <div class="plan-card" role="listitem">
+        <span class="plan-tier tier-1">Starter</span>
+        <h2 class="plan-name">Marketplace</h2>
+        <p class="plan-tagline">List services, post off-peak deals, and take bookings online.</p>
+        <div>
+          <span class="price-num" id="p1">&#8377;639</span><span class="price-per">/month</span>
+        </div>
+        <p class="price-note" id="pn1">Billed &#8377;7,668/year &middot; save &#8377;1,920</p>
+        <button class="btn btn-outline" onclick="location.href='../register.html'">Start 14-day free trial</button>
+        <p class="trial-note">No credit card required</p>
+        <div class="plan-divider"></div>
+        <div class="feat-group">
+          <p class="feat-group-label">Marketplace</p>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Service listings in Genoti marketplace</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Unlimited off-peak deal posts</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Genoti Negotiate AI agent<span class="ai-chip">AI</span></div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Public online booking page</div>
+        </div>
+        <div class="feat-group">
+          <p class="feat-group-label">Operations</p>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Booking &amp; appointment management</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>WhatsApp booking confirmations</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Basic analytics &amp; reports</div>
+          <div class="feat-item dim"><span class="fi-n">&#10007;</span>Staff &amp; vendor management</div>
+          <div class="feat-item dim"><span class="fi-n">&#10007;</span>AI agents &amp; automation</div>
+        </div>
+        <div class="feat-group">
+          <p class="feat-group-label">Free monthly allowance</p>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>200 WhatsApp notifications</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>500 automated emails</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>50 SMS</div>
+        </div>
+      </div>
+
+      <!-- Business (featured) -->
+      <div class="plan-card featured" role="listitem">
+        <div class="pop-badge">Most popular</div>
+        <span class="plan-tier tier-2">Growth</span>
+        <h2 class="plan-name">Business</h2>
+        <p class="plan-tagline">Full operations suite &mdash; staff, inventory, loyalty, CRM, and more.</p>
+        <div>
+          <span class="price-num" id="p2">&#8377;1,999</span><span class="price-per">/month</span>
+        </div>
+        <p class="price-note" id="pn2">Billed &#8377;23,988/year &middot; save &#8377;5,988</p>
+        <button class="btn btn-primary" onclick="location.href='../register.html'">Start 14-day free trial</button>
+        <p class="trial-note">No credit card required</p>
+        <div class="plan-divider"></div>
+        <div class="feat-group">
+          <p class="feat-group-label">Everything in Starter, plus</p>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Staff management &amp; scheduling</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Commission &amp; attendance tracking</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Vendor &amp; supplier management</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Catalogue &amp; menu management</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Membership &amp; package plans</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Inventory management</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Loyalty, gift cards &amp; referrals</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Customer CRM &amp; visit history</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Advanced analytics dashboard</div>
+        </div>
+        <div class="feat-group">
+          <p class="feat-group-label">Free monthly allowance</p>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>500 WhatsApp notifications</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>2,000 automated emails</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>200 SMS</div>
+        </div>
+      </div>
+
+      <!-- AI Pro -->
+      <div class="plan-card" role="listitem">
+        <span class="plan-tier tier-3">Pro</span>
+        <h2 class="plan-name">AI Pro</h2>
+        <p class="plan-tagline">Everything in Business plus AI agents, marketing automation, and ads.</p>
+        <div>
+          <span class="price-num" id="p3">&#8377;3,999</span><span class="price-per">/month</span>
+        </div>
+        <p class="price-note" id="pn3">Billed &#8377;47,988/year &middot; save &#8377;11,988</p>
+        <button class="btn btn-outline" onclick="location.href='../register.html'">Start 14-day free trial</button>
+        <p class="trial-note">No credit card required</p>
+        <div class="plan-divider"></div>
+        <div class="feat-group">
+          <p class="feat-group-label">Everything in Business, plus</p>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>AI chat assistant (24/7)<span class="ai-chip">AI</span></div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>AI voice receptionist<span class="ai-chip">AI</span></div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>AI booking reminders &amp; no-show AI<span class="ai-chip">AI</span></div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>AI review response generator<span class="ai-chip">AI</span></div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Customer re-engagement AI<span class="ai-chip">AI</span></div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>WhatsApp marketing campaigns</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Advanced marketing automation</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Hyperlocal ad management</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Effort-sizing analytics</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Up to 3 locations</div>
+        </div>
+        <div class="feat-group">
+          <p class="feat-group-label">Free monthly allowance</p>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>2,000 WhatsApp notifications</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>10,000 automated emails</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>500 SMS + 200 AI voice mins</div>
+        </div>
+      </div>
+
+      <!-- Scale -->
+      <div class="plan-card" role="listitem">
+        <span class="plan-tier tier-4">Enterprise</span>
+        <h2 class="plan-name">Scale</h2>
+        <p class="plan-tagline">Multi-location chains, franchise groups, and enterprise businesses.</p>
+        <div>
+          <span class="price-num" id="p4">&#8377;7,999</span><span class="price-per">/month</span>
+        </div>
+        <p class="price-note" id="pn4">Billed &#8377;95,988/year &middot; save &#8377;23,988</p>
+        <button class="btn btn-dark">Contact sales</button>
+        <p class="trial-note">Custom onboarding included</p>
+        <div class="plan-divider"></div>
+        <div class="feat-group">
+          <p class="feat-group-label">Everything in AI Pro, plus</p>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Unlimited locations</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Multi-store management dashboard</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Cross-location analytics rollup</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Google Business Profile sync</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Presence &amp; near-me SEO tools</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Reputation management suite</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Social media all-in-one posting</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Keyword rank tracking</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>API access &amp; integrations</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Dedicated account manager</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>White-label option available</div>
+        </div>
+        <div class="feat-group">
+          <p class="feat-group-label">Free monthly allowance</p>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Unlimited WhatsApp notifications</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>Unlimited automated emails</div>
+          <div class="feat-item"><span class="fi-y">&#10003;</span>2,000 SMS + 500 AI voice mins</div>
+        </div>
+      </div>
+
+    </div>
+    <p style="font-size:11px;color:var(--text-3);text-align:center;">All prices exclusive of GST (18%). GST-registered businesses can claim input tax credit.</p>
+  </div>
+</section>
+
+<!-- ── Communication pricing ── -->
+<section class="section" aria-labelledby="comm-title">
+  <div class="container">
+    <h2 class="sec-title" id="comm-title">Communication pricing</h2>
+    <p class="sec-sub">Every plan includes a free monthly allowance of WhatsApp, SMS, and email messages. Once you exceed your allowance, pay only for what you use &mdash; no surprises, no markup.</p>
+
+    <div class="comm-grid">
+      <div class="comm-card">
+        <div class="comm-head">
+          <i class="ti ti-brand-whatsapp comm-icon" style="color:#1D9E75;" aria-hidden="true"></i>
+          <div class="comm-name">WhatsApp</div>
+          <div class="comm-desc">Booking confirmations, reminders, deal alerts, and marketing campaigns via WhatsApp Business API.</div>
+        </div>
+        <div class="comm-body">
+          <div class="comm-row"><span class="comm-label">Automated notifications (within allowance)</span><span class="comm-free">Free</span></div>
+          <div class="comm-row"><span class="comm-label">Over allowance &mdash; per 100 messages</span><span class="comm-val">&#8377;25</span></div>
+          <div class="comm-row"><span class="comm-label">Marketing campaigns &mdash; per 100 messages</span><span class="comm-val">&#8377;40</span></div>
+          <div class="comm-row"><span class="comm-label">AI Negotiate messages &mdash; per 100</span><span class="comm-val">&#8377;30</span></div>
+          <div class="comm-row"><span class="comm-label">AI voice receptionist &mdash; per minute</span><span class="comm-val">&#8377;3.50</span></div>
+          <div class="comm-note">Rates include Meta&rsquo;s WhatsApp platform fee &mdash; passed through at cost with no markup. AI Pro and Scale plans include 200 and 500 free AI voice receptionist minutes/month respectively.</div>
+        </div>
+      </div>
+
+      <div class="comm-card">
+        <div class="comm-head">
+          <i class="ti ti-message comm-icon" style="color:#534AB7;" aria-hidden="true"></i>
+          <div class="comm-name">SMS</div>
+          <div class="comm-desc">Booking confirmations and reminders for customers who don&rsquo;t use WhatsApp.</div>
+        </div>
+        <div class="comm-body">
+          <div class="comm-row"><span class="comm-label">Automated notifications (within allowance)</span><span class="comm-free">Free</span></div>
+          <div class="comm-row"><span class="comm-label">Over allowance &mdash; per 100 messages</span><span class="comm-val">&#8377;18</span></div>
+          <div class="comm-row"><span class="comm-label">Marketing SMS &mdash; per 100 messages</span><span class="comm-val">&#8377;35</span></div>
+          <div class="comm-row"><span class="comm-label">OTP / transactional &mdash; per 100</span><span class="comm-val">&#8377;12</span></div>
+          <div class="comm-row"><span class="comm-label">International SMS</span><span class="comm-val">On request</span></div>
+          <div class="comm-note">Rates apply to India numbers. DLT registration is required by TRAI for marketing SMS &mdash; Genoti handles the registration process for you at no extra cost.</div>
+        </div>
+      </div>
+
+      <div class="comm-card">
+        <div class="comm-head">
+          <i class="ti ti-mail comm-icon" style="color:#185FA5;" aria-hidden="true"></i>
+          <div class="comm-name">Email</div>
+          <div class="comm-desc">Booking confirmations, receipts, loyalty offers, and marketing newsletters.</div>
+        </div>
+        <div class="comm-body">
+          <div class="comm-row"><span class="comm-label">Automated transactional emails</span><span class="comm-free">Always free</span></div>
+          <div class="comm-row"><span class="comm-label">Marketing emails (within allowance)</span><span class="comm-free">Free</span></div>
+          <div class="comm-row"><span class="comm-label">Over allowance &mdash; per 100 emails</span><span class="comm-val">&#8377;2</span></div>
+          <div class="comm-row"><span class="comm-label">Marketing emails &mdash; per 100</span><span class="comm-val">&#8377;4</span></div>
+          <div class="comm-row"><span class="comm-label">Email + SMS combo &mdash; per 100</span><span class="comm-val">&#8377;20</span></div>
+          <div class="comm-note">Automated transactional emails &mdash; booking confirmations, receipts, appointment reminders &mdash; are always free on every plan with no monthly cap.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:15px;font-weight:600;margin-bottom:12px;color:var(--text-1);">Monthly free allowance by plan</h3>
+    <div class="allow-table">
+      <div class="at-head">
+        <div>Channel</div><div>Starter</div><div>Business</div><div>AI Pro</div><div>Scale</div>
+      </div>
+      <div class="at-row">
+        <div class="at-label"><i class="ti ti-brand-whatsapp" style="color:#1D9E75"></i> WhatsApp notifications</div>
+        <div class="at-free">200</div><div class="at-free">500</div><div class="at-free">2,000</div><div class="at-free">Unlimited</div>
+      </div>
+      <div class="at-row">
+        <div class="at-label"><i class="ti ti-brand-whatsapp" style="color:#1D9E75"></i> WhatsApp marketing</div>
+        <div class="at-na">&ndash;</div><div class="at-na">&ndash;</div><div class="at-free">500</div><div class="at-free">Unlimited</div>
+      </div>
+      <div class="at-row">
+        <div class="at-label"><i class="ti ti-message" style="color:#534AB7"></i> SMS notifications</div>
+        <div class="at-free">50</div><div class="at-free">200</div><div class="at-free">500</div><div class="at-free">2,000</div>
+      </div>
+      <div class="at-row">
+        <div class="at-label"><i class="ti ti-message" style="color:#534AB7"></i> Marketing SMS</div>
+        <div class="at-na">&ndash;</div><div class="at-na">&ndash;</div><div class="at-free">200</div><div class="at-free">1,000</div>
+      </div>
+      <div class="at-row">
+        <div class="at-label"><i class="ti ti-mail" style="color:#185FA5"></i> Automated emails</div>
+        <div class="at-free">500</div><div class="at-free">2,000</div><div class="at-free">10,000</div><div class="at-free">Unlimited</div>
+      </div>
+      <div class="at-row">
+        <div class="at-label"><i class="ti ti-mail" style="color:#185FA5"></i> Marketing emails</div>
+        <div class="at-free">100</div><div class="at-free">500</div><div class="at-free">5,000</div><div class="at-free">Unlimited</div>
+      </div>
+      <div class="at-row">
+        <div class="at-label"><i class="ti ti-phone" style="color:#854F0B"></i> AI voice receptionist (mins)</div>
+        <div class="at-na">&ndash;</div><div class="at-na">&ndash;</div><div class="at-free">200</div><div class="at-free">500</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Feature comparison ── -->
+<section class="section" aria-labelledby="compare-title">
+  <div class="container">
+    <h2 class="sec-title" id="compare-title">Full feature comparison</h2>
+    <p class="sec-sub">Everything in one view so you can pick the right plan with confidence.</p>
+    <div class="compare-table">
+      <div class="ct-head">
+        <div>Feature</div><div>Starter</div><div>Business</div><div>AI Pro</div><div>Scale</div>
+      </div>
+      <div class="ct-section">Marketplace &amp; booking</div>
+      <div class="ct-row"><div class="ct-feat">Genoti marketplace listing</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Off-peak deal posts</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Genoti Negotiate AI agent</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Online booking page</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">WhatsApp booking confirmations</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-section">Operations</div>
+      <div class="ct-row"><div class="ct-feat">Staff management &amp; scheduling</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Commission &amp; attendance tracking</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Vendor &amp; supplier management</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Catalogue &amp; menu management</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Membership &amp; package plans</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Inventory management</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Loyalty, gift cards &amp; referrals</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Customer CRM &amp; visit history</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Advanced analytics dashboard</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-section">AI agents</div>
+      <div class="ct-row"><div class="ct-feat">AI chat assistant (24/7)</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">AI voice receptionist</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">AI booking reminders &amp; no-show reduction</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">AI review response generator</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Customer re-engagement AI</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-section">Marketing &amp; advertising</div>
+      <div class="ct-row"><div class="ct-feat">WhatsApp marketing campaigns</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Advanced marketing automation</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Hyperlocal ad management</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-section">Presence &amp; reputation (Scale only)</div>
+      <div class="ct-row"><div class="ct-feat">Google Business Profile sync</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Near-me SEO &amp; presence tools</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Reputation management suite</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Social media all-in-one posting</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-row"><div class="ct-feat">Multi-store management dashboard</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-n">&#10007;</div><div class="ct-y">&#10003;</div></div>
+      <div class="ct-section">Limits &amp; support</div>
+      <div class="ct-row"><div class="ct-feat">Locations</div><div class="ct-v">1</div><div class="ct-v">1</div><div class="ct-v">3</div><div class="ct-v">Unlimited</div></div>
+      <div class="ct-row"><div class="ct-feat">Staff accounts</div><div class="ct-v">3</div><div class="ct-v">15</div><div class="ct-v">Unlimited</div><div class="ct-v">Unlimited</div></div>
+      <div class="ct-row"><div class="ct-feat">Free trial</div><div class="ct-v">14 days</div><div class="ct-v">14 days</div><div class="ct-v">14 days</div><div class="ct-v">Custom</div></div>
+      <div class="ct-row"><div class="ct-feat">Customer support</div><div class="ct-v">Email</div><div class="ct-v">Chat + email</div><div class="ct-v">Priority</div><div class="ct-v">Dedicated</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="section" aria-labelledby="faq-title">
+  <div class="container">
+    <h2 class="sec-title" id="faq-title">Frequently asked questions</h2>
+    <p class="sec-sub" style="margin-bottom:20px">Still have questions? <a href="mailto:hello@genoti.ai" style="color:var(--green);">Email us</a> and we&rsquo;ll reply within a few hours.</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(0)" aria-expanded="false" id="faq-btn-0">
+          <span class="faq-q">Are there hidden costs beyond the subscription?</span>
+          <i class="ti ti-plus faq-icon" id="faq-icon-0"></i>
+        </button>
+        <div class="faq-a" id="faq-a-0">No hidden costs. Your subscription covers unlimited bookings, all core features, and the free communication allowance. The only additional charges are pay-as-you-go communication fees when you exceed your monthly allowance &mdash; and these are shown transparently on this page. Automated transactional emails (booking confirmations, receipts) are always free on every plan with no cap.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(1)" aria-expanded="false" id="faq-btn-1">
+          <span class="faq-q">Why is Genoti Negotiate included on all plans?</span>
+          <i class="ti ti-plus faq-icon" id="faq-icon-1"></i>
+        </button>
+        <div class="faq-a" id="faq-a-1">Genoti Negotiate is our most differentiated feature &mdash; no competitor offers AI-powered deal negotiation. We want every merchant on every plan to benefit from it from day one, and for every consumer to associate Genoti with smarter deals. It&rsquo;s our edge and the reason merchants recommend us to other merchants.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(2)" aria-expanded="false" id="faq-btn-2">
+          <span class="faq-q">How does the WhatsApp pricing work?</span>
+          <i class="ti ti-plus faq-icon" id="faq-icon-2"></i>
+        </button>
+        <div class="faq-a" id="faq-a-2">Each plan includes a free monthly WhatsApp allowance for automated notifications &mdash; booking confirmations, reminders, and deal alerts. Once you exceed that allowance, you pay &#8377;25 per 100 additional messages. Marketing campaigns and AI negotiation messages have separate rates as shown in the communication pricing section above. All WhatsApp rates include Meta&rsquo;s platform fee with no markup.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(3)" aria-expanded="false" id="faq-btn-3">
+          <span class="faq-q">What happens after my 14-day trial?</span>
+          <i class="ti ti-plus faq-icon" id="faq-icon-3"></i>
+        </button>
+        <div class="faq-a" id="faq-a-3">At the end of your trial, choose a plan and add payment details. Your account is never charged automatically during the trial &mdash; there are no surprise charges. If you don&rsquo;t pick a plan, your account pauses and your data is safely stored for 30 days.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(4)" aria-expanded="false" id="faq-btn-4">
+          <span class="faq-q">Can I switch plans at any time?</span>
+          <i class="ti ti-plus faq-icon" id="faq-icon-4"></i>
+        </button>
+        <div class="faq-a" id="faq-a-4">Yes. Upgrade anytime &mdash; new features unlock immediately and you&rsquo;re billed the prorated difference. Downgrade at the end of your billing cycle. No penalties and no long-term contracts on any plan.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(5)" aria-expanded="false" id="faq-btn-5">
+          <span class="faq-q">Does Genoti charge a commission per booking?</span>
+          <i class="ti ti-plus faq-icon" id="faq-icon-5"></i>
+        </button>
+        <div class="faq-a" id="faq-a-5">No commission on bookings, ever. Unlike competitors who charge 15&ndash;20% per new client from their marketplace, Genoti charges a flat subscription. You keep 100% of every transaction. The Genoti Negotiate success fee (&#8377;29&ndash;&#8377;149 per successfully negotiated deal) is paid by the consumer, not the merchant.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(6)" aria-expanded="false" id="faq-btn-6">
+          <span class="faq-q">Is GST included in the listed prices?</span>
+          <i class="ti ti-plus faq-icon" id="faq-icon-6"></i>
+        </button>
+        <div class="faq-a" id="faq-a-6">All prices shown are exclusive of GST (18%). GST will be added at checkout. If you are a GST-registered business, you can claim the input tax credit on your Genoti subscription &mdash; effectively reducing your net cost by 18%.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Bottom CTA ── -->
+<section class="section" style="border-top:none;padding-top:0">
+  <div class="container">
+    <div class="bottom-cta">
+      <h2 class="bc-title">Ready to fill your empty slots?</h2>
+      <p class="bc-sub">Start your 14-day free trial today. No credit card required.</p>
+      <a href="../register.html" class="bc-btn">Get started free</a>
+      <p class="bc-note">Join thousands of merchants across Bengaluru and beyond</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="../index.html" class="logo">✨ Genoti <span>AI</span></a>
+        <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#">Browse deals</a></li>
+          <li><a href="#">How it works</a></li>
+          <li><a href="#">Cities</a></li>
+          <li><a href="#">Download app</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Merchants</h4>
+        <ul>
+          <li><a href="#">List your business</a></li>
+          <li><a href="#">Merchant dashboard</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="#">Success stories</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="../help.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+      <div class="footer-socials">
+        <a href="#">Twitter</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  let isAnnual = true;
+
+  const prices = {
+    monthly: { p1:'&#8377;799',  p2:'&#8377;2,499', p3:'&#8377;4,999', p4:'&#8377;9,999' },
+    annual:  { p1:'&#8377;639',  p2:'&#8377;1,999', p3:'&#8377;3,999', p4:'&#8377;7,999' }
+  };
+  const notes = {
+    monthly: {
+      p1:'Billed monthly · switch to annual and save ₹1,920/year',
+      p2:'Billed monthly · switch to annual and save ₹5,988/year',
+      p3:'Billed monthly · switch to annual and save ₹11,988/year',
+      p4:'Billed monthly · switch to annual and save ₹23,988/year'
+    },
+    annual: {
+      p1:'Billed ₹7,668/year · you save ₹1,920',
+      p2:'Billed ₹23,988/year · you save ₹5,988',
+      p3:'Billed ₹47,988/year · you save ₹11,988',
+      p4:'Billed ₹95,988/year · you save ₹23,988'
+    }
+  };
+
+  function setBilling(annual) {
+    isAnnual = annual;
+    const tog = document.getElementById('tog');
+    tog.classList.toggle('off', !annual);
+    tog.setAttribute('aria-pressed', annual.toString());
+    document.getElementById('lbl-m').classList.toggle('active', !annual);
+    document.getElementById('lbl-a').classList.toggle('active', annual);
+    const p = annual ? prices.annual  : prices.monthly;
+    const n = annual ? notes.annual   : notes.monthly;
+    ['p1','p2','p3','p4'].forEach(id => {
+      document.getElementById(id).innerHTML = p[id];
+      document.getElementById('pn' + id.slice(1)).textContent = n[id];
+    });
+  }
+
+  function toggleFaq(i) {
+    const a    = document.getElementById('faq-a-' + i);
+    const icon = document.getElementById('faq-icon-' + i);
+    const btn  = document.getElementById('faq-btn-' + i);
+    const open = a.classList.contains('open');
+    a.classList.toggle('open', !open);
+    icon.classList.toggle('open', !open);
+    btn.setAttribute('aria-expanded', (!open).toString());
+  }
+
+  function toggleMenu() { document.getElementById('menu-dropdown').classList.toggle('open'); }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.menu-dropdown-wrap')) document.getElementById('menu-dropdown').classList.remove('open');
+  });
+</script>
+</body>
+</html>
