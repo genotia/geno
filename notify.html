@@ -571,8 +571,8 @@
         <span class="srch-row-label">📍 Pincode</span>
         <div class="srch-chips" id="srch-pincode">
           <div class="srch-pincode-chip on"
-               data-loc="560100 Bengaluru" data-lat="12.9716" data-lng="77.5946"
-               onclick="selectSrchPincode(this)">560100 · Bengaluru</div>
+               data-loc="560100 Electronic City Bengaluru" data-lat="12.8406" data-lng="77.6603"
+               onclick="selectSrchPincode(this)">560100 · Electronic City</div>
           <div class="srch-pincode-chip soon" title="More areas coming soon">+ More coming soon</div>
         </div>
       </div>
@@ -1133,9 +1133,9 @@
 
   async function _searchGooglePlaces(q, radKm) {
     const chip = document.querySelector('#srch-pincode .srch-pincode-chip.on');
-    const loc  = chip ? chip.dataset.loc : '560100 Bengaluru';
-    const lat  = chip ? parseFloat(chip.dataset.lat) : 12.9716;
-    const lng  = chip ? parseFloat(chip.dataset.lng) : 77.5946;
+    const loc  = chip ? chip.dataset.loc : '560100 Electronic City Bengaluru';
+    const lat  = chip ? parseFloat(chip.dataset.lat) : 12.8406;
+    const lng  = chip ? parseFloat(chip.dataset.lng) : 77.6603;
     const body = {
       textQuery: q + ' ' + loc,
       maxResultCount: 15,
