@@ -626,7 +626,7 @@
       <div class="srch-bar-wrap">
         <div class="srch-input-wrap">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="srch-query" placeholder="Search spa, restaurant, gym, salon…" onkeydown="if(event.key==='Enter')doSearch()" />
+          <input type="text" id="srch-query" placeholder="Search restaurants, clinics, gyms, hotels…" onkeydown="if(event.key==='Enter')doSearch()" />
         </div>
         <button class="srch-btn" onclick="doSearch()">Search</button>
       </div>
@@ -652,13 +652,15 @@
       </div>
 
       <div class="srch-cats" id="srch-cats">
-        <div class="srch-cat on" data-cat="spa" onclick="selectSrchCat(this)">🛁 Spa</div>
-        <div class="srch-cat" data-cat="restaurant" onclick="selectSrchCat(this)">🍽️ Restaurant</div>
-        <div class="srch-cat" data-cat="gym" onclick="selectSrchCat(this)">💪 Gym</div>
-        <div class="srch-cat" data-cat="salon" onclick="selectSrchCat(this)">✂️ Salon</div>
-        <div class="srch-cat" data-cat="buffet" onclick="selectSrchCat(this)">🍳 Buffet</div>
-        <div class="srch-cat" data-cat="cafe" onclick="selectSrchCat(this)">☕ Café</div>
-        <div class="srch-cat" data-cat="yoga" onclick="selectSrchCat(this)">🧘 Yoga</div>
+        <div class="srch-cat on" data-cat="restaurant" onclick="selectSrchCat(this)">🍽️ Restaurants</div>
+        <div class="srch-cat" data-cat="fitness" onclick="selectSrchCat(this)">🏋️ Fitness &amp; Sports</div>
+        <div class="srch-cat" data-cat="health" onclick="selectSrchCat(this)">🏥 Health &amp; Medical</div>
+        <div class="srch-cat" data-cat="beauty" onclick="selectSrchCat(this)">💅 Beauty &amp; Wellness</div>
+        <div class="srch-cat" data-cat="diagnostics" onclick="selectSrchCat(this)">🔬 Diagnostics</div>
+        <div class="srch-cat" data-cat="hospital" onclick="selectSrchCat(this)">🏨 Hospitals</div>
+        <div class="srch-cat" data-cat="hospitality" onclick="selectSrchCat(this)">🏩 Hospitality</div>
+        <div class="srch-cat" data-cat="coworking" onclick="selectSrchCat(this)">🖥️ Shared Spaces</div>
+        <div class="srch-cat" data-cat="sports" onclick="selectSrchCat(this)">🏸 Sports Facilities</div>
       </div>
 
       <div class="srch-results-header">

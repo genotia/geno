@@ -1430,7 +1430,7 @@
   <div class="search-bar">
     <div class="field">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <input type="text" placeholder="All treatments" />
+      <input type="text" placeholder="Restaurants, clinics, gyms, salons…" />
     </div>
     <div class="field">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1452,11 +1452,15 @@
 
   <div class="categories" style="margin-top:36px">
     <button class="pill active" data-cat="All" onclick="setActive(this, 'All')">🏷️ All</button>
-    <button class="pill" data-cat="Health &amp; Medical" onclick="setActive(this, 'Health &amp; Medical')">🏥 Health &amp; Medical</button>
-    <button class="pill" data-cat="Wellness &amp; Beauty" onclick="setActive(this, 'Wellness &amp; Beauty')">💇 Wellness &amp; Beauty</button>
+    <button class="pill" data-cat="Restaurants &amp; Dining" onclick="setActive(this, 'Restaurants &amp; Dining')">🍽️ Restaurants &amp; Dining</button>
     <button class="pill" data-cat="Fitness &amp; Sports" onclick="setActive(this, 'Fitness &amp; Sports')">🏋️ Fitness &amp; Sports</button>
-    <button class="pill" data-cat="Food &amp; Dining" onclick="setActive(this, 'Food &amp; Dining')">🍽️ Food &amp; Dining</button>
+    <button class="pill" data-cat="Health &amp; Medical" onclick="setActive(this, 'Health &amp; Medical')">🏥 Health &amp; Medical</button>
+    <button class="pill" data-cat="Beauty &amp; Wellness" onclick="setActive(this, 'Beauty &amp; Wellness')">💅 Beauty &amp; Wellness</button>
     <button class="pill" data-cat="Diagnostics" onclick="setActive(this, 'Diagnostics')">🔬 Diagnostics</button>
+    <button class="pill" data-cat="Hospitals" onclick="setActive(this, 'Hospitals')">🏨 Hospitals</button>
+    <button class="pill" data-cat="Hospitality" onclick="setActive(this, 'Hospitality')">🏩 Hospitality</button>
+    <button class="pill" data-cat="Shared Spaces" onclick="setActive(this, 'Shared Spaces')">🖥️ Shared Spaces</button>
+    <button class="pill" data-cat="Sports Facilities" onclick="setActive(this, 'Sports Facilities')">🏸 Sports Facilities</button>
   </div>
 </section>
 
@@ -1905,12 +1909,12 @@
     { id:2,  category:'Health & Medical', emoji:'🩺',  bg:'#F0FDF4', discount:'60% OFF', time:'10:00 AM–12:00 PM',title:'General Physician Consultation',  merchant:'Healify Clinics',           priceNum:199,  wasNum:500,  price:'₹199',  was:'₹500',   dist:'0.7 km' },
     { id:3,  category:'Health & Medical', emoji:'👁️', bg:'#ECFDF5', discount:'50% OFF', time:'2:00–5:00 PM',     title:'Eye Check-up & Prescription',     merchant:'ClearVision Eye Care',      priceNum:249,  wasNum:500,  price:'₹249',  was:'₹500',   dist:'1.1 km' },
 
-    // Wellness & Beauty
-    { id:4,  category:'Wellness & Beauty', emoji:'✂️',  bg:'#EDE9FE', discount:'52% OFF', time:'2:00–4:00 PM',    title:'Classic Haircut + Blow Dry',      merchant:'Savio John Salon',          priceNum:299,  wasNum:620,  price:'₹299',  was:'₹620',   dist:'0.4 km' },
-    { id:5,  category:'Wellness & Beauty', emoji:'💆',  bg:'#FDF4FF', discount:'60% OFF', time:'11:00 AM–1:00 PM',title:'60-min Deep Tissue Massage',      merchant:'Serenity Wellness Studio',  priceNum:599,  wasNum:1500, price:'₹599',  was:'₹1,500', dist:'1.2 km' },
-    { id:6,  category:'Wellness & Beauty', emoji:'💅',  bg:'#FDE8FF', discount:'50% OFF', time:'1:00–3:00 PM',    title:'Manicure + Pedicure',             merchant:'Gloss Nail Studio',         priceNum:349,  wasNum:700,  price:'₹349',  was:'₹700',   dist:'0.9 km' },
-    { id:7,  category:'Wellness & Beauty', emoji:'✨',  bg:'#F5F3FF', discount:'55% OFF', time:'10:00 AM–1:00 PM',title:'HydraFacial (MedSpa)',            merchant:'Glow MedSpa & Skin Clinic', priceNum:799,  wasNum:1800, price:'₹799',  was:'₹1,800', dist:'2.0 km' },
-    { id:8,  category:'Wellness & Beauty', emoji:'💇',  bg:'#FDF2F8', discount:'40% OFF', time:'3:00–6:00 PM',    title:'Hair Spa + Deep Conditioning',    merchant:'Studio 11 Salon',           priceNum:449,  wasNum:749,  price:'₹449',  was:'₹749',   dist:'0.6 km' },
+    // Beauty & Wellness
+    { id:4,  category:'Beauty & Wellness', emoji:'✂️',  bg:'#EDE9FE', discount:'52% OFF', time:'2:00–4:00 PM',    title:'Classic Haircut + Blow Dry',      merchant:'Savio John Salon',          priceNum:299,  wasNum:620,  price:'₹299',  was:'₹620',   dist:'0.4 km' },
+    { id:5,  category:'Beauty & Wellness', emoji:'💆',  bg:'#FDF4FF', discount:'60% OFF', time:'11:00 AM–1:00 PM',title:'60-min Deep Tissue Massage',      merchant:'Serenity Wellness Studio',  priceNum:599,  wasNum:1500, price:'₹599',  was:'₹1,500', dist:'1.2 km' },
+    { id:6,  category:'Beauty & Wellness', emoji:'💅',  bg:'#FDE8FF', discount:'50% OFF', time:'1:00–3:00 PM',    title:'Manicure + Pedicure',             merchant:'Gloss Nail Studio',         priceNum:349,  wasNum:700,  price:'₹349',  was:'₹700',   dist:'0.9 km' },
+    { id:7,  category:'Beauty & Wellness', emoji:'✨',  bg:'#F5F3FF', discount:'55% OFF', time:'10:00 AM–1:00 PM',title:'HydraFacial (MedSpa)',            merchant:'Glow MedSpa & Skin Clinic', priceNum:799,  wasNum:1800, price:'₹799',  was:'₹1,800', dist:'2.0 km' },
+    { id:8,  category:'Beauty & Wellness', emoji:'💇',  bg:'#FDF2F8', discount:'40% OFF', time:'3:00–6:00 PM',    title:'Hair Spa + Deep Conditioning',    merchant:'Studio 11 Salon',           priceNum:449,  wasNum:749,  price:'₹449',  was:'₹749',   dist:'0.6 km' },
 
     // Fitness & Sports
     { id:9,  category:'Fitness & Sports', emoji:'🏋️', bg:'#DBEAFE', discount:'70% OFF', time:'10:00 AM–12:00 PM',title:'Day Pass + Personal Training',   merchant:'Iron Arena Gym',            priceNum:149,  wasNum:499,  price:'₹149',  was:'₹499',   dist:'0.6 km' },
@@ -1918,11 +1922,11 @@
     { id:11, category:'Fitness & Sports', emoji:'🏊',  bg:'#E0F2FE', discount:'60% OFF', time:'6:00–8:00 AM',    title:'Swimming Pool Day Pass',          merchant:'AquaFit Sports Club',       priceNum:149,  wasNum:380,  price:'₹149',  was:'₹380',   dist:'1.8 km' },
     { id:12, category:'Fitness & Sports', emoji:'🥊',  bg:'#FEF2F2', discount:'55% OFF', time:'5:00–7:00 PM',    title:'CrossFit Drop-in Class',          merchant:'The Box CrossFit Studio',   priceNum:199,  wasNum:449,  price:'₹199',  was:'₹449',   dist:'1.3 km' },
 
-    // Food & Dining
-    { id:13, category:'Food & Dining', emoji:'🍜',  bg:'#FEF3C7', discount:'40% OFF', time:'3:00–5:30 PM',    title:'Thali Combo for Two',             merchant:'Copper Chimney Bistro',     priceNum:349,  wasNum:580,  price:'₹349',  was:'₹580',   dist:'0.8 km' },
-    { id:14, category:'Food & Dining', emoji:'☕',  bg:'#FEF9C3', discount:'35% OFF', time:'2:30–5:00 PM',    title:'Cafe Combo (Coffee + Snack)',     merchant:'The Third Wave Café',       priceNum:149,  wasNum:230,  price:'₹149',  was:'₹230',   dist:'0.3 km' },
-    { id:15, category:'Food & Dining', emoji:'🥗',  bg:'#F0FFF4', discount:'45% OFF', time:'12:00–3:00 PM',   title:'Weekend Brunch Buffet',           merchant:'The Grand Table',           priceNum:499,  wasNum:899,  price:'₹499',  was:'₹899',   dist:'1.4 km' },
-    { id:16, category:'Food & Dining', emoji:'🍕',  bg:'#FFF7ED', discount:'38% OFF', time:'3:00–6:00 PM',    title:'Pizza + Pasta Combo for Two',     merchant:'Brick & Dough',             priceNum:349,  wasNum:560,  price:'₹349',  was:'₹560',   dist:'0.5 km' },
+    // Restaurants & Dining
+    { id:13, category:'Restaurants & Dining', emoji:'🍜',  bg:'#FEF3C7', discount:'40% OFF', time:'3:00–5:30 PM',    title:'Thali Combo for Two',             merchant:'Copper Chimney Bistro',     priceNum:349,  wasNum:580,  price:'₹349',  was:'₹580',   dist:'0.8 km' },
+    { id:14, category:'Restaurants & Dining', emoji:'☕',  bg:'#FEF9C3', discount:'35% OFF', time:'2:30–5:00 PM',    title:'Cafe Combo (Coffee + Snack)',     merchant:'The Third Wave Café',       priceNum:149,  wasNum:230,  price:'₹149',  was:'₹230',   dist:'0.3 km' },
+    { id:15, category:'Restaurants & Dining', emoji:'🥗',  bg:'#F0FFF4', discount:'45% OFF', time:'12:00–3:00 PM',   title:'Weekend Brunch Buffet',           merchant:'The Grand Table',           priceNum:499,  wasNum:899,  price:'₹499',  was:'₹899',   dist:'1.4 km' },
+    { id:16, category:'Restaurants & Dining', emoji:'🍕',  bg:'#FFF7ED', discount:'38% OFF', time:'3:00–6:00 PM',    title:'Pizza + Pasta Combo for Two',     merchant:'Brick & Dough',             priceNum:349,  wasNum:560,  price:'₹349',  was:'₹560',   dist:'0.5 km' },
 
     // Diagnostics
     { id:17, category:'Diagnostics', emoji:'🩸',  bg:'#FFF1F2', discount:'55% OFF', time:'7:00–10:00 AM',   title:'Full Body Blood Test (65 tests)',  merchant:'HealthFirst Diagnostics',   priceNum:399,  wasNum:880,  price:'₹399',  was:'₹880',   dist:'0.9 km' },
