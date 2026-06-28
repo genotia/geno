@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OffPeak — Fill the idle hours. Save big, today.</title>
+  <title>⚡ Off-Peak Deals — Genoti AI</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --green: #1D9E75;
       --dark-green: #085041;
@@ -17,1119 +16,60 @@
       --bg: #F9FAFB;
       --white: #ffffff;
     }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color: var(--text);
-      background: var(--white);
-      line-height: 1.5;
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text); background: var(--white); line-height: 1.5; }
 
     /* ── NAVBAR ── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-    .logo {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: var(--text);
-      text-decoration: none;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .logo img { width: 32px; height: 32px; border-radius: 8px; display: block; }
+    nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); text-decoration: none; flex-shrink: 0; }
     .logo span { color: var(--green); }
-    .nav-links {
-      display: flex;
-      gap: 28px;
-      list-style: none;
-    }
-    .nav-links a {
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--muted);
-      transition: color .15s;
-    }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted); transition: color .15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--green); font-weight: 700; }
-    .has-mega { position:relative; }
-    .mega-drop { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); background:white; border:1px solid var(--border); border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.13); z-index:300; width:580px; display:none; overflow:hidden; }
-    .has-mega:hover .mega-drop { display:grid; grid-template-columns:1fr 1px 1fr; }
-    .mega-col { padding:22px; }
-    .mega-col-head { font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
-    .mega-item { display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:10px; cursor:pointer; transition:background .15s; text-decoration:none; }
-    .mega-item:hover { background:var(--bg); }
-    .mega-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
-    .mega-item-name { font-size:14px; font-weight:700; color:var(--text); }
-    .mega-item-desc { font-size:12px; color:var(--muted); margin-top:2px; line-height:1.4; }
-    .mega-divider-v { background:var(--border); }
-    .mega-sub-head { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin:14px 0 7px; }
-    .mega-chips { display:flex; flex-wrap:wrap; gap:5px; }
-    .mega-chip { padding:4px 10px; border-radius:20px; background:var(--bg); font-size:11px; font-weight:500; color:var(--text); border:1px solid var(--border); }
-    .mega-cta { display:inline-flex; align-items:center; gap:5px; margin-top:14px; font-size:13px; font-weight:700; color:var(--green); text-decoration:none; }
-    .mega-cta:hover { text-decoration:underline; }
     .nav-right { display: flex; align-items: center; gap: 10px; }
-    .btn-login {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 8px 12px;
-      text-decoration: none;
-      transition: color .15s;
-      font-family: inherit;
-    }
+    .btn-login { font-size: 14px; font-weight: 500; color: var(--text); background: none; border: none; cursor: pointer; padding: 8px 12px; text-decoration: none; transition: color .15s; font-family: inherit; }
     .btn-login:hover { color: var(--green); }
-    .btn-pill {
-      display: inline-flex;
-      align-items: center;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      background: var(--white);
-      border: 1.5px solid var(--text);
-      border-radius: 40px;
-      padding: 9px 22px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background .15s, color .15s;
-      text-decoration: none;
-      font-family: inherit;
-    }
+    .btn-pill { display: inline-flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid var(--text); border-radius: 40px; padding: 9px 22px; cursor: pointer; white-space: nowrap; transition: background .15s, color .15s; text-decoration: none; font-family: inherit; }
     .btn-pill:hover { background: var(--text); color: var(--white); }
-    .btn-pill-menu {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      background: var(--white);
-      border: 1.5px solid #D1D5DB;
-      border-radius: 40px;
-      padding: 9px 18px;
-      cursor: pointer;
-      transition: border-color .15s, background .15s;
-      font-family: inherit;
-    }
+    .btn-pill-menu { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid #D1D5DB; border-radius: 40px; padding: 9px 18px; cursor: pointer; transition: border-color .15s, background .15s; font-family: inherit; }
     .btn-pill-menu:hover { border-color: var(--text); background: var(--bg); }
     .menu-icon { display: flex; flex-direction: column; gap: 4px; }
     .menu-icon span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; }
-    .hamburger { display: none; }
-    /* ── MENU DROPDOWN ── */
     .menu-dropdown-wrap { position: relative; }
-    .menu-dropdown {
-      display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px;
-      background: var(--white); border: 1px solid var(--border); border-radius: 18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500; overflow: hidden;
-      padding: 8px 0 0;
-    }
+    .menu-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500; overflow: hidden; padding: 8px 0 0; }
     .menu-dropdown.open { display: block; }
-    .menu-main-item {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 20px; font-size: 16px; font-weight: 700; color: var(--text);
-      text-decoration: none; cursor: default; font-family: inherit;
-    }
+    .menu-main-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; font-size: 16px; font-weight: 700; color: var(--text); text-decoration: none; cursor: default; font-family: inherit; }
     .menu-main-item.clickable { cursor: pointer; transition: background .12s; }
     .menu-main-item.clickable:hover { background: var(--bg); }
     .menu-main-arrow { font-size: 18px; color: var(--muted); font-weight: 400; }
-    .menu-sub-item {
-      display: flex; align-items: center; gap: 10px; padding: 10px 20px;
-      font-size: 14px; font-weight: 400; color: #374151;
-      text-decoration: none; cursor: pointer; background: none; border: none;
-      width: 100%; text-align: left; font-family: inherit; transition: background .12s;
-    }
+    .menu-sub-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; font-weight: 400; color: #374151; text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s; }
     .menu-sub-item:hover { background: var(--bg); }
     .menu-sub-item.highlight { color: var(--green); font-weight: 600; }
     .menu-sub-item svg { flex-shrink: 0; color: var(--muted); }
     .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
-    .mobile-menu { display: none; }
-
-    /* ── AVATAR PILL (logged-in state) ── */
-    .btn-avatar-pill {
-      display: none; /* shown via JS when logged in */
-      align-items: center; gap: 10px;
-      background: var(--white); border: 1.5px solid #D1D5DB;
-      border-radius: 40px; padding: 6px 14px 6px 6px;
-      cursor: pointer; font-family: inherit; transition: border-color .15s, background .15s;
-    }
+    .btn-avatar-pill { display: none; align-items: center; gap: 10px; background: var(--white); border: 1.5px solid #D1D5DB; border-radius: 40px; padding: 6px 14px 6px 6px; cursor: pointer; font-family: inherit; transition: border-color .15s, background .15s; }
     .btn-avatar-pill:hover { border-color: var(--text); background: var(--bg); }
-    .avatar-img {
-      width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
-      background: var(--green); color: #fff; font-size: 14px; font-weight: 700;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-      overflow: hidden;
-    }
+    .avatar-img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: var(--green); color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
     .avatar-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
     .avatar-caret { font-size: 11px; color: var(--muted); margin-left: 2px; }
-
-    /* ── PROFILE DROPDOWN ── */
-    .profile-dropdown {
-      display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px;
-      background: var(--white); border: 1px solid var(--border); border-radius: 18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500;
-      padding: 4px 0 8px;
-    }
+    .profile-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500; padding: 4px 0 8px; }
     .profile-dropdown.open { display: block; }
-    .profile-name {
-      font-size: 18px; font-weight: 800; color: var(--text);
-      padding: 16px 20px 10px;
-    }
-    .profile-link {
-      display: flex; align-items: center; gap: 14px;
-      padding: 11px 20px; font-size: 14px; font-weight: 500; color: var(--text);
-      text-decoration: none; cursor: pointer; background: none; border: none;
-      width: 100%; text-align: left; font-family: inherit; transition: background .12s;
-    }
+    .profile-name { font-size: 18px; font-weight: 800; color: var(--text); padding: 16px 20px 10px; }
+    .profile-link { display: flex; align-items: center; gap: 14px; padding: 11px 20px; font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s; }
     .profile-link:hover { background: var(--bg); }
     .profile-link svg { flex-shrink: 0; color: var(--muted); }
     .profile-link.logout { color: var(--text); font-weight: 500; }
-    .profile-link.biz-row {
-      font-weight: 700; font-size: 15px;
-      display: flex; justify-content: space-between; align-items: center; gap: 6px;
-    }
-    .profile-plain {
-      display: flex; align-items: center; gap: 14px;
-      padding: 11px 20px; font-size: 14px; font-weight: 500; color: var(--text);
-      cursor: pointer; text-decoration: none;
-    }
+    .profile-link.biz-row { font-weight: 700; font-size: 15px; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+    .profile-plain { display: flex; align-items: center; gap: 14px; padding: 11px 20px; font-size: 14px; font-weight: 500; color: var(--text); cursor: pointer; text-decoration: none; }
     .profile-plain:hover { background: var(--bg); }
     .profile-plain svg { flex-shrink: 0; color: var(--muted); }
 
     /* ── URGENCY BAR ── */
-    .urgency-bar {
-      background: #FFF7ED;
-      border-bottom: 1px solid #FED7AA;
-      text-align: center;
-      padding: 9px 16px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #92400E;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      background: #F97316;
-      border-radius: 50%;
-      flex-shrink: 0;
-      animation: pulse 1.6s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: .5; transform: scale(.75); }
-    }
+    .urgency-bar { background: #FFF7ED; border-bottom: 1px solid #FED7AA; text-align: center; padding: 9px 16px; font-size: 13px; font-weight: 500; color: #92400E; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .pulse-dot { width: 8px; height: 8px; background: #F97316; border-radius: 50%; flex-shrink: 0; animation: pulse 1.6s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(.75); } }
     #deal-count { font-weight: 700; color: #D97706; }
-
-    /* ── HERO ── */
-    .hero {
-      background: var(--bg);
-      padding: 88px 24px 80px;
-      text-align: center;
-      min-height: 480px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,.7);
-      color: var(--dark-green);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 5px 14px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-      letter-spacing: .4px;
-      text-transform: uppercase;
-      border: 1px solid rgba(29,158,117,.2);
-    }
-    .hero h1 {
-      font-size: clamp(24px, 3.8vw, 44px);
-      font-weight: 800;
-      letter-spacing: -1.2px;
-      line-height: 1.1;
-      color: var(--text);
-      max-width: 900px;
-      white-space: nowrap;
-      margin: 0 auto 18px;
-    }
-    @media (max-width: 700px) { .hero h1 { white-space: normal; } }
-    .hero h1 em { font-style: normal; color: var(--green); }
-    .hero-sub {
-      font-size: 16px;
-      color: #6B7280;
-      max-width: 620px;
-      margin: 0 auto 40px;
-      line-height: 1.6;
-    }
-    /* ── SEARCH BAR (Fresha style) ── */
-    .search-bar {
-      display: flex;
-      align-items: center;
-      max-width: 780px;
-      width: 100%;
-      margin: 0 auto 24px;
-      background: var(--white);
-      border: 1.5px solid #c4b5e8;
-      border-radius: 60px;
-      overflow: hidden;
-      box-shadow: 0 4px 24px rgba(139,92,246,.12), 0 1px 4px rgba(0,0,0,.06);
-      padding: 6px 6px 6px 0;
-    }
-    .search-bar .field {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
-      padding: 10px 20px;
-    }
-    .search-bar .field + .field {
-      border-left: 1.5px solid var(--border);
-    }
-    .search-bar .field svg { color: #9CA3AF; flex-shrink: 0; }
-    .search-bar input {
-      border: none;
-      outline: none;
-      font-size: 15px;
-      color: var(--text);
-      width: 100%;
-      padding: 4px 0;
-      background: transparent;
-      font-family: inherit;
-    }
-    .search-bar input::placeholder { color: #9CA3AF; }
-    .search-btn {
-      background: var(--text);
-      border: none;
-      color: var(--white);
-      font-size: 15px;
-      font-weight: 700;
-      padding: 14px 32px;
-      cursor: pointer;
-      white-space: nowrap;
-      border-radius: 50px;
-      transition: opacity .15s;
-      flex-shrink: 0;
-      font-family: inherit;
-    }
-    .search-btn:hover { opacity: .82; }
-    /* ── HERO STATS + APP ── */
-    .hero-stats {
-      font-size: 15px;
-      color: var(--text);
-      margin-bottom: 20px;
-    }
-    .hero-stats strong { font-weight: 800; }
-    .btn-get-app {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--white);
-      border: 1.5px solid var(--border);
-      border-radius: 40px;
-      padding: 10px 22px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      cursor: pointer;
-      transition: border-color .15s, box-shadow .15s;
-      font-family: inherit;
-      text-decoration: none;
-    }
-    .btn-get-app:hover { border-color: #9CA3AF; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
-
-    .categories {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .pill {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      border: 1.5px solid var(--border);
-      background: var(--white);
-      border-radius: 20px;
-      padding: 7px 16px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all .15s;
-    }
-    .pill:hover, .pill.active {
-      border-color: var(--green);
-      color: var(--green);
-      background: #F0FDF8;
-    }
-    .pill.active { font-weight: 600; }
-
-    /* ── DEALS SECTION ── */
-    .section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 56px 24px;
-    }
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 28px;
-    }
-    .section-header h2 { font-size: 24px; font-weight: 700; letter-spacing: -.5px; }
-    .section-header a {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--green);
-      text-decoration: none;
-    }
-    .section-header a:hover { text-decoration: underline; }
-
-    .deals-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-    .deal-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      transition: box-shadow .15s, transform .15s;
-      cursor: pointer;
-    }
-    .deal-card:hover {
-      box-shadow: 0 8px 24px rgba(0,0,0,.1);
-      transform: translateY(-2px);
-    }
-    .card-thumb {
-      position: relative;
-      height: 148px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 56px;
-    }
-    .badge-discount {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: var(--red);
-      color: var(--white);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
-      letter-spacing: .3px;
-    }
-    .badge-time {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(0,0,0,.55);
-      color: var(--white);
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .card-body { padding: 14px 16px 16px; }
-    .card-category {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--green);
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      margin-bottom: 4px;
-    }
-    .card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-    .card-merchant { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-    .card-footer { display: flex; align-items: center; justify-content: space-between; }
-    .price-block { display: flex; align-items: baseline; gap: 6px; }
-    .price-now { font-size: 18px; font-weight: 800; color: var(--text); }
-    .price-was { font-size: 13px; color: #9CA3AF; text-decoration: line-through; }
-    .card-distance {
-      font-size: 12px;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    /* ── NEGOTIATE BUTTON ── */
-    .card-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-    .btn-book {
-      flex: 1;
-      background: var(--green);
-      color: var(--white);
-      border: none;
-      border-radius: 8px;
-      padding: 9px 12px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity .15s;
-    }
-    .btn-book:hover { opacity: .88; }
-    .btn-negotiate {
-      flex: 1;
-      background: var(--white);
-      color: var(--dark-green);
-      border: 1.5px solid var(--dark-green);
-      border-radius: 8px;
-      padding: 9px 12px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      transition: background .15s, color .15s;
-    }
-    .btn-negotiate:hover { background: #F0FDF8; }
-    .btn-negotiate .bot-icon { font-size: 14px; }
-
-    /* ── STATS ── */
-    .stats-section {
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .stats-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 48px 24px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      text-align: center;
-    }
-    .stat-number {
-      font-size: clamp(28px, 4vw, 40px);
-      font-weight: 800;
-      color: var(--text);
-      letter-spacing: -1px;
-      margin-bottom: 4px;
-    }
-    .stat-number span { color: var(--green); }
-    .stat-label { font-size: 14px; color: var(--muted); font-weight: 500; }
-
-    /* ── HOW IT WORKS ── */
-    .how-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 64px 24px;
-      text-align: center;
-    }
-    .how-section h2 { font-size: 32px; font-weight: 800; letter-spacing: -.8px; margin-bottom: 8px; }
-    .how-section p.sub { font-size: 16px; color: var(--muted); margin-bottom: 48px; }
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
-      position: relative;
-    }
-    .step-connector {
-      position: absolute;
-      top: 28px;
-      left: calc(33.33% - 10px);
-      right: calc(33.33% - 10px);
-      height: 2px;
-      background: var(--border);
-      pointer-events: none;
-    }
-    .step {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
-    .step-num {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: #D1FAE5;
-      color: var(--dark-green);
-      font-size: 20px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      z-index: 1;
-    }
-    .step-icon { font-size: 28px; margin-bottom: -4px; }
-    .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
-    .step p { font-size: 14px; color: var(--muted); max-width: 220px; margin: 0 auto; }
-
-    /* ── MERCHANT BANNER ── */
-    .merchant-banner {
-      background: var(--dark-green);
-      padding: 72px 24px;
-      text-align: center;
-    }
-    .merchant-banner h2 {
-      font-size: clamp(26px, 4vw, 40px);
-      font-weight: 800;
-      color: var(--white);
-      letter-spacing: -.8px;
-      margin-bottom: 12px;
-    }
-    .merchant-banner p { font-size: 16px; color: rgba(255,255,255,.7); max-width: 480px; margin: 0 auto 32px; }
-    .merchant-banner-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .btn-white {
-      background: var(--white);
-      color: var(--dark-green);
-      font-size: 15px;
-      font-weight: 700;
-      border: none;
-      border-radius: 10px;
-      padding: 13px 28px;
-      cursor: pointer;
-      transition: opacity .15s;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .btn-white:hover { opacity: .9; }
-    .btn-outline-white {
-      background: transparent;
-      color: var(--white);
-      font-size: 15px;
-      font-weight: 600;
-      border: 2px solid rgba(255,255,255,.4);
-      border-radius: 10px;
-      padding: 11px 28px;
-      cursor: pointer;
-      transition: border-color .15s;
-    }
-    .btn-outline-white:hover { border-color: var(--white); }
-
-    /* ── FOOTER ── */
-    footer {
-      background: #111827;
-      color: rgba(255,255,255,.6);
-      padding: 48px 24px 32px;
-    }
-    .footer-inner { max-width: 1200px; margin: 0 auto; }
-    .footer-top {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 40px;
-      padding-bottom: 40px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-    .footer-brand .logo { color: var(--white); font-size: 20px; display: block; margin-bottom: 12px; }
-    .footer-brand p { font-size: 13px; line-height: 1.6; max-width: 240px; }
-    .footer-col h4 {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--white);
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      margin-bottom: 16px;
-    }
-    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,.55); text-decoration: none; transition: color .15s; }
-    .footer-col ul a:hover { color: var(--white); }
-    .footer-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 28px;
-      font-size: 12px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
-    .footer-bottom a:hover { color: rgba(255,255,255,.7); }
-    .footer-socials { display: flex; gap: 16px; }
-
-    /* ══════════════════════════════════════
-       AI NEGOTIATOR MODAL
-    ══════════════════════════════════════ */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.45);
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s;
-    }
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-    .modal {
-      background: var(--white);
-      border-radius: 20px;
-      width: 100%;
-      max-width: 520px;
-      max-height: 90vh;
-      overflow-y: auto;
-      transform: translateY(20px);
-      transition: transform .2s;
-      box-shadow: 0 24px 64px rgba(0,0,0,.2);
-    }
-    .modal-overlay.open .modal { transform: translateY(0); }
-
-    .modal-header {
-      padding: 20px 24px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .modal-header-left { display: flex; align-items: center; gap: 10px; }
-    .bot-avatar {
-      width: 40px;
-      height: 40px;
-      background: #D1FAE5;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-    }
-    .modal-title { font-size: 16px; font-weight: 700; }
-    .modal-subtitle { font-size: 12px; color: var(--muted); }
-    .modal-close {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      border: none;
-      background: var(--bg);
-      cursor: pointer;
-      font-size: 16px;
-      color: var(--muted);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background .15s;
-    }
-    .modal-close:hover { background: var(--border); }
-
-    /* Deal summary inside modal */
-    .modal-deal-summary {
-      margin: 16px 24px;
-      background: var(--bg);
-      border-radius: 12px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .modal-deal-emoji {
-      font-size: 28px;
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .modal-deal-info .deal-name { font-size: 14px; font-weight: 700; }
-    .modal-deal-info .deal-merchant { font-size: 12px; color: var(--muted); }
-    .modal-deal-info .deal-prices {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      margin-top: 2px;
-    }
-    .modal-deal-info .deal-prices .now { font-size: 15px; font-weight: 800; color: var(--green); }
-    .modal-deal-info .deal-prices .was { font-size: 12px; color: #9CA3AF; text-decoration: line-through; }
-
-    /* Step screens */
-    .modal-screen { display: none; padding: 20px 24px 24px; }
-    .modal-screen.active { display: block; }
-
-    /* Step 1 — preferences */
-    .pref-label {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
-      display: block;
-    }
-    .pref-sublabel { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 4px; }
-    .price-options {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-    .price-opt {
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 8px;
-      text-align: center;
-      cursor: pointer;
-      transition: all .15s;
-    }
-    .price-opt:hover { border-color: var(--green); background: #F0FDF8; }
-    .price-opt.selected { border-color: var(--green); background: #F0FDF8; }
-    .price-opt .opt-label { font-size: 11px; color: var(--muted); }
-    .price-opt .opt-val { font-size: 14px; font-weight: 700; color: var(--text); margin-top: 2px; }
-    .price-opt.selected .opt-val { color: var(--green); }
-
-    .time-options {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-    .time-opt {
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      padding: 7px 14px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      color: var(--muted);
-      transition: all .15s;
-    }
-    .time-opt:hover { border-color: var(--green); color: var(--green); }
-    .time-opt.selected { border-color: var(--green); color: var(--green); background: #F0FDF8; font-weight: 600; }
-
-    .pref-note {
-      background: #FFF7ED;
-      border: 1px solid #FED7AA;
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 12px;
-      color: #92400E;
-      margin-bottom: 20px;
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
-    }
-
-    .btn-start-negotiate {
-      width: 100%;
-      background: var(--dark-green);
-      color: var(--white);
-      border: none;
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: opacity .15s;
-    }
-    .btn-start-negotiate:hover { opacity: .9; }
-
-    /* Step 2 — chat negotiation */
-    .chat-status-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-      padding: 10px 12px;
-      background: var(--bg);
-      border-radius: 10px;
-    }
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #F97316;
-      animation: pulse 1.2s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-    .status-dot.green { background: var(--green); animation: none; }
-    .status-text { font-size: 13px; font-weight: 600; color: var(--text); }
-    .status-sub { font-size: 11px; color: var(--muted); }
-
-    .chat-window {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      height: 300px;
-      overflow-y: auto;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      background: #FAFAFA;
-      scroll-behavior: smooth;
-    }
-    .chat-msg {
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-      opacity: 0;
-      transform: translateY(8px);
-      transition: opacity .3s, transform .3s;
-    }
-    .chat-msg.visible { opacity: 1; transform: translateY(0); }
-    .chat-msg.from-bot { flex-direction: row; }
-    .chat-msg.from-merchant { flex-direction: row-reverse; }
-    .chat-msg.from-system { justify-content: center; }
-
-    .msg-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-    .msg-avatar.bot { background: #D1FAE5; }
-    .msg-avatar.merchant { background: #DBEAFE; }
-
-    .msg-bubble {
-      max-width: 75%;
-      padding: 9px 12px;
-      border-radius: 12px;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-    .from-bot .msg-bubble {
-      background: var(--white);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-bottom-left-radius: 4px;
-    }
-    .from-merchant .msg-bubble {
-      background: #EFF6FF;
-      color: #1E40AF;
-      border-bottom-right-radius: 4px;
-    }
-    .from-system .msg-bubble {
-      background: #D1FAE5;
-      color: var(--dark-green);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 20px;
-    }
-    .msg-label {
-      font-size: 10px;
-      color: var(--muted);
-      margin-bottom: 3px;
-      font-weight: 600;
-      letter-spacing: .3px;
-    }
-    .msg-wrap { display: flex; flex-direction: column; }
-    .from-merchant .msg-wrap { align-items: flex-end; }
-
-    .typing-indicator {
-      display: flex;
-      gap: 4px;
-      padding: 10px 12px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      border-bottom-left-radius: 4px;
-      width: fit-content;
-    }
-    .typing-indicator span {
-      width: 6px;
-      height: 6px;
-      background: #9CA3AF;
-      border-radius: 50%;
-      animation: typing 1s ease-in-out infinite;
-    }
-    .typing-indicator span:nth-child(2) { animation-delay: .15s; }
-    .typing-indicator span:nth-child(3) { animation-delay: .3s; }
-    @keyframes typing {
-      0%, 60%, 100% { transform: translateY(0); opacity: .4; }
-      30% { transform: translateY(-4px); opacity: 1; }
-    }
-
-    /* Step 3 — result */
-    .result-success {
-      text-align: center;
-      padding: 8px 0 16px;
-    }
-    .result-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-    }
-    .result-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-    .result-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
-
-    .negotiated-deal-card {
-      background: #F0FDF8;
-      border: 2px solid var(--green);
-      border-radius: 14px;
-      padding: 16px;
-      text-align: left;
-      margin-bottom: 20px;
-    }
-    .negotiated-deal-card .nd-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .negotiated-deal-card .nd-emoji {
-      font-size: 24px;
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .negotiated-deal-card .nd-name { font-size: 14px; font-weight: 700; }
-    .negotiated-deal-card .nd-merchant { font-size: 12px; color: var(--muted); }
-    .negotiated-deal-card .nd-prices {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding-top: 12px;
-      border-top: 1px solid #A7F3D0;
-    }
-    .nd-new-price { font-size: 28px; font-weight: 800; color: var(--green); }
-    .nd-was-price { font-size: 14px; color: #9CA3AF; text-decoration: line-through; }
-    .nd-savings-badge {
-      margin-left: auto;
-      background: var(--red);
-      color: var(--white);
-      font-size: 12px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 20px;
-    }
-
-    .deal-expiry-bar {
-      background: #FFF7ED;
-      border: 1px solid #FED7AA;
-      border-radius: 8px;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-      font-size: 13px;
-      color: #92400E;
-      font-weight: 500;
-    }
-    #expiry-timer { font-weight: 800; color: #D97706; }
-
-    .result-btns { display: flex; gap: 10px; }
-    .btn-confirm-book {
-      flex: 2;
-      background: var(--green);
-      color: var(--white);
-      border: none;
-      border-radius: 10px;
-      padding: 13px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity .15s;
-    }
-    .btn-confirm-book:hover { opacity: .88; }
-    .btn-decline {
-      flex: 1;
-      background: var(--white);
-      color: var(--muted);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      padding: 13px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: border-color .15s;
-    }
-    .btn-decline:hover { border-color: var(--muted); }
-
-    /* transcript toggle */
-    .transcript-toggle {
-      font-size: 12px;
-      color: var(--green);
-      cursor: pointer;
-      text-align: center;
-      margin-bottom: 16px;
-      font-weight: 600;
-    }
-    .transcript-toggle:hover { text-decoration: underline; }
-    .transcript-preview {
-      display: none;
-      background: var(--bg);
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 16px;
-      max-height: 160px;
-      overflow-y: auto;
-    }
-    .transcript-preview.open { display: block; }
-    .transcript-line { margin-bottom: 6px; }
-    .transcript-line b { color: var(--text); }
-
-    /* step 4 — booked */
-    .booked-screen { text-align: center; padding: 16px 0; }
-    .booked-icon { font-size: 56px; margin-bottom: 12px; }
-    .booked-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
-    .booked-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
-    .booking-code-box {
-      background: var(--bg);
-      border: 2px dashed var(--green);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-    .booking-code-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
-    .booking-code { font-size: 28px; font-weight: 800; letter-spacing: 6px; color: var(--dark-green); }
 
     /* ── TRUST BAR ── */
     .trust-bar { position:sticky; top:64px; z-index:99; background:linear-gradient(90deg,#0f172a 0%,#1e293b 100%); padding:10px 32px; display:flex; align-items:center; justify-content:center; gap:0; }
@@ -1140,68 +80,246 @@
     .trust-arrow { color:#1D9E75; font-size:16px; font-weight:700; opacity:.8; padding:0 4px; }
     .trust-badge { margin-left:28px; padding:5px 14px; background:rgba(29,158,117,.2); border:1px solid rgba(29,158,117,.4); border-radius:20px; font-size:11px; font-weight:700; color:#4ade80; white-space:nowrap; }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
-      .deals-grid { grid-template-columns: repeat(2, 1fr); }
-      .steps { grid-template-columns: 1fr; gap: 40px; }
-      .step-connector { display: none; }
-      .footer-top { grid-template-columns: 1fr 1fr; }
-      /* Trust bar: scrollable on tablets so steps don't overflow */
-      .trust-bar { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 8px 16px; justify-content: flex-start; }
-      .trust-bar::-webkit-scrollbar { display: none; }
-      .trust-badge { flex-shrink: 0; margin-left: 12px; }
+    /* ── DARK HERO ── */
+    .deals-hero {
+      background: linear-gradient(160deg, #051a12 0%, #0b2d1e 55%, #071710 100%);
+      padding: 80px 24px 72px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    @media (max-width: 600px) {
-      /* Layout */
-      .deals-grid { grid-template-columns: 1fr; }
-      .stats-inner { grid-template-columns: 1fr; }
-      .footer-top { grid-template-columns: 1fr; }
-      .footer-bottom { flex-direction: column; text-align: center; }
-      .nav-right .btn-login, .nav-right .btn-pill { display: none; }
-      /* Trust bar: show badge only, hide steps */
-      .trust-step { display: none; }
-      .trust-arrow { display: none; }
-      .trust-bar { justify-content: center; padding: 7px 12px; overflow-x: unset; }
-      .trust-badge { margin-left: 0; font-size: 11px; }
-      /* Hero: tighten vertical breathing room */
-      .hero { padding: 36px 16px 40px; }
-      .hero-sub { font-size: 15px; margin-bottom: 24px; }
-      /* Search bar: stack fields vertically */
-      .search-bar { flex-direction: column; border-radius: 20px; padding: 0; }
-      .search-bar .field + .field { border-left: none; border-top: 1.5px solid var(--border); }
-      .search-btn { padding: 16px; border-radius: 0 0 18px 18px; width: 100%; }
-      /* Section spacing */
-      .section { padding: 40px 16px; }
-      .how-section { padding: 48px 16px; }
-      .merchant-banner { padding: 48px 16px; }
-      .section-header { flex-direction: column; gap: 6px; }
-      /* Urgency bar: wrap text gracefully */
-      .urgency-bar { flex-wrap: wrap; gap: 6px; font-size: 12px; text-align: center; }
-      /* Modal: 2-col price grid fits much better than 3 on small screens */
-      .price-options { grid-template-columns: repeat(2, 1fr); }
-      .chat-window { height: 240px; }
-      /* Card action buttons: meet 44px touch target minimum */
-      .btn-book, .btn-negotiate { min-height: 44px; padding: 12px; font-size: 14px; }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(29,158,117,.18);
+      color: #4ade80;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      border: 1px solid rgba(29,158,117,.35);
     }
+    .deals-hero h1 {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      line-height: 1.08;
+      color: var(--white);
+      max-width: 800px;
+      margin: 0 auto 16px;
+    }
+    .deals-hero h1 em { font-style: normal; color: #4ade80; }
+    .deals-hero .hero-sub { font-size: 17px; color: rgba(255,255,255,.65); max-width: 580px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-stats { font-size: 15px; color: rgba(255,255,255,.6); margin-bottom: 20px; }
+    .hero-stats strong { font-weight: 800; color: rgba(255,255,255,.9); }
+
+    /* ── SEARCH BAR ── */
+    .search-bar { display: flex; align-items: center; max-width: 780px; width: 100%; margin: 0 auto 24px; background: var(--white); border: 1.5px solid #c4b5e8; border-radius: 60px; overflow: hidden; box-shadow: 0 4px 24px rgba(139,92,246,.12), 0 1px 4px rgba(0,0,0,.06); padding: 6px 6px 6px 0; }
+    .search-bar .field { display: flex; align-items: center; gap: 10px; flex: 1; padding: 10px 20px; }
+    .search-bar .field + .field { border-left: 1.5px solid var(--border); }
+    .search-bar .field svg { color: #9CA3AF; flex-shrink: 0; }
+    .search-bar input { border: none; outline: none; font-size: 15px; color: var(--text); width: 100%; padding: 4px 0; background: transparent; font-family: inherit; }
+    .search-bar input::placeholder { color: #9CA3AF; }
+    .search-btn { background: var(--text); border: none; color: var(--white); font-size: 15px; font-weight: 700; padding: 14px 32px; cursor: pointer; white-space: nowrap; border-radius: 50px; transition: opacity .15s; flex-shrink: 0; font-family: inherit; }
+    .search-btn:hover { opacity: .82; }
+    .btn-get-app { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.2); border-radius: 40px; padding: 10px 22px; font-size: 14px; font-weight: 600; color: rgba(255,255,255,.85); cursor: pointer; transition: border-color .15s, background .15s; font-family: inherit; text-decoration: none; }
+    .btn-get-app:hover { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.12); }
+
+    /* ── CATEGORY PILLS ── */
+    .categories-wrap { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; position: sticky; top: 108px; z-index: 98; }
+    .pill { display: flex; align-items: center; gap: 5px; border: 1.5px solid var(--border); background: var(--white); border-radius: 20px; padding: 7px 16px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all .15s; }
+    .pill:hover, .pill.active { border-color: var(--green); color: var(--green); background: #F0FDF8; }
+    .pill.active { font-weight: 600; }
+
+    /* ── DEALS SECTION ── */
+    .section { max-width: 1200px; margin: 0 auto; padding: 56px 24px; }
+    .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 28px; }
+    .section-header h2 { font-size: 24px; font-weight: 700; letter-spacing: -.5px; }
+    .section-header a { font-size: 13px; font-weight: 600; color: var(--green); text-decoration: none; }
+    .section-header a:hover { text-decoration: underline; }
+    .deals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .deal-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: box-shadow .15s, transform .15s; cursor: pointer; }
+    .deal-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.1); transform: translateY(-2px); }
+    .card-thumb { position: relative; height: 148px; display: flex; align-items: center; justify-content: center; font-size: 56px; }
+    .badge-discount { position: absolute; top: 10px; left: 10px; background: var(--red); color: var(--white); font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; letter-spacing: .3px; }
+    .badge-time { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,.55); color: var(--white); font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: flex; align-items: center; gap: 4px; }
+    .card-body { padding: 14px 16px 16px; }
+    .card-category { font-size: 11px; font-weight: 600; color: var(--green); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .card-merchant { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .price-block { display: flex; align-items: baseline; gap: 6px; }
+    .price-now { font-size: 18px; font-weight: 800; color: var(--text); }
+    .price-was { font-size: 13px; color: #9CA3AF; text-decoration: line-through; }
+    .card-distance { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+    .card-actions { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .btn-book { flex: 1; background: var(--green); color: var(--white); border: none; border-radius: 8px; padding: 9px 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
+    .btn-book:hover { opacity: .88; }
+    .btn-book:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-negotiate { flex: 1; background: var(--white); color: var(--dark-green); border: 1.5px solid var(--dark-green); border-radius: 8px; padding: 9px 12px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: background .15s, color .15s; }
+    .btn-negotiate:hover { background: #F0FDF8; }
+    .btn-negotiate .bot-icon { font-size: 14px; }
+
     /* ── SLOT COUNTER ── */
     .slot-counter { display: flex; align-items: center; gap: 8px; margin: 8px 0 10px; }
     .slot-bar { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
     .slot-fill { height: 100%; border-radius: 3px; transition: width .4s; }
     .slot-fill.plenty { background: var(--green); }
-    .slot-fill.low    { background: #D97706; }
-    .slot-fill.full   { background: #DC2626; }
+    .slot-fill.low { background: #D97706; }
+    .slot-fill.full { background: #DC2626; }
     .slot-label { font-size: 11px; font-weight: 700; white-space: nowrap; }
     .slot-label.plenty { color: var(--green); }
-    .slot-label.low    { color: #D97706; }
-    .slot-label.full   { color: #DC2626; }
-    .btn-book:disabled { opacity: .5; cursor: not-allowed; }
+    .slot-label.low { color: #D97706; }
+    .slot-label.full { color: #DC2626; }
+
+    /* ── STATS ── */
+    .stats-section { background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .stats-inner { max-width: 1200px; margin: 0 auto; padding: 48px 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center; }
+    .stat-number { font-size: clamp(28px, 4vw, 40px); font-weight: 800; color: var(--text); letter-spacing: -1px; margin-bottom: 4px; }
+    .stat-number span { color: var(--green); }
+    .stat-label { font-size: 14px; color: var(--muted); font-weight: 500; }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { max-width: 1200px; margin: 0 auto; padding: 64px 24px; text-align: center; }
+    .how-section h2 { font-size: 32px; font-weight: 800; letter-spacing: -.8px; margin-bottom: 8px; }
+    .how-section p.sub { font-size: 16px; color: var(--muted); margin-bottom: 48px; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; position: relative; }
+    .step-connector { position: absolute; top: 28px; left: calc(33.33% - 10px); right: calc(33.33% - 10px); height: 2px; background: var(--border); pointer-events: none; }
+    .step { position: relative; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .step-num { width: 56px; height: 56px; border-radius: 50%; background: #D1FAE5; color: var(--dark-green); font-size: 20px; font-weight: 800; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
+    .step-icon { font-size: 28px; margin-bottom: -4px; }
+    .step h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .step p { font-size: 14px; color: var(--muted); max-width: 220px; margin: 0 auto; }
+
+    /* ── MERCHANT BANNER ── */
+    .merchant-banner { background: var(--dark-green); padding: 72px 24px; text-align: center; }
+    .merchant-banner h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 800; color: var(--white); letter-spacing: -.8px; margin-bottom: 12px; }
+    .merchant-banner p { font-size: 16px; color: rgba(255,255,255,.7); max-width: 480px; margin: 0 auto 32px; }
+    .merchant-banner-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: var(--white); color: var(--dark-green); font-size: 15px; font-weight: 700; border: none; border-radius: 10px; padding: 13px 28px; cursor: pointer; transition: opacity .15s; text-decoration: none; display: inline-block; }
+    .btn-white:hover { opacity: .9; }
+    .btn-outline-white { background: transparent; color: var(--white); font-size: 15px; font-weight: 600; border: 2px solid rgba(255,255,255,.4); border-radius: 10px; padding: 11px 28px; cursor: pointer; transition: border-color .15s; }
+    .btn-outline-white:hover { border-color: var(--white); }
+
+    /* ── FOOTER ── */
+    footer { background: #111827; color: rgba(255,255,255,.6); padding: 48px 24px 32px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .footer-brand .logo { color: var(--white); font-size: 20px; display: block; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; line-height: 1.6; max-width: 240px; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,.55); text-decoration: none; transition: color .15s; }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; font-size: 12px; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
+    .footer-bottom a:hover { color: rgba(255,255,255,.7); }
+    .footer-socials { display: flex; gap: 16px; }
+
+    /* ── MODAL ── */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 16px; opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--white); border-radius: 20px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: transform .2s; box-shadow: 0 24px 64px rgba(0,0,0,.2); }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .modal-header-left { display: flex; align-items: center; gap: 10px; }
+    .bot-avatar { width: 40px; height: 40px; background: #D1FAE5; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .modal-title { font-size: 16px; font-weight: 700; }
+    .modal-subtitle { font-size: 12px; color: var(--muted); }
+    .modal-close { width: 32px; height: 32px; border-radius: 8px; border: none; background: var(--bg); cursor: pointer; font-size: 16px; color: var(--muted); display: flex; align-items: center; justify-content: center; transition: background .15s; }
+    .modal-close:hover { background: var(--border); }
+    .modal-deal-summary { margin: 16px 24px; background: var(--bg); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; }
+    .modal-deal-emoji { font-size: 28px; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .modal-deal-info .deal-name { font-size: 14px; font-weight: 700; }
+    .modal-deal-info .deal-merchant { font-size: 12px; color: var(--muted); }
+    .modal-deal-info .deal-prices { display: flex; align-items: baseline; gap: 6px; margin-top: 2px; }
+    .modal-deal-info .deal-prices .now { font-size: 15px; font-weight: 800; color: var(--green); }
+    .modal-deal-info .deal-prices .was { font-size: 12px; color: #9CA3AF; text-decoration: line-through; }
+    .modal-screen { display: none; padding: 20px 24px 24px; }
+    .modal-screen.active { display: block; }
+    .pref-label { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 8px; display: block; }
+    .pref-sublabel { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 4px; }
+    .price-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+    .price-opt { border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 8px; text-align: center; cursor: pointer; transition: all .15s; }
+    .price-opt:hover { border-color: var(--green); background: #F0FDF8; }
+    .price-opt.selected { border-color: var(--green); background: #F0FDF8; }
+    .price-opt .opt-label { font-size: 11px; color: var(--muted); }
+    .price-opt .opt-val { font-size: 14px; font-weight: 700; color: var(--text); margin-top: 2px; }
+    .price-opt.selected .opt-val { color: var(--green); }
+    .time-options { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .time-opt { border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--muted); transition: all .15s; }
+    .time-opt:hover { border-color: var(--green); color: var(--green); }
+    .time-opt.selected { border-color: var(--green); color: var(--green); background: #F0FDF8; font-weight: 600; }
+    .pref-note { background: #FFF7ED; border: 1px solid #FED7AA; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #92400E; margin-bottom: 20px; display: flex; gap: 8px; align-items: flex-start; }
+    .btn-start-negotiate { width: 100%; background: var(--dark-green); color: var(--white); border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity .15s; }
+    .btn-start-negotiate:hover { opacity: .9; }
+    .chat-status-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 10px 12px; background: var(--bg); border-radius: 10px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #F97316; animation: pulse 1.2s ease-in-out infinite; flex-shrink: 0; }
+    .status-dot.green { background: var(--green); animation: none; }
+    .status-text { font-size: 13px; font-weight: 600; color: var(--text); }
+    .status-sub { font-size: 11px; color: var(--muted); }
+    .chat-window { border: 1px solid var(--border); border-radius: 12px; height: 300px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; background: #FAFAFA; scroll-behavior: smooth; }
+    .chat-msg { display: flex; gap: 8px; align-items: flex-end; opacity: 0; transform: translateY(8px); transition: opacity .3s, transform .3s; }
+    .chat-msg.visible { opacity: 1; transform: translateY(0); }
+    .chat-msg.from-bot { flex-direction: row; }
+    .chat-msg.from-merchant { flex-direction: row-reverse; }
+    .chat-msg.from-system { justify-content: center; }
+    .msg-avatar { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .msg-avatar.bot { background: #D1FAE5; }
+    .msg-avatar.merchant { background: #DBEAFE; }
+    .msg-bubble { max-width: 75%; padding: 9px 12px; border-radius: 12px; font-size: 13px; line-height: 1.45; }
+    .from-bot .msg-bubble { background: var(--white); border: 1px solid var(--border); color: var(--text); border-bottom-left-radius: 4px; }
+    .from-merchant .msg-bubble { background: #EFF6FF; color: #1E40AF; border-bottom-right-radius: 4px; }
+    .from-system .msg-bubble { background: #D1FAE5; color: var(--dark-green); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 20px; }
+    .msg-label { font-size: 10px; color: var(--muted); margin-bottom: 3px; font-weight: 600; letter-spacing: .3px; }
+    .msg-wrap { display: flex; flex-direction: column; }
+    .from-merchant .msg-wrap { align-items: flex-end; }
+    .typing-indicator { display: flex; gap: 4px; padding: 10px 12px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; border-bottom-left-radius: 4px; width: fit-content; }
+    .typing-indicator span { width: 6px; height: 6px; background: #9CA3AF; border-radius: 50%; animation: typing 1s ease-in-out infinite; }
+    .typing-indicator span:nth-child(2) { animation-delay: .15s; }
+    .typing-indicator span:nth-child(3) { animation-delay: .3s; }
+    @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: .4; } 30% { transform: translateY(-4px); opacity: 1; } }
+    .result-success { text-align: center; padding: 8px 0 16px; }
+    .result-icon { font-size: 48px; margin-bottom: 12px; }
+    .result-title { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .result-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .negotiated-deal-card { background: #F0FDF8; border: 2px solid var(--green); border-radius: 14px; padding: 16px; text-align: left; margin-bottom: 20px; }
+    .negotiated-deal-card .nd-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .negotiated-deal-card .nd-emoji { font-size: 24px; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .negotiated-deal-card .nd-name { font-size: 14px; font-weight: 700; }
+    .negotiated-deal-card .nd-merchant { font-size: 12px; color: var(--muted); }
+    .negotiated-deal-card .nd-prices { display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid #A7F3D0; }
+    .nd-new-price { font-size: 28px; font-weight: 800; color: var(--green); }
+    .nd-was-price { font-size: 14px; color: #9CA3AF; text-decoration: line-through; }
+    .nd-savings-badge { margin-left: auto; background: var(--red); color: var(--white); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+    .deal-expiry-bar { background: #FFF7ED; border: 1px solid #FED7AA; border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-size: 13px; color: #92400E; font-weight: 500; }
+    #expiry-timer { font-weight: 800; color: #D97706; }
+    .result-btns { display: flex; gap: 10px; }
+    .btn-confirm-book { flex: 2; background: var(--green); color: var(--white); border: none; border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity .15s; }
+    .btn-confirm-book:hover { opacity: .88; }
+    .btn-decline { flex: 1; background: var(--white); color: var(--muted); border: 1.5px solid var(--border); border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600; cursor: pointer; transition: border-color .15s; }
+    .btn-decline:hover { border-color: var(--muted); }
+    .transcript-toggle { font-size: 12px; color: var(--green); cursor: pointer; text-align: center; margin-bottom: 16px; font-weight: 600; }
+    .transcript-toggle:hover { text-decoration: underline; }
+    .transcript-preview { display: none; background: var(--bg); border-radius: 10px; padding: 12px; font-size: 12px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; max-height: 160px; overflow-y: auto; }
+    .transcript-preview.open { display: block; }
+    .transcript-line { margin-bottom: 6px; }
+    .transcript-line b { color: var(--text); }
+    .booked-screen { text-align: center; padding: 16px 0; }
+    .booked-icon { font-size: 56px; margin-bottom: 12px; }
+    .booked-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .booked-sub { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .booking-code-box { background: var(--bg); border: 2px dashed var(--green); border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    .booking-code-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .booking-code { font-size: 28px; font-weight: 800; letter-spacing: 6px; color: var(--dark-green); }
+
     /* ── BOOKING MODAL ── */
-    .bk-deal-summary {
-      display: flex; align-items: center; gap: 14px;
-      background: var(--bg); border-radius: 14px; padding: 14px 16px; margin-bottom: 20px;
-    }
+    .bk-deal-summary { display: flex; align-items: center; gap: 14px; background: var(--bg); border-radius: 14px; padding: 14px 16px; margin-bottom: 20px; }
     .bk-deal-emoji { font-size: 28px; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .bk-deal-title { font-size: 15px; font-weight: 700; }
     .bk-deal-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
@@ -1211,12 +329,7 @@
     .bk-section-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
     .bk-date-grid { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 20px; scrollbar-width: none; }
     .bk-date-grid::-webkit-scrollbar { display: none; }
-    .bk-date-chip {
-      flex-shrink: 0; width: 60px; border-radius: 12px; padding: 10px 0;
-      border: 1.5px solid var(--border); background: var(--white);
-      display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer;
-      transition: all .12s; user-select: none;
-    }
+    .bk-date-chip { flex-shrink: 0; width: 60px; border-radius: 12px; padding: 10px 0; border: 1.5px solid var(--border); background: var(--white); display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; transition: all .12s; user-select: none; }
     .bk-date-chip:hover:not(.disabled) { border-color: var(--green); background: #F0FDF8; }
     .bk-date-chip.selected { border-color: var(--green); background: var(--green); }
     .bk-date-chip.disabled { opacity: .35; cursor: not-allowed; }
@@ -1228,18 +341,10 @@
     .bk-date-chip.selected .bk-date-mon { color: rgba(255,255,255,.75); }
     .bk-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
     .bk-field label { font-size: 13px; font-weight: 600; color: var(--text); }
-    .bk-field input, .bk-field textarea {
-      padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 14px; color: var(--text); outline: none; font-family: inherit;
-      background: var(--white); transition: border-color .15s; resize: none;
-    }
+    .bk-field input, .bk-field textarea { padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; color: var(--text); outline: none; font-family: inherit; background: var(--white); transition: border-color .15s; resize: none; }
     .bk-field input:focus, .bk-field textarea:focus { border-color: var(--green); }
     .bk-error { font-size: 13px; color: #DC2626; min-height: 18px; margin-bottom: 4px; }
-    .bk-submit {
-      width: 100%; background: var(--green); color: var(--white); border: none;
-      border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700;
-      cursor: pointer; transition: opacity .15s; font-family: inherit;
-    }
+    .bk-submit { width: 100%; background: var(--green); color: var(--white); border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity .15s; font-family: inherit; }
     .bk-submit:hover { opacity: .88; }
     .bk-submit:disabled { opacity: .5; cursor: not-allowed; }
     .bk-screen-confirm { text-align: center; padding: 12px 0 8px; }
@@ -1250,13 +355,76 @@
     .bk-code { font-size: 32px; font-weight: 800; letter-spacing: 6px; color: var(--dark-green); font-family: monospace; }
     .bk-confirm-summary { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
     .bk-confirm-summary strong { color: var(--text); font-weight: 600; }
-    .bk-done-btn {
-      width: 100%; background: var(--white); color: var(--text); border: 1.5px solid var(--border);
-      border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600;
-      cursor: pointer; transition: border-color .15s; font-family: inherit;
-    }
+    .bk-done-btn { width: 100%; background: var(--white); color: var(--text); border: 1.5px solid var(--border); border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600; cursor: pointer; transition: border-color .15s; font-family: inherit; }
     .bk-done-btn:hover { border-color: var(--muted); }
 
+    /* ── NOTIFY BUTTON ── */
+    .btn-notify {
+      width: 100%; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: inherit; border: 1.5px solid var(--border); background: var(--white); color: var(--muted);
+      transition: all .15s;
+    }
+    .btn-notify:hover { border-color: var(--green); color: var(--green); background: #F0FDF8; }
+    .btn-notify.saved { border-color: var(--green); background: #F0FDF8; color: var(--dark-green); }
+
+    /* ── LOGIN GATE MODAL ── */
+    .login-gate-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45);
+      z-index: 1000; align-items: center; justify-content: center;
+    }
+    .login-gate-backdrop.open { display: flex; }
+    .login-gate-card {
+      background: var(--white); border-radius: 24px; padding: 36px 32px 28px;
+      max-width: 380px; width: calc(100% - 32px); text-align: center;
+      box-shadow: 0 24px 64px rgba(0,0,0,.18);
+    }
+    .login-gate-icon { font-size: 40px; margin-bottom: 14px; }
+    .login-gate-title { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -.4px; margin-bottom: 8px; }
+    .login-gate-msg { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+    .login-gate-actions { display: flex; flex-direction: column; gap: 10px; }
+    .login-gate-btn-primary {
+      display: block; background: var(--green); color: white; font-size: 15px; font-weight: 700;
+      border: none; border-radius: 12px; padding: 13px; cursor: pointer; text-decoration: none;
+      font-family: inherit; transition: opacity .15s;
+    }
+    .login-gate-btn-primary:hover { opacity: .88; }
+    .login-gate-btn-secondary {
+      display: block; background: none; color: var(--muted); font-size: 14px; font-weight: 500;
+      border: none; cursor: pointer; font-family: inherit; padding: 6px;
+    }
+    .login-gate-btn-secondary:hover { color: var(--text); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .deals-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: 1fr; gap: 40px; }
+      .step-connector { display: none; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .trust-bar { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 8px 16px; justify-content: flex-start; }
+      .trust-bar::-webkit-scrollbar { display: none; }
+      .trust-badge { flex-shrink: 0; margin-left: 12px; }
+    }
+    @media (max-width: 600px) {
+      .deals-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .nav-right .btn-login, .nav-right .btn-pill { display: none; }
+      .trust-step { display: none; }
+      .trust-arrow { display: none; }
+      .trust-bar { justify-content: center; padding: 7px 12px; overflow-x: unset; }
+      .trust-badge { margin-left: 0; font-size: 11px; }
+      .deals-hero { padding: 56px 16px 48px; }
+      .deals-hero h1 { letter-spacing: -.8px; }
+      .search-bar { flex-direction: column; border-radius: 20px; padding: 0; }
+      .search-bar .field + .field { border-left: none; border-top: 1.5px solid var(--border); }
+      .search-btn { padding: 16px; border-radius: 0 0 18px 18px; width: 100%; }
+      .price-options { grid-template-columns: repeat(2, 1fr); }
+      .chat-window { height: 240px; }
+      .btn-book, .btn-negotiate { min-height: 44px; padding: 12px; font-size: 14px; }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/md5@2.3.0/dist/md5.min.js"></script>
@@ -1267,12 +435,12 @@
 <nav>
   <div class="nav-inner">
     <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
-      <a href="#" class="logo"><img src="genoti_logo.svg" alt="Genoti" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
+      <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
       <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover, Book here, Save more</span>
     </div>
     <ul class="nav-links">
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
-        <a href="deals.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px">⚡ Off-Peak Deals</a>
+        <a href="index.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px">⚡ Off-Peak Deals</a>
         <span style="font-size:10px;color:#6B7280;margin-top:1px">Save up to 75%</span>
       </div></li>
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
@@ -1292,31 +460,11 @@
       <a href="login.html" class="btn-login" id="nav-login-link">Log in</a>
       <a href="register.html" class="btn-pill" id="nav-list-biz">List your business</a>
       <div class="menu-dropdown-wrap">
-
-        <!-- ── GUEST: Menu pill ── -->
         <button class="btn-pill-menu" onclick="toggleMenu()" aria-label="Menu" id="menu-toggle-btn">
           Menu
           <div class="menu-icon"><span></span><span></span><span></span></div>
         </button>
         <div class="menu-dropdown" id="menu-dropdown">
-          <div class="menu-main-item">Explore</div>
-          <a href="deals.html" class="menu-sub-item">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            ⚡ Off-Peak Deals
-          </a>
-          <a href="negotiate.html" class="menu-sub-item">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            🤝 AI Negotiator
-          </a>
-          <a href="booking.html" class="menu-sub-item">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            🛎️ BookNow
-          </a>
-          <a href="notify.html" class="menu-sub-item">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            🔔 Notify Me
-          </a>
-          <div class="menu-divider"></div>
           <div class="menu-main-item">For customers</div>
           <a href="login.html" class="menu-sub-item highlight">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1339,13 +487,9 @@
             <span class="menu-main-arrow">→</span>
           </a>
         </div>
-
-        <!-- ── LOGGED IN: Avatar pill ── -->
         <button class="btn-avatar-pill" onclick="toggleProfile()" aria-label="Account" id="avatar-toggle-btn">
-          <div class="avatar-img" id="nav-avatar">
-            <span id="nav-avatar-initial">?</span>
-          </div>
-          <span class="avatar-caret" id="avatar-caret">▲</span>
+          <div class="avatar-img" id="nav-avatar"><span id="nav-avatar-initial">?</span></div>
+          <span class="avatar-caret" id="avatar-caret">▼</span>
         </button>
         <div class="profile-dropdown" id="profile-dropdown">
           <div class="profile-name" id="profile-name">—</div>
@@ -1396,13 +540,12 @@
             <span>→</span>
           </a>
         </div>
-
       </div>
     </div>
   </div>
-  <div class="mobile-menu" id="mobile-menu"></div>
 </nav>
 
+<!-- ══ TRUST BAR ══ -->
 <div class="trust-bar">
   <div class="trust-step"><div class="trust-step-icon">🔍</div><div><div class="trust-step-title">Search</div><div class="trust-step-sub">Find local services</div></div></div>
   <div class="trust-arrow">→</div>
@@ -1419,13 +562,13 @@
 </div>
 
 <!-- ══ HERO ══ -->
-<section class="hero">
+<section class="deals-hero">
   <div class="hero-eyebrow">
     <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="6"/></svg>
     Hyperlocal deals · Updated every 15 min
   </div>
-  <h1>Fill the idle hours. <em>Save big,</em> today.</h1>
-  <p class="hero-sub">Merchants unlock steep off-peak discounts. You grab them before they expire.</p>
+  <h1>⚡ Off-Peak Deals.<br><em>Save up to 75%</em> today.</h1>
+  <p class="hero-sub">Book before they expire → pay at the counter, zero commission.</p>
 
   <div class="search-bar">
     <div class="field">
@@ -1449,27 +592,27 @@
     Get the app
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h.01M14 17h3v3M17 14h3"/></svg>
   </a>
-
-  <div class="categories" style="margin-top:36px">
-    <button class="pill active" data-cat="All" onclick="setActive(this, 'All')">🏷️ All</button>
-    <button class="pill" data-cat="Restaurants &amp; Dining" onclick="setActive(this, 'Restaurants &amp; Dining')">🍽️ Restaurants &amp; Dining</button>
-    <button class="pill" data-cat="Fitness &amp; Sports" onclick="setActive(this, 'Fitness &amp; Sports')">🏋️ Fitness &amp; Sports</button>
-    <button class="pill" data-cat="Health &amp; Medical" onclick="setActive(this, 'Health &amp; Medical')">🏥 Health &amp; Medical</button>
-    <button class="pill" data-cat="Beauty &amp; Wellness" onclick="setActive(this, 'Beauty &amp; Wellness')">💅 Beauty &amp; Wellness</button>
-    <button class="pill" data-cat="Diagnostics" onclick="setActive(this, 'Diagnostics')">🔬 Diagnostics</button>
-    <button class="pill" data-cat="Hospitals" onclick="setActive(this, 'Hospitals')">🏨 Hospitals</button>
-    <button class="pill" data-cat="Hospitality" onclick="setActive(this, 'Hospitality')">🏩 Hospitality</button>
-    <button class="pill" data-cat="Shared Spaces" onclick="setActive(this, 'Shared Spaces')">🖥️ Shared Spaces</button>
-    <button class="pill" data-cat="Sports Facilities" onclick="setActive(this, 'Sports Facilities')">🏸 Sports Facilities</button>
-  </div>
 </section>
 
+<!-- ══ CATEGORY PILLS ══ -->
+<div class="categories-wrap">
+  <button class="pill active" data-cat="All" onclick="setActive(this, 'All')">🏷️ All</button>
+  <button class="pill" data-cat="Restaurants &amp; Dining" onclick="setActive(this, 'Restaurants &amp; Dining')">🍽️ Restaurants &amp; Dining</button>
+  <button class="pill" data-cat="Fitness &amp; Sports" onclick="setActive(this, 'Fitness &amp; Sports')">🏋️ Fitness &amp; Sports</button>
+  <button class="pill" data-cat="Health &amp; Medical" onclick="setActive(this, 'Health &amp; Medical')">🏥 Health &amp; Medical</button>
+  <button class="pill" data-cat="Beauty &amp; Wellness" onclick="setActive(this, 'Beauty &amp; Wellness')">💅 Beauty &amp; Wellness</button>
+  <button class="pill" data-cat="Diagnostics" onclick="setActive(this, 'Diagnostics')">🔬 Diagnostics</button>
+  <button class="pill" data-cat="Hospitals" onclick="setActive(this, 'Hospitals')">🏨 Hospitals</button>
+  <button class="pill" data-cat="Hospitality" onclick="setActive(this, 'Hospitality')">🏩 Hospitality</button>
+  <button class="pill" data-cat="Shared Spaces" onclick="setActive(this, 'Shared Spaces')">🖥️ Shared Spaces</button>
+  <button class="pill" data-cat="Sports Facilities" onclick="setActive(this, 'Sports Facilities')">🏸 Sports Facilities</button>
+</div>
 
 <!-- ══ DEALS SECTION ══ -->
-<div class="section" id="deals">
+<div class="section">
   <div class="section-header">
     <h2>Hot deals near you</h2>
-    <a href="#">View all →</a>
+    <span id="deals-count-label" style="font-size:13px;color:var(--muted);font-weight:500"></span>
   </div>
   <div class="deals-grid" id="deals-grid"></div>
 </div>
@@ -1493,7 +636,7 @@
 </div>
 
 <!-- ══ HOW IT WORKS ══ -->
-<div class="how-section" id="how">
+<div class="how-section">
   <h2>How OffPeak works</h2>
   <p class="sub">Three steps between you and a ridiculous deal.</p>
   <div class="steps">
@@ -1526,7 +669,7 @@
 </div>
 
 <!-- ══ MERCHANT BANNER ══ -->
-<div class="merchant-banner" id="merchant">
+<div class="merchant-banner">
   <h2>Got empty slots? Fill them<br>with OffPeak.</h2>
   <p>List your off-peak hours, set your own discount, and get customers through the door — at zero commission for the first 3 months.</p>
   <div class="merchant-banner-btns">
@@ -1535,21 +678,34 @@
   </div>
 </div>
 
+<!-- ══ LOGIN GATE MODAL ══ -->
+<div class="login-gate-backdrop" id="login-gate-backdrop" onclick="closeLoginGate(event)">
+  <div class="login-gate-card">
+    <div class="login-gate-icon">🔔</div>
+    <div class="login-gate-title">Log in to save alerts</div>
+    <div class="login-gate-msg">Sign in to follow this business and get notified the moment a matching deal or discount goes live.</div>
+    <div class="login-gate-actions">
+      <a href="login.html?screen=customer" class="login-gate-btn-primary">Log in or sign up</a>
+      <button class="login-gate-btn-secondary" onclick="closeLoginGate()">Maybe later</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ FOOTER ══ -->
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
       <div class="footer-brand">
-        <a href="#" class="logo"><img src="genoti_logo.svg" alt="Genoti" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
+        <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
         <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
       </div>
       <div class="footer-col">
         <h4>Product</h4>
         <ul>
-          <li><a href="#">Browse deals</a></li>
+          <li><a href="index.html">Browse deals</a></li>
           <li><a href="#">How it works</a></li>
           <li><a href="#">Cities</a></li>
-          <li><a href="#">Download app</a></li>
+          <li><a href="download-the-app.html">Download app</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1582,9 +738,6 @@
   </div>
 </footer>
 
-<!-- ══════════════════════════════════════
-     AI NEGOTIATOR MODAL
-══════════════════════════════════════ -->
 <!-- ══ BOOKING MODAL ══ -->
 <div class="modal-overlay" id="booking-overlay" onclick="handleBookingOverlayClick(event)">
   <div class="modal" id="booking-modal">
@@ -1598,64 +751,45 @@
       </div>
       <button class="modal-close" onclick="closeBookingModal()">✕</button>
     </div>
-
-    <!-- Deal summary -->
-    <div class="bk-deal-summary">
-      <div class="bk-deal-emoji" id="bk-emoji"></div>
-      <div>
-        <div class="bk-deal-title" id="bk-deal-title"></div>
-        <div class="bk-deal-meta" id="bk-deal-meta"></div>
-        <div class="bk-deal-prices">
-          <span class="bk-price-now" id="bk-price-now"></span>
-          <span class="bk-price-was" id="bk-price-was"></span>
+    <div style="padding:20px 24px 0">
+      <div class="bk-deal-summary">
+        <div class="bk-deal-emoji" id="bk-emoji"></div>
+        <div>
+          <div class="bk-deal-title" id="bk-deal-title"></div>
+          <div class="bk-deal-meta" id="bk-deal-meta"></div>
+          <div class="bk-deal-prices">
+            <span class="bk-price-now" id="bk-price-now"></span>
+            <span class="bk-price-was" id="bk-price-was"></span>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- Screen 1: form -->
-    <div id="bk-screen-form">
-      <div class="bk-section-label">Pick a date</div>
-      <div class="bk-date-grid" id="bk-date-grid"></div>
-
-      <form id="bk-form" onsubmit="submitBooking(event)">
-        <div class="bk-field">
-          <label>Your name *</label>
-          <input type="text" id="bk-name" placeholder="Full name" required />
-        </div>
-        <div class="bk-field">
-          <label>Email *</label>
-          <input type="email" id="bk-email" placeholder="you@example.com" required />
-        </div>
-        <div class="bk-field">
-          <label>Phone</label>
-          <input type="tel" id="bk-phone" placeholder="+91 98765 43210" />
-        </div>
-        <div class="bk-field">
-          <label>Note <span style="font-weight:400;color:var(--muted)">(optional)</span></label>
-          <textarea id="bk-note" rows="2" placeholder="Any special request…"></textarea>
-        </div>
-        <div class="bk-error" id="bk-error"></div>
-        <button type="submit" class="bk-submit" id="bk-submit-btn">Confirm Booking →</button>
-      </form>
-    </div>
-
-    <!-- Screen 2: confirmation -->
-    <div id="bk-screen-confirm" class="bk-screen-confirm" style="display:none">
-      <div class="bk-success-icon">✅</div>
-      <div class="bk-success-title">You're booked!</div>
-      <div class="bk-success-sub">Show this code at the venue</div>
-      <div class="bk-code-box">
-        <div class="bk-code" id="bk-code"></div>
+      <div id="bk-screen-form">
+        <div class="bk-section-label">Pick a date</div>
+        <div class="bk-date-grid" id="bk-date-grid"></div>
+        <form id="bk-form" onsubmit="submitBooking(event)">
+          <div class="bk-field"><label>Your name *</label><input type="text" id="bk-name" placeholder="Full name" required /></div>
+          <div class="bk-field"><label>Email *</label><input type="email" id="bk-email" placeholder="you@example.com" required /></div>
+          <div class="bk-field"><label>Phone</label><input type="tel" id="bk-phone" placeholder="+91 98765 43210" /></div>
+          <div class="bk-field"><label>Note <span style="font-weight:400;color:var(--muted)">(optional)</span></label><textarea id="bk-note" rows="2" placeholder="Any special request…"></textarea></div>
+          <div class="bk-error" id="bk-error"></div>
+          <button type="submit" class="bk-submit" id="bk-submit-btn" style="margin-bottom:20px">Confirm Booking →</button>
+        </form>
       </div>
-      <div class="bk-confirm-summary" id="bk-confirm-summary"></div>
-      <button class="bk-done-btn" onclick="closeBookingModal()">Done →</button>
+      <div id="bk-screen-confirm" class="bk-screen-confirm" style="display:none">
+        <div class="bk-success-icon">✅</div>
+        <div class="bk-success-title">You're booked!</div>
+        <div class="bk-success-sub">Show this code at the venue</div>
+        <div class="bk-code-box"><div class="bk-code" id="bk-code"></div></div>
+        <div class="bk-confirm-summary" id="bk-confirm-summary"></div>
+        <button class="bk-done-btn" onclick="closeBookingModal()">Done →</button>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- ══ AI NEGOTIATOR MODAL ══ -->
 <div class="modal-overlay" id="neg-overlay" onclick="handleOverlayClick(event)">
   <div class="modal" id="neg-modal">
-
     <div class="modal-header">
       <div class="modal-header-left">
         <div class="bot-avatar">🤖</div>
@@ -1666,8 +800,6 @@
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-
-    <!-- Deal summary (always visible) -->
     <div class="modal-deal-summary" id="modal-deal-summary">
       <div class="modal-deal-emoji" id="modal-emoji"></div>
       <div class="modal-deal-info">
@@ -1679,29 +811,14 @@
         </div>
       </div>
     </div>
-
-    <!-- Screen 1: Preferences -->
     <div class="modal-screen active" id="screen-prefs">
       <label class="pref-label">Target price <span class="pref-sublabel">— what would feel like a win?</span></label>
-      <div class="price-options" id="price-options">
-        <!-- injected by JS -->
-      </div>
-
+      <div class="price-options" id="price-options"></div>
       <label class="pref-label">Preferred time slot</label>
-      <div class="time-options" id="time-options">
-        <!-- injected by JS -->
-      </div>
-
-      <div class="pref-note">
-        💡 DealBot never reveals your target to the merchant. It negotiates from the top down.
-      </div>
-
-      <button class="btn-start-negotiate" onclick="startNegotiation()">
-        🤖 Let DealBot negotiate for me
-      </button>
+      <div class="time-options" id="time-options"></div>
+      <div class="pref-note">💡 DealBot never reveals your target to the merchant. It negotiates from the top down.</div>
+      <button class="btn-start-negotiate" onclick="startNegotiation()">🤖 Let DealBot negotiate for me</button>
     </div>
-
-    <!-- Screen 2: Live negotiation chat -->
     <div class="modal-screen" id="screen-chat">
       <div class="chat-status-bar">
         <div class="status-dot" id="status-dot"></div>
@@ -1712,8 +829,6 @@
       </div>
       <div class="chat-window" id="chat-window"></div>
     </div>
-
-    <!-- Screen 3: Deal result -->
     <div class="modal-screen" id="screen-result">
       <div class="result-success">
         <div class="result-icon">🎉</div>
@@ -1721,9 +836,7 @@
         <div class="result-sub" id="result-sub"></div>
       </div>
       <div class="negotiated-deal-card" id="negotiated-card"></div>
-      <div class="deal-expiry-bar">
-        ⏳ This deal expires in <span id="expiry-timer">1:59:47</span> — book now to lock it in
-      </div>
+      <div class="deal-expiry-bar">⏳ This deal expires in <span id="expiry-timer">1:59:47</span> — book now to lock it in</div>
       <div class="transcript-toggle" onclick="toggleTranscript()">📄 See full negotiation transcript</div>
       <div class="transcript-preview" id="transcript-preview"></div>
       <div class="result-btns">
@@ -1731,8 +844,6 @@
         <button class="btn-decline" onclick="closeModal()">Not now</button>
       </div>
     </div>
-
-    <!-- Screen 4: Booked confirmation -->
     <div class="modal-screen" id="screen-booked">
       <div class="booked-screen">
         <div class="booked-icon">✅</div>
@@ -1745,7 +856,6 @@
         <button class="btn-confirm-book" onclick="closeModal()" style="max-width:280px;margin:0 auto;display:block;">Done</button>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -1767,35 +877,28 @@
 
   async function resolveAvatar(user) {
     const meta = user.user_metadata || {};
-    // 1. Saved avatar (social login photo or manual upload)
     if (meta.avatar_url) return meta.avatar_url;
-    // 2. Gravatar by email hash
     const hash    = md5(user.email.trim().toLowerCase());
     const gravUrl = `https://www.gravatar.com/avatar/${hash}?s=200&d=404`;
     return await probeImage(gravUrl);
   }
 
+  let _currentUser = null;
+
   async function setNavLoggedIn(user) {
+    _currentUser = user;
     const meta     = user.user_metadata || {};
     const first    = meta.first_name || '';
     const last     = meta.last_name  || '';
     const fullName = (meta.full_name || (first + ' ' + last).trim() || user.email.split('@')[0]).trim();
     const initial  = fullName[0]?.toUpperCase() || '?';
-
-    // Swap Menu pill → Avatar pill; hide Log in + List your business
     document.getElementById('menu-toggle-btn').style.display  = 'none';
     document.getElementById('menu-dropdown').style.display    = 'none';
     document.getElementById('avatar-toggle-btn').style.display = 'inline-flex';
     document.getElementById('nav-login-link').style.display   = 'none';
     document.getElementById('nav-list-biz').style.display     = 'none';
-
-    // Populate name in dropdown
     document.getElementById('profile-name').textContent = fullName || user.email;
-
-    // Show initial immediately while we probe for photo
     document.getElementById('nav-avatar-initial').textContent = initial;
-
-    // Then swap in photo if found
     const avatarUrl = await resolveAvatar(user);
     const avatarEl  = document.getElementById('nav-avatar');
     if (avatarUrl) {
@@ -1804,6 +907,7 @@
   }
 
   function setNavGuest() {
+    _currentUser = null;
     document.getElementById('menu-toggle-btn').style.display  = '';
     document.getElementById('nav-login-link').style.display   = '';
     document.getElementById('nav-list-biz').style.display     = '';
@@ -1811,12 +915,9 @@
     document.getElementById('profile-dropdown').classList.remove('open');
   }
 
-  // Check session on load
   _sb.auth.getSession().then(({ data }) => {
     if (data.session?.user) setNavLoggedIn(data.session.user);
   });
-
-  // React to sign-in / sign-out events
   _sb.auth.onAuthStateChange((_event, session) => {
     if (session?.user) setNavLoggedIn(session.user);
     else setNavGuest();
@@ -1827,20 +928,14 @@
     document.getElementById('profile-dropdown').classList.remove('open');
   }
 
-  /* ── Guest menu toggle ── */
-  function toggleMenu() {
-    document.getElementById('menu-dropdown').classList.toggle('open');
-  }
-
-  /* ── Logged-in profile toggle ── */
+  function toggleMenu() { document.getElementById('menu-dropdown').classList.toggle('open'); }
   function toggleProfile() {
-    const dd     = document.getElementById('profile-dropdown');
-    const caret  = document.getElementById('avatar-caret');
-    const open   = dd.classList.toggle('open');
+    const dd    = document.getElementById('profile-dropdown');
+    const caret = document.getElementById('avatar-caret');
+    const open  = dd.classList.toggle('open');
     caret.textContent = open ? '▲' : '▼';
   }
 
-  // Close any dropdown when clicking outside
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.menu-dropdown-wrap')) {
       document.getElementById('menu-dropdown').classList.remove('open');
@@ -1849,11 +944,43 @@
     }
   });
 
-  /* ── Category pills ── */
+  /* ── Category filter ── */
   function setActive(el, cat) {
     document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
     renderDeals(cat);
+  }
+
+  /* ── Notify Me / bookmarks ── */
+  let _notifyBM = JSON.parse(localStorage.getItem('genoti_bm') || '[]');
+
+  function _isSaved(id) { return _notifyBM.some(b => b.id === id); }
+
+  function _persistBM() { localStorage.setItem('genoti_bm', JSON.stringify(_notifyBM)); }
+
+  function openLoginGate() { document.getElementById('login-gate-backdrop').classList.add('open'); }
+  function closeLoginGate(e) {
+    if (e && e.target !== document.getElementById('login-gate-backdrop')) return;
+    document.getElementById('login-gate-backdrop').classList.remove('open');
+  }
+
+  function toggleNotify(dealId) {
+    if (!_currentUser) { openLoginGate(); return; }
+    const d = allDeals.find(x => String(x.id) === String(dealId));
+    if (!d) return;
+    const bmId = 'deal_' + d.id;
+    if (_isSaved(bmId)) {
+      _notifyBM = _notifyBM.filter(b => b.id !== bmId);
+    } else {
+      _notifyBM.push({
+        id: bmId, name: d.merchant, category: d.category,
+        addr: '', dist: d.dist, emoji: d.emoji,
+        alerts: ['offpeak'], listed: true, savedAt: Date.now()
+      });
+    }
+    _persistBM();
+    const activeCategory = document.querySelector('.pill.active');
+    renderDeals(activeCategory ? activeCategory.getAttribute('data-cat') : 'All');
   }
 
   /* ── Live deal counter ── */
@@ -1876,24 +1003,14 @@
     const live = data.map(d => {
       const priceNum = Math.round(d.original_price * (1 - d.discount_pct / 100));
       return {
-        id:          d.id,
-        merchant_id: d.merchant_id,
-        category:    d.category,
-        emoji:       d.emoji,
-        bg:          d.bg_color,
-        discount:    d.discount_pct + '% OFF',
-        time:        d.time_slot,
-        days:        d.days,
-        title:       d.title,
-        merchant:    d.merchant_name,
-        capacity:    d.capacity || 0,
-        booked:      d.booked   || 0,
-        priceNum,
-        wasNum:      d.original_price,
-        price:       '₹' + priceNum.toLocaleString('en-IN'),
-        was:         '₹' + Number(d.original_price).toLocaleString('en-IN'),
-        dist:        'Nearby',
-        live:        true,
+        id: d.id, merchant_id: d.merchant_id, category: d.category,
+        emoji: d.emoji, bg: d.bg_color, discount: d.discount_pct + '% OFF',
+        time: d.time_slot, days: d.days, title: d.title, merchant: d.merchant_name,
+        capacity: d.capacity || 0, booked: d.booked || 0, priceNum,
+        wasNum: d.original_price,
+        price: '₹' + priceNum.toLocaleString('en-IN'),
+        was: '₹' + Number(d.original_price).toLocaleString('en-IN'),
+        dist: 'Nearby', live: true,
       };
     });
     allDeals = [...live, ...staticDeals];
@@ -1904,35 +1021,26 @@
 
   /* ── Deal data ── */
   const staticDeals = [
-    // Health & Medical
-    { id:1,  category:'Health & Medical', emoji:'🦷',  bg:'#ECFDF5', discount:'45% OFF', time:'9:00–11:00 AM',    title:'Teeth Cleaning & Polishing',      merchant:'Smile Studio Dental',       priceNum:449,  wasNum:820,  price:'₹449',  was:'₹820',   dist:'1.5 km' },
-    { id:2,  category:'Health & Medical', emoji:'🩺',  bg:'#F0FDF4', discount:'60% OFF', time:'10:00 AM–12:00 PM',title:'General Physician Consultation',  merchant:'Healify Clinics',           priceNum:199,  wasNum:500,  price:'₹199',  was:'₹500',   dist:'0.7 km' },
-    { id:3,  category:'Health & Medical', emoji:'👁️', bg:'#ECFDF5', discount:'50% OFF', time:'2:00–5:00 PM',     title:'Eye Check-up & Prescription',     merchant:'ClearVision Eye Care',      priceNum:249,  wasNum:500,  price:'₹249',  was:'₹500',   dist:'1.1 km' },
-
-    // Beauty & Wellness
-    { id:4,  category:'Beauty & Wellness', emoji:'✂️',  bg:'#EDE9FE', discount:'52% OFF', time:'2:00–4:00 PM',    title:'Classic Haircut + Blow Dry',      merchant:'Savio John Salon',          priceNum:299,  wasNum:620,  price:'₹299',  was:'₹620',   dist:'0.4 km' },
-    { id:5,  category:'Beauty & Wellness', emoji:'💆',  bg:'#FDF4FF', discount:'60% OFF', time:'11:00 AM–1:00 PM',title:'60-min Deep Tissue Massage',      merchant:'Serenity Wellness Studio',  priceNum:599,  wasNum:1500, price:'₹599',  was:'₹1,500', dist:'1.2 km' },
-    { id:6,  category:'Beauty & Wellness', emoji:'💅',  bg:'#FDE8FF', discount:'50% OFF', time:'1:00–3:00 PM',    title:'Manicure + Pedicure',             merchant:'Gloss Nail Studio',         priceNum:349,  wasNum:700,  price:'₹349',  was:'₹700',   dist:'0.9 km' },
-    { id:7,  category:'Beauty & Wellness', emoji:'✨',  bg:'#F5F3FF', discount:'55% OFF', time:'10:00 AM–1:00 PM',title:'HydraFacial (MedSpa)',            merchant:'Glow MedSpa & Skin Clinic', priceNum:799,  wasNum:1800, price:'₹799',  was:'₹1,800', dist:'2.0 km' },
-    { id:8,  category:'Beauty & Wellness', emoji:'💇',  bg:'#FDF2F8', discount:'40% OFF', time:'3:00–6:00 PM',    title:'Hair Spa + Deep Conditioning',    merchant:'Studio 11 Salon',           priceNum:449,  wasNum:749,  price:'₹449',  was:'₹749',   dist:'0.6 km' },
-
-    // Fitness & Sports
-    { id:9,  category:'Fitness & Sports', emoji:'🏋️', bg:'#DBEAFE', discount:'70% OFF', time:'10:00 AM–12:00 PM',title:'Day Pass + Personal Training',   merchant:'Iron Arena Gym',            priceNum:149,  wasNum:499,  price:'₹149',  was:'₹499',   dist:'0.6 km' },
-    { id:10, category:'Fitness & Sports', emoji:'🧘',  bg:'#EFF6FF', discount:'65% OFF', time:'7:00–9:00 AM',    title:'Yoga Flow Class (1 session)',     merchant:'Breathe Yoga Studio',       priceNum:99,   wasNum:280,  price:'₹99',   was:'₹280',   dist:'1.0 km' },
-    { id:11, category:'Fitness & Sports', emoji:'🏊',  bg:'#E0F2FE', discount:'60% OFF', time:'6:00–8:00 AM',    title:'Swimming Pool Day Pass',          merchant:'AquaFit Sports Club',       priceNum:149,  wasNum:380,  price:'₹149',  was:'₹380',   dist:'1.8 km' },
-    { id:12, category:'Fitness & Sports', emoji:'🥊',  bg:'#FEF2F2', discount:'55% OFF', time:'5:00–7:00 PM',    title:'CrossFit Drop-in Class',          merchant:'The Box CrossFit Studio',   priceNum:199,  wasNum:449,  price:'₹199',  was:'₹449',   dist:'1.3 km' },
-
-    // Restaurants & Dining
-    { id:13, category:'Restaurants & Dining', emoji:'🍜',  bg:'#FEF3C7', discount:'40% OFF', time:'3:00–5:30 PM',    title:'Thali Combo for Two',             merchant:'Copper Chimney Bistro',     priceNum:349,  wasNum:580,  price:'₹349',  was:'₹580',   dist:'0.8 km' },
-    { id:14, category:'Restaurants & Dining', emoji:'☕',  bg:'#FEF9C3', discount:'35% OFF', time:'2:30–5:00 PM',    title:'Cafe Combo (Coffee + Snack)',     merchant:'The Third Wave Café',       priceNum:149,  wasNum:230,  price:'₹149',  was:'₹230',   dist:'0.3 km' },
-    { id:15, category:'Restaurants & Dining', emoji:'🥗',  bg:'#F0FFF4', discount:'45% OFF', time:'12:00–3:00 PM',   title:'Weekend Brunch Buffet',           merchant:'The Grand Table',           priceNum:499,  wasNum:899,  price:'₹499',  was:'₹899',   dist:'1.4 km' },
-    { id:16, category:'Restaurants & Dining', emoji:'🍕',  bg:'#FFF7ED', discount:'38% OFF', time:'3:00–6:00 PM',    title:'Pizza + Pasta Combo for Two',     merchant:'Brick & Dough',             priceNum:349,  wasNum:560,  price:'₹349',  was:'₹560',   dist:'0.5 km' },
-
-    // Diagnostics
-    { id:17, category:'Diagnostics', emoji:'🩸',  bg:'#FFF1F2', discount:'55% OFF', time:'7:00–10:00 AM',   title:'Full Body Blood Test (65 tests)',  merchant:'HealthFirst Diagnostics',   priceNum:399,  wasNum:880,  price:'₹399',  was:'₹880',   dist:'0.9 km' },
-    { id:18, category:'Diagnostics', emoji:'🫁',  bg:'#F0F9FF', discount:'50% OFF', time:'8:00 AM–12:00 PM',title:'Chest X-Ray (Digital)',            merchant:'ClearScan Imaging Centre',  priceNum:199,  wasNum:400,  price:'₹199',  was:'₹400',   dist:'1.1 km' },
-    { id:19, category:'Diagnostics', emoji:'🔬',  bg:'#F0FDF4', discount:'48% OFF', time:'8:00–11:00 AM',   title:'Thyroid Profile (T3, T4, TSH)',    merchant:'MedLab Express',            priceNum:249,  wasNum:480,  price:'₹249',  was:'₹480',   dist:'0.7 km' },
-    { id:20, category:'Diagnostics', emoji:'🧠',  bg:'#FAF5FF', discount:'40% OFF', time:'9:00 AM–1:00 PM', title:'Ultrasound Abdomen (Full)',        merchant:'Precision Scan & Diagnostics',priceNum:599, wasNum:999,  price:'₹599',  was:'₹999',   dist:'1.6 km' },
+    { id:1,  category:'Health & Medical', emoji:'🦷',  bg:'#ECFDF5', discount:'45% OFF', time:'9:00–11:00 AM',    title:'Teeth Cleaning & Polishing',      merchant:'Smile Studio Dental',         priceNum:449,  wasNum:820,  price:'₹449',  was:'₹820',   dist:'1.5 km' },
+    { id:2,  category:'Health & Medical', emoji:'🩺',  bg:'#F0FDF4', discount:'60% OFF', time:'10:00 AM–12:00 PM',title:'General Physician Consultation',  merchant:'Healify Clinics',             priceNum:199,  wasNum:500,  price:'₹199',  was:'₹500',   dist:'0.7 km' },
+    { id:3,  category:'Health & Medical', emoji:'👁️', bg:'#ECFDF5', discount:'50% OFF', time:'2:00–5:00 PM',     title:'Eye Check-up & Prescription',     merchant:'ClearVision Eye Care',        priceNum:249,  wasNum:500,  price:'₹249',  was:'₹500',   dist:'1.1 km' },
+    { id:4,  category:'Beauty & Wellness', emoji:'✂️',  bg:'#EDE9FE', discount:'52% OFF', time:'2:00–4:00 PM',    title:'Classic Haircut + Blow Dry',      merchant:'Savio John Salon',            priceNum:299,  wasNum:620,  price:'₹299',  was:'₹620',   dist:'0.4 km' },
+    { id:5,  category:'Beauty & Wellness', emoji:'💆',  bg:'#FDF4FF', discount:'60% OFF', time:'11:00 AM–1:00 PM',title:'60-min Deep Tissue Massage',      merchant:'Serenity Wellness Studio',    priceNum:599,  wasNum:1500, price:'₹599',  was:'₹1,500', dist:'1.2 km' },
+    { id:6,  category:'Beauty & Wellness', emoji:'💅',  bg:'#FDE8FF', discount:'50% OFF', time:'1:00–3:00 PM',    title:'Manicure + Pedicure',             merchant:'Gloss Nail Studio',           priceNum:349,  wasNum:700,  price:'₹349',  was:'₹700',   dist:'0.9 km' },
+    { id:7,  category:'Beauty & Wellness', emoji:'✨',  bg:'#F5F3FF', discount:'55% OFF', time:'10:00 AM–1:00 PM',title:'HydraFacial (MedSpa)',            merchant:'Glow MedSpa & Skin Clinic',  priceNum:799,  wasNum:1800, price:'₹799',  was:'₹1,800', dist:'2.0 km' },
+    { id:8,  category:'Beauty & Wellness', emoji:'💇',  bg:'#FDF2F8', discount:'40% OFF', time:'3:00–6:00 PM',    title:'Hair Spa + Deep Conditioning',    merchant:'Studio 11 Salon',             priceNum:449,  wasNum:749,  price:'₹449',  was:'₹749',   dist:'0.6 km' },
+    { id:9,  category:'Fitness & Sports', emoji:'🏋️', bg:'#DBEAFE', discount:'70% OFF', time:'10:00 AM–12:00 PM',title:'Day Pass + Personal Training',   merchant:'Iron Arena Gym',              priceNum:149,  wasNum:499,  price:'₹149',  was:'₹499',   dist:'0.6 km' },
+    { id:10, category:'Fitness & Sports', emoji:'🧘',  bg:'#EFF6FF', discount:'65% OFF', time:'7:00–9:00 AM',    title:'Yoga Flow Class (1 session)',     merchant:'Breathe Yoga Studio',         priceNum:99,   wasNum:280,  price:'₹99',   was:'₹280',   dist:'1.0 km' },
+    { id:11, category:'Fitness & Sports', emoji:'🏊',  bg:'#E0F2FE', discount:'60% OFF', time:'6:00–8:00 AM',    title:'Swimming Pool Day Pass',          merchant:'AquaFit Sports Club',         priceNum:149,  wasNum:380,  price:'₹149',  was:'₹380',   dist:'1.8 km' },
+    { id:12, category:'Fitness & Sports', emoji:'🥊',  bg:'#FEF2F2', discount:'55% OFF', time:'5:00–7:00 PM',    title:'CrossFit Drop-in Class',          merchant:'The Box CrossFit Studio',     priceNum:199,  wasNum:449,  price:'₹199',  was:'₹449',   dist:'1.3 km' },
+    { id:13, category:'Restaurants & Dining', emoji:'🍜',  bg:'#FEF3C7', discount:'40% OFF', time:'3:00–5:30 PM',    title:'Thali Combo for Two',             merchant:'Copper Chimney Bistro',       priceNum:349,  wasNum:580,  price:'₹349',  was:'₹580',   dist:'0.8 km' },
+    { id:14, category:'Restaurants & Dining', emoji:'☕',  bg:'#FEF9C3', discount:'35% OFF', time:'2:30–5:00 PM',    title:'Cafe Combo (Coffee + Snack)',     merchant:'The Third Wave Café',         priceNum:149,  wasNum:230,  price:'₹149',  was:'₹230',   dist:'0.3 km' },
+    { id:15, category:'Restaurants & Dining', emoji:'🥗',  bg:'#F0FFF4', discount:'45% OFF', time:'12:00–3:00 PM',   title:'Weekend Brunch Buffet',           merchant:'The Grand Table',             priceNum:499,  wasNum:899,  price:'₹499',  was:'₹899',   dist:'1.4 km' },
+    { id:16, category:'Restaurants & Dining', emoji:'🍕',  bg:'#FFF7ED', discount:'38% OFF', time:'3:00–6:00 PM',    title:'Pizza + Pasta Combo for Two',     merchant:'Brick & Dough',               priceNum:349,  wasNum:560,  price:'₹349',  was:'₹560',   dist:'0.5 km' },
+    { id:17, category:'Diagnostics', emoji:'🩸',  bg:'#FFF1F2', discount:'55% OFF', time:'7:00–10:00 AM',   title:'Full Body Blood Test (65 tests)',  merchant:'HealthFirst Diagnostics',     priceNum:399,  wasNum:880,  price:'₹399',  was:'₹880',   dist:'0.9 km' },
+    { id:18, category:'Diagnostics', emoji:'🫁',  bg:'#F0F9FF', discount:'50% OFF', time:'8:00 AM–12:00 PM',title:'Chest X-Ray (Digital)',            merchant:'ClearScan Imaging Centre',    priceNum:199,  wasNum:400,  price:'₹199',  was:'₹400',   dist:'1.1 km' },
+    { id:19, category:'Diagnostics', emoji:'🔬',  bg:'#F0FDF4', discount:'48% OFF', time:'8:00–11:00 AM',   title:'Thyroid Profile (T3, T4, TSH)',    merchant:'MedLab Express',              priceNum:249,  wasNum:480,  price:'₹249',  was:'₹480',   dist:'0.7 km' },
+    { id:20, category:'Diagnostics', emoji:'🧠',  bg:'#FAF5FF', discount:'40% OFF', time:'9:00 AM–1:00 PM', title:'Ultrasound Abdomen (Full)',        merchant:'Precision Scan & Diagnostics',priceNum:599,  wasNum:999,  price:'₹599',  was:'₹999',   dist:'1.6 km' },
   ];
 
   let allDeals = [...staticDeals];
@@ -1953,11 +1061,14 @@
 
   function renderDeals(cat = 'All') {
     const filtered = cat === 'All' ? allDeals : allDeals.filter(d => d.category === cat);
+    const lbl = document.getElementById('deals-count-label');
+    if (lbl) lbl.textContent = filtered.length + ' deals' + (cat !== 'All' ? ' in ' + cat : ' near you');
     document.getElementById('deals-grid').innerHTML = filtered.map(d => {
-      const full        = d.live && d.capacity > 0 && (d.capacity - d.booked) <= 0;
-      const bookBtn     = full
+      const full    = d.live && d.capacity > 0 && (d.capacity - d.booked) <= 0;
+      const bookBtn = full
         ? `<button class="btn-book" disabled>Fully booked</button>`
         : `<button class="btn-book" onclick="event.stopPropagation(); openBooking('${d.id}')">Book now</button>`;
+      const saved   = _isSaved('deal_' + d.id);
       return `
       <div class="deal-card">
         <div class="card-thumb" style="background:${d.bg}">
@@ -1989,6 +1100,9 @@
               <span class="bot-icon">🤖</span> Negotiate
             </button>
           </div>
+          <button class="btn-notify${saved ? ' saved' : ''}" onclick="event.stopPropagation(); toggleNotify('${d.id}')">
+            🔔 ${saved ? 'Notifying me when prices drop' : 'Notify me when prices drop'}
+          </button>
         </div>
       </div>`;
     }).join('');
@@ -1997,10 +1111,15 @@
   renderDeals();
   loadLiveDeals();
 
-  /* ══════════════════════════════════════
-     BOOKING FLOW
-  ══════════════════════════════════════ */
-  let currentBookingDeal  = null;
+  /* ── Geolocation ── */
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(() => {
+      document.getElementById('loc-input').placeholder = 'Using your current location';
+    });
+  }
+
+  /* ══ BOOKING FLOW ══ */
+  let currentBookingDeal = null;
   let selectedBookingDate = null;
   const DAY_IDX = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
 
@@ -2008,7 +1127,6 @@
     currentBookingDeal = allDeals.find(d => String(d.id) === String(dealId));
     if (!currentBookingDeal) return;
     const d = currentBookingDeal;
-
     document.getElementById('bk-emoji').textContent           = d.emoji  || '✨';
     document.getElementById('bk-emoji').style.background      = d.bg     || '#ECFDF5';
     document.getElementById('bk-deal-title').textContent      = d.title;
@@ -2016,17 +1134,14 @@
     document.getElementById('bk-deal-meta').textContent       = d.time   || '';
     document.getElementById('bk-price-now').textContent       = d.price  || '';
     document.getElementById('bk-price-was').textContent       = d.was    || '';
-
     selectedBookingDate = null;
     buildDateGrid(d.days);
-
     document.getElementById('bk-form').reset();
     document.getElementById('bk-error').textContent = '';
     document.getElementById('bk-submit-btn').disabled = false;
     document.getElementById('bk-submit-btn').textContent = 'Confirm Booking →';
     document.getElementById('bk-screen-form').style.display    = '';
     document.getElementById('bk-screen-confirm').style.display = 'none';
-
     document.getElementById('booking-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -2073,18 +1188,15 @@
     const isDealUUID = typeof d.id === 'string' && d.id.includes('-');
 
     const payload = {
-      booking_ref:    ref,
-      deal_id:        isDealUUID ? d.id : null,
-      merchant_id:    d.merchant_id || null,
-      deal_title:     d.title,
-      merchant_name:  d.merchant || '',
-      time_slot:      d.time    || '',
-      customer_name:  document.getElementById('bk-name').value.trim(),
+      booking_ref: ref, deal_id: isDealUUID ? d.id : null,
+      merchant_id: d.merchant_id || null, deal_title: d.title,
+      merchant_name: d.merchant || '', time_slot: d.time || '',
+      customer_name: document.getElementById('bk-name').value.trim(),
       customer_email: document.getElementById('bk-email').value.trim(),
       customer_phone: document.getElementById('bk-phone').value.trim(),
-      booking_date:   selectedBookingDate,
-      notes:          document.getElementById('bk-note').value.trim(),
-      status:         'pending',
+      booking_date: selectedBookingDate,
+      notes: document.getElementById('bk-note').value.trim(),
+      status: 'pending',
     };
 
     const { error } = await db.from('bookings').insert(payload);
@@ -2094,12 +1206,10 @@
       return;
     }
 
-    // Increment booked counter and refresh cards
     if (isDealUUID) {
       db.rpc('increment_deal_booked', { p_deal_id: d.id }).then(() => loadLiveDeals());
     }
 
-    // Show confirmation
     document.getElementById('bk-code').textContent = ref;
     const dateLabel = new Date(selectedBookingDate + 'T00:00:00')
       .toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long' });
@@ -2117,36 +1227,23 @@
     if (e.target === document.getElementById('booking-overlay')) closeBookingModal();
   }
 
-  /* ── Geolocation ── */
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(() => {
-      document.getElementById('loc-input').placeholder = 'Using your current location';
-    });
-  }
-
-  /* ════════════════════════════════════
-     AI NEGOTIATOR LOGIC
-  ════════════════════════════════════ */
+  /* ══ AI NEGOTIATOR ══ */
   let currentDeal = null;
   let selectedPriceTarget = null;
   let selectedTime = null;
   let expiryInterval = null;
-  let expirySeconds = 7187; // ~2 hours
+  let expirySeconds = 7187;
 
   function openNegotiator(dealId) {
     currentDeal = allDeals.find(d => String(d.id) === String(dealId));
     selectedPriceTarget = null;
     selectedTime = null;
-
-    // Populate deal summary
     document.getElementById('modal-emoji').textContent = currentDeal.emoji;
     document.getElementById('modal-emoji').style.background = currentDeal.bg;
     document.getElementById('modal-deal-name').textContent = currentDeal.title;
     document.getElementById('modal-merchant-name').textContent = currentDeal.merchant;
     document.getElementById('modal-price-now').textContent = currentDeal.price;
     document.getElementById('modal-price-was').textContent = currentDeal.was;
-
-    // Build price options: listed price, 10% lower, 20% lower
     const p = currentDeal.priceNum;
     const targets = [
       { label: 'Listed price', val: p,                  note: 'Secure the slot' },
@@ -2161,14 +1258,11 @@
       </div>
     `).join('');
     selectedPriceTarget = targets[1].val;
-
-    // Time slots
     const timeSlots = ['Today', 'Tomorrow', 'This week', 'Flexible'];
     document.getElementById('time-options').innerHTML = timeSlots.map((t, i) => `
       <div class="time-opt ${i===0?'selected':''}" onclick="selectTime(this, '${t}')">${t}</div>
     `).join('');
     selectedTime = 'Today';
-
     showScreen('prefs');
     document.getElementById('neg-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -2179,41 +1273,36 @@
     el.classList.add('selected');
     selectedPriceTarget = val;
   }
-
   function selectTime(el, val) {
     document.querySelectorAll('.time-opt').forEach(e => e.classList.remove('selected'));
     el.classList.add('selected');
     selectedTime = val;
   }
-
   function showScreen(name) {
     document.querySelectorAll('.modal-screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + name).classList.add('active');
   }
-
   function closeModal() {
     document.getElementById('neg-overlay').classList.remove('open');
     document.body.style.overflow = '';
     if (expiryInterval) { clearInterval(expiryInterval); expiryInterval = null; }
   }
-
   function handleOverlayClick(e) {
     if (e.target === document.getElementById('neg-overlay')) closeModal();
   }
 
-  /* ── Negotiation chat simulation ── */
   const chatScripts = (deal, target) => {
     const savings = deal.wasNum - target;
     const pct = Math.round((savings / deal.wasNum) * 100);
     return [
-      { delay: 600,  from: 'system', text: `DealBot connected to ${deal.merchant} via WhatsApp` },
-      { delay: 1400, from: 'bot',    text: `Hi! I'm DealBot from OffPeak 👋 A customer is interested in "${deal.title}" for ${selectedTime.toLowerCase()}. They're a verified OffPeak user. Could you offer a special rate for an off-peak slot?` },
+      { delay: 600,  from: 'system',   text: `DealBot connected to ${deal.merchant} via WhatsApp` },
+      { delay: 1400, from: 'bot',      text: `Hi! I'm DealBot from OffPeak 👋 A customer is interested in "${deal.title}" for ${selectedTime.toLowerCase()}. They're a verified OffPeak user. Could you offer a special rate for an off-peak slot?` },
       { delay: 3200, from: 'merchant', text: `Hello! Our standard off-peak rate is ${deal.price}. That's already ${deal.discount} off our regular price.` },
-      { delay: 4800, from: 'bot',    text: `Understood! The customer is flexible on timing and ready to book immediately if the deal is right. Could you stretch it to ₹${target}? They'd commit right now for ${selectedTime.toLowerCase()}.` },
+      { delay: 4800, from: 'bot',      text: `Understood! The customer is flexible on timing and ready to book immediately if the deal is right. Could you stretch it to ₹${target}? They'd commit right now for ${selectedTime.toLowerCase()}.` },
       { delay: 7000, from: 'merchant', text: `Hmm, that's quite low... Let me check with the manager.` },
       { delay: 9500, from: 'merchant', text: `Okay, we can do ₹${target} — but only for ${selectedTime.toLowerCase()} between ${deal.time}. Slot must be confirmed within 2 hours.` },
-      { delay: 11000, from: 'bot',   text: `That's wonderful, thank you! 🙏 Locking in the slot now. The customer will receive a booking code shortly.` },
-      { delay: 12200, from: 'system', text: `🎉 Deal secured! ${pct}% off original price` },
+      { delay: 11000, from: 'bot',     text: `That's wonderful, thank you! 🙏 Locking in the slot now. The customer will receive a booking code shortly.` },
+      { delay: 12200, from: 'system',  text: `🎉 Deal secured! ${pct}% off original price` },
     ];
   };
 
@@ -2223,43 +1312,30 @@
     showScreen('chat');
     const chatEl = document.getElementById('chat-window');
     chatEl.innerHTML = '';
-
-    // Clear any previous timeouts
     negotiationTimeouts.forEach(t => clearTimeout(t));
     negotiationTimeouts = [];
-
     const script = chatScripts(currentDeal, selectedPriceTarget);
-
     script.forEach((msg, idx) => {
-      // Show typing indicator before bot/merchant messages
       let typingDelay = msg.delay - 900;
       let showTyping = msg.from !== 'system' && idx > 0;
-
       if (showTyping && typingDelay > 0) {
         const t1 = setTimeout(() => {
-          const typingId = 'typing-' + idx;
           const typingEl = document.createElement('div');
-          typingEl.id = typingId;
+          typingEl.id = 'typing-' + idx;
           typingEl.className = 'chat-msg from-bot visible';
           typingEl.innerHTML = `
             <div class="msg-avatar ${msg.from === 'merchant' ? 'merchant' : 'bot'}">${msg.from === 'merchant' ? '🏪' : '🤖'}</div>
-            <div class="typing-indicator"><span></span><span></span><span></span></div>
-          `;
+            <div class="typing-indicator"><span></span><span></span><span></span></div>`;
           chatEl.appendChild(typingEl);
           chatEl.scrollTop = chatEl.scrollHeight;
         }, typingDelay);
         negotiationTimeouts.push(t1);
       }
-
       const t2 = setTimeout(() => {
-        // Remove typing
         const typingEl = document.getElementById('typing-' + idx);
         if (typingEl) typingEl.remove();
-
-        // Build message
         const msgEl = document.createElement('div');
         msgEl.className = `chat-msg from-${msg.from}`;
-
         if (msg.from === 'system') {
           msgEl.innerHTML = `<div class="msg-bubble">${msg.text}</div>`;
         } else {
@@ -2271,19 +1347,11 @@
             <div class="msg-wrap">
               <div class="msg-label">${label}</div>
               <div class="msg-bubble">${msg.text}</div>
-            </div>
-          `;
+            </div>`;
         }
-
         chatEl.appendChild(msgEl);
         chatEl.scrollTop = chatEl.scrollHeight;
-
-        // Trigger animation
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => msgEl.classList.add('visible'));
-        });
-
-        // Update status bar
+        requestAnimationFrame(() => requestAnimationFrame(() => msgEl.classList.add('visible')));
         if (idx === 0) {
           document.getElementById('status-text').textContent = `Connected to ${currentDeal.merchant}`;
           document.getElementById('status-dot').className = 'status-dot';
@@ -2291,13 +1359,10 @@
         if (msg.from === 'merchant' && idx > 2) {
           document.getElementById('status-text').textContent = 'Merchant is responding...';
         }
-
-        // Last message — show result
         if (idx === script.length - 1) {
           document.getElementById('status-dot').className = 'status-dot green';
           document.getElementById('status-text').textContent = 'Deal secured!';
           document.getElementById('status-sub').textContent = 'Tap below to see your negotiated deal';
-
           setTimeout(() => showResult(), 1200);
         }
       }, msg.delay);
@@ -2308,14 +1373,11 @@
   function showResult() {
     const deal = currentDeal;
     const target = selectedPriceTarget;
-    const origSavings = deal.wasNum - deal.priceNum;
     const extraSavings = deal.priceNum - target;
     const totalSavings = deal.wasNum - target;
     const totalPct = Math.round((totalSavings / deal.wasNum) * 100);
-
     document.getElementById('result-sub').textContent =
       `DealBot saved you an extra ₹${extraSavings} on top of the listed deal — ₹${totalSavings} total off!`;
-
     document.getElementById('negotiated-card').innerHTML = `
       <div class="nd-header">
         <div class="nd-emoji" style="background:${deal.bg}">${deal.emoji}</div>
@@ -2328,21 +1390,15 @@
         <span class="nd-new-price">₹${target}</span>
         <span class="nd-was-price">${deal.was}</span>
         <span class="nd-savings-badge">${totalPct}% OFF</span>
-      </div>
-    `;
-
-    // Build transcript
+      </div>`;
     const script = chatScripts(deal, target);
     document.getElementById('transcript-preview').innerHTML = script
       .filter(m => m.from !== 'system')
       .map(m => `<div class="transcript-line"><b>${m.from === 'bot' ? 'DealBot' : deal.merchant}:</b> ${m.text}</div>`)
       .join('');
-
-    // Start expiry countdown
     expirySeconds = 7187;
     updateExpiry();
     expiryInterval = setInterval(updateExpiry, 1000);
-
     showScreen('result');
   }
 
@@ -2371,7 +1427,6 @@
       `Show this code at ${currentDeal.merchant} between ${currentDeal.time}. Pay ₹${selectedPriceTarget} at the counter.`;
     showScreen('booked');
   }
-
 </script>
 </body>
 </html>
