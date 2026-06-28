@@ -358,6 +358,43 @@
     .bk-done-btn { width: 100%; background: var(--white); color: var(--text); border: 1.5px solid var(--border); border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600; cursor: pointer; transition: border-color .15s; font-family: inherit; }
     .bk-done-btn:hover { border-color: var(--muted); }
 
+    /* ── NOTIFY BUTTON ── */
+    .btn-notify {
+      width: 100%; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: inherit; border: 1.5px solid var(--border); background: var(--white); color: var(--muted);
+      transition: all .15s;
+    }
+    .btn-notify:hover { border-color: var(--green); color: var(--green); background: #F0FDF8; }
+    .btn-notify.saved { border-color: var(--green); background: #F0FDF8; color: var(--dark-green); }
+
+    /* ── LOGIN GATE MODAL ── */
+    .login-gate-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45);
+      z-index: 1000; align-items: center; justify-content: center;
+    }
+    .login-gate-backdrop.open { display: flex; }
+    .login-gate-card {
+      background: var(--white); border-radius: 24px; padding: 36px 32px 28px;
+      max-width: 380px; width: calc(100% - 32px); text-align: center;
+      box-shadow: 0 24px 64px rgba(0,0,0,.18);
+    }
+    .login-gate-icon { font-size: 40px; margin-bottom: 14px; }
+    .login-gate-title { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -.4px; margin-bottom: 8px; }
+    .login-gate-msg { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+    .login-gate-actions { display: flex; flex-direction: column; gap: 10px; }
+    .login-gate-btn-primary {
+      display: block; background: var(--green); color: white; font-size: 15px; font-weight: 700;
+      border: none; border-radius: 12px; padding: 13px; cursor: pointer; text-decoration: none;
+      font-family: inherit; transition: opacity .15s;
+    }
+    .login-gate-btn-primary:hover { opacity: .88; }
+    .login-gate-btn-secondary {
+      display: block; background: none; color: var(--muted); font-size: 14px; font-weight: 500;
+      border: none; cursor: pointer; font-family: inherit; padding: 6px;
+    }
+    .login-gate-btn-secondary:hover { color: var(--text); }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .nav-links { display: none; }
@@ -641,6 +678,19 @@
   </div>
 </div>
 
+<!-- ══ LOGIN GATE MODAL ══ -->
+<div class="login-gate-backdrop" id="login-gate-backdrop" onclick="closeLoginGate(event)">
+  <div class="login-gate-card">
+    <div class="login-gate-icon">🔔</div>
+    <div class="login-gate-title">Log in to save alerts</div>
+    <div class="login-gate-msg">Sign in to follow this business and get notified the moment a matching deal or discount goes live.</div>
+    <div class="login-gate-actions">
+      <a href="login.html?screen=customer" class="login-gate-btn-primary">Log in or sign up</a>
+      <button class="login-gate-btn-secondary" onclick="closeLoginGate()">Maybe later</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ FOOTER ══ -->
 <footer>
   <div class="footer-inner">
@@ -833,7 +883,10 @@
     return await probeImage(gravUrl);
   }
 
+  let _currentUser = null;
+
   async function setNavLoggedIn(user) {
+    _currentUser = user;
     const meta     = user.user_metadata || {};
     const first    = meta.first_name || '';
     const last     = meta.last_name  || '';
@@ -854,6 +907,7 @@
   }
 
   function setNavGuest() {
+    _currentUser = null;
     document.getElementById('menu-toggle-btn').style.display  = '';
     document.getElementById('nav-login-link').style.display   = '';
     document.getElementById('nav-list-biz').style.display     = '';
@@ -895,6 +949,38 @@
     document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
     renderDeals(cat);
+  }
+
+  /* ── Notify Me / bookmarks ── */
+  let _notifyBM = JSON.parse(localStorage.getItem('genoti_bm') || '[]');
+
+  function _isSaved(id) { return _notifyBM.some(b => b.id === id); }
+
+  function _persistBM() { localStorage.setItem('genoti_bm', JSON.stringify(_notifyBM)); }
+
+  function openLoginGate() { document.getElementById('login-gate-backdrop').classList.add('open'); }
+  function closeLoginGate(e) {
+    if (e && e.target !== document.getElementById('login-gate-backdrop')) return;
+    document.getElementById('login-gate-backdrop').classList.remove('open');
+  }
+
+  function toggleNotify(dealId) {
+    if (!_currentUser) { openLoginGate(); return; }
+    const d = allDeals.find(x => String(x.id) === String(dealId));
+    if (!d) return;
+    const bmId = 'deal_' + d.id;
+    if (_isSaved(bmId)) {
+      _notifyBM = _notifyBM.filter(b => b.id !== bmId);
+    } else {
+      _notifyBM.push({
+        id: bmId, name: d.merchant, category: d.category,
+        addr: '', dist: d.dist, emoji: d.emoji,
+        alerts: ['offpeak'], listed: true, savedAt: Date.now()
+      });
+    }
+    _persistBM();
+    const activeCategory = document.querySelector('.pill.active');
+    renderDeals(activeCategory ? activeCategory.getAttribute('data-cat') : 'All');
   }
 
   /* ── Live deal counter ── */
@@ -982,6 +1068,7 @@
       const bookBtn = full
         ? `<button class="btn-book" disabled>Fully booked</button>`
         : `<button class="btn-book" onclick="event.stopPropagation(); openBooking('${d.id}')">Book now</button>`;
+      const saved   = _isSaved('deal_' + d.id);
       return `
       <div class="deal-card">
         <div class="card-thumb" style="background:${d.bg}">
@@ -1013,6 +1100,9 @@
               <span class="bot-icon">🤖</span> Negotiate
             </button>
           </div>
+          <button class="btn-notify${saved ? ' saved' : ''}" onclick="event.stopPropagation(); toggleNotify('${d.id}')">
+            🔔 ${saved ? 'Notifying me' : 'Notify me'}
+          </button>
         </div>
       </div>`;
     }).join('');
