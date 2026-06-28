@@ -409,7 +409,7 @@
     .srch-content-wrap { display: block; }
     .srch-content-wrap.with-map { display: grid; grid-template-columns: 1fr 440px; gap: 20px; align-items: start; }
     .srch-content-wrap.with-map .srch-results { grid-template-columns: 1fr 1fr; }
-    .srch-map-wrap { border-radius: 16px; overflow: hidden; border: 1.5px solid var(--border); position: sticky; top: 76px; display: none; }
+    .srch-map-wrap { border-radius: 16px; overflow: hidden; border: 1.5px solid var(--border); position: sticky; top: 76px; display: block; }
     #srch-map { height: 580px; }
     @media (max-width: 1100px) {
       .srch-content-wrap.with-map { grid-template-columns: 1fr; }
@@ -422,6 +422,52 @@
       .srch-results { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) { .srch-results { grid-template-columns: 1fr; } }
+
+    /* ── TRACKING PANEL ── */
+    .tracking-section { background: #F0FDF9; border-top: 1px solid #C6F6E8; border-bottom: 1px solid #C6F6E8; }
+    .tracking-inner { max-width: 1200px; margin: 0 auto; padding: 20px 24px 24px; }
+    .tracking-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .tracking-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .tracking-badge { background: var(--green); color: white; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+    .tracking-cards { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; scroll-behavior: smooth; }
+    .tracking-cards::-webkit-scrollbar { height: 4px; }
+    .tracking-cards::-webkit-scrollbar-thumb { background: #A7F3D0; border-radius: 4px; }
+    .tracking-card { background: var(--white); border: 1.5px solid #A7F3D0; border-radius: 14px; padding: 14px 14px 12px; min-width: 178px; max-width: 196px; flex-shrink: 0; position: relative; }
+    .tracking-card-emoji { font-size: 24px; margin-bottom: 6px; }
+    .tracking-card-name { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+    .tracking-card-meta { font-size: 11px; color: var(--muted); text-transform: capitalize; margin-bottom: 8px; }
+    .tracking-card-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+    .tracking-card-chip { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+    .tracking-card-chip.pending { background: #FEF3C7; color: #92400E; border-color: #FDE68A; }
+    .tracking-card-remove { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #D1D5DB; cursor: pointer; font-size: 13px; line-height: 1; padding: 3px 5px; border-radius: 6px; transition: color .12s, background .12s; }
+    .tracking-card-remove:hover { color: #EF4444; background: #FEF2F2; }
+
+    /* ── LOGIN GATE MODAL ── */
+    .login-gate-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45);
+      z-index: 1000; align-items: center; justify-content: center;
+    }
+    .login-gate-backdrop.open { display: flex; }
+    .login-gate-card {
+      background: var(--white); border-radius: 24px; padding: 36px 32px 28px;
+      max-width: 380px; width: calc(100% - 32px); text-align: center;
+      box-shadow: 0 24px 64px rgba(0,0,0,.18);
+    }
+    .login-gate-icon { font-size: 40px; margin-bottom: 14px; }
+    .login-gate-title { font-size: 20px; font-weight: 800; color: var(--text); letter-spacing: -.4px; margin-bottom: 8px; }
+    .login-gate-msg { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+    .login-gate-actions { display: flex; flex-direction: column; gap: 10px; }
+    .login-gate-btn-primary {
+      display: block; background: var(--green); color: white; font-size: 15px; font-weight: 700;
+      border: none; border-radius: 12px; padding: 13px; cursor: pointer; text-decoration: none;
+      font-family: inherit; transition: opacity .15s;
+    }
+    .login-gate-btn-primary:hover { opacity: .88; }
+    .login-gate-btn-secondary {
+      display: block; background: none; color: var(--muted); font-size: 14px; font-weight: 500;
+      border: none; cursor: pointer; font-family: inherit; padding: 6px;
+    }
+    .login-gate-btn-secondary:hover { color: var(--text); }
   </style>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -617,9 +663,9 @@
 
       <div class="srch-results-header">
         <div id="srch-results-count" class="srch-results-count"></div>
-        <button class="srch-map-toggle" id="srch-map-toggle" onclick="toggleSearchMap()">🗺️ Show map</button>
+        <button class="srch-map-toggle active" id="srch-map-toggle" onclick="toggleSearchMap()">🗺️ Hide map</button>
       </div>
-      <div class="srch-content-wrap" id="srch-content-wrap">
+      <div class="srch-content-wrap with-map" id="srch-content-wrap">
         <div id="srch-results" class="srch-results">
           <div class="srch-placeholder">
             <div class="srch-placeholder-icon">🔍</div>
@@ -638,6 +684,17 @@
       <div id="saved-list" class="saved-list"></div>
     </div>
 
+  </div>
+</div>
+
+<!-- ══ TRACKING PANEL ══ -->
+<div class="tracking-section" id="tracking-panel" style="display:none">
+  <div class="tracking-inner">
+    <div class="tracking-header">
+      <span class="tracking-title">📌 Businesses you're tracking</span>
+      <span class="tracking-badge" id="tracking-badge">0</span>
+    </div>
+    <div class="tracking-cards" id="tracking-cards"></div>
   </div>
 </div>
 
@@ -908,6 +965,19 @@
   </div>
 </div>
 
+<!-- ══ LOGIN GATE MODAL ══ -->
+<div class="login-gate-backdrop" id="login-gate-backdrop" onclick="closeLoginGate(event)">
+  <div class="login-gate-card">
+    <div class="login-gate-icon">🔔</div>
+    <div class="login-gate-title">Log in to save alerts</div>
+    <div class="login-gate-msg">Sign in to save businesses and get notified the moment a matching deal goes live.</div>
+    <div class="login-gate-actions">
+      <a href="login.html?screen=customer" class="login-gate-btn-primary">Log in or sign up</a>
+      <button class="login-gate-btn-secondary" onclick="closeLoginGate()">Maybe later</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ FOOTER ══ -->
 <footer>
   <div class="footer-inner">
@@ -975,7 +1045,10 @@
     const hash = md5(user.email.trim().toLowerCase());
     return await probeImage('https://www.gravatar.com/avatar/' + hash + '?s=200&d=404');
   }
+  let _currentUser = null;
+
   async function setNavLoggedIn(user) {
+    _currentUser = user;
     const meta     = user.user_metadata || {};
     const first    = meta.first_name || '';
     const last     = meta.last_name  || '';
@@ -995,6 +1068,7 @@
     }
   }
   function setNavGuest() {
+    _currentUser = null;
     document.getElementById('menu-toggle-btn').style.display   = '';
     document.getElementById('nav-login-link').style.display    = '';
     document.getElementById('nav-list-biz').style.display      = '';
@@ -1031,7 +1105,7 @@
   const GOOGLE_PLACES_KEY = 'AIzaSyD_wG3tD4o_7Hon-YF0YwYmWQeFbAJGRKY';
 
   /* ── Map ── */
-  let _map = null, _mapMarkers = [], _mapVisible = false;
+  let _map = null, _mapMarkers = [], _mapVisible = true;
 
   function toggleSearchMap() {
     _mapVisible = !_mapVisible;
@@ -1092,6 +1166,29 @@
   function _saveBM() {
     localStorage.setItem('genoti_bm', JSON.stringify(_bookmarks));
     _updateBMCount();
+    _renderTracking();
+  }
+
+  function _renderTracking() {
+    const panel = document.getElementById('tracking-panel');
+    const cards = document.getElementById('tracking-cards');
+    const badge = document.getElementById('tracking-badge');
+    if (!panel || !cards) return;
+    if (!_bookmarks.length) { panel.style.display = 'none'; return; }
+    panel.style.display = '';
+    badge.textContent = _bookmarks.length;
+    cards.innerHTML = _bookmarks.map(b => {
+      const chips = b.listed && b.alerts?.length
+        ? b.alerts.map(a => '<span class="tracking-card-chip">' + (_alertLabel[a] || a) + '</span>').join('')
+        : '<span class="tracking-card-chip pending">⏳ Notify when they join</span>';
+      return '<div class="tracking-card">'
+        + '<button class="tracking-card-remove" onclick="removeBM(this.dataset.id)" data-id="' + b.id + '" title="Stop tracking">✕</button>'
+        + '<div class="tracking-card-emoji">' + b.emoji + '</div>'
+        + '<div class="tracking-card-name">' + b.name + '</div>'
+        + '<div class="tracking-card-meta">' + b.category + (b.dist && b.dist !== '?' ? ' · ' + _distStr(b.dist) + ' away' : '') + '</div>'
+        + '<div class="tracking-card-chips">' + chips + '</div>'
+        + '</div>';
+    }).join('');
   }
   function _updateBMCount() {
     const n = _bookmarks.length;
@@ -1102,9 +1199,18 @@
   }
   function _isBM(id) { return _bookmarks.some(b => b.id === id); }
 
+  function openLoginGate() {
+    document.getElementById('login-gate-backdrop').classList.add('open');
+  }
+  function closeLoginGate(e) {
+    if (e && e.target !== document.getElementById('login-gate-backdrop')) return;
+    document.getElementById('login-gate-backdrop').classList.remove('open');
+  }
+
   function toggleBM(id) {
     const m = _srchMap[id];
     if (!m) return;
+    if (!_currentUser) { openLoginGate(); return; }
     if (_isBM(id)) {
       _bookmarks = _bookmarks.filter(b => b.id !== id);
     } else {
@@ -1119,6 +1225,7 @@
     _bookmarks = _bookmarks.filter(b => b.id !== id);
     _saveBM();
     _renderSaved();
+    _renderResults(Object.values(_srchMap));
   }
 
   function switchSrchTab(tab) {
@@ -1304,6 +1411,8 @@
   }
 
   _updateBMCount();
+  _renderTracking();
+  _initMap();
 
   function nmToggleChannel(el) {
     el.classList.toggle('on');

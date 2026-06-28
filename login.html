@@ -452,6 +452,9 @@
     prev[currentScreen] ? showScreen(prev[currentScreen]) : location.href = 'index.html';
   }
 
+  const _initScreen = new URLSearchParams(location.search).get('screen');
+  if (_initScreen && SCREENS.includes(_initScreen)) showScreen(_initScreen);
+
   function showBanner(id, msg, type) {
     const b = document.getElementById(id);
     b.textContent = msg;
