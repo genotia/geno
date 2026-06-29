@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Deals — Discover Deals Together · Genoti</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #1D9E75; --dark-green: #085041; --text: #111827; --muted: #6B7280;
+      --border: #E5E7EB; --bg: #F9FAFB; --white: #fff; --red: #EF4444;
+      --amber: #B45309; --amber-bg: #FFFBEB; --amber-border: #FDE68A;
+      --blue: #1D4ED8; --blue-bg: #EFF6FF; --blue-border: #BFDBFE;
+      --purple: #6D28D9; --purple-bg: #F5F3FF; --purple-border: #DDD6FE;
+      --coral: #C2410C; --coral-bg: #FFF7ED;
+      --green-lt: #ECFDF5; --green-md: #A7F3D0;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text); background: var(--bg); line-height: 1.5; }
+
+    /* ── NAV ── */
+    nav { position: sticky; top: 0; z-index: 200; background: var(--white); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .logo { font-size: 22px; font-weight: 800; letter-spacing: -.5px; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 14px; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted); transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--green); font-weight: 700; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .btn-login { font-size: 14px; font-weight: 500; color: var(--text); background: none; border: none; cursor: pointer; padding: 8px 12px; text-decoration: none; transition: color .15s; font-family: inherit; }
+    .btn-login:hover { color: var(--green); }
+    .btn-pill { display: inline-flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid var(--text); border-radius: 40px; padding: 9px 22px; cursor: pointer; white-space: nowrap; transition: background .15s, color .15s; text-decoration: none; font-family: inherit; }
+    .btn-pill:hover { background: var(--text); color: var(--white); }
+    .btn-pill-menu { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid #D1D5DB; border-radius: 40px; padding: 9px 18px; cursor: pointer; transition: border-color .15s, background .15s; font-family: inherit; }
+    .btn-pill-menu:hover { border-color: var(--text); background: var(--bg); }
+    .menu-icon { display: flex; flex-direction: column; gap: 4px; }
+    .menu-icon span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; }
+    .menu-dropdown-wrap { position: relative; }
+    .menu-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 280px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 16px 48px rgba(0,0,0,.12); z-index: 500; overflow: hidden; padding: 8px 0; }
+    .menu-dropdown.open { display: block; }
+    .menu-main-item { font-size: 13px; font-weight: 800; color: var(--text); padding: 14px 20px 8px; display: flex; align-items: center; justify-content: space-between; }
+    .menu-main-item.clickable { cursor: pointer; transition: background .12s; text-decoration: none; }
+    .menu-main-item.clickable:hover { background: var(--bg); }
+    .menu-main-arrow { color: var(--muted); }
+    .menu-sub-item { display: flex; align-items: center; gap: 10px; padding: 11px 20px; font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s; }
+    .menu-sub-item:hover { background: var(--bg); }
+    .menu-sub-item.highlight { color: var(--green); font-weight: 600; }
+    .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
+    .btn-avatar-pill { display: none; align-items: center; gap: 10px; background: var(--white); border: 1.5px solid #D1D5DB; border-radius: 40px; padding: 6px 14px 6px 6px; cursor: pointer; font-family: inherit; transition: border-color .15s, background .15s; }
+    .btn-avatar-pill:hover { border-color: var(--text); background: var(--bg); }
+    .avatar-img { width: 32px; height: 32px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .avatar-caret { font-size: 10px; color: var(--muted); }
+    .profile-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500; padding: 4px 0 8px; }
+    .profile-dropdown.open { display: block; }
+    .profile-name { font-size: 13px; font-weight: 700; color: var(--text); padding: 14px 20px 10px; }
+    .profile-link { display: flex; align-items: center; gap: 10px; padding: 11px 20px; font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s; }
+    .profile-link:hover { background: var(--bg); }
+    .profile-link.logout { color: #EF4444; }
+    .profile-plain { display: flex; align-items: center; gap: 10px; padding: 9px 20px; font-size: 13px; color: var(--muted); text-decoration: none; transition: background .12s; }
+    .profile-plain:hover { background: var(--bg); }
+    .biz-row { font-weight: 700; border-top: 1px solid var(--border); margin-top: 4px; }
+    .mobile-menu { display: none; }
+
+    /* ── TRUST BAR ── */
+    .trust-bar { position: sticky; top: 64px; z-index: 99; background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%); padding: 10px 32px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+    .trust-bar-steps { display: flex; align-items: center; justify-content: center; }
+    .trust-bar-badge { display: flex; justify-content: flex-end; }
+    .trust-step { display: flex; align-items: center; gap: 8px; padding: 0 18px; }
+    .trust-step-icon { width: 28px; height: 28px; background: rgba(255,255,255,.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+    .trust-step-title { font-size: 12px; font-weight: 700; color: white; }
+    .trust-step-sub { font-size: 10px; color: #94a3b8; }
+    .trust-arrow { color: var(--green); font-size: 16px; font-weight: 700; opacity: .8; padding: 0 4px; }
+    .trust-badge { background: rgba(29,158,117,.15); border: 1px solid rgba(29,158,117,.3); color: #4ADEAB; font-size: 11px; font-weight: 600; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+
+    /* ── HERO ── */
+    .hero { background: linear-gradient(160deg, #071f16 0%, #0d2e22 45%, #0f3d2a 100%); padding: 56px 24px 80px; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(29,158,117,.2) 0%, transparent 70%); border-radius: 50%; }
+    .hero::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 48px; background: var(--bg); clip-path: ellipse(55% 100% at 50% 100%); }
+    .hero-inner { max-width: 760px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 6px; background: rgba(74,222,171,.15); border: 1px solid rgba(74,222,171,.3); color: #4ADEAB; font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 20px; margin-bottom: 18px; letter-spacing: .6px; text-transform: uppercase; }
+    .hero h1 { font-size: clamp(28px, 5vw, 52px); font-weight: 800; letter-spacing: -1.5px; color: #F0FDF8; margin-bottom: 14px; line-height: 1.1; }
+    .hero h1 em { font-style: normal; color: #4ADEAB; }
+    .hero-sub { font-size: 16px; color: rgba(240,253,248,.6); margin-bottom: 32px; }
+    .hero-stats { display: flex; gap: 32px; justify-content: center; margin-top: 28px; }
+    .hero-stat { text-align: center; }
+    .hero-stat-val { font-size: 22px; font-weight: 800; color: #4ADEAB; letter-spacing: -.5px; }
+    .hero-stat-label { font-size: 11px; color: rgba(240,253,248,.5); margin-top: 2px; }
+    .hero-search { display: flex; background: var(--white); border-radius: 14px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.3); max-width: 540px; margin: 0 auto; }
+    .hero-search input { flex: 1; border: none; padding: 14px 18px; font-size: 14px; font-family: inherit; color: var(--text); outline: none; }
+    .hero-search input::placeholder { color: var(--muted); }
+    .hero-search-btn { padding: 14px 24px; background: var(--green); color: #fff; border: none; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 6px; transition: opacity .15s; white-space: nowrap; }
+    .hero-search-btn:hover { opacity: .88; }
+
+    /* ── MAIN LAYOUT ── */
+    .main-wrap { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+
+    /* ── VIEWS ── */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Non-feed views: fixed centered modal overlay */
+    #view-submit, #view-ai, #view-verify, #view-detail { display: none; }
+    #view-submit.active, #view-ai.active, #view-verify.active, #view-detail.active {
+      display: flex; align-items: flex-start; justify-content: center;
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
+      padding: 32px 16px; overflow-y: auto;
+    }
+    #view-submit .form-view-wrap,
+    #view-ai .form-view-wrap,
+    #view-verify .form-view-wrap,
+    #view-detail .detail-wrap {
+      background: var(--white); border-radius: 20px;
+      box-shadow: 0 24px 64px rgba(0,0,0,.2);
+      padding: 28px; width: 100%; max-width: 600px;
+      position: relative;
+    }
+
+    /* ── FEED VIEW ── */
+    .feed-layout { display: grid; grid-template-columns: 1fr 340px; gap: 32px; align-items: start; }
+
+    /* ── FILTER BAR ── */
+    .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+    .filter-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+    .filter-pill { padding: 6px 16px; border-radius: 40px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 500; cursor: pointer; background: var(--white); color: var(--muted); font-family: inherit; transition: all .15s; }
+    .filter-pill.active { background: var(--green-lt); color: var(--dark-green); border-color: var(--green-md); font-weight: 600; }
+    .filter-pill:hover:not(.active) { border-color: var(--text); color: var(--text); }
+
+    /* ── SECTION HEADER ── */
+    .section-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-title { font-size: 15px; font-weight: 700; color: var(--text); }
+    .see-all { font-size: 13px; font-weight: 600; color: var(--green); text-decoration: none; }
+    .see-all:hover { text-decoration: underline; }
+
+    /* ── DEAL GRID ── */
+    .deal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+    .deal-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+    .deal-card:hover { border-color: var(--green-md); box-shadow: 0 4px 20px rgba(0,0,0,.07); }
+    .deal-thumb { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 34px; position: relative; }
+    .deal-thumb-green { background: var(--green-lt); }
+    .deal-thumb-amber { background: var(--amber-bg); }
+    .deal-thumb-purple { background: var(--purple-bg); }
+    .deal-thumb-blue { background: var(--blue-bg); }
+    .deal-thumb-pink { background: #FDF2F8; }
+    .deal-thumb-sage { background: #F0FDF4; }
+    .disc-badge { position: absolute; top: 8px; right: 8px; background: #D85A30; color: #fff; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 5px; }
+    .verify-badge { position: absolute; top: 8px; left: 8px; font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 4px; display: flex; align-items: center; gap: 3px; }
+    .vb-community { background: var(--green-lt); color: var(--dark-green); }
+    .vb-ai { background: var(--blue-bg); color: var(--blue); }
+    .vb-merchant { background: var(--purple-bg); color: var(--purple); }
+    .deal-info { padding: 10px 12px; }
+    .deal-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .deal-merchant { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+    .deal-price-row { display: flex; align-items: baseline; gap: 6px; }
+    .price-new { font-size: 14px; font-weight: 700; color: var(--green); }
+    .price-old { font-size: 11px; color: var(--muted); text-decoration: line-through; }
+    .price-dist { font-size: 10px; color: var(--muted); margin-left: auto; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── SUBMIT CTA ── */
+    .submit-cta-bar { background: linear-gradient(135deg, #085041 0%, #0f3d2a 100%); border-radius: 16px; padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 24px; position: relative; overflow: hidden; }
+    .submit-cta-bar::before { content: ''; position: absolute; top: -40px; right: 200px; width: 160px; height: 160px; background: rgba(74,222,171,.08); border-radius: 50%; pointer-events: none; }
+    .submit-cta-bar::after { content: ''; position: absolute; bottom: -30px; right: -30px; width: 120px; height: 120px; background: rgba(74,222,171,.06); border-radius: 50%; pointer-events: none; }
+    .submit-cta-left { display: flex; align-items: center; gap: 16px; position: relative; }
+    .submit-cta-icon { width: 44px; height: 44px; background: rgba(74,222,171,.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .submit-cta-bar h3 { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+    .submit-cta-bar p { font-size: 12px; color: rgba(240,253,248,.6); margin: 0; }
+    .btn-submit { display: flex; align-items: center; gap: 8px; padding: 11px 24px; background: var(--green); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity .15s; white-space: nowrap; flex-shrink: 0; position: relative; }
+    .btn-submit:hover { opacity: .88; }
+
+    /* ── HOW IT WORKS ── */
+    .how-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; }
+    .how-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 14px; }
+    .how-step { display: flex; gap: 12px; margin-bottom: 14px; }
+    .how-step:last-child { margin-bottom: 0; }
+    .how-num { width: 26px; height: 26px; border-radius: 50%; background: var(--green-lt); color: var(--dark-green); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .how-text { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .how-text strong { color: var(--text); font-weight: 600; }
+
+    /* ── LEADERBOARD ── */
+    .lb-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; }
+    .lb-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 14px; }
+    .lb-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-rank { font-size: 12px; font-weight: 700; color: var(--muted); width: 18px; flex-shrink: 0; }
+    .lb-rank.gold { color: #D97706; }
+    .lb-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--green-lt); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--dark-green); flex-shrink: 0; }
+    .lb-name { font-size: 12px; font-weight: 600; flex: 1; }
+    .lb-badge { font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 10px; background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+    .lb-count { font-size: 11px; color: var(--muted); }
+
+    /* ── SUBMIT FORM VIEW ── */
+    .form-view-wrap { max-width: 640px; margin: 0 auto; }
+    .form-topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .form-back { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; transition: color .15s; }
+    .form-back:hover { color: var(--text); }
+    .form-topbar h2 { font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+    .form-topbar-step { font-size: 12px; color: var(--muted); margin-left: auto; }
+    .step-dots { display: flex; gap: 6px; margin-bottom: 24px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: all .2s; }
+    .dot.active { background: var(--green); width: 24px; border-radius: 4px; }
+    .dot.done { background: var(--green-md); }
+    .upload-box { border: 2px dashed var(--border); border-radius: 14px; padding: 32px 24px; text-align: center; cursor: pointer; background: var(--bg); transition: border-color .2s, background .2s; margin-bottom: 16px; }
+    .upload-box:hover { border-color: var(--green); background: var(--green-lt); }
+    .upload-icon { font-size: 36px; margin-bottom: 10px; }
+    .upload-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .upload-box p { font-size: 12px; color: var(--muted); }
+    .or-row { display: flex; align-items: center; gap: 12px; margin: 16px 0; font-size: 12px; color: var(--muted); }
+    .or-row::before, .or-row::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .f-group { margin-bottom: 16px; }
+    .f-label { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; display: block; }
+    .f-input { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 14px; background: var(--white); color: var(--text); font-family: inherit; outline: none; transition: border-color .15s; }
+    .f-input:focus { border-color: var(--green); }
+    .f-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+    .f-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .btn-primary { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 13px; background: var(--green); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity .15s; }
+    .btn-primary:hover { opacity: .88; }
+    .btn-secondary { display: flex; align-items: center; justify-content: center; gap: 6px; flex: 1; padding: 12px; background: transparent; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; color: var(--text); transition: background .15s; }
+    .btn-secondary:hover { background: var(--bg); }
+    .form-hint { font-size: 11px; color: var(--muted); text-align: center; margin-top: 10px; }
+    .action-row { display: flex; gap: 10px; }
+
+    /* ── AI EXTRACTION VIEW ── */
+    .ai-notice { background: var(--blue-bg); border: 1px solid var(--blue-border); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--blue); line-height: 1.5; }
+    .ai-notice svg { flex-shrink: 0; margin-top: 1px; }
+    .extract-card { border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 16px; }
+    .extract-head { background: var(--blue-bg); padding: 11px 16px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--blue); }
+    .extract-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-top: 1px solid var(--border); font-size: 13px; }
+    .extract-key { color: var(--muted); }
+    .extract-val { font-weight: 600; color: var(--text); text-align: right; max-width: 55%; }
+    .extract-val.success { color: var(--green); }
+    .conf-wrap { margin-bottom: 16px; }
+    .conf-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 13px; }
+    .conf-header span:first-child { color: var(--muted); }
+    .conf-score { font-weight: 700; color: var(--dark-green); font-size: 15px; }
+    .conf-track { height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+    .conf-fill { height: 100%; border-radius: 5px; background: var(--green); }
+    .conf-note { font-size: 11px; color: var(--green); margin-top: 6px; }
+    .validation-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .vcheck { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; background: var(--green-lt); color: var(--dark-green); }
+
+    /* ── VERIFICATION VIEW ── */
+    .verify-notice { background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--amber); line-height: 1.5; }
+    .verify-notice svg { flex-shrink: 0; margin-top: 1px; }
+    .vote-card { border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; background: var(--white); margin-bottom: 14px; }
+    .vote-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .vote-meta { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+    .vote-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
+    .chip-blue { background: var(--blue-bg); color: var(--blue); }
+    .chip-amber { background: var(--amber-bg); color: var(--amber); }
+    .chip-gray { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+    .vote-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+    .vbtn { padding: 9px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; text-align: center; border: 1.5px solid; transition: opacity .15s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .vbtn:hover { opacity: .85; }
+    .vbtn-valid { background: var(--green-lt); color: var(--dark-green); border-color: var(--green-md); }
+    .vbtn-expired { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-border); }
+    .vbtn-fake { background: #FEF2F2; color: #991B1B; border-color: #FECACA; }
+    .vote-progress { display: flex; flex-direction: column; gap: 7px; }
+    .vp-row { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+    .vp-label { width: 52px; color: var(--muted); flex-shrink: 0; }
+    .vp-track { flex: 1; height: 7px; background: var(--bg); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+    .vp-fill { height: 100%; border-radius: 4px; }
+    .vp-count { width: 16px; text-align: right; color: var(--text); font-weight: 600; }
+    .hunter-banner { background: var(--green-lt); border: 1px solid var(--green-md); border-radius: 12px; padding: 14px 16px; font-size: 13px; color: var(--dark-green); display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+    .hunter-banner svg { flex-shrink: 0; }
+
+    /* ── DEAL DETAIL VIEW ── */
+    .detail-wrap { max-width: 680px; margin: 0 auto; }
+    .expiry-bar { background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 10px; padding: 10px 16px; font-size: 13px; color: var(--amber); display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+    .detail-thumb { height: 160px; background: var(--green-lt); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 56px; position: relative; margin-bottom: 20px; }
+    .detail-disc { position: absolute; top: 14px; right: 14px; background: #D85A30; color: #fff; font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 6px; }
+    .detail-badge { position: absolute; top: 14px; left: 14px; background: var(--green-lt); color: var(--dark-green); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; display: flex; align-items: center; gap: 5px; }
+    .detail-title { font-size: 22px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 4px; }
+    .detail-merchant { font-size: 14px; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 5px; }
+    .detail-price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+    .detail-price-new { font-size: 28px; font-weight: 800; color: var(--green); }
+    .detail-price-old { font-size: 16px; color: var(--muted); text-decoration: line-through; }
+    .detail-saving { font-size: 13px; background: var(--coral-bg); color: var(--coral); padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+    .detail-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .dtag { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px; }
+    .dtag-green { background: var(--green-lt); color: var(--dark-green); }
+    .dtag-blue { background: var(--blue-bg); color: var(--blue); }
+    .dtag-purple { background: var(--purple-bg); color: var(--purple); }
+    .detail-actions { display: flex; gap: 10px; margin-bottom: 20px; }
+    .btn-book { flex: 1; padding: 13px; background: var(--green); color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity .15s; }
+    .btn-book:hover { opacity: .88; }
+    .btn-share { padding: 13px 18px; background: transparent; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; cursor: pointer; color: var(--muted); display: flex; align-items: center; transition: background .15s; }
+    .btn-share:hover { background: var(--bg); }
+    .contributor-card { border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; background: var(--white); margin-bottom: 12px; }
+    .contrib-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+    .contrib-info { display: flex; align-items: center; gap: 12px; }
+    .contrib-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--green-lt); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--dark-green); flex-shrink: 0; }
+    .contrib-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; }
+    .hunter-chip { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 10px; background: var(--green-lt); color: var(--dark-green); border: 1px solid var(--green-md); }
+    .contrib-meta { font-size: 12px; color: var(--muted); }
+    .sv-card { border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .sv-header { padding: 12px 16px; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--border); }
+    .sv-btns { display: flex; }
+    .sv-btn { flex: 1; padding: 11px; text-align: center; font-size: 13px; cursor: pointer; font-family: inherit; background: none; border: none; transition: background .15s; font-weight: 600; }
+    .sv-btn:hover { background: var(--bg); }
+    .sv-btn-valid { color: var(--dark-green); }
+    .sv-btn-invalid { color: var(--coral); border-left: 1px solid var(--border); }
+
+    /* ── FOOTER ── */
+    footer { background: #111827; color: rgba(255,255,255,.6); padding: 44px 24px 28px; margin-top: 60px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px; margin-bottom: 36px; }
+    .f-logo { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -.5px; display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .f-logo span { color: var(--green); }
+    .f-tagline { font-size: 13px; line-height: 1.6; max-width: 260px; }
+    .footer-col h4 { font-size: 13px; font-weight: 700; color: white; margin-bottom: 12px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col ul a { text-decoration: none; font-size: 13px; color: rgba(255,255,255,.55); transition: color .15s; }
+    .footer-col ul a:hover { color: white; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,.1); padding-top: 20px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; max-width: 1200px; margin: 0 auto; }
+    .footer-bottom a { color: rgba(255,255,255,.5); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .feed-layout { grid-template-columns: 1fr; }
+      .sidebar { display: grid; grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .deal-grid { grid-template-columns: 1fr 1fr; }
+      .sidebar { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .trust-bar { display: none; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 480px) {
+      .deal-grid { grid-template-columns: 1fr; }
+      .vote-btns { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-inner">
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
+      <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover, Book here, Save more</span>
+    </div>
+    <ul class="nav-links">
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="index.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Off-Peak Deals</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px;white-space:nowrap">Save upto 75%</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="negotiate.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Negotiate</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px;white-space:nowrap">AI deal maker</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="booking.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> BookNow</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px;white-space:nowrap">No platform fee</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="notify.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> NotifyMe</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px;white-space:nowrap">Smart alerts</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="community.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Community</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px;white-space:nowrap">Discover together</span>
+      </div></li>
+    </ul>
+    <div class="nav-right">
+      <a href="login.html" class="btn-login" id="nav-login-link">Log in</a>
+      <a href="register.html" class="btn-pill" id="nav-list-biz">List your business</a>
+      <div class="menu-dropdown-wrap">
+        <button class="btn-pill-menu" onclick="toggleMenu()" aria-label="Menu" id="menu-toggle-btn">
+          Menu
+          <div class="menu-icon"><span></span><span></span><span></span></div>
+        </button>
+        <div class="menu-dropdown" id="menu-dropdown">
+          <div class="menu-main-item">For customers</div>
+          <a href="login.html" class="menu-sub-item highlight">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Log in or sign up
+          </a>
+          <a href="download-the-app.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Download the app
+          </a>
+          <a href="help.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Help and support
+          </a>
+          <div class="menu-divider"></div>
+          <a href="merchant/merchants.html" class="menu-main-item clickable">
+            <span style="display:flex;align-items:center;gap:10px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              For businesses
+            </span>
+            <span class="menu-main-arrow">→</span>
+          </a>
+        </div>
+        <button class="btn-avatar-pill" onclick="toggleProfile()" aria-label="Account" id="avatar-toggle-btn" style="display:none">
+          <div class="avatar-img" id="nav-avatar"><span id="nav-avatar-initial">?</span></div>
+          <span class="avatar-caret" id="avatar-caret">&#9660;</span>
+        </button>
+        <div class="profile-dropdown" id="profile-dropdown">
+          <div class="profile-name" id="profile-name">—</div>
+          <div class="menu-divider" style="margin:0 0 4px"></div>
+          <a href="profile.html" class="profile-link" style="font-size:15px;font-weight:700;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Profile
+          </a>
+          <button class="profile-link logout" onclick="signOut()" style="font-size:15px;font-weight:700;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Log out
+          </button>
+          <div class="menu-divider"></div>
+          <a href="merchant/merchants.html" class="profile-link biz-row">
+            <span style="display:flex;align-items:center;gap:10px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9h18v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9z"/><path d="M3 9l2.5-6h13L21 9"/></svg>
+              For businesses
+            </span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ TRUST BAR ══ -->
+<div class="trust-bar">
+  <div></div>
+  <div class="trust-bar-steps">
+    <div class="trust-step"><div class="trust-step-icon">👀</div><div><div class="trust-step-title">Spot a deal</div><div class="trust-step-sub">In the wild or online</div></div></div>
+    <div class="trust-arrow">→</div>
+    <div class="trust-step"><div class="trust-step-icon">🤖</div><div><div class="trust-step-title">AI verifies</div><div class="trust-step-sub">Extracts & checks instantly</div></div></div>
+    <div class="trust-arrow">→</div>
+    <div class="trust-step"><div class="trust-step-icon">🗳️</div><div><div class="trust-step-title">Community votes</div><div class="trust-step-sub">Real people confirm it's live</div></div></div>
+    <div class="trust-arrow">→</div>
+    <div class="trust-step"><div class="trust-step-icon">🎉</div><div><div class="trust-step-title">Deal goes live</div><div class="trust-step-sub">Everyone benefits</div></div></div>
+  </div>
+  <div class="trust-bar-badge">
+    <div class="trust-badge">✦ 1,240 live deals · 847 contributors</div>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Community Deals
+    </div>
+    <h1>Discover Deals <em>Together</em></h1>
+    <p class="hero-sub">Real deals spotted by real people near you — verified by AI and the community.</p>
+    <div class="hero-search">
+      <input type="text" placeholder="Search deals, restaurants, salons, gyms…" id="hero-search-input" onkeydown="if(event.key==='Enter')filterDeals()" />
+      <button class="hero-search-btn" onclick="filterDeals()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        Search
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val">1,240</div><div class="hero-stat-label">Live deals</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">847</div><div class="hero-stat-label">Contributors</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">₹2.4L</div><div class="hero-stat-label">Saved today</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main-wrap">
+
+  <!-- VIEW: FEED -->
+  <div class="view active" id="view-feed">
+    <div class="feed-layout">
+      <div>
+        <!-- Spotted a deal CTA -->
+        <div class="submit-cta-bar">
+          <div class="submit-cta-left">
+            <div class="submit-cta-icon">👀</div>
+            <div>
+              <h3>Spotted a deal?</h3>
+              <p>Share it with the Genoti community and earn Hunter points.</p>
+            </div>
+          </div>
+          <button class="btn-submit" onclick="goView('view-submit')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Submit a deal
+          </button>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar">
+          <span class="filter-label">Filter:</span>
+          <button class="filter-pill active" onclick="setFilter(this,'All')">All</button>
+          <button class="filter-pill" onclick="setFilter(this,'Restaurants & Dining')">🍽️ Restaurants</button>
+          <button class="filter-pill" onclick="setFilter(this,'Fitness & Sports')">🏋️ Fitness</button>
+          <button class="filter-pill" onclick="setFilter(this,'Beauty & Wellness')">💅 Beauty</button>
+          <button class="filter-pill" onclick="setFilter(this,'Health & Medical')">🏥 Health</button>
+          <button class="filter-pill" onclick="setFilter(this,'Hospitality')">🏨 Hotels</button>
+        </div>
+
+        <!-- Hot now -->
+        <div class="section-hdr">
+          <h2 class="section-title">🔥 Hot right now</h2>
+          <a href="#" class="see-all">See all →</a>
+        </div>
+        <div class="deal-grid" id="deal-grid">
+
+          <div class="deal-card" onclick="goView('view-detail')" data-cat="Beauty & Wellness">
+            <div class="deal-thumb deal-thumb-green">
+              ✂️
+              <div class="disc-badge">60% off</div>
+              <div class="verify-badge vb-community">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Community
+              </div>
+            </div>
+            <div class="deal-info">
+              <div class="deal-name">Full hair spa + cut</div>
+              <div class="deal-merchant">Glam Studio · Koramangala</div>
+              <div class="deal-price-row"><span class="price-new">₹499</span><span class="price-old">₹1,250</span><span class="price-dist">0.8 km</span></div>
+            </div>
+          </div>
+
+          <div class="deal-card" data-cat="Restaurants & Dining">
+            <div class="deal-thumb deal-thumb-amber">
+              🍽️
+              <div class="disc-badge">40% off</div>
+              <div class="verify-badge vb-ai">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                AI reviewed
+              </div>
+            </div>
+            <div class="deal-info">
+              <div class="deal-name">Lunch buffet for 2</div>
+              <div class="deal-merchant">Spice Route · Indiranagar</div>
+              <div class="deal-price-row"><span class="price-new">₹599</span><span class="price-old">₹999</span><span class="price-dist">1.4 km</span></div>
+            </div>
+          </div>
+
+          <div class="deal-card" data-cat="Beauty & Wellness">
+            <div class="deal-thumb deal-thumb-purple">
+              💆
+              <div class="disc-badge">55% off</div>
+              <div class="verify-badge vb-merchant">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Merchant
+              </div>
+            </div>
+            <div class="deal-info">
+              <div class="deal-name">Deep tissue massage</div>
+              <div class="deal-merchant">Serenity Spa · HSR Layout</div>
+              <div class="deal-price-row"><span class="price-new">₹899</span><span class="price-old">₹1,999</span><span class="price-dist">2.1 km</span></div>
+            </div>
+          </div>
+
+          <div class="deal-card" data-cat="Fitness & Sports">
+            <div class="deal-thumb deal-thumb-blue">
+              🏋️
+              <div class="disc-badge">50% off</div>
+              <div class="verify-badge vb-community">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Community
+              </div>
+            </div>
+            <div class="deal-info">
+              <div class="deal-name">Monthly gym pass</div>
+              <div class="deal-merchant">FitStop · BTM Layout</div>
+              <div class="deal-price-row"><span class="price-new">₹999</span><span class="price-old">₹1,999</span><span class="price-dist">3.0 km</span></div>
+            </div>
+          </div>
+
+          <div class="deal-card" data-cat="Beauty & Wellness">
+            <div class="deal-thumb deal-thumb-pink">
+              💅
+              <div class="disc-badge">35% off</div>
+              <div class="verify-badge vb-ai">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                AI reviewed
+              </div>
+            </div>
+            <div class="deal-info">
+              <div class="deal-name">Nail art + pedicure</div>
+              <div class="deal-merchant">Nails & Co · Jayanagar</div>
+              <div class="deal-price-row"><span class="price-new">₹649</span><span class="price-old">₹999</span><span class="price-dist">1.9 km</span></div>
+            </div>
+          </div>
+
+          <div class="deal-card" data-cat="Health & Medical">
+            <div class="deal-thumb deal-thumb-sage">
+              🩺
+              <div class="disc-badge">25% off</div>
+              <div class="verify-badge vb-community">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Community
+              </div>
+            </div>
+            <div class="deal-info">
+              <div class="deal-name">Full body checkup</div>
+              <div class="deal-merchant">HealthFirst · Whitefield</div>
+              <div class="deal-price-row"><span class="price-new">₹1,499</span><span class="price-old">₹1,999</span><span class="price-dist">4.2 km</span></div>
+            </div>
+          </div>
+
+        </div><!-- /deal-grid -->
+      </div><!-- /main col -->
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+
+        <!-- How it works -->
+        <div class="how-card">
+          <h4>How it works</h4>
+          <div class="how-step">
+            <div class="how-num">1</div>
+            <div class="how-text"><strong>Spot a deal</strong> — screenshot, link, or type it in manually.</div>
+          </div>
+          <div class="how-step">
+            <div class="how-num">2</div>
+            <div class="how-text"><strong>AI extracts</strong> the price, discount, validity & merchant details.</div>
+          </div>
+          <div class="how-step">
+            <div class="how-num">3</div>
+            <div class="how-text"><strong>Community votes</strong> — 3 confirmations and it goes live for everyone.</div>
+          </div>
+          <div class="how-step">
+            <div class="how-num">4</div>
+            <div class="how-text"><strong>Earn Hunter points</strong> — top contributors get exclusive perks.</div>
+          </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="lb-card">
+          <h4>🏆 Top hunters this week</h4>
+          <div class="lb-row">
+            <div class="lb-rank gold">1</div>
+            <div class="lb-avatar">PK</div>
+            <div class="lb-name">Priya K. <span class="lb-badge">Hunter</span></div>
+            <div class="lb-count">47 deals</div>
+          </div>
+          <div class="lb-row">
+            <div class="lb-rank">2</div>
+            <div class="lb-avatar" style="background:#EFF6FF;color:#1D4ED8">AR</div>
+            <div class="lb-name">Arjun R.</div>
+            <div class="lb-count">31 deals</div>
+          </div>
+          <div class="lb-row">
+            <div class="lb-rank">3</div>
+            <div class="lb-avatar" style="background:#F5F3FF;color:#6D28D9">SM</div>
+            <div class="lb-name">Sunita M.</div>
+            <div class="lb-count">28 deals</div>
+          </div>
+          <div class="lb-row">
+            <div class="lb-rank">4</div>
+            <div class="lb-avatar" style="background:#FFF7ED;color:#B45309">VN</div>
+            <div class="lb-name">Vikram N.</div>
+            <div class="lb-count">22 deals</div>
+          </div>
+          <div class="lb-row">
+            <div class="lb-rank">5</div>
+            <div class="lb-avatar">RT</div>
+            <div class="lb-name">Ritu T.</div>
+            <div class="lb-count">19 deals</div>
+          </div>
+        </div>
+
+      </div><!-- /sidebar -->
+    </div><!-- /feed-layout -->
+  </div><!-- /view-feed -->
+
+  <!-- VIEW: SUBMIT A DEAL -->
+  <div class="view" id="view-submit">
+    <div class="form-view-wrap">
+      <div class="form-topbar">
+        <button class="form-back" onclick="goView('view-feed')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
+        </button>
+        <h2>Submit a deal</h2>
+        <span class="form-topbar-step">Step 1 of 3</span>
+      </div>
+      <div class="step-dots">
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+
+      <div class="upload-box" onclick="this.querySelector('input').click()">
+        <input type="file" accept="image/*" style="display:none" />
+        <div class="upload-icon">📸</div>
+        <h3>Upload a screenshot</h3>
+        <p>From Instagram, WhatsApp, a flyer photo, or any image</p>
+      </div>
+
+      <div class="or-row">or paste a link</div>
+      <div class="f-group">
+        <label class="f-label" for="deal-url">Deal URL or social media link</label>
+        <input class="f-input" id="deal-url" type="url" placeholder="instagram.com/p/… or any deal page URL" />
+      </div>
+
+      <div class="or-row">or enter details manually</div>
+      <div class="f-group">
+        <label class="f-label" for="merchant-name">Merchant name and location</label>
+        <input class="f-input" id="merchant-name" type="text" placeholder="e.g. Glam Studio, Koramangala" />
+      </div>
+      <div class="f-row-2">
+        <div>
+          <label class="f-label" for="orig-price">Original price</label>
+          <input class="f-input" id="orig-price" type="text" placeholder="₹1,250" />
+        </div>
+        <div>
+          <label class="f-label" for="deal-price">Deal price</label>
+          <input class="f-input" id="deal-price" type="text" placeholder="₹499" />
+        </div>
+      </div>
+      <div class="f-group">
+        <label class="f-label" for="service-name">Service or product name</label>
+        <input class="f-input" id="service-name" type="text" placeholder="e.g. Full hair spa + cut" />
+      </div>
+      <div class="f-group">
+        <label class="f-label" for="valid-until">Valid until</label>
+        <input class="f-input" id="valid-until" type="text" placeholder="e.g. 31 Jan 2026 or 'Today only'" />
+      </div>
+      <div class="f-group">
+        <label class="f-label" for="deal-source">Where did you find this?</label>
+        <select class="f-input" id="deal-source">
+          <option value="">Select source</option>
+          <option>Instagram</option>
+          <option>WhatsApp forward</option>
+          <option>Flyer or poster</option>
+          <option>Newspaper</option>
+          <option>Merchant website</option>
+          <option>Word of mouth</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="goView('view-ai')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        Submit — AI will extract and verify
+      </button>
+      <p class="form-hint">Takes under 60 seconds. You'll be notified when it goes live.</p>
+    </div>
+  </div>
+
+  <!-- VIEW: AI EXTRACTION -->
+  <div class="view" id="view-ai">
+    <div class="form-view-wrap">
+      <div class="form-topbar">
+        <button class="form-back" onclick="goView('view-submit')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
+        </button>
+        <h2>AI extracted the deal</h2>
+        <span class="form-topbar-step">Step 2 of 3</span>
+      </div>
+      <div class="step-dots">
+        <div class="dot done"></div><div class="dot active"></div><div class="dot"></div>
+      </div>
+
+      <div class="ai-notice">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        AI analysed your screenshot and extracted the details below. Review and confirm before it goes live.
+      </div>
+
+      <div class="extract-card">
+        <div class="extract-head">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Deal details extracted
+        </div>
+        <div class="extract-row"><span class="extract-key">Merchant</span><span class="extract-val">Glam Studio, Koramangala</span></div>
+        <div class="extract-row"><span class="extract-key">Service</span><span class="extract-val">Full hair spa + cut</span></div>
+        <div class="extract-row"><span class="extract-key">Category</span><span class="extract-val">Beauty &amp; Wellness</span></div>
+        <div class="extract-row"><span class="extract-key">Original price</span><span class="extract-val">₹1,250</span></div>
+        <div class="extract-row"><span class="extract-key">Deal price</span><span class="extract-val success">₹499</span></div>
+        <div class="extract-row"><span class="extract-key">Discount</span><span class="extract-val success">60% off</span></div>
+        <div class="extract-row"><span class="extract-key">Valid until</span><span class="extract-val">31 Jan 2026</span></div>
+        <div class="extract-row"><span class="extract-key">Hours</span><span class="extract-val">Weekdays 11am–4pm</span></div>
+        <div class="extract-row"><span class="extract-key">Merchant verified</span><span class="extract-val success">Found on Google Maps</span></div>
+      </div>
+
+      <div class="conf-wrap">
+        <div class="conf-header">
+          <span>AI confidence score</span>
+          <span class="conf-score">86 / 100</span>
+        </div>
+        <div class="conf-track">
+          <div class="conf-fill" style="width:86%"></div>
+        </div>
+        <p class="conf-note">High confidence · eligible for fast-track publishing</p>
+      </div>
+
+      <div class="validation-badges">
+        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>No duplicate found</div>
+        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Merchant verified</div>
+        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Price plausible</div>
+        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Not expired</div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-secondary" onclick="goView('view-submit')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit details
+        </button>
+        <button class="btn-primary" style="flex:2" onclick="goView('view-verify')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Confirm and submit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: COMMUNITY VERIFICATION -->
+  <div class="view" id="view-verify">
+    <div class="form-view-wrap">
+      <div class="form-topbar">
+        <button class="form-back" onclick="goView('view-feed')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to feed
+        </button>
+        <h2>Community verification</h2>
+        <span class="form-topbar-step">Step 3 of 3</span>
+      </div>
+      <div class="step-dots">
+        <div class="dot done"></div><div class="dot done"></div><div class="dot active"></div>
+      </div>
+
+      <div class="verify-notice">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        AI confidence score was 62 — 3 community votes are needed before this deal publishes.
+      </div>
+
+      <p style="font-size:14px;font-weight:600;margin-bottom:16px">Deals waiting for your vote</p>
+
+      <!-- Vote card 1 -->
+      <div class="vote-card">
+        <h3>30% off all facials · weekday mornings</h3>
+        <p class="vote-meta">The Glow Clinic · Jayanagar · submitted via Instagram · 45 min ago</p>
+        <div class="vote-chips">
+          <span class="chip chip-blue">AI score: 62</span>
+          <span class="chip chip-amber">1 of 3 votes in</span>
+        </div>
+        <div class="vote-btns">
+          <button class="vbtn vbtn-valid" onclick="castVote(this,'valid')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Valid
+          </button>
+          <button class="vbtn vbtn-expired" onclick="castVote(this,'expired')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Expired
+          </button>
+          <button class="vbtn vbtn-fake" onclick="castVote(this,'fake')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Fake
+          </button>
+        </div>
+        <div class="vote-progress">
+          <div class="vp-row"><span class="vp-label">Valid</span><div class="vp-track"><div class="vp-fill" style="width:67%;background:#1D9E75"></div></div><span class="vp-count">1</span></div>
+          <div class="vp-row"><span class="vp-label">Expired</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#B45309"></div></div><span class="vp-count">0</span></div>
+          <div class="vp-row"><span class="vp-label">Fake</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#EF4444"></div></div><span class="vp-count">0</span></div>
+        </div>
+      </div>
+
+      <!-- Vote card 2 -->
+      <div class="vote-card">
+        <h3>Buy 1 get 1 free · protein shakes</h3>
+        <p class="vote-meta">NutriZone · Whitefield · submitted via WhatsApp forward · 2 hours ago</p>
+        <div class="vote-chips">
+          <span class="chip chip-blue">AI score: 54</span>
+          <span class="chip chip-gray">0 of 3 votes in</span>
+        </div>
+        <div class="vote-btns">
+          <button class="vbtn vbtn-valid" onclick="castVote(this,'valid')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Valid
+          </button>
+          <button class="vbtn vbtn-expired" onclick="castVote(this,'expired')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Expired
+          </button>
+          <button class="vbtn vbtn-fake" onclick="castVote(this,'fake')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Fake
+          </button>
+        </div>
+        <div class="vote-progress">
+          <div class="vp-row"><span class="vp-label">Valid</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#1D9E75"></div></div><span class="vp-count">0</span></div>
+          <div class="vp-row"><span class="vp-label">Expired</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#B45309"></div></div><span class="vp-count">0</span></div>
+          <div class="vp-row"><span class="vp-label">Fake</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#EF4444"></div></div><span class="vp-count">0</span></div>
+        </div>
+      </div>
+
+      <div class="hunter-banner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        You've verified 24 deals this month. Your vote carries extra weight as a Hunter.
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: DEAL DETAIL -->
+  <div class="view" id="view-detail">
+    <div class="detail-wrap">
+      <div class="form-topbar">
+        <button class="form-back" onclick="goView('view-feed')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to feed
+        </button>
+        <h2>Deal detail</h2>
+      </div>
+
+      <div class="expiry-bar">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Ends today at 6:00 PM · 3 slots remaining
+      </div>
+
+      <div class="detail-thumb">
+        ✂️
+        <div class="detail-disc">60% off</div>
+        <div class="detail-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Community verified
+        </div>
+      </div>
+
+      <h1 class="detail-title">Full hair spa + cut</h1>
+      <p class="detail-merchant">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Glam Studio · Koramangala · 0.8 km
+      </p>
+
+      <div class="detail-price-row">
+        <span class="detail-price-new">₹499</span>
+        <span class="detail-price-old">₹1,250</span>
+        <span class="detail-saving">Save ₹751</span>
+      </div>
+
+      <div class="detail-tags">
+        <span class="dtag dtag-green">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Weekdays 11am–4pm
+        </span>
+        <span class="dtag dtag-blue">★ 4.8 rating</span>
+        <span class="dtag dtag-purple">Hair spa + cut included</span>
+      </div>
+
+      <div class="detail-actions">
+        <button class="btn-book">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Book now
+        </button>
+        <button class="btn-share">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </button>
+      </div>
+
+      <div class="contributor-card">
+        <p class="contrib-label">Submitted by the community</p>
+        <div class="contrib-info">
+          <div class="contrib-avatar">PK</div>
+          <div>
+            <p class="contrib-name">Priya K. <span class="hunter-chip">Hunter</span></p>
+            <p class="contrib-meta">Found on Instagram · 3 hours ago · 12 people claimed this deal</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sv-card">
+        <div class="sv-header">Is this deal still valid?</div>
+        <div class="sv-btns">
+          <button class="sv-btn sv-btn-valid" onclick="this.textContent='Thanks for confirming!'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"/></svg>
+            Yes, still active
+          </button>
+          <button class="sv-btn sv-btn-invalid" onclick="this.textContent='Reported — thanks!'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Expired or fake
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="f-logo"><img src="genoti_logo.svg" alt="" style="width:30px;height:30px;vertical-align:middle;margin-right:4px">Genoti</div>
+      <div class="f-tagline">Smart booking &amp; appointment platform for beauty, wellness &amp; fitness businesses.</div>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="index.html">Off-Peak Deals</a></li>
+        <li><a href="negotiate.html">Negotiate</a></li>
+        <li><a href="booking.html">BookNow</a></li>
+        <li><a href="notify.html">NotifyMe</a></li>
+        <li><a href="community.html">Community</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Businesses</h4>
+      <ul>
+        <li><a href="merchant/merchants.html">For Merchants</a></li>
+        <li><a href="register.html">List your business</a></li>
+        <li><a href="#">Analytics</a></li>
+        <li><a href="#">Pricing</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+    <div style="display:flex;gap:16px"><a href="#">Twitter</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  /* ── Auth ── */
+  const _sb = supabase.createClient(
+    'https://ijsxmgkzwvamwctbkgjo.supabase.co',
+    'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ'
+  );
+  let _currentUser = null;
+
+  function setNavLoggedIn(user) {
+    _currentUser = user;
+    document.getElementById('nav-login-link').style.display = 'none';
+    document.getElementById('nav-list-biz').style.display = 'none';
+    const avatarBtn = document.getElementById('avatar-toggle-btn');
+    avatarBtn.style.display = 'flex';
+    const name = user.user_metadata?.full_name || user.email || '';
+    document.getElementById('nav-avatar-initial').textContent = name.charAt(0).toUpperCase() || '?';
+    document.getElementById('profile-name').textContent = name || user.email;
+  }
+  function setNavGuest() {
+    _currentUser = null;
+    document.getElementById('nav-login-link').style.display = '';
+    document.getElementById('nav-list-biz').style.display = '';
+    document.getElementById('avatar-toggle-btn').style.display = 'none';
+  }
+
+  _sb.auth.getSession().then(({ data }) => {
+    if (data.session?.user) setNavLoggedIn(data.session.user); else setNavGuest();
+  });
+  _sb.auth.onAuthStateChange((_event, session) => {
+    if (session?.user) setNavLoggedIn(session.user); else setNavGuest();
+  });
+  async function signOut() {
+    await _sb.auth.signOut();
+    location.href = 'index.html';
+  }
+
+  /* ── Menu / profile toggles ── */
+  function toggleMenu() { document.getElementById('menu-dropdown').classList.toggle('open'); }
+  function toggleProfile() { document.getElementById('profile-dropdown').classList.toggle('open'); }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.menu-dropdown-wrap')) {
+      document.getElementById('menu-dropdown').classList.remove('open');
+      document.getElementById('profile-dropdown').classList.remove('open');
+    }
+  });
+
+  /* ── View navigation ── */
+  const MODAL_VIEWS = new Set(['view-submit','view-ai','view-verify','view-detail']);
+
+  document.addEventListener('click', e => {
+    MODAL_VIEWS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.classList.contains('active') && e.target === el) goView('view-feed');
+    });
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      const open = [...MODAL_VIEWS].find(id => document.getElementById(id)?.classList.contains('active'));
+      if (open) goView('view-feed');
+    }
+  });
+  function goView(id) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const target = document.getElementById(id);
+    if (!target) return;
+    target.classList.add('active');
+    if (MODAL_VIEWS.has(id)) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  /* ── Category filter ── */
+  function setFilter(el, cat) {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('#deal-grid .deal-card').forEach(card => {
+      const cardCat = card.dataset.cat || '';
+      card.style.display = (cat === 'All' || cardCat === cat) ? '' : 'none';
+    });
+  }
+
+  function filterDeals() {
+    const q = (document.getElementById('hero-search-input').value || '').trim().toLowerCase();
+    if (!q) return;
+    document.querySelectorAll('#deal-grid .deal-card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      card.style.display = text.includes(q) ? '' : 'none';
+    });
+  }
+
+  /* ── Vote ── */
+  function castVote(btn, type) {
+    const card = btn.closest('.vote-card');
+    card.querySelectorAll('.vbtn').forEach(b => { b.disabled = true; b.style.opacity = '.5'; });
+    btn.style.opacity = '1';
+    btn.style.outline = '2px solid currentColor';
+    const rows = card.querySelectorAll('.vp-row');
+    rows.forEach(r => {
+      const label = r.querySelector('.vp-label').textContent.trim().toLowerCase();
+      if (label === type) {
+        const fill  = r.querySelector('.vp-fill');
+        const count = r.querySelector('.vp-count');
+        const cur   = parseInt(count.textContent) || 0;
+        const next  = cur + 1;
+        count.textContent = next;
+        fill.style.width = Math.min(next * 33, 100) + '%';
+      }
+    });
+  }
+</script>
+</body>
+</html>
