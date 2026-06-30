@@ -117,7 +117,8 @@
     }
 
     /* ── FEED VIEW ── */
-    .feed-layout { display: grid; grid-template-columns: 1fr 340px; gap: 32px; align-items: start; }
+    .feed-layout { display: flex; flex-direction: column; gap: 32px; }
+    .below-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 
     /* ── FILTER BAR ── */
     .filter-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
@@ -159,7 +160,7 @@
     .deal-time svg { flex-shrink: 0; }
 
     /* ── SIDEBAR ── */
-    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .sidebar { display: contents; }
 
     /* ── SUBMIT CTA ── */
     .submit-cta-bar { background: linear-gradient(135deg, #085041 0%, #0f3d2a 100%); border-radius: 16px; padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 24px; position: relative; overflow: hidden; }
@@ -327,12 +328,11 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 1024px) {
-      .feed-layout { grid-template-columns: 1fr; }
-      .sidebar { display: grid; grid-template-columns: 1fr 1fr; }
+      .below-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 768px) {
       .deal-grid { grid-template-columns: 1fr 1fr; }
-      .sidebar { grid-template-columns: 1fr; }
+      .below-grid { grid-template-columns: 1fr; }
       .footer-inner { grid-template-columns: 1fr 1fr; }
       .trust-bar { display: none; }
       .nav-links { display: none; }
@@ -621,8 +621,8 @@
         </div><!-- /deal-grid -->
       </div><!-- /main col -->
 
-      <!-- Sidebar -->
-      <div class="sidebar">
+      <!-- Below deals: How it works + Leaderboard side by side -->
+      <div class="below-grid">
 
         <!-- How it works -->
         <div class="how-card">
@@ -680,7 +680,7 @@
           </div>
         </div>
 
-      </div><!-- /sidebar -->
+      </div><!-- /below-grid -->
     </div><!-- /feed-layout -->
   </div><!-- /view-feed -->
 
