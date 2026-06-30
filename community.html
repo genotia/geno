@@ -155,6 +155,8 @@
     .price-new { font-size: 14px; font-weight: 700; color: var(--green); }
     .price-old { font-size: 11px; color: var(--muted); text-decoration: line-through; }
     .price-dist { font-size: 10px; color: var(--muted); margin-left: auto; }
+    .deal-time { font-size: 10px; color: var(--muted); margin-top: 5px; display: flex; align-items: center; gap: 4px; }
+    .deal-time svg { flex-shrink: 0; }
 
     /* ── SIDEBAR ── */
     .sidebar { display: flex; flex-direction: column; gap: 16px; }
@@ -508,7 +510,7 @@
         </div>
         <div class="deal-grid" id="deal-grid">
 
-          <div class="deal-card" onclick="goView('view-detail')" data-cat="Beauty & Wellness">
+          <div class="deal-card" onclick="goView('view-detail')" data-cat="Beauty & Wellness" data-ts-min="10">
             <div class="deal-thumb deal-thumb-green">
               ✂️
               <div class="disc-badge">60% off</div>
@@ -521,10 +523,11 @@
               <div class="deal-name">Full hair spa + cut</div>
               <div class="deal-merchant">Glam Studio · Koramangala</div>
               <div class="deal-price-row"><span class="price-new">₹499</span><span class="price-old">₹1,250</span><span class="price-dist">0.8 km</span></div>
+              <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
             </div>
           </div>
 
-          <div class="deal-card" data-cat="Restaurants & Dining">
+          <div class="deal-card" data-cat="Restaurants & Dining" data-ts-min="28">
             <div class="deal-thumb deal-thumb-amber">
               🍽️
               <div class="disc-badge">40% off</div>
@@ -537,10 +540,11 @@
               <div class="deal-name">Lunch buffet for 2</div>
               <div class="deal-merchant">Spice Route · Indiranagar</div>
               <div class="deal-price-row"><span class="price-new">₹599</span><span class="price-old">₹999</span><span class="price-dist">1.4 km</span></div>
+              <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
             </div>
           </div>
 
-          <div class="deal-card" data-cat="Beauty & Wellness">
+          <div class="deal-card" data-cat="Beauty & Wellness" data-ts-min="92">
             <div class="deal-thumb deal-thumb-purple">
               💆
               <div class="disc-badge">55% off</div>
@@ -553,10 +557,11 @@
               <div class="deal-name">Deep tissue massage</div>
               <div class="deal-merchant">Serenity Spa · HSR Layout</div>
               <div class="deal-price-row"><span class="price-new">₹899</span><span class="price-old">₹1,999</span><span class="price-dist">2.1 km</span></div>
+              <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
             </div>
           </div>
 
-          <div class="deal-card" data-cat="Fitness & Sports">
+          <div class="deal-card" data-cat="Fitness & Sports" data-ts-min="125">
             <div class="deal-thumb deal-thumb-blue">
               🏋️
               <div class="disc-badge">50% off</div>
@@ -569,10 +574,11 @@
               <div class="deal-name">Monthly gym pass</div>
               <div class="deal-merchant">FitStop · BTM Layout</div>
               <div class="deal-price-row"><span class="price-new">₹999</span><span class="price-old">₹1,999</span><span class="price-dist">3.0 km</span></div>
+              <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
             </div>
           </div>
 
-          <div class="deal-card" data-cat="Beauty & Wellness">
+          <div class="deal-card" data-cat="Beauty & Wellness" data-ts-min="47">
             <div class="deal-thumb deal-thumb-pink">
               💅
               <div class="disc-badge">35% off</div>
@@ -585,10 +591,11 @@
               <div class="deal-name">Nail art + pedicure</div>
               <div class="deal-merchant">Nails & Co · Jayanagar</div>
               <div class="deal-price-row"><span class="price-new">₹649</span><span class="price-old">₹999</span><span class="price-dist">1.9 km</span></div>
+              <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
             </div>
           </div>
 
-          <div class="deal-card" data-cat="Health & Medical">
+          <div class="deal-card" data-cat="Health & Medical" data-ts-min="185">
             <div class="deal-thumb deal-thumb-sage">
               🩺
               <div class="disc-badge">25% off</div>
@@ -601,6 +608,7 @@
               <div class="deal-name">Full body checkup</div>
               <div class="deal-merchant">HealthFirst · Whitefield</div>
               <div class="deal-price-row"><span class="price-new">₹1,499</span><span class="price-old">₹1,999</span><span class="price-dist">4.2 km</span></div>
+              <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
             </div>
           </div>
 
@@ -685,11 +693,31 @@
         <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
       </div>
 
-      <div class="upload-box" onclick="this.querySelector('input').click()">
-        <input type="file" accept="image/*" style="display:none" />
-        <div class="upload-icon">📸</div>
-        <h3>Upload a screenshot</h3>
-        <p>From Instagram, WhatsApp, a flyer photo, or any image</p>
+      <!-- Upload box -->
+      <div class="upload-box" id="upload-box" onclick="document.getElementById('deal-img-input').click()">
+        <input type="file" accept="image/*" id="deal-img-input" style="display:none" onchange="handleImageUpload(this)" />
+        <div id="upload-preview" style="display:none;margin-bottom:10px">
+          <img id="upload-thumb" style="max-height:120px;border-radius:8px;object-fit:contain" />
+        </div>
+        <div id="upload-idle">
+          <div class="upload-icon">📸</div>
+          <h3>Upload a screenshot</h3>
+          <p>From Instagram, WhatsApp, a flyer photo, or any image</p>
+        </div>
+        <div id="upload-loading" style="display:none;text-align:center;padding:8px 0">
+          <div style="font-size:24px;margin-bottom:8px">🤖</div>
+          <div style="font-size:13px;font-weight:600;color:var(--green)">AI is reading the deal…</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Extracting merchant, price & details</div>
+          <div style="margin-top:12px;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+            <div id="extract-progress" style="height:100%;background:var(--green);border-radius:2px;width:0%;transition:width 2s ease"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI extract status banner (shown after extraction) -->
+      <div id="extract-banner" style="display:none;background:var(--green-lt);border:1px solid var(--green-md);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--dark-green);display:none;align-items:center;gap:8px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="extract-banner-text">AI extracted details from your image — review below</span>
       </div>
 
       <div class="or-row">or paste a link</div>
@@ -801,7 +829,7 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           Edit details
         </button>
-        <button class="btn-primary" style="flex:2" onclick="goView('view-verify')">
+        <button class="btn-primary" style="flex:2" onclick="confirmAndSubmit()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           Confirm and submit
         </button>
@@ -834,7 +862,7 @@
       <!-- Vote card 1 -->
       <div class="vote-card">
         <h3>30% off all facials · weekday mornings</h3>
-        <p class="vote-meta">The Glow Clinic · Jayanagar · submitted via Instagram · 45 min ago</p>
+        <p class="vote-meta">The Glow Clinic · Jayanagar · submitted via Instagram · <span class="ts-label" data-ts-min="45"></span></p>
         <div class="vote-chips">
           <span class="chip chip-blue">AI score: 62</span>
           <span class="chip chip-amber">1 of 3 votes in</span>
@@ -863,7 +891,7 @@
       <!-- Vote card 2 -->
       <div class="vote-card">
         <h3>Buy 1 get 1 free · protein shakes</h3>
-        <p class="vote-meta">NutriZone · Whitefield · submitted via WhatsApp forward · 2 hours ago</p>
+        <p class="vote-meta">NutriZone · Whitefield · submitted via WhatsApp forward · <span class="ts-label" data-ts-min="120"></span></p>
         <div class="vote-chips">
           <span class="chip chip-blue">AI score: 54</span>
           <span class="chip chip-gray">0 of 3 votes in</span>
@@ -958,7 +986,7 @@
           <div class="contrib-avatar">PK</div>
           <div>
             <p class="contrib-name">Priya K. <span class="hunter-chip">Hunter</span></p>
-            <p class="contrib-meta">Found on Instagram · 3 hours ago · 12 people claimed this deal</p>
+            <p class="contrib-meta">Found on Instagram · <span class="ts-label" data-ts-min="180"></span> · 12 people claimed this deal</p>
           </div>
         </div>
       </div>
@@ -1136,6 +1164,161 @@
         fill.style.width = Math.min(next * 33, 100) + '%';
       }
     });
+  }
+
+  /* ── AI Image Extraction ── */
+  const EXTRACT_FN_URL = 'https://ijsxmgkzwvamwctbkgjo.supabase.co/functions/v1/extract-deal';
+
+  async function handleImageUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    // Show thumb preview
+    const thumb = document.getElementById('upload-thumb');
+    thumb.src = URL.createObjectURL(file);
+    document.getElementById('upload-preview').style.display = 'block';
+
+    // Switch to loading state
+    document.getElementById('upload-idle').style.display = 'none';
+    document.getElementById('upload-loading').style.display = 'block';
+    const bar = document.getElementById('extract-progress');
+    bar.style.width = '0%';
+    setTimeout(() => { bar.style.width = '80%'; }, 50);
+
+    try {
+      // Read as base64
+      const base64 = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result.split(',')[1]);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+
+      const resp = await fetch(EXTRACT_FN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlqc3htZ2t6d3ZhbXdjdGJrZ2pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5ODI1NjAsImV4cCI6MjA1ODU1ODU2MH0.7ejxMGQyIbNvjjABMRqfYzc0Rlo5Jkl7DUFHmlWkXsM' },
+        body: JSON.stringify({ image_base64: base64, mime_type: file.type }),
+      });
+
+      bar.style.width = '100%';
+      const json = await resp.json();
+
+      if (!json.ok) throw new Error(json.error || 'Extraction failed');
+
+      const d = json.data;
+      // Auto-fill form fields
+      if (d.merchant_name) document.getElementById('merchant-name').value = d.merchant_name + (d.location ? ', ' + d.location : '');
+      if (d.original_price) document.getElementById('orig-price').value = d.original_price;
+      if (d.deal_price)     document.getElementById('deal-price').value = d.deal_price;
+      if (d.service_name)   document.getElementById('service-name').value = d.service_name;
+      if (d.valid_until)    document.getElementById('valid-until').value = d.valid_until;
+
+      // Show success banner
+      const banner = document.getElementById('extract-banner');
+      const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
+      document.getElementById('extract-banner-text').textContent =
+        `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from your image — review and confirm below`;
+      banner.style.display = 'flex';
+
+      // Highlight filled fields
+      ['merchant-name','orig-price','deal-price','service-name','valid-until'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.value) {
+          el.style.borderColor = 'var(--green)';
+          el.style.background = 'var(--green-lt)';
+          setTimeout(() => { el.style.background = ''; }, 2000);
+        }
+      });
+
+    } catch (err) {
+      document.getElementById('extract-banner').style.display = 'flex';
+      document.getElementById('extract-banner').style.background = '#FEF2F2';
+      document.getElementById('extract-banner').style.borderColor = '#FECACA';
+      document.getElementById('extract-banner').style.color = '#991B1B';
+      document.getElementById('extract-banner-text').textContent =
+        'Could not extract details automatically — please fill in manually.';
+    } finally {
+      document.getElementById('upload-loading').style.display = 'none';
+      document.getElementById('upload-idle').style.display = 'block';
+    }
+  }
+
+  /* ── Timestamps ── */
+  function timeAgo(ts) {
+    const s = Math.floor((Date.now() - ts) / 1000);
+    if (s < 10)   return 'Just now';
+    if (s < 60)   return s + 's ago';
+    if (s < 3600) return Math.floor(s / 60) + ' min ago';
+    if (s < 86400) {
+      const h = Math.floor(s / 3600);
+      return h === 1 ? '1 hr ago' : h + ' hrs ago';
+    }
+    const d = Math.floor(s / 86400);
+    return d === 1 ? '1 day ago' : d + ' days ago';
+  }
+
+  function initTimestamps() {
+    // data-ts-min: minutes ago (static seed for existing cards)
+    document.querySelectorAll('[data-ts-min]').forEach(el => {
+      const mins = parseInt(el.dataset.tsMin);
+      const ts = Date.now() - mins * 60 * 1000;
+      el.dataset.ts = ts;
+      // find the ts-label inside this element (deal card) or use the element itself if it's already a span
+      const label = el.classList.contains('ts-label') ? el : el.querySelector('.ts-label');
+      if (label) { label.dataset.ts = ts; label.textContent = timeAgo(ts); }
+    });
+    // data-ts spans (standalone, already have ts set)
+    document.querySelectorAll('.ts-label[data-ts]').forEach(el => {
+      el.textContent = timeAgo(parseInt(el.dataset.ts));
+    });
+  }
+
+  function refreshTimestamps() {
+    document.querySelectorAll('.ts-label[data-ts]').forEach(el => {
+      el.textContent = timeAgo(parseInt(el.dataset.ts));
+    });
+  }
+
+  initTimestamps();
+  setInterval(refreshTimestamps, 30000);
+
+  /* ── Capture timestamp on deal submission ── */
+  function confirmAndSubmit() {
+    const ts = Date.now();
+    // Inject a new deal card at the top of the grid
+    const grid = document.getElementById('deal-grid');
+    const merchant = document.getElementById('merchant-name')?.value || 'Your deal';
+    const origPrice = document.getElementById('orig-price')?.value || '';
+    const dealPrice = document.getElementById('deal-price')?.value || '';
+    const service = document.getElementById('service-name')?.value || 'New deal';
+    const card = document.createElement('div');
+    card.className = 'deal-card';
+    card.dataset.cat = 'Community';
+    card.dataset.tsMin = '0';
+    card.dataset.ts = ts;
+    card.innerHTML = `
+      <div class="deal-thumb deal-thumb-green" style="background:#ECFDF5">
+        🏷️
+        ${dealPrice && origPrice ? `<div class="disc-badge">New</div>` : ''}
+        <div class="verify-badge vb-community">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Community
+        </div>
+      </div>
+      <div class="deal-info">
+        <div class="deal-name">${service || merchant}</div>
+        <div class="deal-merchant">${merchant}</div>
+        <div class="deal-price-row">
+          ${dealPrice ? `<span class="price-new">${dealPrice}</span>` : ''}
+          ${origPrice ? `<span class="price-old">${origPrice}</span>` : ''}
+        </div>
+        <div class="deal-time">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="ts-label" data-ts="${ts}">Just now</span>
+        </div>
+      </div>`;
+    grid.prepend(card);
+    goView('view-verify');
   }
 </script>
 </body>
