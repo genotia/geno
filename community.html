@@ -99,16 +99,14 @@
     .view.active { display: block; }
 
     /* Non-feed views: fixed centered modal overlay */
-    #view-submit, #view-ai, #view-verify, #view-detail { display: none; }
-    #view-submit.active, #view-ai.active, #view-verify.active, #view-detail.active {
+    #view-submit, #view-detail { display: none; }
+    #view-submit.active, #view-detail.active {
       display: flex; align-items: flex-start; justify-content: center;
       position: fixed; inset: 0; z-index: 300;
       background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
       padding: 32px 16px; overflow-y: auto;
     }
     #view-submit .form-view-wrap,
-    #view-ai .form-view-wrap,
-    #view-verify .form-view-wrap,
     #view-detail .detail-wrap {
       background: var(--white); border-radius: 20px;
       box-shadow: 0 24px 64px rgba(0,0,0,.2);
@@ -761,10 +759,6 @@
           Back
         </button>
         <h2>Submit a deal</h2>
-        <span class="form-topbar-step">Step 1 of 3</span>
-      </div>
-      <div class="step-dots">
-        <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
       </div>
 
       <!-- Deal URL — shown first -->
@@ -856,165 +850,11 @@
         </select>
         <input type="hidden" id="deal-source-domain" />
       </div>
-      <button class="btn-primary" onclick="goView('view-ai')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-        Submit — AI will extract and verify
+      <button class="btn-primary" onclick="confirmAndSubmit()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Post this deal
       </button>
       <p class="form-hint">Takes under 60 seconds. You'll be notified when it goes live.</p>
-    </div>
-  </div>
-
-  <!-- VIEW: AI EXTRACTION -->
-  <div class="view" id="view-ai">
-    <div class="form-view-wrap">
-      <div class="form-topbar">
-        <button class="form-back" onclick="goView('view-submit')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-          Back
-        </button>
-        <h2>AI extracted the deal</h2>
-        <span class="form-topbar-step">Step 2 of 3</span>
-      </div>
-      <div class="step-dots">
-        <div class="dot done"></div><div class="dot active"></div><div class="dot"></div>
-      </div>
-
-      <div class="ai-notice">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-        AI analysed your screenshot and extracted the details below. Review and confirm before it goes live.
-      </div>
-
-      <div class="extract-card">
-        <div class="extract-head">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Deal details extracted
-        </div>
-        <div class="extract-row"><span class="extract-key">Merchant</span><span class="extract-val">Glam Studio, Koramangala</span></div>
-        <div class="extract-row"><span class="extract-key">Service</span><span class="extract-val">Full hair spa + cut</span></div>
-        <div class="extract-row"><span class="extract-key">Category</span><span class="extract-val">Beauty &amp; Wellness</span></div>
-        <div class="extract-row"><span class="extract-key">Original price</span><span class="extract-val">₹1,250</span></div>
-        <div class="extract-row"><span class="extract-key">Deal price</span><span class="extract-val success">₹499</span></div>
-        <div class="extract-row"><span class="extract-key">Discount</span><span class="extract-val success">60% off</span></div>
-        <div class="extract-row"><span class="extract-key">Valid until</span><span class="extract-val">31 Jan 2026</span></div>
-        <div class="extract-row"><span class="extract-key">Hours</span><span class="extract-val">Weekdays 11am–4pm</span></div>
-        <div class="extract-row"><span class="extract-key">Merchant verified</span><span class="extract-val success">Found on Google Maps</span></div>
-      </div>
-
-      <div class="conf-wrap">
-        <div class="conf-header">
-          <span>AI confidence score</span>
-          <span class="conf-score">86 / 100</span>
-        </div>
-        <div class="conf-track">
-          <div class="conf-fill" style="width:86%"></div>
-        </div>
-        <p class="conf-note">High confidence · eligible for fast-track publishing</p>
-      </div>
-
-      <div class="validation-badges">
-        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>No duplicate found</div>
-        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Merchant verified</div>
-        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Price plausible</div>
-        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Not expired</div>
-      </div>
-
-      <div class="action-row">
-        <button class="btn-secondary" onclick="goView('view-submit')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          Edit details
-        </button>
-        <button class="btn-primary" style="flex:2" onclick="confirmAndSubmit()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          Confirm and submit
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- VIEW: COMMUNITY VERIFICATION -->
-  <div class="view" id="view-verify">
-    <div class="form-view-wrap">
-      <div class="form-topbar">
-        <button class="form-back" onclick="goView('view-feed')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-          Back to feed
-        </button>
-        <h2>Community verification</h2>
-        <span class="form-topbar-step">Step 3 of 3</span>
-      </div>
-      <div class="step-dots">
-        <div class="dot done"></div><div class="dot done"></div><div class="dot active"></div>
-      </div>
-
-      <div class="verify-notice">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        AI confidence score was 62 — 3 community votes are needed before this deal publishes.
-      </div>
-
-      <p style="font-size:14px;font-weight:600;margin-bottom:16px">Deals waiting for your vote</p>
-
-      <!-- Vote card 1 -->
-      <div class="vote-card">
-        <h3>30% off all facials · weekday mornings</h3>
-        <p class="vote-meta">The Glow Clinic · Jayanagar · submitted via Instagram · <span class="ts-label" data-ts-min="45"></span></p>
-        <div class="vote-chips">
-          <span class="chip chip-blue">AI score: 62</span>
-          <span class="chip chip-amber">1 of 3 votes in</span>
-        </div>
-        <div class="vote-btns">
-          <button class="vbtn vbtn-valid" onclick="castVote(this,'valid')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Valid
-          </button>
-          <button class="vbtn vbtn-expired" onclick="castVote(this,'expired')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Expired
-          </button>
-          <button class="vbtn vbtn-fake" onclick="castVote(this,'fake')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            Fake
-          </button>
-        </div>
-        <div class="vote-progress">
-          <div class="vp-row"><span class="vp-label">Valid</span><div class="vp-track"><div class="vp-fill" style="width:67%;background:#1D9E75"></div></div><span class="vp-count">1</span></div>
-          <div class="vp-row"><span class="vp-label">Expired</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#B45309"></div></div><span class="vp-count">0</span></div>
-          <div class="vp-row"><span class="vp-label">Fake</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#EF4444"></div></div><span class="vp-count">0</span></div>
-        </div>
-      </div>
-
-      <!-- Vote card 2 -->
-      <div class="vote-card">
-        <h3>Buy 1 get 1 free · protein shakes</h3>
-        <p class="vote-meta">NutriZone · Whitefield · submitted via WhatsApp forward · <span class="ts-label" data-ts-min="120"></span></p>
-        <div class="vote-chips">
-          <span class="chip chip-blue">AI score: 54</span>
-          <span class="chip chip-gray">0 of 3 votes in</span>
-        </div>
-        <div class="vote-btns">
-          <button class="vbtn vbtn-valid" onclick="castVote(this,'valid')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Valid
-          </button>
-          <button class="vbtn vbtn-expired" onclick="castVote(this,'expired')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Expired
-          </button>
-          <button class="vbtn vbtn-fake" onclick="castVote(this,'fake')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            Fake
-          </button>
-        </div>
-        <div class="vote-progress">
-          <div class="vp-row"><span class="vp-label">Valid</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#1D9E75"></div></div><span class="vp-count">0</span></div>
-          <div class="vp-row"><span class="vp-label">Expired</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#B45309"></div></div><span class="vp-count">0</span></div>
-          <div class="vp-row"><span class="vp-label">Fake</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#EF4444"></div></div><span class="vp-count">0</span></div>
-        </div>
-      </div>
-
-      <div class="hunter-banner">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        You've verified 24 deals this month. Your vote carries extra weight as a Hunter.
-      </div>
     </div>
   </div>
 
@@ -1194,7 +1034,7 @@
   });
 
   /* ── View navigation ── */
-  const MODAL_VIEWS = new Set(['view-submit','view-ai','view-verify','view-detail']);
+  const MODAL_VIEWS = new Set(['view-submit','view-detail']);
 
   document.addEventListener('click', e => {
     MODAL_VIEWS.forEach(id => {
@@ -1556,7 +1396,7 @@
         </div>
       </div>`;
     grid.prepend(card);
-    goView('view-verify');
+    goView('view-feed');
   }
 </script>
 </body>
