@@ -1194,9 +1194,17 @@
         r.readAsDataURL(file);
       });
 
+      // Use current session token if logged in, else anon key
+      const { data: { session } } = await _sb.auth.getSession();
+      const authToken = session?.access_token ||
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlqc3htZ2t6d3ZhbXdjdGJrZ2pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5ODI1NjAsImV4cCI6MjA1ODU1ODU2MH0.7ejxMGQyIbNvjjABMRqfYzc0Rlo5Jkl7DUFHmlWkXsM';
       const resp = await fetch(EXTRACT_FN_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlqc3htZ2t6d3ZhbXdjdGJrZ2pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5ODI1NjAsImV4cCI6MjA1ODU1ODU2MH0.7ejxMGQyIbNvjjABMRqfYzc0Rlo5Jkl7DUFHmlWkXsM' },
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlqc3htZ2t6d3ZhbXdjdGJrZ2pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5ODI1NjAsImV4cCI6MjA1ODU1ODU2MH0.7ejxMGQyIbNvjjABMRqfYzc0Rlo5Jkl7DUFHmlWkXsM',
+          'Authorization': `Bearer ${authToken}`,
+        },
         body: JSON.stringify({ image_base64: base64, mime_type: file.type }),
       });
 
