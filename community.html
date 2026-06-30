@@ -99,14 +99,15 @@
     .view.active { display: block; }
 
     /* Non-feed views: fixed centered modal overlay */
-    #view-submit, #view-detail { display: none; }
-    #view-submit.active, #view-detail.active {
+    #view-submit, #view-review, #view-detail { display: none; }
+    #view-submit.active, #view-review.active, #view-detail.active {
       display: flex; align-items: flex-start; justify-content: center;
       position: fixed; inset: 0; z-index: 300;
       background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
       padding: 32px 16px; overflow-y: auto;
     }
     #view-submit .form-view-wrap,
+    #view-review .form-view-wrap,
     #view-detail .detail-wrap {
       background: var(--white); border-radius: 20px;
       box-shadow: 0 24px 64px rgba(0,0,0,.2);
@@ -750,7 +751,7 @@
     </div><!-- /feed-layout -->
   </div><!-- /view-feed -->
 
-  <!-- VIEW: SUBMIT A DEAL -->
+  <!-- PAGE 1: CAPTURE — URL or image -->
   <div class="view" id="view-submit">
     <div class="form-view-wrap">
       <div class="form-topbar">
@@ -758,10 +759,11 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
           Back
         </button>
-        <h2>Submit a deal</h2>
+        <h2>Share a deal</h2>
+        <span class="form-topbar-step">Step 1 of 2</span>
       </div>
 
-      <!-- Deal URL — shown first -->
+      <!-- Deal URL -->
       <div class="f-group" style="margin-bottom:4px">
         <label class="f-label" for="deal-url" style="font-size:13px;margin-bottom:8px;display:flex;align-items:center;gap:6px">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -805,13 +807,32 @@
         </div>
       </div>
 
-      <!-- AI extract status banner (shown after extraction) -->
+      <!-- AI extract status banner -->
       <div id="extract-banner" style="display:none;background:var(--green-lt);border:1px solid var(--green-md);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--dark-green);align-items:center;gap:8px">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         <span id="extract-banner-text">AI extracted details from your image — review below</span>
       </div>
 
-      <div class="or-row">or enter details manually</div>
+      <button class="btn-primary" style="margin-top:8px" onclick="goView('view-review')">
+        Next — review details
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <p class="form-hint">You can also skip straight to entering details manually.</p>
+    </div>
+  </div>
+
+  <!-- PAGE 2: REVIEW & POST -->
+  <div class="view" id="view-review">
+    <div class="form-view-wrap">
+      <div class="form-topbar">
+        <button class="form-back" onclick="goView('view-submit')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
+        </button>
+        <h2>Review details</h2>
+        <span class="form-topbar-step">Step 2 of 2</span>
+      </div>
+
       <div class="f-group">
         <label class="f-label" for="merchant-name">Merchant name and location</label>
         <input class="f-input" id="merchant-name" type="text" placeholder="e.g. Glam Studio, Koramangala" />
@@ -854,7 +875,7 @@
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         Post this deal
       </button>
-      <p class="form-hint">Takes under 60 seconds. You'll be notified when it goes live.</p>
+      <p class="form-hint">Your deal will appear in the feed immediately.</p>
     </div>
   </div>
 
@@ -1034,7 +1055,7 @@
   });
 
   /* ── View navigation ── */
-  const MODAL_VIEWS = new Set(['view-submit','view-detail']);
+  const MODAL_VIEWS = new Set(['view-submit','view-review','view-detail']);
 
   document.addEventListener('click', e => {
     MODAL_VIEWS.forEach(id => {
@@ -1233,6 +1254,7 @@
       const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
       const srcLabel = src ? `${src.icon} ${src.label}` : '';
       showBanner(true, `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${srcLabel} — review below`);
+      goView('view-review');
     } catch(err) {
       showBanner(false, 'Could not read link (' + err.message + ') — please fill in manually.');
     } finally {
@@ -1291,7 +1313,8 @@
       const d = json.data;
       fillFields(d);
       const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
-      showBanner(true, `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from your image — review and confirm below`);
+      showBanner(true, `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from your image — review below`);
+      goView('view-review');
 
     } catch (err) {
       showBanner(false, 'Could not extract details (' + err.message + ') — please fill in manually.');
