@@ -158,6 +158,13 @@
     .price-dist { font-size: 10px; color: var(--muted); margin-left: auto; }
     .deal-time { font-size: 10px; color: var(--muted); margin-top: 5px; display: flex; align-items: center; gap: 4px; }
     .deal-time svg { flex-shrink: 0; }
+    .vote-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .vote-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--muted); background: var(--bg); border: 1.5px solid var(--border); border-radius: 20px; padding: 4px 10px; cursor: pointer; transition: all .15s; user-select: none; }
+    .vote-btn:hover { border-color: currentColor; }
+    .vote-btn.up:hover, .vote-btn.up.active { color: #16a34a; border-color: #16a34a; background: #f0fdf4; }
+    .vote-btn.down:hover, .vote-btn.down.active { color: #dc2626; border-color: #dc2626; background: #fef2f2; }
+    .vote-btn.active { font-weight: 700; }
+    .vote-score { font-size: 10px; color: var(--muted); margin-left: auto; }
 
     /* ── SIDEBAR ── */
     .sidebar { display: contents; }
@@ -530,6 +537,16 @@
               <div class="deal-merchant">Glam Studio · Koramangala</div>
               <div class="deal-price-row"><span class="price-new">₹499</span><span class="price-old">₹1,250</span><span class="price-dist">0.8 km</span></div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
+                            <div class="vote-row" onclick="event.stopPropagation()">
+                <button class="vote-btn up" onclick="castVote(this,'up')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                  <span>24</span>
+                </button>
+                <button class="vote-btn down" onclick="castVote(this,'down')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                  <span>3</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -547,6 +564,16 @@
               <div class="deal-merchant">Spice Route · Indiranagar</div>
               <div class="deal-price-row"><span class="price-new">₹599</span><span class="price-old">₹999</span><span class="price-dist">1.4 km</span></div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
+                            <div class="vote-row" onclick="event.stopPropagation()">
+                <button class="vote-btn up" onclick="castVote(this,'up')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                  <span>18</span>
+                </button>
+                <button class="vote-btn down" onclick="castVote(this,'down')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                  <span>5</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -564,6 +591,16 @@
               <div class="deal-merchant">Serenity Spa · HSR Layout</div>
               <div class="deal-price-row"><span class="price-new">₹899</span><span class="price-old">₹1,999</span><span class="price-dist">2.1 km</span></div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
+                            <div class="vote-row" onclick="event.stopPropagation()">
+                <button class="vote-btn up" onclick="castVote(this,'up')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                  <span>31</span>
+                </button>
+                <button class="vote-btn down" onclick="castVote(this,'down')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                  <span>2</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -581,6 +618,16 @@
               <div class="deal-merchant">FitStop · BTM Layout</div>
               <div class="deal-price-row"><span class="price-new">₹999</span><span class="price-old">₹1,999</span><span class="price-dist">3.0 km</span></div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
+                            <div class="vote-row" onclick="event.stopPropagation()">
+                <button class="vote-btn up" onclick="castVote(this,'up')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                  <span>12</span>
+                </button>
+                <button class="vote-btn down" onclick="castVote(this,'down')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                  <span>7</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -598,6 +645,16 @@
               <div class="deal-merchant">Nails & Co · Jayanagar</div>
               <div class="deal-price-row"><span class="price-new">₹649</span><span class="price-old">₹999</span><span class="price-dist">1.9 km</span></div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
+                            <div class="vote-row" onclick="event.stopPropagation()">
+                <button class="vote-btn up" onclick="castVote(this,'up')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                  <span>9</span>
+                </button>
+                <button class="vote-btn down" onclick="castVote(this,'down')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                  <span>1</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -615,6 +672,16 @@
               <div class="deal-merchant">HealthFirst · Whitefield</div>
               <div class="deal-price-row"><span class="price-new">₹1,499</span><span class="price-old">₹1,999</span><span class="price-dist">4.2 km</span></div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
+                            <div class="vote-row" onclick="event.stopPropagation()">
+                <button class="vote-btn up" onclick="castVote(this,'up')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                  <span>22</span>
+                </button>
+                <button class="vote-btn down" onclick="castVote(this,'down')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                  <span>4</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1222,6 +1289,33 @@
     document.getElementById('extract-banner-text').textContent = msg;
   }
 
+  /* ── Voting ── */
+  function castVote(btn, type) {
+    const row = btn.closest('.vote-row');
+    const upBtn = row.querySelector('.vote-btn.up');
+    const downBtn = row.querySelector('.vote-btn.down');
+    const upCount = upBtn.querySelector('span');
+    const downCount = downBtn.querySelector('span');
+    const wasActive = btn.classList.contains('active');
+
+    // Clear both
+    if (upBtn.classList.contains('active')) {
+      upBtn.classList.remove('active');
+      upCount.textContent = Math.max(0, parseInt(upCount.textContent) - 1);
+    }
+    if (downBtn.classList.contains('active')) {
+      downBtn.classList.remove('active');
+      downCount.textContent = Math.max(0, parseInt(downCount.textContent) - 1);
+    }
+
+    // Toggle on if wasn't active
+    if (!wasActive) {
+      btn.classList.add('active');
+      const countEl = btn.querySelector('span');
+      countEl.textContent = parseInt(countEl.textContent) + 1;
+    }
+  }
+
   /* ── URL extraction ── */
   let _urlTimer;
   function applySource(url) {
@@ -1448,6 +1542,16 @@
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           <span class="ts-label" data-ts="${ts}">Just now</span>
           ${src ? `<span style="margin-left:auto;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:${src.color}18;color:${src.color};border:1px solid ${src.color}40">${src.icon} ${src.label}</span>` : ''}
+        </div>
+        <div class="vote-row" onclick="event.stopPropagation()">
+          <button class="vote-btn up" onclick="castVote(this,'up')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+            <span>0</span>
+          </button>
+          <button class="vote-btn down" onclick="castVote(this,'down')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+            <span>0</span>
+          </button>
         </div>
       </div>`;
     grid.prepend(card);
