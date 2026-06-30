@@ -784,6 +784,7 @@
           <option>Word of mouth</option>
           <option>Other</option>
         </select>
+        <input type="hidden" id="deal-source-domain" />
       </div>
       <button class="btn-primary" onclick="goView('view-ai')">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
@@ -1244,7 +1245,7 @@
     try {
       const host = new URL(url).hostname.replace('www.', '');
       return SOURCE_MAP.find(s => s.match.some(m => host.includes(m))) ||
-             { label: 'Merchant website', icon: '🌐', color: '#6B7280' };
+             { label: host, icon: '🌐', color: '#6B7280' };
     } catch { return null; }
   }
 
@@ -1270,9 +1271,11 @@
       if (!json.ok) throw new Error(json.error || 'Extraction failed');
       const d = json.data;
       fillFields(d);
-      // Auto-set source dropdown
+      // Auto-set source dropdown + store raw domain
       const src = detectSource(url);
       if (src) {
+        const domain = new URL(url).hostname.replace('www.', '');
+        document.getElementById('deal-source-domain').value = domain;
         const sel = document.getElementById('deal-source');
         for (const opt of sel.options) {
           if (opt.value === src.label) { sel.value = src.label; break; }
@@ -1400,8 +1403,11 @@
 
     // Detect source from URL or fallback to dropdown
     const srcFromUrl = dealUrl ? detectSource(dealUrl) : null;
+    const storedDomain = document.getElementById('deal-source-domain')?.value || '';
     const srcLabel = document.getElementById('deal-source')?.value || '';
-    const src = srcFromUrl || (srcLabel ? { label: srcLabel, icon: '🌐', color: '#6B7280' } : null);
+    const src = srcFromUrl
+      ? { ...srcFromUrl, label: storedDomain || srcFromUrl.label }
+      : (srcLabel ? { label: srcLabel, icon: '🌐', color: '#6B7280' } : null);
 
     const card = document.createElement('div');
     card.className = 'deal-card';
