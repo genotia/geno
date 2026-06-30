@@ -204,8 +204,14 @@
     .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: all .2s; }
     .dot.active { background: var(--green); width: 24px; border-radius: 4px; }
     .dot.done { background: var(--green-md); }
-    .upload-box { border: 2px dashed var(--border); border-radius: 14px; padding: 32px 24px; text-align: center; cursor: pointer; background: var(--bg); transition: border-color .2s, background .2s; margin-bottom: 16px; }
+    .upload-box { border: 2px dashed var(--border); border-radius: 14px; padding: 16px 24px; text-align: center; cursor: pointer; background: var(--bg); transition: border-color .2s, background .2s; margin-bottom: 16px; }
     .upload-box:hover { border-color: var(--green); background: var(--green-lt); }
+    .url-input-wrap { position: relative; margin-bottom: 16px; }
+    .url-input-wrap .url-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+    .url-input-wrap .f-input { padding-left: 38px; border-radius: 12px; font-size: 14px; }
+    .url-source-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .url-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; background: var(--bg); border: 1.5px solid var(--border); color: var(--muted); cursor: pointer; transition: all .15s; }
+    .url-chip:hover { border-color: var(--green); color: var(--green); background: var(--green-lt); }
     .upload-icon { font-size: 36px; margin-bottom: 10px; }
     .upload-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
     .upload-box p { font-size: 12px; color: var(--muted); }
@@ -693,37 +699,54 @@
         <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
       </div>
 
+      <!-- Deal URL — shown first -->
+      <div class="f-group" style="margin-bottom:4px">
+        <label class="f-label" for="deal-url" style="font-size:13px;margin-bottom:8px;display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Paste a deal link
+        </label>
+        <div class="url-input-wrap">
+          <svg class="url-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="f-input" id="deal-url" type="url" placeholder="Instagram, Zomato, merchant website…" />
+        </div>
+        <div class="url-source-chips">
+          <span class="url-chip">📸 Instagram</span>
+          <span class="url-chip">🍽️ Zomato</span>
+          <span class="url-chip">🛒 Swiggy</span>
+          <span class="url-chip">🌐 Any website</span>
+        </div>
+      </div>
+
+      <div class="or-row" style="margin:18px 0">or upload a screenshot</div>
+
       <!-- Upload box -->
       <div class="upload-box" id="upload-box" onclick="document.getElementById('deal-img-input').click()">
         <input type="file" accept="image/*" id="deal-img-input" style="display:none" onchange="handleImageUpload(this)" />
-        <div id="upload-preview" style="display:none;margin-bottom:10px">
-          <img id="upload-thumb" style="max-height:120px;border-radius:8px;object-fit:contain" />
+        <div id="upload-preview" style="display:none;margin-bottom:8px">
+          <img id="upload-thumb" style="max-height:80px;border-radius:8px;object-fit:contain" />
         </div>
-        <div id="upload-idle">
-          <div class="upload-icon">📸</div>
-          <h3>Upload a screenshot</h3>
-          <p>From Instagram, WhatsApp, a flyer photo, or any image</p>
+        <div id="upload-idle" style="display:flex;align-items:center;gap:12px;justify-content:center">
+          <div class="upload-icon" style="font-size:22px;margin:0">📸</div>
+          <div style="text-align:left">
+            <div style="font-size:13px;font-weight:700;color:var(--text)">Upload a screenshot</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">WhatsApp, Instagram, flyer or photo — AI will read it</div>
+          </div>
+          <div style="margin-left:auto;font-size:11px;font-weight:600;color:var(--green);background:var(--green-lt);padding:4px 10px;border-radius:20px;white-space:nowrap">AI extract</div>
         </div>
-        <div id="upload-loading" style="display:none;text-align:center;padding:8px 0">
-          <div style="font-size:24px;margin-bottom:8px">🤖</div>
+        <div id="upload-loading" style="display:none;text-align:center;padding:4px 0">
+          <div style="font-size:20px;margin-bottom:6px">🤖</div>
           <div style="font-size:13px;font-weight:600;color:var(--green)">AI is reading the deal…</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px">Extracting merchant, price & details</div>
-          <div style="margin-top:12px;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Extracting merchant, price & details</div>
+          <div style="margin-top:10px;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
             <div id="extract-progress" style="height:100%;background:var(--green);border-radius:2px;width:0%;transition:width 2s ease"></div>
           </div>
         </div>
       </div>
 
       <!-- AI extract status banner (shown after extraction) -->
-      <div id="extract-banner" style="display:none;background:var(--green-lt);border:1px solid var(--green-md);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--dark-green);display:none;align-items:center;gap:8px">
+      <div id="extract-banner" style="display:none;background:var(--green-lt);border:1px solid var(--green-md);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--dark-green);align-items:center;gap:8px">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         <span id="extract-banner-text">AI extracted details from your image — review below</span>
-      </div>
-
-      <div class="or-row">or paste a link</div>
-      <div class="f-group">
-        <label class="f-label" for="deal-url">Deal URL or social media link</label>
-        <input class="f-input" id="deal-url" type="url" placeholder="instagram.com/p/… or any deal page URL" />
       </div>
 
       <div class="or-row">or enter details manually</div>
