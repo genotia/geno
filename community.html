@@ -1192,6 +1192,74 @@
   /* ── AI Image Extraction ── */
   const EXTRACT_FN_URL = 'https://ijsxmgkzwvamwctbkgjo.supabase.co/functions/v1/extract-deal';
 
+  function fillFields(d) {
+    if (d.merchant_name) document.getElementById('merchant-name').value = d.merchant_name + (d.location ? ', ' + d.location : '');
+    if (d.original_price) document.getElementById('orig-price').value = d.original_price;
+    if (d.deal_price)     document.getElementById('deal-price').value = d.deal_price;
+    if (d.service_name)   document.getElementById('service-name').value = d.service_name;
+    if (d.valid_until)    document.getElementById('valid-until').value = d.valid_until;
+    ['merchant-name','orig-price','deal-price','service-name','valid-until'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.value) {
+        el.style.borderColor = 'var(--green)';
+        el.style.background = 'var(--green-lt)';
+        setTimeout(() => { el.style.background = ''; }, 2000);
+      }
+    });
+  }
+
+  function showBanner(ok, msg) {
+    const banner = document.getElementById('extract-banner');
+    banner.style.display = 'flex';
+    if (ok) {
+      banner.style.background = ''; banner.style.borderColor = ''; banner.style.color = '';
+    } else {
+      banner.style.background = '#FEF2F2'; banner.style.borderColor = '#FECACA'; banner.style.color = '#991B1B';
+    }
+    document.getElementById('extract-banner-text').textContent = msg;
+  }
+
+  /* ── URL extraction ── */
+  let _urlTimer;
+  document.getElementById('deal-url').addEventListener('input', function() {
+    clearTimeout(_urlTimer);
+    const url = this.value.trim();
+    if (!url || !url.startsWith('http')) return;
+    _urlTimer = setTimeout(() => extractFromUrl(url), 800);
+  });
+
+  async function extractFromUrl(url) {
+    const urlInput = document.getElementById('deal-url');
+    urlInput.style.borderColor = 'var(--green)';
+    urlInput.style.background = 'var(--green-lt)';
+    // Show loading state in banner
+    const banner = document.getElementById('extract-banner');
+    banner.style.display = 'flex';
+    banner.style.background = ''; banner.style.borderColor = ''; banner.style.color = '';
+    document.getElementById('extract-banner-text').textContent = '🤖 Reading the link…';
+    try {
+      const resp = await fetch(EXTRACT_FN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+      });
+      const text = await resp.text();
+      let json;
+      try { json = JSON.parse(text); } catch(e) { throw new Error('Server error: ' + text.slice(0,120)); }
+      if (!resp.ok) throw new Error(json.message || json.error || `HTTP ${resp.status}`);
+      if (!json.ok) throw new Error(json.error || 'Extraction failed');
+      const d = json.data;
+      fillFields(d);
+      const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
+      showBanner(true, `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from the link — review below`);
+    } catch(err) {
+      showBanner(false, 'Could not read link (' + err.message + ') — please fill in manually.');
+    } finally {
+      urlInput.style.borderColor = '';
+      urlInput.style.background = '';
+    }
+  }
+
   async function handleImageUpload(input) {
     const file = input.files[0];
     if (!file) return;
@@ -1240,37 +1308,12 @@
       if (!json.ok) throw new Error(json.error || 'Extraction failed');
 
       const d = json.data;
-      // Auto-fill form fields
-      if (d.merchant_name) document.getElementById('merchant-name').value = d.merchant_name + (d.location ? ', ' + d.location : '');
-      if (d.original_price) document.getElementById('orig-price').value = d.original_price;
-      if (d.deal_price)     document.getElementById('deal-price').value = d.deal_price;
-      if (d.service_name)   document.getElementById('service-name').value = d.service_name;
-      if (d.valid_until)    document.getElementById('valid-until').value = d.valid_until;
-
-      // Show success banner
-      const banner = document.getElementById('extract-banner');
+      fillFields(d);
       const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
-      document.getElementById('extract-banner-text').textContent =
-        `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from your image — review and confirm below`;
-      banner.style.display = 'flex';
-
-      // Highlight filled fields
-      ['merchant-name','orig-price','deal-price','service-name','valid-until'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el && el.value) {
-          el.style.borderColor = 'var(--green)';
-          el.style.background = 'var(--green-lt)';
-          setTimeout(() => { el.style.background = ''; }, 2000);
-        }
-      });
+      showBanner(true, `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from your image — review and confirm below`);
 
     } catch (err) {
-      document.getElementById('extract-banner').style.display = 'flex';
-      document.getElementById('extract-banner').style.background = '#FEF2F2';
-      document.getElementById('extract-banner').style.borderColor = '#FECACA';
-      document.getElementById('extract-banner').style.color = '#991B1B';
-      document.getElementById('extract-banner-text').textContent =
-        'Could not extract details (' + err.message + ') — please fill in manually.';
+      showBanner(false, 'Could not extract details (' + err.message + ') — please fill in manually.');
     } finally {
       document.getElementById('upload-loading').style.display = 'none';
       document.getElementById('upload-idle').style.display = 'block';
