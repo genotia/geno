@@ -777,6 +777,8 @@
         <select class="f-input" id="deal-source">
           <option value="">Select source</option>
           <option>Instagram</option>
+          <option>Zomato</option>
+          <option>Swiggy</option>
           <option>WhatsApp forward</option>
           <option>Flyer or poster</option>
           <option>Newspaper</option>
@@ -1222,32 +1224,41 @@
 
   /* ── URL extraction ── */
   let _urlTimer;
+  function applySource(url) {
+    const src = detectSource(url);
+    if (!src) return;
+    try {
+      const normalized = url.startsWith('http') ? url : 'https://' + url;
+      const domain = new URL(normalized).hostname.replace('www.', '');
+      document.getElementById('deal-source-domain').value = domain;
+      // Set dropdown to the best matching option
+      const sel = document.getElementById('deal-source');
+      const dropVal = src.dropdown || 'Merchant website';
+      for (const opt of sel.options) {
+        if (opt.text === dropVal) { sel.value = opt.value; break; }
+      }
+    } catch {}
+  }
+
   document.getElementById('deal-url').addEventListener('input', function() {
     clearTimeout(_urlTimer);
     const url = this.value.trim();
     if (!url) return;
-    // Always store domain immediately on any URL input
-    const src = detectSource(url);
-    if (src) {
-      try {
-        const normalized = url.startsWith('http') ? url : 'https://' + url;
-        document.getElementById('deal-source-domain').value = new URL(normalized).hostname.replace('www.', '');
-      } catch {}
-    }
+    applySource(url);
     if (!url.startsWith('http')) return;
     _urlTimer = setTimeout(() => extractFromUrl(url), 800);
   });
 
   const SOURCE_MAP = [
-    { match: ['instagram.com'],          label: 'Instagram',        icon: '📸', color: '#E1306C' },
-    { match: ['zomato.com'],             label: 'Zomato',           icon: '🍽️', color: '#E23744' },
-    { match: ['swiggy.com'],             label: 'Swiggy',           icon: '🛵', color: '#FC8019' },
-    { match: ['whatsapp.com','wa.me'],   label: 'WhatsApp forward', icon: '💬', color: '#25D366' },
-    { match: ['facebook.com','fb.com'],  label: 'Instagram',        icon: '📘', color: '#1877F2' },
-    { match: ['twitter.com','x.com'],    label: 'Other',            icon: '🐦', color: '#1DA1F2' },
-    { match: ['youtube.com','youtu.be'], label: 'Other',            icon: '▶️', color: '#FF0000' },
-    { match: ['magicpin.in'],            label: 'Merchant website', icon: '📍', color: '#7C3AED' },
-    { match: ['dineout.co.in'],          label: 'Merchant website', icon: '🍴', color: '#1D9E75' },
+    { match: ['instagram.com'],          label: 'Instagram',        dropdown: 'Instagram',        icon: '📸', color: '#E1306C' },
+    { match: ['zomato.com'],             label: 'Zomato',           dropdown: 'Zomato',           icon: '🍽️', color: '#E23744' },
+    { match: ['swiggy.com'],             label: 'Swiggy',           dropdown: 'Swiggy',           icon: '🛵', color: '#FC8019' },
+    { match: ['whatsapp.com','wa.me'],   label: 'WhatsApp forward', dropdown: 'WhatsApp forward', icon: '💬', color: '#25D366' },
+    { match: ['facebook.com','fb.com'],  label: 'Facebook',         dropdown: 'Other',            icon: '📘', color: '#1877F2' },
+    { match: ['twitter.com','x.com'],    label: 'X / Twitter',      dropdown: 'Other',            icon: '🐦', color: '#1DA1F2' },
+    { match: ['youtube.com','youtu.be'], label: 'YouTube',          dropdown: 'Other',            icon: '▶️', color: '#FF0000' },
+    { match: ['magicpin.in'],            label: 'Magicpin',         dropdown: 'Merchant website', icon: '📍', color: '#7C3AED' },
+    { match: ['dineout.co.in'],          label: 'Dineout',          dropdown: 'Merchant website', icon: '🍴', color: '#1D9E75' },
   ];
 
   function detectSource(url) {
@@ -1282,16 +1293,8 @@
       if (!json.ok) throw new Error(json.error || 'Extraction failed');
       const d = json.data;
       fillFields(d);
-      // Auto-set source dropdown + store raw domain
+      applySource(url);
       const src = detectSource(url);
-      if (src) {
-        const domain = new URL(url).hostname.replace('www.', '');
-        document.getElementById('deal-source-domain').value = domain;
-        const sel = document.getElementById('deal-source');
-        for (const opt of sel.options) {
-          if (opt.value === src.label) { sel.value = src.label; break; }
-        }
-      }
       const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
       const srcLabel = src ? `${src.icon} ${src.label}` : '';
       showBanner(true, `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${srcLabel} — review below`);
