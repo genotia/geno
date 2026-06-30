@@ -16,8 +16,12 @@ const DEAL_SCHEMA = `{
   "category": "one of: Restaurants & Dining | Fitness & Sports | Health & Medical | Beauty & Wellness | Diagnostics | Hospitals | Hospitality | Shared Spaces | Sports Facilities"
 }`;
 
+const PROMPT = `You are a deal extraction assistant. Extract deal details and return ONLY a valid JSON object with these fields (use null if not found):
+${DEAL_SCHEMA}
+
+Do not include any explanation or markdown. Return raw JSON only.`;
+
 function extractPageText(html: string): string {
-  // Pull OG / meta tags first — richest signal
   const og: Record<string, string> = {};
   const ogRe = /<meta[^>]+property=["']og:(\w+)["'][^>]+content=["']([^"']+)["']/gi;
   let m;
@@ -26,7 +30,6 @@ function extractPageText(html: string): string {
   const metaDesc = (/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i.exec(html) ?? [])[1] ?? "";
   const title = (/<title[^>]*>([^<]+)<\/title>/i.exec(html) ?? [])[1] ?? "";
 
-  // Strip scripts/styles, then pull visible text (first 3000 chars)
   const bodyText = html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
@@ -42,26 +45,26 @@ function extractPageText(html: string): string {
     metaDesc && `Meta description: ${metaDesc}`,
     og.price_amount && `OG price: ${og.price_currency ?? ""} ${og.price_amount}`,
     `Page text: ${bodyText}`,
-  ]
-    .filter(Boolean)
-    .join("\n");
+  ].filter(Boolean).join("\n");
 }
 
-async function callGemini(key: string, parts: object[]): Promise<string> {
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts }],
-        generationConfig: { temperature: 0.1, maxOutputTokens: 400 },
-      }),
-    }
-  );
-  if (!res.ok) throw new Error("Gemini error: " + await res.text());
+async function callMistral(key: string, messages: object[]): Promise<string> {
+  const res = await fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${key}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "pixtral-12b-2409",
+      messages,
+      max_tokens: 400,
+      temperature: 0.1,
+    }),
+  });
+  if (!res.ok) throw new Error("Mistral error: " + await res.text());
   const json = await res.json();
-  return json.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
+  return json.choices?.[0]?.message?.content ?? "{}";
 }
 
 serve(async (req) => {
@@ -69,10 +72,8 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-    if (!GEMINI_API_KEY) throw new Error("GEMINI_API_KEY secret not set");
-
-    const prompt = `You are a deal extraction assistant. Extract deal details and return ONLY a valid JSON object with these fields (use null if not found):\n${DEAL_SCHEMA}\n\nDo not include any explanation or markdown. Return raw JSON only.`;
+    const MISTRAL_API_KEY = Deno.env.get("MISTRAL_API_KEY");
+    if (!MISTRAL_API_KEY) throw new Error("MISTRAL_API_KEY secret not set");
 
     let raw: string;
 
@@ -90,20 +91,23 @@ serve(async (req) => {
       const html = await pageRes.text();
       const pageText = extractPageText(html);
 
-      raw = await callGemini(GEMINI_API_KEY, [
-        { text: `${prompt}\n\nHere is content from the deal page:\n\n${pageText}` },
+      raw = await callMistral(MISTRAL_API_KEY, [
+        { role: "user", content: `${PROMPT}\n\nHere is content from the deal page:\n\n${pageText}` },
       ]);
 
     } else if (body.image_base64) {
       // ── Image mode ────────────────────────────────────────────
-      raw = await callGemini(GEMINI_API_KEY, [
+      raw = await callMistral(MISTRAL_API_KEY, [
         {
-          inline_data: {
-            mime_type: body.mime_type ?? "image/jpeg",
-            data: body.image_base64,
-          },
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: { url: `data:${body.mime_type ?? "image/jpeg"};base64,${body.image_base64}` },
+            },
+            { type: "text", text: PROMPT },
+          ],
         },
-        { text: prompt },
       ]);
 
     } else {
