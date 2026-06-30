@@ -158,6 +158,7 @@
     .price-dist { font-size: 10px; color: var(--muted); margin-left: auto; }
     .deal-time { font-size: 10px; color: var(--muted); margin-top: 5px; display: flex; align-items: center; gap: 4px; }
     .deal-time svg { flex-shrink: 0; }
+    .deal-source-row { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; margin-top: 5px; padding: 2px 8px; border-radius: 20px; background: var(--bg); border: 1px solid var(--border); color: var(--muted); }
     .vote-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
     .vote-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--muted); background: var(--bg); border: 1.5px solid var(--border); border-radius: 20px; padding: 4px 10px; cursor: pointer; transition: all .15s; user-select: none; }
     .vote-btn:hover { border-color: currentColor; }
@@ -1538,10 +1539,10 @@
           ${dealPrice ? `<span class="price-new">${dealPrice}</span>` : ''}
           ${origPrice ? `<span class="price-old">${origPrice}</span>` : ''}
         </div>
-        <div class="deal-time" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        ${src ? `<div class="deal-source-row" style="border-color:${src.color}40;color:${src.color};background:${src.color}0f">${src.icon} ${src.label}</div>` : ''}
+        <div class="deal-time">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           <span class="ts-label" data-ts="${ts}">Just now</span>
-          ${src ? `<span style="margin-left:auto;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:${src.color}18;color:${src.color};border:1px solid ${src.color}40">${src.icon} ${src.label}</span>` : ''}
         </div>
         <div class="vote-row" onclick="event.stopPropagation()">
           <button class="vote-btn up" onclick="castVote(this,'up')">
