@@ -1228,6 +1228,26 @@
     _urlTimer = setTimeout(() => extractFromUrl(url), 800);
   });
 
+  const SOURCE_MAP = [
+    { match: ['instagram.com'],          label: 'Instagram',        icon: '📸', color: '#E1306C' },
+    { match: ['zomato.com'],             label: 'Zomato',           icon: '🍽️', color: '#E23744' },
+    { match: ['swiggy.com'],             label: 'Swiggy',           icon: '🛵', color: '#FC8019' },
+    { match: ['whatsapp.com','wa.me'],   label: 'WhatsApp forward', icon: '💬', color: '#25D366' },
+    { match: ['facebook.com','fb.com'],  label: 'Instagram',        icon: '📘', color: '#1877F2' },
+    { match: ['twitter.com','x.com'],    label: 'Other',            icon: '🐦', color: '#1DA1F2' },
+    { match: ['youtube.com','youtu.be'], label: 'Other',            icon: '▶️', color: '#FF0000' },
+    { match: ['magicpin.in'],            label: 'Merchant website', icon: '📍', color: '#7C3AED' },
+    { match: ['dineout.co.in'],          label: 'Merchant website', icon: '🍴', color: '#1D9E75' },
+  ];
+
+  function detectSource(url) {
+    try {
+      const host = new URL(url).hostname.replace('www.', '');
+      return SOURCE_MAP.find(s => s.match.some(m => host.includes(m))) ||
+             { label: 'Merchant website', icon: '🌐', color: '#6B7280' };
+    } catch { return null; }
+  }
+
   async function extractFromUrl(url) {
     const urlInput = document.getElementById('deal-url');
     urlInput.style.borderColor = 'var(--green)';
@@ -1250,8 +1270,17 @@
       if (!json.ok) throw new Error(json.error || 'Extraction failed');
       const d = json.data;
       fillFields(d);
+      // Auto-set source dropdown
+      const src = detectSource(url);
+      if (src) {
+        const sel = document.getElementById('deal-source');
+        for (const opt of sel.options) {
+          if (opt.value === src.label) { sel.value = src.label; break; }
+        }
+      }
       const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
-      showBanner(true, `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from the link — review below`);
+      const srcLabel = src ? `${src.icon} ${src.label}` : '';
+      showBanner(true, `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${srcLabel} — review below`);
     } catch(err) {
       showBanner(false, 'Could not read link (' + err.message + ') — please fill in manually.');
     } finally {
@@ -1362,12 +1391,18 @@
   /* ── Capture timestamp on deal submission ── */
   function confirmAndSubmit() {
     const ts = Date.now();
-    // Inject a new deal card at the top of the grid
     const grid = document.getElementById('deal-grid');
     const merchant = document.getElementById('merchant-name')?.value || 'Your deal';
     const origPrice = document.getElementById('orig-price')?.value || '';
     const dealPrice = document.getElementById('deal-price')?.value || '';
     const service = document.getElementById('service-name')?.value || 'New deal';
+    const dealUrl = document.getElementById('deal-url')?.value || '';
+
+    // Detect source from URL or fallback to dropdown
+    const srcFromUrl = dealUrl ? detectSource(dealUrl) : null;
+    const srcLabel = document.getElementById('deal-source')?.value || '';
+    const src = srcFromUrl || (srcLabel ? { label: srcLabel, icon: '🌐', color: '#6B7280' } : null);
+
     const card = document.createElement('div');
     card.className = 'deal-card';
     card.dataset.cat = 'Community';
@@ -1389,9 +1424,10 @@
           ${dealPrice ? `<span class="price-new">${dealPrice}</span>` : ''}
           ${origPrice ? `<span class="price-old">${origPrice}</span>` : ''}
         </div>
-        <div class="deal-time">
+        <div class="deal-time" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           <span class="ts-label" data-ts="${ts}">Just now</span>
+          ${src ? `<span style="margin-left:auto;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:${src.color}18;color:${src.color};border:1px solid ${src.color}40">${src.icon} ${src.label}</span>` : ''}
         </div>
       </div>`;
     grid.prepend(card);
