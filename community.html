@@ -35,7 +35,7 @@
     .btn-pill-menu:hover { border-color: var(--text); background: var(--bg); }
     .menu-icon { display: flex; flex-direction: column; gap: 4px; }
     .menu-icon span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; }
-    .menu-dropdown-wrap { position: relative; }
+    .menu-dropdown-wrap { position: relative; display: flex; align-items: center; gap: 8px; }
     .menu-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 280px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 16px 48px rgba(0,0,0,.12); z-index: 500; overflow: hidden; padding: 8px 0; }
     .menu-dropdown.open { display: block; }
     .menu-main-item { font-size: 13px; font-weight: 800; color: var(--text); padding: 14px 20px 8px; display: flex; align-items: center; justify-content: space-between; }
@@ -1209,8 +1209,11 @@
       });
 
       bar.style.width = '100%';
-      const json = await resp.json();
+      const text = await resp.text();
+      let json;
+      try { json = JSON.parse(text); } catch(e) { throw new Error('Server error: ' + text.slice(0,120)); }
 
+      if (!resp.ok) throw new Error(json.message || json.error || `HTTP ${resp.status}`);
       if (!json.ok) throw new Error(json.error || 'Extraction failed');
 
       const d = json.data;
@@ -1244,7 +1247,7 @@
       document.getElementById('extract-banner').style.borderColor = '#FECACA';
       document.getElementById('extract-banner').style.color = '#991B1B';
       document.getElementById('extract-banner-text').textContent =
-        'Could not extract details automatically — please fill in manually.';
+        'Could not extract details (' + err.message + ') — please fill in manually.';
     } finally {
       document.getElementById('upload-loading').style.display = 'none';
       document.getElementById('upload-idle').style.display = 'block';
