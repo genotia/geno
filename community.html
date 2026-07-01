@@ -99,15 +99,14 @@
     .view.active { display: block; }
 
     /* Non-feed views: fixed centered modal overlay */
-    #view-submit, #view-ai, #view-detail { display: none; }
-    #view-submit.active, #view-ai.active, #view-detail.active {
+    #view-submit, #view-detail { display: none; }
+    #view-submit.active, #view-detail.active {
       display: flex; align-items: flex-start; justify-content: center;
       position: fixed; inset: 0; z-index: 300;
       background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
       padding: 32px 16px; overflow-y: auto;
     }
     #view-submit .form-view-wrap,
-    #view-ai .form-view-wrap,
     #view-detail .detail-wrap {
       background: var(--white); border-radius: 20px;
       box-shadow: 0 24px 64px rgba(0,0,0,.2);
@@ -766,7 +765,7 @@
     </div><!-- /feed-layout -->
   </div><!-- /view-feed -->
 
-  <!-- PAGE 1: CAPTURE -->
+  <!-- SINGLE PAGE: SUBMIT A DEAL -->
   <div class="view" id="view-submit">
     <div class="form-view-wrap">
       <div class="form-topbar">
@@ -775,13 +774,15 @@
           Back
         </button>
         <h2>Share a deal</h2>
-        <span class="form-topbar-step">Step 1 of 2</span>
-      </div>
-      <div class="step-dots">
-        <div class="dot active"></div><div class="dot"></div>
       </div>
 
-      <!-- URL box — styled like upload box -->
+      <!-- AI notice (shown after extraction) -->
+      <div class="ai-notice" id="ai-notice" style="display:none">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="ai-notice-text">AI pre-filled the details below — review and edit if needed.</span>
+      </div>
+
+      <!-- URL box -->
       <div class="url-box" id="url-box">
         <div class="url-box-top">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -795,12 +796,9 @@
           <svg class="url-box-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input class="url-box-input" id="deal-url" type="url" placeholder="https://…" autocomplete="off" />
         </div>
-        <!-- Source chip — shown when domain detected -->
         <div class="url-source-chip" id="url-source-chip"></div>
-        <!-- Loading bar — shown during extraction -->
         <div class="url-bar-wrap" id="url-bar-wrap"><div class="url-bar" id="url-bar"></div></div>
         <div class="url-loading-text" id="url-loading-text">🤖 Reading link — AI is extracting deal details…</div>
-        <!-- Status after extraction -->
         <div class="url-status-text" id="url-status-text"></div>
       </div>
 
@@ -830,33 +828,7 @@
         </div>
       </div>
 
-      <button class="btn-primary" style="margin-top:4px" onclick="goView('view-ai')">
-        Next — review &amp; edit details
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-      <p class="form-hint">You can also skip ahead and fill in details manually.</p>
-    </div>
-  </div>
-
-  <!-- PAGE 2: REVIEW & POST -->
-  <div class="view" id="view-ai">
-    <div class="form-view-wrap">
-      <div class="form-topbar">
-        <button class="form-back" onclick="goView('view-submit')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-          Back
-        </button>
-        <h2>Review &amp; edit</h2>
-        <span class="form-topbar-step">Step 2 of 2</span>
-      </div>
-      <div class="step-dots">
-        <div class="dot done"></div><div class="dot active"></div>
-      </div>
-
-      <div class="ai-notice" id="ai-notice" style="display:none">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        <span id="ai-notice-text">AI pre-filled the details below — review and edit if needed.</span>
-      </div>
+      <div class="or-row">deal details</div>
 
       <div class="f-group">
         <label class="f-label" for="merchant-name">Merchant name and location</label>
@@ -898,7 +870,7 @@
       </div>
       <button class="btn-primary" onclick="confirmAndSubmit()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        Confirm &amp; post this deal
+        Post this deal
       </button>
       <p class="form-hint">Your deal will appear in the feed immediately.</p>
     </div>
@@ -1080,7 +1052,7 @@
   });
 
   /* ── View navigation ── */
-  const MODAL_VIEWS = new Set(['view-submit','view-ai','view-detail']);
+  const MODAL_VIEWS = new Set(['view-submit','view-detail']);
 
   document.addEventListener('click', e => {
     MODAL_VIEWS.forEach(id => {
@@ -1316,8 +1288,7 @@
       document.getElementById('url-bar').style.width = '100%';
       setTimeout(() => {
         setUrlBoxState('ok', `${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} extracted from ${srcLabel}`);
-        setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${srcLabel} — review and edit if needed.`);
-        goView('view-ai');
+        setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${srcLabel} — review and edit below.`);
       }, 400);
     } catch(err) {
       setUrlBoxState('error', 'Could not read link — please fill in manually or skip to next step.');
@@ -1368,12 +1339,10 @@
       const d = json.data;
       fillFields(d);
       const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
-      setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from your screenshot — review and edit if needed.`);
-      setTimeout(() => goView('view-ai'), 400);
+      setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from your screenshot — review and edit below.`);
 
     } catch (err) {
-      alert('Could not extract details (' + err.message + ') — please fill in manually on the next screen.');
-      goView('view-ai');
+      setAiNotice('Could not extract details (' + err.message + ') — please fill in manually below.');
     } finally {
       document.getElementById('upload-loading').style.display = 'none';
       document.getElementById('upload-idle').style.display = 'block';
