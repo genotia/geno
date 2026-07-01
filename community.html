@@ -228,7 +228,7 @@
     .url-box-input-wrap { position: relative; }
     .url-box-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
     .url-bar-wrap { margin-top: 12px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; display: none; }
-    .url-bar { height: 100%; background: var(--green); border-radius: 2px; width: 0%; transition: width 1.5s ease; }
+    .url-bar { height: 100%; background: var(--green); border-radius: 2px; width: 0%; transition: width 0.25s ease; }
     .url-loading-text { display: none; font-size: 12px; font-weight: 600; color: var(--dark-green); margin-top: 8px; }
     .url-source-chip { display: none; margin-top: 10px; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; border: 1.5px solid; width: fit-content; }
     .url-status-text { display: none; margin-top: 10px; font-size: 12px; font-weight: 500; align-items: center; gap: 6px; }
@@ -1167,12 +1167,38 @@
   /* ── URL extraction ── */
   let _urlTimer;
 
+  let _urlProgressTimer = null;
+  let _urlProgressVal = 0;
+
+  function startUrlProgress() {
+    const bar = document.getElementById('url-bar');
+    const loadingText = document.getElementById('url-loading-text');
+    _urlProgressVal = 0;
+    bar.style.width = '0%';
+    clearInterval(_urlProgressTimer);
+    _urlProgressTimer = setInterval(() => {
+      // Fast at start, slows sharply as it approaches 90%
+      const remaining = 90 - _urlProgressVal;
+      const step = Math.max(remaining * 0.06, 0.4);
+      _urlProgressVal = Math.min(90, _urlProgressVal + step);
+      bar.style.width = _urlProgressVal.toFixed(1) + '%';
+      loadingText.textContent = `🤖 Reading link… ${Math.round(_urlProgressVal)}%`;
+    }, 250);
+  }
+
+  function completeUrlProgress(success) {
+    clearInterval(_urlProgressTimer);
+    const bar = document.getElementById('url-bar');
+    bar.style.width = '100%';
+  }
+
   function setUrlBoxState(state, msg) {
     const box = document.getElementById('url-box');
     const barWrap = document.getElementById('url-bar-wrap');
     const bar = document.getElementById('url-bar');
     const loadingText = document.getElementById('url-loading-text');
     const statusText = document.getElementById('url-status-text');
+    if (state !== 'loading') { clearInterval(_urlProgressTimer); }
     box.classList.remove('has-url','is-loading','is-error');
     barWrap.style.display = 'none';
     loadingText.style.display = 'none';
@@ -1182,7 +1208,8 @@
       box.classList.add('is-loading');
       barWrap.style.display = 'block';
       loadingText.style.display = 'block';
-      setTimeout(() => { bar.style.width = '75%'; }, 50);
+      loadingText.textContent = '🤖 Reading link… 0%';
+      startUrlProgress();
     } else if (state === 'ok') {
       box.classList.add('has-url');
       statusText.className = 'url-status-text ok';
@@ -1285,13 +1312,14 @@
       const src = detectSource(url);
       const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
       const srcLabel = src ? `${src.icon} ${src.label}` : 'link';
-      document.getElementById('url-bar').style.width = '100%';
+      completeUrlProgress();
       setTimeout(() => {
         setUrlBoxState('ok', `${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} extracted from ${srcLabel}`);
         setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${srcLabel} — review and edit below.`);
-      }, 400);
+      }, 350);
     } catch(err) {
-      setUrlBoxState('error', 'Could not read link — please fill in manually or skip to next step.');
+      completeUrlProgress();
+      setUrlBoxState('error', 'Could not read link — please fill in manually below.');
     }
   }
 
