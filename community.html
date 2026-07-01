@@ -22,11 +22,11 @@
     .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
     .logo { font-size: 22px; font-weight: 800; letter-spacing: -.5px; color: var(--text); text-decoration: none; flex-shrink: 0; }
     .logo span { color: var(--green); }
-    .nav-links { display: flex; gap: 14px; list-style: none; }
+    .nav-links { display: flex; gap: 14px; list-style: none; min-width: 0; overflow: hidden; }
     .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted); transition: color .15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--green); font-weight: 700; }
-    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
     .btn-login { font-size: 14px; font-weight: 500; color: var(--text); background: none; border: none; cursor: pointer; padding: 8px 12px; text-decoration: none; transition: color .15s; font-family: inherit; }
     .btn-login:hover { color: var(--green); }
     .btn-pill { display: inline-flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid var(--text); border-radius: 40px; padding: 9px 22px; cursor: pointer; white-space: nowrap; transition: background .15s, color .15s; text-decoration: none; font-family: inherit; }
@@ -337,6 +337,7 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 1024px) {
       .below-grid { grid-template-columns: 1fr 1fr; }
+      #nav-list-biz { display: none; }
     }
     @media (max-width: 768px) {
       .deal-grid { grid-template-columns: 1fr 1fr; }
