@@ -216,7 +216,7 @@
 
     /* Scope tabs */
     .scope-tabs { display: flex; border-bottom: 1px solid var(--border); }
-    .scope-tab { flex: 1; padding: 12px 4px; font-size: 12px; font-weight: 600; text-align: center; cursor: pointer; border: none; background: transparent; font-family: inherit; color: var(--muted); border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; }
+    .scope-tab { flex: 1; padding: 13px 4px; font-size: 13px; font-weight: 700; text-align: center; cursor: pointer; border: none; background: transparent; font-family: inherit; color: var(--muted); border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; }
     .scope-tab.active { color: var(--dark-green); border-bottom-color: var(--green); }
     .scope-tab:hover:not(.active) { color: var(--text); }
 
@@ -847,7 +847,7 @@
         <div class="hz-card" id="hunter-card">
           <div class="scope-tabs">
             <button class="scope-tab active" onclick="setScope(this,'community')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Community</button>
-            <button class="scope-tab" onclick="setScope(this,'neighbourhood')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Neighbourhood</button>
+            <button class="scope-tab" onclick="setScope(this,'locality')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Locality</button>
             <button class="scope-tab" onclick="setScope(this,'city')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>City</button>
             <button class="scope-tab" onclick="setScope(this,'mytier')">🏅 My points</button>
             <button class="scope-tab" onclick="setScope(this,'tophunters')">🏆 Top hunters</button>
@@ -1105,36 +1105,77 @@
           </div><!-- /pts-panel -->
 
           <!-- ── Panel: Top hunters this week (tab 5) ── -->
-          <div id="tophunters-panel" style="display:none;padding:18px">
-            <div class="lb-row">
-              <div class="lb-rank gold">1</div>
-              <div class="lb-avatar">PK</div>
-              <div class="lb-name">Priya K. <span class="lb-badge">Hunter</span></div>
-              <div class="lb-count">47 deals</div>
+          <div id="tophunters-panel" style="display:none">
+            <div class="hero-band">
+              <p class="hb-eyebrow">All communities</p>
+              <h2 class="hb-title">Top hunters this week</h2>
+              <p class="hb-sub">Brigade Residency · 24 members</p>
+              <div class="reset-pill">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Resets in 3 days
+              </div>
             </div>
-            <div class="lb-row">
-              <div class="lb-rank">2</div>
-              <div class="lb-avatar" style="background:#EFF6FF;color:#1D4ED8">AR</div>
-              <div class="lb-name">Arjun R.</div>
-              <div class="lb-count">31 deals</div>
-            </div>
-            <div class="lb-row">
-              <div class="lb-rank">3</div>
-              <div class="lb-avatar" style="background:#F5F3FF;color:#6D28D9">SM</div>
-              <div class="lb-name">Sunita M.</div>
-              <div class="lb-count">28 deals</div>
-            </div>
-            <div class="lb-row">
-              <div class="lb-rank">4</div>
-              <div class="lb-avatar" style="background:#FFF7ED;color:#B45309">VN</div>
-              <div class="lb-name">Vikram N.</div>
-              <div class="lb-count">22 deals</div>
-            </div>
-            <div class="lb-row">
-              <div class="lb-rank">5</div>
-              <div class="lb-avatar">RT</div>
-              <div class="lb-name">Ritu T.</div>
-              <div class="lb-count">19 deals</div>
+            <div class="hz-list">
+              <div class="hzl-row">
+                <span class="hzl-rank" style="color:#D97706">1</span>
+                <div class="hzl-av" style="background:#FFFBEB;color:#854F0B">PK</div>
+                <div class="hzl-info">
+                  <div class="hzl-name">Priya K. <span class="lb-badge">Hunter</span></div>
+                  <div class="hzl-meta">47 deals · Brigade Tower</div>
+                </div>
+                <div class="hzl-right">
+                  <div class="hzl-pts">840 pts</div>
+                  <div class="hzl-delta delta-up"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>2</div>
+                </div>
+              </div>
+              <div class="hzl-row">
+                <span class="hzl-rank">2</span>
+                <div class="hzl-av" style="background:#EFF6FF;color:#1D4ED8">AR</div>
+                <div class="hzl-info">
+                  <div class="hzl-name">Arjun R.</div>
+                  <div class="hzl-meta">31 deals · Sobha wing B</div>
+                </div>
+                <div class="hzl-right">
+                  <div class="hzl-pts">620 pts</div>
+                  <div class="hzl-delta delta-eq"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+                </div>
+              </div>
+              <div class="hzl-row">
+                <span class="hzl-rank">3</span>
+                <div class="hzl-av" style="background:#F5F3FF;color:#6D28D9">SM</div>
+                <div class="hzl-info">
+                  <div class="hzl-name">Sunita M.</div>
+                  <div class="hzl-meta">28 deals · Tower 3</div>
+                </div>
+                <div class="hzl-right">
+                  <div class="hzl-pts">510 pts</div>
+                  <div class="hzl-delta delta-up"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>1</div>
+                </div>
+              </div>
+              <div class="hzl-row">
+                <span class="hzl-rank">4</span>
+                <div class="hzl-av" style="background:#FFF7ED;color:#B45309">VN</div>
+                <div class="hzl-info">
+                  <div class="hzl-name">Vikram N.</div>
+                  <div class="hzl-meta">22 deals · Wing A</div>
+                </div>
+                <div class="hzl-right">
+                  <div class="hzl-pts">380 pts</div>
+                  <div class="hzl-delta delta-dn"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>1</div>
+                </div>
+              </div>
+              <div class="hzl-row">
+                <span class="hzl-rank">5</span>
+                <div class="hzl-av" style="background:#ECFDF5;color:#085041">RT</div>
+                <div class="hzl-info">
+                  <div class="hzl-name">Ritu T.</div>
+                  <div class="hzl-meta">19 deals · Block C</div>
+                </div>
+                <div class="hzl-right">
+                  <div class="hzl-pts">290 pts</div>
+                  <div class="hzl-delta delta-up"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>3</div>
+                </div>
+              </div>
             </div>
           </div><!-- /tophunters-panel -->
 
@@ -1452,7 +1493,7 @@
       const nameEl = document.getElementById('lb-community-name');
       const statsEl = document.getElementById('lb-stats');
       if (scope === 'community') { nameEl.textContent = 'Brigade Residency'; statsEl.textContent = '24 members · 61 deals submitted'; }
-      else if (scope === 'neighbourhood') { nameEl.textContent = 'Koramangala'; statsEl.textContent = '312 contributors · 840 deals this week'; }
+      else if (scope === 'locality') { nameEl.textContent = 'Koramangala'; statsEl.textContent = '312 contributors · 840 deals this week'; }
       else { nameEl.textContent = 'Bengaluru'; statsEl.textContent = '4,200 contributors · 12,400 deals this week'; }
     }
   }
