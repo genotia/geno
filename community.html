@@ -99,8 +99,8 @@
     .view.active { display: block; }
 
     /* Non-feed views: fixed centered modal overlay */
-    #view-submit, #view-ai, #view-verify, #view-detail { display: none; }
-    #view-submit.active, #view-ai.active, #view-verify.active, #view-detail.active {
+    #view-submit, #view-ai, #view-detail { display: none; }
+    #view-submit.active, #view-ai.active, #view-detail.active {
       display: flex; align-items: flex-start; justify-content: center;
       position: fixed; inset: 0; z-index: 300;
       background: rgba(0,0,0,.45); backdrop-filter: blur(4px);
@@ -108,7 +108,6 @@
     }
     #view-submit .form-view-wrap,
     #view-ai .form-view-wrap,
-    #view-verify .form-view-wrap,
     #view-detail .detail-wrap {
       background: var(--white); border-radius: 20px;
       box-shadow: 0 24px 64px rgba(0,0,0,.2);
@@ -213,15 +212,29 @@
     .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: all .2s; }
     .dot.active { background: var(--green); width: 24px; border-radius: 4px; }
     .dot.done { background: var(--green-md); }
-    .upload-box { border: 2px dashed var(--border); border-radius: 14px; padding: 16px 24px; text-align: center; cursor: pointer; background: var(--bg); transition: border-color .2s, background .2s; margin-bottom: 16px; }
+    .upload-box { border: 2px dashed var(--border); border-radius: 14px; padding: 16px 24px; cursor: pointer; background: var(--bg); transition: border-color .2s, background .2s; margin-bottom: 16px; }
     .upload-box:hover { border-color: var(--green); background: var(--green-lt); }
-    .url-input-wrap { position: relative; margin-bottom: 16px; }
-    .url-input-wrap .url-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
-    .url-input-wrap .f-input { padding-left: 38px; border-radius: 12px; font-size: 14px; }
-    .url-source-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-    .url-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; background: var(--bg); border: 1.5px solid var(--border); color: var(--muted); cursor: pointer; transition: all .15s; }
-    .url-chip:hover { border-color: var(--green); color: var(--green); background: var(--green-lt); }
     .upload-icon { font-size: 36px; margin-bottom: 10px; }
+    /* URL box — styled like upload-box but with an input inside */
+    .url-box { border: 2px dashed var(--border); border-radius: 14px; padding: 16px 20px; background: var(--bg); transition: border-color .2s, background .2s, border-style .2s; margin-bottom: 16px; }
+    .url-box.has-url { border-style: solid; border-color: var(--green); background: var(--green-lt); }
+    .url-box.is-loading { border-style: solid; border-color: var(--green); background: var(--green-lt); }
+    .url-box.is-error { border-style: solid; border-color: #FECACA; background: #FEF2F2; }
+    .url-box-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .url-box-top-label { font-size: 13px; font-weight: 700; color: var(--text); }
+    .url-box-top-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .url-box-badge { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--green); background: var(--white); padding: 3px 10px; border-radius: 20px; white-space: nowrap; border: 1px solid var(--green-md); flex-shrink: 0; }
+    .url-box-input { width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 14px 10px 38px; font-size: 14px; background: var(--white); color: var(--text); font-family: inherit; outline: none; transition: border-color .15s; }
+    .url-box-input:focus { border-color: var(--green); }
+    .url-box-input-wrap { position: relative; }
+    .url-box-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+    .url-bar-wrap { margin-top: 12px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; display: none; }
+    .url-bar { height: 100%; background: var(--green); border-radius: 2px; width: 0%; transition: width 1.5s ease; }
+    .url-loading-text { display: none; font-size: 12px; font-weight: 600; color: var(--dark-green); margin-top: 8px; }
+    .url-source-chip { display: none; margin-top: 10px; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; border: 1.5px solid; width: fit-content; }
+    .url-status-text { display: none; margin-top: 10px; font-size: 12px; font-weight: 500; align-items: center; gap: 6px; }
+    .url-status-text.ok { color: var(--dark-green); }
+    .url-status-text.err { color: #991B1B; }
     .upload-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
     .upload-box p { font-size: 12px; color: var(--muted); }
     .or-row { display: flex; align-items: center; gap: 12px; margin: 16px 0; font-size: 12px; color: var(--muted); }
@@ -753,7 +766,7 @@
     </div><!-- /feed-layout -->
   </div><!-- /view-feed -->
 
-  <!-- VIEW: SUBMIT A DEAL -->
+  <!-- PAGE 1: CAPTURE -->
   <div class="view" id="view-submit">
     <div class="form-view-wrap">
       <div class="form-topbar">
@@ -761,32 +774,37 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
           Back
         </button>
-        <h2>Submit a deal</h2>
-        <span class="form-topbar-step">Step 1 of 3</span>
+        <h2>Share a deal</h2>
+        <span class="form-topbar-step">Step 1 of 2</span>
       </div>
       <div class="step-dots">
-        <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+        <div class="dot active"></div><div class="dot"></div>
       </div>
 
-      <!-- Deal URL — shown first -->
-      <div class="f-group" style="margin-bottom:4px">
-        <label class="f-label" for="deal-url" style="font-size:13px;margin-bottom:8px;display:flex;align-items:center;gap:6px">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          Paste a deal link
-        </label>
-        <div class="url-input-wrap">
-          <svg class="url-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input class="f-input" id="deal-url" type="url" placeholder="Instagram, Zomato, merchant website…" />
+      <!-- URL box — styled like upload box -->
+      <div class="url-box" id="url-box">
+        <div class="url-box-top">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          <div>
+            <div class="url-box-top-label">Paste a deal link</div>
+            <div class="url-box-top-sub">Instagram, Zomato, Swiggy, merchant website…</div>
+          </div>
+          <div class="url-box-badge">AI extract</div>
         </div>
-        <div class="url-source-chips">
-          <span class="url-chip">📸 Instagram</span>
-          <span class="url-chip">🍽️ Zomato</span>
-          <span class="url-chip">🛒 Swiggy</span>
-          <span class="url-chip">🌐 Any website</span>
+        <div class="url-box-input-wrap">
+          <svg class="url-box-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="url-box-input" id="deal-url" type="url" placeholder="https://…" autocomplete="off" />
         </div>
+        <!-- Source chip — shown when domain detected -->
+        <div class="url-source-chip" id="url-source-chip"></div>
+        <!-- Loading bar — shown during extraction -->
+        <div class="url-bar-wrap" id="url-bar-wrap"><div class="url-bar" id="url-bar"></div></div>
+        <div class="url-loading-text" id="url-loading-text">🤖 Reading link — AI is extracting deal details…</div>
+        <!-- Status after extraction -->
+        <div class="url-status-text" id="url-status-text"></div>
       </div>
 
-      <div class="or-row" style="margin:18px 0">or upload a screenshot</div>
+      <div class="or-row">or upload a screenshot</div>
 
       <!-- Upload box -->
       <div class="upload-box" id="upload-box" onclick="document.getElementById('deal-img-input').click()">
@@ -794,13 +812,13 @@
         <div id="upload-preview" style="display:none;margin-bottom:8px">
           <img id="upload-thumb" style="max-height:80px;border-radius:8px;object-fit:contain" />
         </div>
-        <div id="upload-idle" style="display:flex;align-items:center;gap:12px;justify-content:center">
+        <div id="upload-idle" style="display:flex;align-items:center;gap:12px">
           <div class="upload-icon" style="font-size:22px;margin:0">📸</div>
           <div style="text-align:left">
             <div style="font-size:13px;font-weight:700;color:var(--text)">Upload a screenshot</div>
             <div style="font-size:11px;color:var(--muted);margin-top:2px">WhatsApp, Instagram, flyer or photo — AI will read it</div>
           </div>
-          <div style="margin-left:auto;font-size:11px;font-weight:600;color:var(--green);background:var(--green-lt);padding:4px 10px;border-radius:20px;white-space:nowrap">AI extract</div>
+          <div style="margin-left:auto;font-size:11px;font-weight:600;color:var(--green);background:var(--green-lt);padding:4px 10px;border-radius:20px;white-space:nowrap;border:1px solid var(--green-md)">AI extract</div>
         </div>
         <div id="upload-loading" style="display:none;text-align:center;padding:4px 0">
           <div style="font-size:20px;margin-bottom:6px">🤖</div>
@@ -812,13 +830,34 @@
         </div>
       </div>
 
-      <!-- AI extract status banner (shown after extraction) -->
-      <div id="extract-banner" style="display:none;background:var(--green-lt);border:1px solid var(--green-md);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--dark-green);align-items:center;gap:8px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        <span id="extract-banner-text">AI extracted details from your image — review below</span>
+      <button class="btn-primary" style="margin-top:4px" onclick="goView('view-ai')">
+        Next — review &amp; edit details
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <p class="form-hint">You can also skip ahead and fill in details manually.</p>
+    </div>
+  </div>
+
+  <!-- PAGE 2: REVIEW & POST -->
+  <div class="view" id="view-ai">
+    <div class="form-view-wrap">
+      <div class="form-topbar">
+        <button class="form-back" onclick="goView('view-submit')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          Back
+        </button>
+        <h2>Review &amp; edit</h2>
+        <span class="form-topbar-step">Step 2 of 2</span>
+      </div>
+      <div class="step-dots">
+        <div class="dot done"></div><div class="dot active"></div>
       </div>
 
-      <div class="or-row">or enter details manually</div>
+      <div class="ai-notice" id="ai-notice" style="display:none">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="ai-notice-text">AI pre-filled the details below — review and edit if needed.</span>
+      </div>
+
       <div class="f-group">
         <label class="f-label" for="merchant-name">Merchant name and location</label>
         <input class="f-input" id="merchant-name" type="text" placeholder="e.g. Glam Studio, Koramangala" />
@@ -857,165 +896,11 @@
         </select>
         <input type="hidden" id="deal-source-domain" />
       </div>
-      <button class="btn-primary" onclick="goView('view-ai')">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-        Submit — AI will extract and verify
+      <button class="btn-primary" onclick="confirmAndSubmit()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Confirm &amp; post this deal
       </button>
-      <p class="form-hint">Takes under 60 seconds. You'll be notified when it goes live.</p>
-    </div>
-  </div>
-
-  <!-- VIEW: AI EXTRACTION -->
-  <div class="view" id="view-ai">
-    <div class="form-view-wrap">
-      <div class="form-topbar">
-        <button class="form-back" onclick="goView('view-submit')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-          Back
-        </button>
-        <h2>AI extracted the deal</h2>
-        <span class="form-topbar-step">Step 2 of 3</span>
-      </div>
-      <div class="step-dots">
-        <div class="dot done"></div><div class="dot active"></div><div class="dot"></div>
-      </div>
-
-      <div class="ai-notice">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-        AI analysed your screenshot and extracted the details below. Review and confirm before it goes live.
-      </div>
-
-      <div class="extract-card">
-        <div class="extract-head">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-          Deal details extracted
-        </div>
-        <div class="extract-row"><span class="extract-key">Merchant</span><span class="extract-val">Glam Studio, Koramangala</span></div>
-        <div class="extract-row"><span class="extract-key">Service</span><span class="extract-val">Full hair spa + cut</span></div>
-        <div class="extract-row"><span class="extract-key">Category</span><span class="extract-val">Beauty &amp; Wellness</span></div>
-        <div class="extract-row"><span class="extract-key">Original price</span><span class="extract-val">₹1,250</span></div>
-        <div class="extract-row"><span class="extract-key">Deal price</span><span class="extract-val success">₹499</span></div>
-        <div class="extract-row"><span class="extract-key">Discount</span><span class="extract-val success">60% off</span></div>
-        <div class="extract-row"><span class="extract-key">Valid until</span><span class="extract-val">31 Jan 2026</span></div>
-        <div class="extract-row"><span class="extract-key">Hours</span><span class="extract-val">Weekdays 11am–4pm</span></div>
-        <div class="extract-row"><span class="extract-key">Merchant verified</span><span class="extract-val success">Found on Google Maps</span></div>
-      </div>
-
-      <div class="conf-wrap">
-        <div class="conf-header">
-          <span>AI confidence score</span>
-          <span class="conf-score">86 / 100</span>
-        </div>
-        <div class="conf-track">
-          <div class="conf-fill" style="width:86%"></div>
-        </div>
-        <p class="conf-note">High confidence · eligible for fast-track publishing</p>
-      </div>
-
-      <div class="validation-badges">
-        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>No duplicate found</div>
-        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Merchant verified</div>
-        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Price plausible</div>
-        <div class="vcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Not expired</div>
-      </div>
-
-      <div class="action-row">
-        <button class="btn-secondary" onclick="goView('view-submit')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          Edit details
-        </button>
-        <button class="btn-primary" style="flex:2" onclick="confirmAndSubmit()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          Confirm and submit
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- VIEW: COMMUNITY VERIFICATION -->
-  <div class="view" id="view-verify">
-    <div class="form-view-wrap">
-      <div class="form-topbar">
-        <button class="form-back" onclick="goView('view-feed')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-          Back to feed
-        </button>
-        <h2>Community verification</h2>
-        <span class="form-topbar-step">Step 3 of 3</span>
-      </div>
-      <div class="step-dots">
-        <div class="dot done"></div><div class="dot done"></div><div class="dot active"></div>
-      </div>
-
-      <div class="verify-notice">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        AI confidence score was 62 — 3 community votes are needed before this deal publishes.
-      </div>
-
-      <p style="font-size:14px;font-weight:600;margin-bottom:16px">Deals waiting for your vote</p>
-
-      <!-- Vote card 1 -->
-      <div class="vote-card">
-        <h3>30% off all facials · weekday mornings</h3>
-        <p class="vote-meta">The Glow Clinic · Jayanagar · submitted via Instagram · <span class="ts-label" data-ts-min="45"></span></p>
-        <div class="vote-chips">
-          <span class="chip chip-blue">AI score: 62</span>
-          <span class="chip chip-amber">1 of 3 votes in</span>
-        </div>
-        <div class="vote-btns">
-          <button class="vbtn vbtn-valid" onclick="castVote(this,'valid')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Valid
-          </button>
-          <button class="vbtn vbtn-expired" onclick="castVote(this,'expired')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Expired
-          </button>
-          <button class="vbtn vbtn-fake" onclick="castVote(this,'fake')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            Fake
-          </button>
-        </div>
-        <div class="vote-progress">
-          <div class="vp-row"><span class="vp-label">Valid</span><div class="vp-track"><div class="vp-fill" style="width:67%;background:#1D9E75"></div></div><span class="vp-count">1</span></div>
-          <div class="vp-row"><span class="vp-label">Expired</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#B45309"></div></div><span class="vp-count">0</span></div>
-          <div class="vp-row"><span class="vp-label">Fake</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#EF4444"></div></div><span class="vp-count">0</span></div>
-        </div>
-      </div>
-
-      <!-- Vote card 2 -->
-      <div class="vote-card">
-        <h3>Buy 1 get 1 free · protein shakes</h3>
-        <p class="vote-meta">NutriZone · Whitefield · submitted via WhatsApp forward · <span class="ts-label" data-ts-min="120"></span></p>
-        <div class="vote-chips">
-          <span class="chip chip-blue">AI score: 54</span>
-          <span class="chip chip-gray">0 of 3 votes in</span>
-        </div>
-        <div class="vote-btns">
-          <button class="vbtn vbtn-valid" onclick="castVote(this,'valid')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Valid
-          </button>
-          <button class="vbtn vbtn-expired" onclick="castVote(this,'expired')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Expired
-          </button>
-          <button class="vbtn vbtn-fake" onclick="castVote(this,'fake')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            Fake
-          </button>
-        </div>
-        <div class="vote-progress">
-          <div class="vp-row"><span class="vp-label">Valid</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#1D9E75"></div></div><span class="vp-count">0</span></div>
-          <div class="vp-row"><span class="vp-label">Expired</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#B45309"></div></div><span class="vp-count">0</span></div>
-          <div class="vp-row"><span class="vp-label">Fake</span><div class="vp-track"><div class="vp-fill" style="width:0%;background:#EF4444"></div></div><span class="vp-count">0</span></div>
-        </div>
-      </div>
-
-      <div class="hunter-banner">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        You've verified 24 deals this month. Your vote carries extra weight as a Hunter.
-      </div>
+      <p class="form-hint">Your deal will appear in the feed immediately.</p>
     </div>
   </div>
 
@@ -1195,7 +1080,7 @@
   });
 
   /* ── View navigation ── */
-  const MODAL_VIEWS = new Set(['view-submit','view-ai','view-verify','view-detail']);
+  const MODAL_VIEWS = new Set(['view-submit','view-ai','view-detail']);
 
   document.addEventListener('click', e => {
     MODAL_VIEWS.forEach(id => {
@@ -1280,17 +1165,6 @@
     });
   }
 
-  function showBanner(ok, msg) {
-    const banner = document.getElementById('extract-banner');
-    banner.style.display = 'flex';
-    if (ok) {
-      banner.style.background = ''; banner.style.borderColor = ''; banner.style.color = '';
-    } else {
-      banner.style.background = '#FEF2F2'; banner.style.borderColor = '#FECACA'; banner.style.color = '#991B1B';
-    }
-    document.getElementById('extract-banner-text').textContent = msg;
-  }
-
   /* ── Voting ── */
   function castVote(btn, type) {
     const row = btn.closest('.vote-row');
@@ -1320,6 +1194,48 @@
 
   /* ── URL extraction ── */
   let _urlTimer;
+
+  function setUrlBoxState(state, msg) {
+    const box = document.getElementById('url-box');
+    const barWrap = document.getElementById('url-bar-wrap');
+    const bar = document.getElementById('url-bar');
+    const loadingText = document.getElementById('url-loading-text');
+    const statusText = document.getElementById('url-status-text');
+    box.classList.remove('has-url','is-loading','is-error');
+    barWrap.style.display = 'none';
+    loadingText.style.display = 'none';
+    statusText.style.display = 'none';
+    bar.style.width = '0%';
+    if (state === 'loading') {
+      box.classList.add('is-loading');
+      barWrap.style.display = 'block';
+      loadingText.style.display = 'block';
+      setTimeout(() => { bar.style.width = '75%'; }, 50);
+    } else if (state === 'ok') {
+      box.classList.add('has-url');
+      statusText.className = 'url-status-text ok';
+      statusText.style.display = 'flex';
+      statusText.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ${msg}`;
+    } else if (state === 'error') {
+      box.classList.add('is-error');
+      statusText.className = 'url-status-text err';
+      statusText.style.display = 'flex';
+      statusText.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#991B1B" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> ${msg}`;
+    } else if (state === 'url') {
+      box.classList.add('has-url');
+    }
+  }
+
+  function showSourceChip(src, domain) {
+    const chip = document.getElementById('url-source-chip');
+    if (!src) { chip.style.display = 'none'; return; }
+    chip.style.display = 'inline-flex';
+    chip.style.color = src.color;
+    chip.style.borderColor = src.color + '60';
+    chip.style.background = src.color + '10';
+    chip.textContent = `${src.icon} ${domain || src.label}`;
+  }
+
   function applySource(url) {
     const src = detectSource(url);
     if (!src) return;
@@ -1327,7 +1243,7 @@
       const normalized = url.startsWith('http') ? url : 'https://' + url;
       const domain = new URL(normalized).hostname.replace('www.', '');
       document.getElementById('deal-source-domain').value = domain;
-      // Set dropdown to the best matching option
+      showSourceChip(src, domain);
       const sel = document.getElementById('deal-source');
       const dropVal = src.dropdown || 'Merchant website';
       for (const opt of sel.options) {
@@ -1339,8 +1255,13 @@
   document.getElementById('deal-url').addEventListener('input', function() {
     clearTimeout(_urlTimer);
     const url = this.value.trim();
-    if (!url) return;
+    if (!url) {
+      setUrlBoxState('idle');
+      document.getElementById('url-source-chip').style.display = 'none';
+      return;
+    }
     applySource(url);
+    setUrlBoxState('url');
     if (!url.startsWith('http')) return;
     _urlTimer = setTimeout(() => extractFromUrl(url), 800);
   });
@@ -1367,15 +1288,14 @@
     } catch { return null; }
   }
 
+  function setAiNotice(msg) {
+    const el = document.getElementById('ai-notice');
+    el.style.display = 'flex';
+    document.getElementById('ai-notice-text').textContent = msg;
+  }
+
   async function extractFromUrl(url) {
-    const urlInput = document.getElementById('deal-url');
-    urlInput.style.borderColor = 'var(--green)';
-    urlInput.style.background = 'var(--green-lt)';
-    // Show loading state in banner
-    const banner = document.getElementById('extract-banner');
-    banner.style.display = 'flex';
-    banner.style.background = ''; banner.style.borderColor = ''; banner.style.color = '';
-    document.getElementById('extract-banner-text').textContent = '🤖 Reading the link…';
+    setUrlBoxState('loading');
     try {
       const resp = await fetch(EXTRACT_FN_URL, {
         method: 'POST',
@@ -1392,13 +1312,15 @@
       applySource(url);
       const src = detectSource(url);
       const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
-      const srcLabel = src ? `${src.icon} ${src.label}` : '';
-      showBanner(true, `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${srcLabel} — review below`);
+      const srcLabel = src ? `${src.icon} ${src.label}` : 'link';
+      document.getElementById('url-bar').style.width = '100%';
+      setTimeout(() => {
+        setUrlBoxState('ok', `${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} extracted from ${srcLabel}`);
+        setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${srcLabel} — review and edit if needed.`);
+        goView('view-ai');
+      }, 400);
     } catch(err) {
-      showBanner(false, 'Could not read link (' + err.message + ') — please fill in manually.');
-    } finally {
-      urlInput.style.borderColor = '';
-      urlInput.style.background = '';
+      setUrlBoxState('error', 'Could not read link — please fill in manually or skip to next step.');
     }
   }
 
@@ -1406,12 +1328,9 @@
     const file = input.files[0];
     if (!file) return;
 
-    // Show thumb preview
     const thumb = document.getElementById('upload-thumb');
     thumb.src = URL.createObjectURL(file);
     document.getElementById('upload-preview').style.display = 'block';
-
-    // Switch to loading state
     document.getElementById('upload-idle').style.display = 'none';
     document.getElementById('upload-loading').style.display = 'block';
     const bar = document.getElementById('extract-progress');
@@ -1419,7 +1338,6 @@
     setTimeout(() => { bar.style.width = '80%'; }, 50);
 
     try {
-      // Read as base64
       const base64 = await new Promise((res, rej) => {
         const r = new FileReader();
         r.onload = () => res(r.result.split(',')[1]);
@@ -1427,7 +1345,6 @@
         r.readAsDataURL(file);
       });
 
-      // Use current session token if logged in, else anon key
       const { data: { session } } = await _sb.auth.getSession();
       const authToken = session?.access_token ||
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlqc3htZ2t6d3ZhbXdjdGJrZ2pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI5ODI1NjAsImV4cCI6MjA1ODU1ODU2MH0.7ejxMGQyIbNvjjABMRqfYzc0Rlo5Jkl7DUFHmlWkXsM';
@@ -1445,17 +1362,18 @@
       const text = await resp.text();
       let json;
       try { json = JSON.parse(text); } catch(e) { throw new Error('Server error: ' + text.slice(0,120)); }
-
       if (!resp.ok) throw new Error(json.message || json.error || `HTTP ${resp.status}`);
       if (!json.ok) throw new Error(json.error || 'Extraction failed');
 
       const d = json.data;
       fillFields(d);
       const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
-      showBanner(true, `AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from your image — review and confirm below`);
+      setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from your screenshot — review and edit if needed.`);
+      setTimeout(() => goView('view-ai'), 400);
 
     } catch (err) {
-      showBanner(false, 'Could not extract details (' + err.message + ') — please fill in manually.');
+      alert('Could not extract details (' + err.message + ') — please fill in manually on the next screen.');
+      goView('view-ai');
     } finally {
       document.getElementById('upload-loading').style.display = 'none';
       document.getElementById('upload-idle').style.display = 'block';
@@ -1557,7 +1475,7 @@
         </div>
       </div>`;
     grid.prepend(card);
-    goView('view-verify');
+    goView('view-feed');
   }
 </script>
 </body>
