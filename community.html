@@ -189,13 +189,13 @@
     .btn-submit { display: flex; align-items: center; gap: 8px; padding: 11px 24px; background: var(--green); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity .15s; white-space: nowrap; flex-shrink: 0; position: relative; }
     .btn-submit:hover { opacity: .88; }
 
-    /* ── HOW IT WORKS ── */
-    .how-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 18px; }
-    .how-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 14px; }
-    .how-step { display: flex; gap: 12px; margin-bottom: 14px; }
-    .how-step:last-child { margin-bottom: 0; }
+    /* ── HOW IT WORKS (flat) ── */
+    .how-flat { padding: 28px 0; border-top: 1.5px solid var(--border); margin-top: 32px; }
+    .how-flat-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 20px; }
+    .how-steps-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
+    .how-step-col { display: flex; gap: 12px; align-items: flex-start; }
     .how-num { width: 26px; height: 26px; border-radius: 50%; background: var(--green-lt); color: var(--dark-green); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .how-text { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .how-text { font-size: 12px; color: var(--muted); line-height: 1.6; }
     .how-text strong { color: var(--text); font-weight: 600; }
 
     /* ── LEADERBOARD ── */
@@ -223,7 +223,7 @@
     /* Hero band */
     .hero-band { background: linear-gradient(135deg, #085041 0%, #0f3d2a 100%); padding: 20px; }
     .hb-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--green-md); margin-bottom: 6px; }
-    .hb-title { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -.03em; margin-bottom: 4px; }
+    .hb-title { font-size: 30px; font-weight: 900; color: #fff; letter-spacing: -.04em; margin-bottom: 4px; }
     .hb-sub { font-size: 12px; color: rgba(255,255,255,.6); margin-bottom: 12px; }
     .reset-pill { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,.12); color: rgba(255,255,255,.85); font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 100px; }
 
@@ -484,6 +484,7 @@
       #nav-list-biz { display: none; }
     }
     @media (max-width: 768px) {
+      .how-steps-row { grid-template-columns: 1fr 1fr; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
       .deal-grid { grid-template-columns: 1fr 1fr; }
       .below-grid { grid-template-columns: 1fr; }
@@ -838,18 +839,18 @@
 
       <!-- ══ HUNTER ZONE: full leaderboard + points dashboard ══ -->
       <div class="section-hdr" style="margin-top:8px">
-        <div class="section-title">🏆 Hunter leaderboard & rewards</div>
-        <a href="#" class="see-all">Hall of fame</a>
+        <div class="section-title" style="font-size:18px;font-weight:800;letter-spacing:-.3px">🏆 Hunter leaderboard & rewards</div>
       </div>
       <div class="hunter-zone">
 
         <!-- ── Combined leaderboard + points card ── -->
         <div class="hz-card" id="hunter-card">
           <div class="scope-tabs">
-            <button class="scope-tab active" onclick="setScope(this,'community')">Community</button>
-            <button class="scope-tab" onclick="setScope(this,'neighbourhood')">Neighbourhood</button>
-            <button class="scope-tab" onclick="setScope(this,'city')">City</button>
+            <button class="scope-tab active" onclick="setScope(this,'community')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Community</button>
+            <button class="scope-tab" onclick="setScope(this,'neighbourhood')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Neighbourhood</button>
+            <button class="scope-tab" onclick="setScope(this,'city')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:3px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>City</button>
             <button class="scope-tab" onclick="setScope(this,'mytier')">🏅 Hunter tier</button>
+            <button class="scope-tab" onclick="setScope(this,'tophunters')">🏆 Top hunters</button>
           </div>
 
           <!-- ── Panel: leaderboard (tabs 1-3) ── -->
@@ -1103,70 +1104,66 @@
           </div>
           </div><!-- /pts-panel -->
 
+          <!-- ── Panel: Top hunters this week (tab 5) ── -->
+          <div id="tophunters-panel" style="display:none;padding:18px">
+            <div class="lb-row">
+              <div class="lb-rank gold">1</div>
+              <div class="lb-avatar">PK</div>
+              <div class="lb-name">Priya K. <span class="lb-badge">Hunter</span></div>
+              <div class="lb-count">47 deals</div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">2</div>
+              <div class="lb-avatar" style="background:#EFF6FF;color:#1D4ED8">AR</div>
+              <div class="lb-name">Arjun R.</div>
+              <div class="lb-count">31 deals</div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">3</div>
+              <div class="lb-avatar" style="background:#F5F3FF;color:#6D28D9">SM</div>
+              <div class="lb-name">Sunita M.</div>
+              <div class="lb-count">28 deals</div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">4</div>
+              <div class="lb-avatar" style="background:#FFF7ED;color:#B45309">VN</div>
+              <div class="lb-name">Vikram N.</div>
+              <div class="lb-count">22 deals</div>
+            </div>
+            <div class="lb-row">
+              <div class="lb-rank">5</div>
+              <div class="lb-avatar">RT</div>
+              <div class="lb-name">Ritu T.</div>
+              <div class="lb-count">19 deals</div>
+            </div>
+          </div><!-- /tophunters-panel -->
+
         </div><!-- /hunter-card -->
 
       </div><!-- /hunter-zone -->
 
-      <!-- Below hunter zone: How it works + Top hunters side by side -->
-      <div class="below-grid" style="margin-top:32px">
-
-        <!-- How it works -->
-        <div class="how-card">
-          <h4>How it works</h4>
-          <div class="how-step">
+      <!-- How it works — flat section -->
+      <div class="how-flat">
+        <div class="how-flat-title">How it works</div>
+        <div class="how-steps-row">
+          <div class="how-step-col">
             <div class="how-num">1</div>
             <div class="how-text"><strong>Spot a deal</strong> — screenshot, link, or type it in manually.</div>
           </div>
-          <div class="how-step">
+          <div class="how-step-col">
             <div class="how-num">2</div>
             <div class="how-text"><strong>AI extracts</strong> the price, discount, validity & merchant details.</div>
           </div>
-          <div class="how-step">
+          <div class="how-step-col">
             <div class="how-num">3</div>
             <div class="how-text"><strong>Community votes</strong> — 3 confirmations and it goes live for everyone.</div>
           </div>
-          <div class="how-step">
+          <div class="how-step-col">
             <div class="how-num">4</div>
             <div class="how-text"><strong>Earn Hunter points</strong> — top contributors get exclusive perks.</div>
           </div>
         </div>
-
-        <!-- Leaderboard -->
-        <div class="lb-card">
-          <h4>🏆 Top hunters this week</h4>
-          <div class="lb-row">
-            <div class="lb-rank gold">1</div>
-            <div class="lb-avatar">PK</div>
-            <div class="lb-name">Priya K. <span class="lb-badge">Hunter</span></div>
-            <div class="lb-count">47 deals</div>
-          </div>
-          <div class="lb-row">
-            <div class="lb-rank">2</div>
-            <div class="lb-avatar" style="background:#EFF6FF;color:#1D4ED8">AR</div>
-            <div class="lb-name">Arjun R.</div>
-            <div class="lb-count">31 deals</div>
-          </div>
-          <div class="lb-row">
-            <div class="lb-rank">3</div>
-            <div class="lb-avatar" style="background:#F5F3FF;color:#6D28D9">SM</div>
-            <div class="lb-name">Sunita M.</div>
-            <div class="lb-count">28 deals</div>
-          </div>
-          <div class="lb-row">
-            <div class="lb-rank">4</div>
-            <div class="lb-avatar" style="background:#FFF7ED;color:#B45309">VN</div>
-            <div class="lb-name">Vikram N.</div>
-            <div class="lb-count">22 deals</div>
-          </div>
-          <div class="lb-row">
-            <div class="lb-rank">5</div>
-            <div class="lb-avatar">RT</div>
-            <div class="lb-name">Ritu T.</div>
-            <div class="lb-count">19 deals</div>
-          </div>
-        </div>
-
-      </div><!-- /below-grid -->
+      </div>
     </div><!-- /feed-layout -->
   </div><!-- /view-feed -->
 
@@ -1444,14 +1441,14 @@
   function setScope(btn, scope) {
     btn.closest('.scope-tabs').querySelectorAll('.scope-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
-    const lbPanel = document.getElementById('lb-panel');
-    const ptsPanel = document.getElementById('pts-panel');
+    const panels = { lb: 'lb-panel', pts: 'pts-panel', top: 'tophunters-panel' };
+    Object.values(panels).forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
     if (scope === 'mytier') {
-      lbPanel.style.display = 'none';
-      ptsPanel.style.display = 'block';
+      document.getElementById('pts-panel').style.display = 'block';
+    } else if (scope === 'tophunters') {
+      document.getElementById('tophunters-panel').style.display = 'block';
     } else {
-      lbPanel.style.display = 'block';
-      ptsPanel.style.display = 'none';
+      document.getElementById('lb-panel').style.display = 'block';
       const nameEl = document.getElementById('lb-community-name');
       const statsEl = document.getElementById('lb-stats');
       if (scope === 'community') { nameEl.textContent = 'Brigade Residency'; statsEl.textContent = '24 members · 61 deals submitted'; }
