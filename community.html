@@ -211,7 +211,7 @@
     .lb-count { font-size: 11px; color: var(--muted); }
 
     /* ── HUNTER ZONE (full leaderboard + points dashboard) ── */
-    .hunter-zone { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; margin-top: 32px; }
+    .hunter-zone { margin-top: 32px; }
     .hz-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 18px; overflow: hidden; }
 
     /* Scope tabs */
@@ -280,7 +280,7 @@
     .tp-fill { height: 100%; border-radius: 4px; background: var(--green); }
 
     /* Stats grid */
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px 18px; border-bottom: 1px solid var(--border); }
+    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; padding: 16px 18px; border-bottom: 1px solid var(--border); }
     .stat-box { background: var(--bg); border-radius: 12px; padding: 12px; }
     .stat-val { font-size: 20px; font-weight: 800; color: var(--dark-green); letter-spacing: -.02em; }
     .stat-label { font-size: 10px; color: var(--muted); margin-top: 3px; margin-bottom: 4px; }
@@ -483,10 +483,8 @@
       .below-grid { grid-template-columns: 1fr 1fr; }
       #nav-list-biz { display: none; }
     }
-    @media (max-width: 900px) {
-      .hunter-zone { grid-template-columns: 1fr; }
-    }
     @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
       .deal-grid { grid-template-columns: 1fr 1fr; }
       .below-grid { grid-template-columns: 1fr; }
       .footer-inner { grid-template-columns: 1fr 1fr; }
@@ -905,13 +903,17 @@
       </div>
       <div class="hunter-zone">
 
-        <!-- ── Leaderboard card ── -->
-        <div class="hz-card" id="leaderboard-card">
+        <!-- ── Combined leaderboard + points card ── -->
+        <div class="hz-card" id="hunter-card">
           <div class="scope-tabs">
-            <button class="scope-tab active" onclick="setScope(this)">Community</button>
-            <button class="scope-tab" onclick="setScope(this)">Neighbourhood</button>
-            <button class="scope-tab" onclick="setScope(this)">City</button>
+            <button class="scope-tab active" onclick="setScope(this,'community')">Community</button>
+            <button class="scope-tab" onclick="setScope(this,'neighbourhood')">Neighbourhood</button>
+            <button class="scope-tab" onclick="setScope(this,'city')">City</button>
+            <button class="scope-tab" onclick="setScope(this,'mytier')">🏅 Hunter tier</button>
           </div>
+
+          <!-- ── Panel: leaderboard (tabs 1-3) ── -->
+          <div id="lb-panel">
 
           <div class="hero-band">
             <p class="hb-eyebrow" id="lb-community-name">Brigade Residency</p>
@@ -1022,10 +1024,10 @@
               <div class="yp-hint-label">to reach top 10</div>
             </div>
           </div>
-        </div><!-- /leaderboard-card -->
+          </div><!-- /lb-panel -->
 
-        <!-- ── Points dashboard card ── -->
-        <div class="hz-card" id="points-card">
+          <!-- ── Panel: Hunter tier / points dashboard (tab 4) ── -->
+          <div id="pts-panel" style="display:none">
           <div class="pts-hero">
             <div class="ph-row">
               <div class="ph-avatar">BK</div>
@@ -1159,7 +1161,9 @@
               <div class="act-pts-col">+5</div>
             </div>
           </div>
-        </div><!-- /points-card -->
+          </div><!-- /pts-panel -->
+
+        </div><!-- /hunter-card -->
 
       </div><!-- /hunter-zone -->
     </div><!-- /feed-layout -->
@@ -1435,16 +1439,24 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  /* ── Leaderboard scope switch ── */
-  function setScope(btn) {
+  /* ── Leaderboard / Hunter tier tab switch ── */
+  function setScope(btn, scope) {
     btn.closest('.scope-tabs').querySelectorAll('.scope-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
-    const scope = btn.textContent.trim();
-    const nameEl = document.getElementById('lb-community-name');
-    const statsEl = document.getElementById('lb-stats');
-    if (scope === 'Community') { nameEl.textContent = 'Brigade Residency'; statsEl.textContent = '24 members · 61 deals submitted'; }
-    else if (scope === 'Neighbourhood') { nameEl.textContent = 'Koramangala'; statsEl.textContent = '312 contributors · 840 deals this week'; }
-    else { nameEl.textContent = 'Bengaluru'; statsEl.textContent = '4,200 contributors · 12,400 deals this week'; }
+    const lbPanel = document.getElementById('lb-panel');
+    const ptsPanel = document.getElementById('pts-panel');
+    if (scope === 'mytier') {
+      lbPanel.style.display = 'none';
+      ptsPanel.style.display = 'block';
+    } else {
+      lbPanel.style.display = 'block';
+      ptsPanel.style.display = 'none';
+      const nameEl = document.getElementById('lb-community-name');
+      const statsEl = document.getElementById('lb-stats');
+      if (scope === 'community') { nameEl.textContent = 'Brigade Residency'; statsEl.textContent = '24 members · 61 deals submitted'; }
+      else if (scope === 'neighbourhood') { nameEl.textContent = 'Koramangala'; statsEl.textContent = '312 contributors · 840 deals this week'; }
+      else { nameEl.textContent = 'Bengaluru'; statsEl.textContent = '4,200 contributors · 12,400 deals this week'; }
+    }
   }
 
   /* ── Auth ── */
