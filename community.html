@@ -210,6 +210,115 @@
     .lb-badge { font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 10px; background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
     .lb-count { font-size: 11px; color: var(--muted); }
 
+    /* ── HUNTER ZONE (full leaderboard + points dashboard) ── */
+    .hunter-zone { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; margin-top: 32px; }
+    .hz-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 18px; overflow: hidden; }
+
+    /* Scope tabs */
+    .scope-tabs { display: flex; border-bottom: 1px solid var(--border); }
+    .scope-tab { flex: 1; padding: 12px 4px; font-size: 12px; font-weight: 600; text-align: center; cursor: pointer; border: none; background: transparent; font-family: inherit; color: var(--muted); border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; }
+    .scope-tab.active { color: var(--dark-green); border-bottom-color: var(--green); }
+    .scope-tab:hover:not(.active) { color: var(--text); }
+
+    /* Hero band */
+    .hero-band { background: linear-gradient(135deg, #085041 0%, #0f3d2a 100%); padding: 20px; }
+    .hb-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--green-md); margin-bottom: 6px; }
+    .hb-title { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -.03em; margin-bottom: 4px; }
+    .hb-sub { font-size: 12px; color: rgba(255,255,255,.6); margin-bottom: 12px; }
+    .reset-pill { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,.12); color: rgba(255,255,255,.85); font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 100px; }
+
+    /* Podium */
+    .podium { display: flex; align-items: flex-end; justify-content: center; gap: 12px; padding: 20px 16px 0; }
+    .pod-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .pod-avatar { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+    .pod-name { font-size: 11px; font-weight: 600; color: var(--text); text-align: center; max-width: 72px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pod-pts { font-size: 11px; color: var(--green); font-weight: 600; }
+    .pod-base { width: 72px; border-radius: 8px 8px 0 0; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; }
+
+    /* Ranked list */
+    .hz-list { padding: 8px 18px; }
+    .hzl-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .hzl-row:last-child { border-bottom: none; }
+    .hzl-row.you { background: var(--green-lt); margin: 0 -18px; padding: 10px 18px; border-bottom: none; border-top: 1px solid var(--green-md); border-radius: 0 0 4px 4px; }
+    .hzl-rank { width: 22px; font-size: 13px; font-weight: 700; color: var(--muted); flex-shrink: 0; text-align: center; }
+    .hzl-av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .hzl-info { flex: 1; min-width: 0; }
+    .hzl-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hzl-meta { font-size: 10px; color: var(--muted); margin-top: 1px; }
+    .hzl-right { text-align: right; flex-shrink: 0; }
+    .hzl-pts { font-size: 13px; font-weight: 700; color: var(--dark-green); }
+    .hzl-delta { font-size: 10px; font-weight: 600; margin-top: 2px; display: flex; align-items: center; justify-content: flex-end; gap: 2px; }
+    .delta-up { color: var(--green); }
+    .delta-dn { color: #E24B4A; }
+    .delta-eq { color: var(--muted); }
+
+    /* Your-position bar */
+    .your-pos { margin: 4px 18px 18px; background: var(--bg); border-radius: 14px; padding: 14px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); }
+    .yp-rank { font-size: 26px; font-weight: 800; color: var(--dark-green); letter-spacing: -.02em; line-height: 1; }
+    .yp-label { font-size: 10px; color: var(--muted); margin-top: 3px; }
+    .yp-bar-wrap { flex: 1; }
+    .yp-bar-track { height: 6px; background: var(--white); border-radius: 3px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 4px; }
+    .yp-bar-fill { height: 100%; border-radius: 3px; background: var(--green); }
+    .yp-bar-pts { font-size: 10px; color: var(--muted); }
+    .yp-hint { text-align: right; flex-shrink: 0; }
+    .yp-hint-val { font-size: 14px; font-weight: 700; color: var(--dark-green); }
+    .yp-hint-label { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+    /* Points hero */
+    .pts-hero { background: linear-gradient(135deg, #085041 0%, #0f3d2a 100%); padding: 20px; }
+    .ph-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .ph-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .ph-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .ph-tier { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,.12); color: var(--green-md); font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 100px; }
+    .ph-city-rank { margin-left: auto; text-align: right; }
+    .ph-city-label { font-size: 10px; color: rgba(255,255,255,.5); margin-bottom: 3px; }
+    .ph-city-val { font-size: 16px; font-weight: 700; color: var(--green-md); }
+    .pts-number { font-size: 40px; font-weight: 800; color: #fff; letter-spacing: -.03em; line-height: 1; margin-bottom: 4px; }
+    .pts-sub { font-size: 12px; color: rgba(255,255,255,.55); margin-bottom: 16px; }
+    .tp-header { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,.6); margin-bottom: 6px; }
+    .tp-track { height: 7px; background: rgba(255,255,255,.15); border-radius: 4px; overflow: hidden; }
+    .tp-fill { height: 100%; border-radius: 4px; background: var(--green); }
+
+    /* Stats grid */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px 18px; border-bottom: 1px solid var(--border); }
+    .stat-box { background: var(--bg); border-radius: 12px; padding: 12px; }
+    .stat-val { font-size: 20px; font-weight: 800; color: var(--dark-green); letter-spacing: -.02em; }
+    .stat-label { font-size: 10px; color: var(--muted); margin-top: 3px; margin-bottom: 4px; }
+    .stat-trend { font-size: 10px; font-weight: 600; color: var(--green); display: flex; align-items: center; gap: 2px; }
+
+    /* Streak bar */
+    .streak-bar { margin: 16px 18px 0; background: var(--amber-bg); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--amber-border); }
+    .streak-val { font-size: 14px; font-weight: 700; color: var(--amber); }
+    .streak-label { font-size: 10px; color: var(--muted); margin-top: 1px; }
+    .streak-days { display: flex; gap: 4px; margin-left: auto; }
+    .s-day { width: 22px; height: 22px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; }
+    .s-done { background: var(--green); color: #fff; }
+    .s-today { background: var(--green-lt); color: var(--dark-green); border: 1.5px solid var(--green); }
+    .s-future { background: var(--white); color: var(--muted); border: 1px solid var(--border); }
+
+    /* Redeem card */
+    .redeem-card { margin: 16px 18px 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .rc-head { background: var(--green-lt); padding: 10px 14px; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--dark-green); }
+    .rc-options { display: flex; gap: 8px; padding: 12px 14px; }
+    .rc-option { flex: 1; padding: 10px 8px; border-radius: 10px; text-align: center; border: 1px solid var(--border); cursor: pointer; background: var(--bg); transition: border-color .15s; }
+    .rc-option:hover { border-color: var(--green); }
+    .rc-opt-val { font-size: 14px; font-weight: 700; color: var(--dark-green); margin-bottom: 2px; }
+    .rc-opt-label { font-size: 10px; color: var(--muted); }
+
+    /* Activity */
+    .hz-sec-header { padding: 16px 18px 6px; display: flex; justify-content: space-between; align-items: center; }
+    .hz-sec-title { font-size: 13px; font-weight: 700; }
+    .hz-sec-link { font-size: 11px; font-weight: 600; color: var(--green); text-decoration: none; cursor: pointer; }
+    .activity-list { padding: 0 18px 12px; }
+    .activity-row { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .activity-row:last-child { border-bottom: none; }
+    .act-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
+    .act-body { flex: 1; min-width: 0; }
+    .act-title { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+    .act-meta { font-size: 10px; color: var(--muted); }
+    .act-pts-col { flex-shrink: 0; font-size: 14px; font-weight: 700; color: var(--green); padding-top: 2px; }
+    .act-pts-col.pending { color: var(--muted); }
+
     /* ── SUBMIT FORM VIEW ── */
     .form-view-wrap { max-width: 640px; margin: 0 auto; }
     .form-topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
@@ -373,6 +482,9 @@
     @media (max-width: 1024px) {
       .below-grid { grid-template-columns: 1fr 1fr; }
       #nav-list-biz { display: none; }
+    }
+    @media (max-width: 900px) {
+      .hunter-zone { grid-template-columns: 1fr; }
     }
     @media (max-width: 768px) {
       .deal-grid { grid-template-columns: 1fr 1fr; }
@@ -785,6 +897,271 @@
         </div>
 
       </div><!-- /below-grid -->
+
+      <!-- ══ HUNTER ZONE: full leaderboard + points dashboard ══ -->
+      <div class="section-hdr" style="margin-top:8px">
+        <div class="section-title">🏆 Hunter leaderboard & rewards</div>
+        <a href="#" class="see-all">Hall of fame</a>
+      </div>
+      <div class="hunter-zone">
+
+        <!-- ── Leaderboard card ── -->
+        <div class="hz-card" id="leaderboard-card">
+          <div class="scope-tabs">
+            <button class="scope-tab active" onclick="setScope(this)">Community</button>
+            <button class="scope-tab" onclick="setScope(this)">Neighbourhood</button>
+            <button class="scope-tab" onclick="setScope(this)">City</button>
+          </div>
+
+          <div class="hero-band">
+            <p class="hb-eyebrow" id="lb-community-name">Brigade Residency</p>
+            <h2 class="hb-title">This week's hunters</h2>
+            <p class="hb-sub" id="lb-stats">24 members · 61 deals submitted</p>
+            <div class="reset-pill">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Resets in 3 days
+            </div>
+          </div>
+
+          <div class="podium">
+            <div class="pod-col">
+              <div class="pod-avatar" style="width:40px;height:40px;background:#ECFDF5;color:#085041">RN</div>
+              <p class="pod-name">Rahul N.</p>
+              <p class="pod-pts">620 pts</p>
+              <div class="pod-base" style="height:44px;background:#A7F3D0;color:#085041">2</div>
+            </div>
+            <div class="pod-col">
+              <div style="font-size:20px;line-height:1">👑</div>
+              <div class="pod-avatar" style="width:50px;height:50px;background:#FFFBEB;color:#854F0B">PK</div>
+              <p class="pod-name" style="font-weight:700">Priya K.</p>
+              <p class="pod-pts" style="font-size:12px">840 pts</p>
+              <div class="pod-base" style="height:58px;background:#1D9E75">1</div>
+            </div>
+            <div class="pod-col">
+              <div class="pod-avatar" style="width:36px;height:36px;background:#FAECE7;color:#993C1D">AM</div>
+              <p class="pod-name">Ananya M.</p>
+              <p class="pod-pts">510 pts</p>
+              <div class="pod-base" style="height:32px;background:#F0997B;color:#712B13">3</div>
+            </div>
+          </div>
+
+          <div class="hz-list">
+            <div class="hzl-row">
+              <span class="hzl-rank">4</span>
+              <div class="hzl-av" style="background:#EFF6FF;color:#1D4ED8">VK</div>
+              <div class="hzl-info">
+                <div class="hzl-name">Vikram K.</div>
+                <div class="hzl-meta">7 deals · Sobha wing B</div>
+              </div>
+              <div class="hzl-right">
+                <div class="hzl-pts">380 pts</div>
+                <div class="hzl-delta delta-up"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>2</div>
+              </div>
+            </div>
+            <div class="hzl-row">
+              <span class="hzl-rank">5</span>
+              <div class="hzl-av" style="background:#F5F3FF;color:#6D28D9">SM</div>
+              <div class="hzl-info">
+                <div class="hzl-name">Sunita M.</div>
+                <div class="hzl-meta">5 deals · Tower 3</div>
+              </div>
+              <div class="hzl-right">
+                <div class="hzl-pts">290 pts</div>
+                <div class="hzl-delta delta-eq"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+              </div>
+            </div>
+            <div class="hzl-row">
+              <span class="hzl-rank">6</span>
+              <div class="hzl-av" style="background:#F1EFE8;color:#444441">DJ</div>
+              <div class="hzl-info">
+                <div class="hzl-name">Dev J.</div>
+                <div class="hzl-meta">4 deals · Wing A</div>
+              </div>
+              <div class="hzl-right">
+                <div class="hzl-pts">210 pts</div>
+                <div class="hzl-delta delta-dn"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>1</div>
+              </div>
+            </div>
+            <div class="hzl-row">
+              <span class="hzl-rank">7</span>
+              <div class="hzl-av" style="background:#FBEAF0;color:#72243E">NK</div>
+              <div class="hzl-info">
+                <div class="hzl-name">Neha K.</div>
+                <div class="hzl-meta">3 deals · Block C</div>
+              </div>
+              <div class="hzl-right">
+                <div class="hzl-pts">175 pts</div>
+                <div class="hzl-delta delta-up"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>3</div>
+              </div>
+            </div>
+            <div class="hzl-row you">
+              <span class="hzl-rank" style="color:#085041">12</span>
+              <div class="hzl-av" style="background:#1D9E75;color:#fff">BK</div>
+              <div class="hzl-info">
+                <div class="hzl-name" style="color:#085041">You</div>
+                <div class="hzl-meta" style="color:#0F6E56">2 deals · Brigade Tower</div>
+              </div>
+              <div class="hzl-right">
+                <div class="hzl-pts">98 pts</div>
+                <div class="hzl-delta delta-up"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>1</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="your-pos">
+            <div>
+              <div class="yp-rank">#12</div>
+              <div class="yp-label">Your rank this week</div>
+            </div>
+            <div class="yp-bar-wrap">
+              <div class="yp-bar-track"><div class="yp-bar-fill" style="width:65%"></div></div>
+              <div class="yp-bar-pts">98 pts</div>
+            </div>
+            <div class="yp-hint">
+              <div class="yp-hint-val">+52 pts</div>
+              <div class="yp-hint-label">to reach top 10</div>
+            </div>
+          </div>
+        </div><!-- /leaderboard-card -->
+
+        <!-- ── Points dashboard card ── -->
+        <div class="hz-card" id="points-card">
+          <div class="pts-hero">
+            <div class="ph-row">
+              <div class="ph-avatar">BK</div>
+              <div>
+                <div class="ph-name">Balaji K.</div>
+                <div class="ph-tier">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  Hunter tier
+                </div>
+              </div>
+              <div class="ph-city-rank">
+                <div class="ph-city-label">City rank</div>
+                <div class="ph-city-val">#48</div>
+              </div>
+            </div>
+            <div class="pts-number">620</div>
+            <div class="pts-sub">points this week · 2,840 all-time</div>
+            <div class="tier-progress">
+              <div class="tp-header">
+                <span>Hunter</span>
+                <span>Expert at 1,000 pts</span>
+              </div>
+              <div class="tp-track"><div class="tp-fill" style="width:52%"></div></div>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-val">11</div>
+              <div class="stat-label">Deals submitted</div>
+              <div class="stat-trend"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>3 vs last week</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">8</div>
+              <div class="stat-label">Deals verified</div>
+              <div class="stat-trend" style="color:var(--dark-green)">73% success rate</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">34</div>
+              <div class="stat-label">Bookings from your deals</div>
+              <div class="stat-trend"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>12 this week</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">₹2.1L</div>
+              <div class="stat-label">Community saved via your deals</div>
+              <div class="stat-trend" style="color:var(--dark-green)">This month</div>
+            </div>
+          </div>
+
+          <div class="streak-bar">
+            <div style="font-size:22px;line-height:1">🔥</div>
+            <div>
+              <div class="streak-val">5-day streak</div>
+              <div class="streak-label">Submit today to keep it going</div>
+            </div>
+            <div class="streak-days">
+              <div class="s-day s-done">M</div>
+              <div class="s-day s-done">T</div>
+              <div class="s-day s-done">W</div>
+              <div class="s-day s-done">T</div>
+              <div class="s-day s-done">F</div>
+              <div class="s-day s-today">S</div>
+              <div class="s-day s-future">S</div>
+            </div>
+          </div>
+
+          <div class="redeem-card">
+            <div class="rc-head">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+              Redeem your 620 points
+            </div>
+            <div class="rc-options">
+              <div class="rc-option">
+                <div class="rc-opt-val">₹310</div>
+                <div class="rc-opt-label">Genoti credit</div>
+              </div>
+              <div class="rc-option">
+                <div class="rc-opt-val">3 free</div>
+                <div class="rc-opt-label">Negotiate deals</div>
+              </div>
+              <div class="rc-option">
+                <div class="rc-opt-val">Vouchers</div>
+                <div class="rc-opt-label">Partner offers</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hz-sec-header">
+            <h2 class="hz-sec-title">Recent activity</h2>
+            <a href="#" class="hz-sec-link">View all</a>
+          </div>
+          <div class="activity-list">
+            <div class="activity-row">
+              <div class="act-icon" style="background:var(--green-lt)">✅</div>
+              <div class="act-body">
+                <div class="act-title">Deal verified by community</div>
+                <div class="act-meta">Glam Studio · full hair spa · today 2:14 PM</div>
+              </div>
+              <div class="act-pts-col">+25</div>
+            </div>
+            <div class="activity-row">
+              <div class="act-icon" style="background:var(--amber-bg)">🤝</div>
+              <div class="act-body">
+                <div class="act-title">5 bookings from your deal</div>
+                <div class="act-meta">Serenity Spa massage · this week</div>
+              </div>
+              <div class="act-pts-col">+25</div>
+            </div>
+            <div class="activity-row">
+              <div class="act-icon" style="background:var(--blue-bg)">🔥</div>
+              <div class="act-body">
+                <div class="act-title">5-day streak bonus</div>
+                <div class="act-meta">Keep going — 7-day streak = double points</div>
+              </div>
+              <div class="act-pts-col">+75</div>
+            </div>
+            <div class="activity-row">
+              <div class="act-icon" style="background:var(--bg)">📤</div>
+              <div class="act-body">
+                <div class="act-title">Deal submitted</div>
+                <div class="act-meta">FitStop gym pass · awaiting verification</div>
+              </div>
+              <div class="act-pts-col pending">+10</div>
+            </div>
+            <div class="activity-row">
+              <div class="act-icon" style="background:var(--purple-bg)">☑️</div>
+              <div class="act-body">
+                <div class="act-title">Correct verification vote</div>
+                <div class="act-meta">Voted "valid" · majority agreed</div>
+              </div>
+              <div class="act-pts-col">+5</div>
+            </div>
+          </div>
+        </div><!-- /points-card -->
+
+      </div><!-- /hunter-zone -->
     </div><!-- /feed-layout -->
   </div><!-- /view-feed -->
 
@@ -1058,6 +1435,18 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  /* ── Leaderboard scope switch ── */
+  function setScope(btn) {
+    btn.closest('.scope-tabs').querySelectorAll('.scope-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const scope = btn.textContent.trim();
+    const nameEl = document.getElementById('lb-community-name');
+    const statsEl = document.getElementById('lb-stats');
+    if (scope === 'Community') { nameEl.textContent = 'Brigade Residency'; statsEl.textContent = '24 members · 61 deals submitted'; }
+    else if (scope === 'Neighbourhood') { nameEl.textContent = 'Koramangala'; statsEl.textContent = '312 contributors · 840 deals this week'; }
+    else { nameEl.textContent = 'Bengaluru'; statsEl.textContent = '4,200 contributors · 12,400 deals this week'; }
+  }
+
   /* ── Auth ── */
   const _sb = supabase.createClient(
     'https://ijsxmgkzwvamwctbkgjo.supabase.co',
