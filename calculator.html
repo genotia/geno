@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TruePrice Calculator — Genoti.ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:#F8F8F6;color:#1A1A18;-webkit-font-smoothing:antialiased}
+
+:root{
+  --green:#1D9E75;--dark-green:#085041;--green-dp:#0F6E56;
+  --green-lt:#ECFDF5;--green-md:#A7F3D0;
+  --red-dk:#A32D2D;--red-lt:#FCEBEB;--red-bar:#E8B4B4;
+  --amber-lt:#FFFBEB;--amber-dk:#854F0B;--amber:#B45309;
+  --blue-lt:#EFF6FF;--blue-dk:#1D4ED8;
+  --muted:#6B7280;--text:#111827;--border:#E5E7EB;--bg:#F9FAFB;--white:#fff;
+  --surface:#fff;--surface-1:#F4F3F0;
+  --border-md:rgba(0,0,0,0.13);
+  --r:8px;--rl:12px;--rxl:16px;
+}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;gap:20px}
+.logo{font-size:20px;font-weight:800;color:var(--dark-green);text-decoration:none;letter-spacing:-.5px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.logo span{color:var(--green)}
+.nav-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;transition:color .15s}
+.nav-back:hover{color:var(--text)}
+.nav-back svg{flex-shrink:0}
+.btn-try{padding:9px 20px;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;transition:opacity .15s}
+.btn-try:hover{opacity:.88}
+
+/* ── PAGE WRAPPER ── */
+.container{max-width:760px;margin:0 auto;padding:40px 20px 60px}
+
+/* ── PAGE HEADER ── */
+.page-header{text-align:center;margin-bottom:36px}
+.page-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green);background:var(--green-lt);border:1px solid var(--green-md);padding:4px 12px;border-radius:100px;margin-bottom:14px}
+.page-title{font-size:36px;font-weight:900;letter-spacing:-.04em;color:var(--text);margin-bottom:10px;line-height:1.1}
+.page-sub{font-size:16px;color:var(--muted);line-height:1.6;max-width:520px;margin:0 auto}
+
+/* ── SWITCHER ── */
+.calc-switch{display:flex;border-radius:var(--rl);overflow:hidden;border:2px solid var(--dark-green);margin-bottom:32px}
+.cs-btn{flex:1;padding:14px 10px;font-size:15px;font-weight:700;text-align:center;cursor:pointer;border:none;background:transparent;font-family:inherit;color:var(--dark-green);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.cs-btn.active{background:var(--dark-green);color:#fff}
+.pane{display:none}.pane.active{display:block}
+
+/* ── CALC CARD ── */
+.calc-hero{background:linear-gradient(135deg,#085041 0%,#0f3d2a 100%);border-radius:var(--rxl) var(--rxl) 0 0;padding:32px 28px}
+.ch-eyebrow{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green-md);margin-bottom:8px}
+.ch-title{font-size:32px;font-weight:900;color:#fff;letter-spacing:-.04em;line-height:1.15;margin-bottom:8px}
+.ch-sub{font-size:14px;color:rgba(255,255,255,.65);line-height:1.7;max-width:520px}
+.calc-body{background:var(--surface);border:1px solid var(--border-md);border-top:none;border-radius:0 0 var(--rxl) var(--rxl);padding:32px 28px}
+
+/* ── SLIDERS ── */
+.f-group{margin-bottom:22px}
+.f-label{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.f-val{font-size:21px;font-weight:700;color:var(--dark-green);letter-spacing:-.02em}
+.f-hint{font-size:11px;color:#9CA3AF;margin-top:5px;line-height:1.5}
+input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer;margin:4px 0}
+.divider{height:1px;background:var(--border);margin:28px 0}
+.section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:16px}
+
+/* ── FLOW ROW ── */
+.flow-row{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:6px;align-items:center;margin-bottom:20px}
+.flow-card{border:1px solid var(--border-md);border-radius:var(--rl);padding:14px 10px;text-align:center}
+.flow-card.bad{background:var(--red-lt);border-color:var(--red-bar)}
+.flow-card.good{background:var(--green-lt);border-color:var(--green-md)}
+.fc-icon{font-size:22px;margin-bottom:5px}
+.fc-val{font-size:16px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
+.fc-label{font-size:9px;color:var(--muted);line-height:1.4}
+.flow-arrow{font-size:18px;color:var(--muted);text-align:center}
+
+/* ── COMPARE GRID ── */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.cmp-card{border:1px solid var(--border-md);border-radius:var(--rl);padding:20px 18px;text-align:center}
+.cmp-card.them{background:var(--surface-1)}
+.cmp-card.us{background:var(--green-lt);border-color:var(--green-md)}
+.cmp-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}
+.cmp-price{font-size:30px;font-weight:800;letter-spacing:-.03em}
+.cmp-price.red{color:var(--red-dk)}
+.cmp-price.green{color:var(--dark-green)}
+.cmp-detail{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6}
+
+/* ── SAVINGS BOX ── */
+.savings-box{background:linear-gradient(135deg,#085041 0%,#0f3d2a 100%);border-radius:var(--rl);padding:26px 22px;text-align:center;margin-bottom:20px}
+.sv-label{font-size:12px;font-weight:600;color:var(--green-md);margin-bottom:8px}
+.sv-amount{font-size:42px;font-weight:900;color:#fff;letter-spacing:-.04em}
+.sv-pct{font-size:14px;color:var(--green-md);margin-top:4px;font-weight:600}
+.sv-sub{font-size:12px;color:rgba(255,255,255,.45);margin-top:10px}
+
+/* ── BAR COMPARE ── */
+.bar-compare{margin-bottom:20px}
+.bc-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px}
+.bc-track{height:18px;background:var(--bg);border-radius:9px;overflow:hidden;display:flex;border:1px solid var(--border)}
+.bc-them{height:100%;background:var(--red-bar)}
+.bc-us{height:100%;background:var(--green)}
+.bc-legend{display:flex;gap:18px;margin-top:10px}
+.bc-leg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.bc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── NOTE ── */
+.note{background:var(--bg);border-radius:var(--r);padding:16px 18px;font-size:12px;color:var(--muted);line-height:1.8;border-left:3px solid var(--green)}
+.note strong{color:var(--text)}
+
+/* ── GST CALLOUT ── */
+.gst-callout{background:var(--amber-lt);border-radius:var(--r);padding:14px 16px;margin-bottom:20px;display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--amber);line-height:1.7;border-left:3px solid var(--amber)}
+.gst-callout svg{flex-shrink:0;margin-top:2px}
+
+/* ── BREAKDOWN TABLE ── */
+.breakdown{border:1px solid var(--border-md);border-radius:var(--rl);overflow:hidden;margin-bottom:20px}
+.bd-head{display:grid;grid-template-columns:2.2fr 1fr 1fr;background:var(--dark-green);padding:12px 18px;font-size:11px;font-weight:600;color:#fff;letter-spacing:.04em}
+.bd-row{display:grid;grid-template-columns:2.2fr 1fr 1fr;padding:11px 18px;font-size:13px;border-top:1px solid var(--border);align-items:center}
+.bd-row:nth-child(even){background:var(--bg)}
+.bd-label{color:var(--muted)}
+.bd-val{text-align:right;font-weight:600}
+.bd-val.red{color:var(--red-dk)}
+.bd-val.green{color:var(--dark-green)}
+.bd-total{background:var(--dark-green)!important;border:none}
+.bd-total .bd-label,.bd-total .bd-val{color:#fff;font-weight:700}
+.bd-gst{background:var(--amber-lt)!important}
+
+/* ── CASH CARDS ── */
+.cash-card{border:1px solid var(--border-md);border-radius:var(--rl);padding:16px 18px;margin-bottom:12px;display:flex;gap:12px;align-items:flex-start}
+.cc-icon{width:38px;height:38px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.cc-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.cc-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.cc-val{font-size:16px;font-weight:700;margin-left:auto;flex-shrink:0;padding-top:4px}
+
+/* ── FOOTER CTA ── */
+.footer-cta{background:linear-gradient(135deg,#085041 0%,#0f3d2a 100%);border-radius:var(--rxl);padding:40px 28px;text-align:center;margin-top:48px}
+.fct-title{font-size:26px;font-weight:900;color:#fff;letter-spacing:-.03em;margin-bottom:8px}
+.fct-sub{font-size:14px;color:rgba(255,255,255,.6);margin-bottom:24px}
+.fct-btn{display:inline-block;padding:13px 32px;background:var(--green);color:#fff;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:inherit;text-decoration:none;transition:opacity .15s}
+.fct-btn:hover{opacity:.88}
+
+@media(max-width:600px){
+  .flow-row{grid-template-columns:1fr 1fr;gap:6px}
+  .flow-arrow{display:none}
+  .ch-title{font-size:26px}
+  .page-title{font-size:28px}
+  .calc-body{padding:20px 16px}
+  .calc-hero{padding:24px 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
+    <a href="index.html" class="nav-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to home
+    </a>
+    <a href="register.html" class="btn-try">Get started free</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="page-header">
+    <div class="page-eyebrow">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      TruePrice Calculator
+    </div>
+    <h1 class="page-title">See what you're<br>really paying</h1>
+    <p class="page-sub">Third-party platforms inflate prices to cover their commission. Find out the real cost — and how much you save on Genoti.</p>
+  </div>
+
+  <div class="calc-switch" role="tablist">
+    <button class="cs-btn active" role="tab" onclick="switchPane(0)" aria-selected="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Customer savings
+    </button>
+    <button class="cs-btn" role="tab" onclick="switchPane(1)" aria-selected="false">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Merchant savings
+    </button>
+  </div>
+
+  <!-- ━━━━━━━ CUSTOMER CALCULATOR ━━━━━━━ -->
+  <div class="pane active" id="pane-consumer">
+    <div class="calc-hero">
+      <p class="ch-eyebrow">Customer savings calculator</p>
+      <h2 class="ch-title">The real price<br>behind the "deal"</h2>
+      <p class="ch-sub">Platforms charge merchants 15–30% commission. Merchants inflate their prices to cover it. You pay the hidden markup — plus GST on top of that inflated number.</p>
+    </div>
+    <div class="calc-body">
+      <div class="f-group">
+        <div class="f-label"><span>Service actual value (ex-GST)</span><span class="f-val" id="c-price-v">₹1,000</span></div>
+        <input type="range" min="200" max="10000" step="100" value="1000" id="c-price" oninput="calcC()"/>
+        <div class="f-hint">What the service is actually worth at the merchant's counter before GST</div>
+      </div>
+      <div class="f-group">
+        <div class="f-label"><span>GST rate</span><span class="f-val" id="c-gst-v">18%</span></div>
+        <input type="range" min="0" max="28" step="1" value="18" id="c-gst" oninput="calcC()"/>
+        <div class="f-hint">18% for most services, 5% for restaurants without ITC</div>
+      </div>
+      <div class="f-group">
+        <div class="f-label"><span>Platform commission on merchant</span><span class="f-val" id="c-comm-v">20%</span></div>
+        <input type="range" min="10" max="35" step="1" value="20" id="c-comm" oninput="calcC()"/>
+        <div class="f-hint">What Swiggy / Zomato / Nearbuy charge the merchant (typically 15–30%)</div>
+      </div>
+      <div class="f-group">
+        <div class="f-label"><span>Platform "discount" shown to you</span><span class="f-val" id="c-disc-v">20%</span></div>
+        <input type="range" min="5" max="40" step="1" value="20" id="c-disc" oninput="calcC()"/>
+        <div class="f-hint">The discount the platform advertises — but applied on the inflated price</div>
+      </div>
+      <div class="f-group">
+        <div class="f-label"><span>Your visits per month</span><span class="f-val" id="c-visits-v">4</span></div>
+        <input type="range" min="1" max="20" step="1" value="4" id="c-visits" oninput="calcC()"/>
+      </div>
+
+      <div class="divider"></div>
+      <p class="section-label">Here's the truth about your "discount"</p>
+
+      <div class="flow-row">
+        <div class="flow-card">
+          <div class="fc-icon">🏷️</div>
+          <div class="fc-val" id="c-f1">₹1,000</div>
+          <div class="fc-label">Actual price (ex-GST)</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-card bad">
+          <div class="fc-icon">📈</div>
+          <div class="fc-val" id="c-f2">₹1,200</div>
+          <div class="fc-label">Inflated for platform fee</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-card">
+          <div class="fc-icon">🎟️</div>
+          <div class="fc-val" id="c-f3">₹960</div>
+          <div class="fc-label">"Discounted" ex-GST</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-card bad">
+          <div class="fc-icon">🧾</div>
+          <div class="fc-val" id="c-f4">₹1,133</div>
+          <div class="fc-label">You pay incl. GST</div>
+        </div>
+      </div>
+
+      <div class="compare-grid">
+        <div class="cmp-card them">
+          <div class="cmp-label">On Swiggy / Nearbuy</div>
+          <div class="cmp-price red" id="c-them">₹1,133</div>
+          <div class="cmp-detail" id="c-them-d">Inflated → "discounted" → GST on the inflated-discounted price</div>
+        </div>
+        <div class="cmp-card us">
+          <div class="cmp-label">On Genoti</div>
+          <div class="cmp-price green" id="c-us">₹944</div>
+          <div class="cmp-detail" id="c-us-d">Real price, 20% off-peak discount, GST on the discounted real price</div>
+        </div>
+      </div>
+
+      <div class="savings-box">
+        <div class="sv-label">You save per visit (including GST)</div>
+        <div class="sv-amount" id="c-sv-amt">₹189</div>
+        <div class="sv-pct" id="c-sv-pct">17% less than other platforms</div>
+        <div class="sv-sub" id="c-sv-yr">That's ₹9,072 saved per year across 48 visits</div>
+      </div>
+
+      <div class="gst-callout">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <div><strong style="color:#854F0B">GST makes the gap even wider.</strong> On other platforms, GST is calculated on the inflated price after their "discount" — so you're paying 18% on a padded number. On Genoti, GST is calculated on the actual discounted price. The GST difference alone saves you <span id="c-gst-diff">₹29</span> per visit.</div>
+      </div>
+
+      <div class="bar-compare">
+        <div class="bc-label"><span>Annual spend comparison (incl. GST)</span></div>
+        <div class="bc-track">
+          <div class="bc-them" id="c-bar-t" style="width:55%"></div>
+          <div class="bc-us" id="c-bar-u" style="width:45%"></div>
+        </div>
+        <div class="bc-legend">
+          <div class="bc-leg"><div class="bc-dot" style="background:var(--red-bar)"></div><span id="c-bar-tl">Other: ₹54,374/yr</span></div>
+          <div class="bc-leg"><div class="bc-dot" style="background:var(--green)"></div><span id="c-bar-ul">Genoti: ₹45,312/yr</span></div>
+        </div>
+      </div>
+
+      <div class="note">
+        <strong>Why this happens:</strong> When a platform charges merchants 20% commission, the merchant raises their listed price by 20–30% to cover it. The "discount" brings the inflated price back toward what it should have been — and then GST is charged on that inflated-discounted price. On Genoti, merchants pay a flat subscription with zero commission, so the listed price is real, the off-peak discount is genuine, and GST is calculated on the lower base. You save twice — once on the price, once on the GST.
+      </div>
+    </div>
+  </div>
+
+  <!-- ━━━━━━━ MERCHANT CALCULATOR ━━━━━━━ -->
+  <div class="pane" id="pane-merchant">
+    <div class="calc-hero">
+      <p class="ch-eyebrow">Merchant revenue calculator</p>
+      <h2 class="ch-title">Keep what<br>you earn</h2>
+      <p class="ch-sub">Third-party platforms take 15–30% commission, charge GST on that commission, and delay your payout by weeks. Compare your real take-home on Genoti.</p>
+    </div>
+    <div class="calc-body">
+      <div class="f-group">
+        <div class="f-label"><span>Your service price (ex-GST)</span><span class="f-val" id="m-price-v">₹1,000</span></div>
+        <input type="range" min="200" max="10000" step="100" value="1000" id="m-price" oninput="calcM()"/>
+        <div class="f-hint">What you'd charge a walk-in customer before GST</div>
+      </div>
+      <div class="f-group">
+        <div class="f-label"><span>GST rate</span><span class="f-val" id="m-gst-v">18%</span></div>
+        <input type="range" min="0" max="28" step="1" value="18" id="m-gst" oninput="calcM()"/>
+        <div class="f-hint">18% for salons/spas/clinics, 5% for restaurants without ITC</div>
+      </div>
+      <div class="f-group">
+        <div class="f-label"><span>Discount you offer on platform</span><span class="f-val" id="m-disc-v">30%</span></div>
+        <input type="range" min="5" max="50" step="1" value="30" id="m-disc" oninput="calcM()"/>
+      </div>
+      <div class="f-group">
+        <div class="f-label"><span>Platform commission</span><span class="f-val" id="m-comm-v">20%</span></div>
+        <input type="range" min="10" max="35" step="1" value="20" id="m-comm" oninput="calcM()"/>
+        <div class="f-hint">Taken from the customer's payment before paying you</div>
+      </div>
+      <div class="f-group">
+        <div class="f-label"><span>Monthly bookings from platform</span><span class="f-val" id="m-book-v">30</span></div>
+        <input type="range" min="5" max="200" step="5" value="30" id="m-book" oninput="calcM()"/>
+      </div>
+      <div class="f-group">
+        <div class="f-label"><span>Payout delay</span><span class="f-val" id="m-delay-v">14 days</span></div>
+        <input type="range" min="1" max="45" step="1" value="14" id="m-delay" oninput="calcM()"/>
+        <div class="f-hint">How long the platform holds your money before paying you</div>
+      </div>
+
+      <div class="divider"></div>
+      <p class="section-label">What happens to your ₹1,000 service</p>
+
+      <div class="breakdown">
+        <div class="bd-head">
+          <div>Line item</div>
+          <div style="text-align:right">Other platforms</div>
+          <div style="text-align:right">Genoti</div>
+        </div>
+        <div class="bd-row"><div class="bd-label">Your service price (ex-GST)</div><div class="bd-val" id="m-r1a">₹1,000</div><div class="bd-val" id="m-r1b">₹1,000</div></div>
+        <div class="bd-row"><div class="bd-label">Discount given</div><div class="bd-val red" id="m-r2a">−₹300</div><div class="bd-val red" id="m-r2b">−₹200</div></div>
+        <div class="bd-row"><div class="bd-label">Discounted price (ex-GST)</div><div class="bd-val" id="m-r3a">₹700</div><div class="bd-val" id="m-r3b">₹800</div></div>
+        <div class="bd-row bd-gst"><div class="bd-label">GST collected from customer</div><div class="bd-val" id="m-r4a" style="color:var(--amber)">+₹126</div><div class="bd-val" id="m-r4b" style="color:var(--amber)">+₹144</div></div>
+        <div class="bd-row"><div class="bd-label">Customer pays (incl. GST)</div><div class="bd-val" id="m-r5a">₹826</div><div class="bd-val" id="m-r5b">₹944</div></div>
+        <div class="bd-row"><div class="bd-label">Platform commission (on ex-GST)</div><div class="bd-val red" id="m-r6a">−₹140</div><div class="bd-val green" id="m-r6b">₹0</div></div>
+        <div class="bd-row bd-gst"><div class="bd-label">GST on platform commission (18%)</div><div class="bd-val red" id="m-r7a">−₹25</div><div class="bd-val green" id="m-r7b">₹0</div></div>
+        <div class="bd-row"><div class="bd-label">GST remitted to govt</div><div class="bd-val red" id="m-r8a">−₹126</div><div class="bd-val red" id="m-r8b">−₹144</div></div>
+        <div class="bd-row"><div class="bd-label">Genoti subscription (per booking)</div><div class="bd-val" id="m-r9a">₹0</div><div class="bd-val red" id="m-r9b">−₹27</div></div>
+        <div class="bd-row bd-gst"><div class="bd-label">GST on Genoti sub (ITC claimable)</div><div class="bd-val" id="m-r10a">₹0</div><div class="bd-val" id="m-r10b" style="color:var(--amber)">−₹5</div></div>
+        <div class="bd-row bd-total"><div class="bd-label">You keep per booking</div><div class="bd-val" id="m-r11a">₹535</div><div class="bd-val" id="m-r11b">₹768</div></div>
+      </div>
+
+      <div class="gst-callout">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <div><strong style="color:#854F0B">GST on commission is the hidden killer.</strong> Other platforms charge 18% GST on top of their commission — so a 20% commission actually costs you <span id="m-comm-eff">23.6%</span>. On Genoti, there's no commission, so no GST on commission either. The Genoti subscription GST is fully claimable as input tax credit (ITC) if you're GST-registered.</div>
+      </div>
+
+      <div class="compare-grid">
+        <div class="cmp-card them">
+          <div class="cmp-label">Other platforms (after GST)</div>
+          <div class="cmp-price red" id="m-them">₹535</div>
+          <div class="cmp-detail" id="m-them-d">Per booking · paid after 14 days</div>
+        </div>
+        <div class="cmp-card us">
+          <div class="cmp-label">Genoti (after GST)</div>
+          <div class="cmp-price green" id="m-us">₹768</div>
+          <div class="cmp-detail">Per booking · settled instantly to your account</div>
+        </div>
+      </div>
+
+      <div class="savings-box">
+        <div class="sv-label">Extra revenue you keep per month</div>
+        <div class="sv-amount" id="m-sv-mo">₹6,990</div>
+        <div class="sv-pct" id="m-sv-pct">44% more per booking than other platforms</div>
+        <div class="sv-sub" id="m-sv-yr">That's ₹83,880 more revenue per year</div>
+      </div>
+
+      <p class="section-label" style="margin-top:22px">The hidden cost: cash flow delay</p>
+      <div class="cash-card" style="border-color:var(--red-bar)">
+        <div class="cc-icon" style="background:var(--red-lt)">⏳</div>
+        <div>
+          <div class="cc-title">Other platforms lock your money</div>
+          <div class="cc-desc" id="m-lock-desc">₹16,800 is locked for 14 days. That's cash you can't use for rent, supplies, or staff salaries.</div>
+        </div>
+        <div class="cc-val" style="color:var(--red-dk)" id="m-lock-val">₹16,800</div>
+      </div>
+      <div class="cash-card" style="border-color:var(--green-md)">
+        <div class="cc-icon" style="background:var(--green-lt)">⚡</div>
+        <div>
+          <div class="cc-title">Genoti settles instantly</div>
+          <div class="cc-desc">Customer pays → money hits your account the same day. Zero delay.</div>
+        </div>
+        <div class="cc-val" style="color:var(--dark-green)">₹0</div>
+      </div>
+
+      <div class="bar-compare" style="margin-top:20px">
+        <div class="bc-label"><span>Annual revenue comparison (after all GST)</span></div>
+        <div class="bc-track">
+          <div class="bc-them" id="m-bar-t" style="width:42%"></div>
+          <div class="bc-us" id="m-bar-u" style="width:58%"></div>
+        </div>
+        <div class="bc-legend">
+          <div class="bc-leg"><div class="bc-dot" style="background:var(--red-bar)"></div><span id="m-bar-tl">Other: ₹1,92,600/yr</span></div>
+          <div class="bc-leg"><div class="bc-dot" style="background:var(--green)"></div><span id="m-bar-ul">Genoti: ₹2,76,480/yr</span></div>
+        </div>
+      </div>
+
+      <div class="note" style="margin-top:20px">
+        <strong>How Genoti works differently:</strong> Flat subscription (₹799–₹7,999/month), zero commission, zero GST on commission. The subscription GST (18%) is claimable as ITC. Payment settles to your bank account the same day. At 30 bookings/month on Starter, the effective cost is just ₹32/booking (₹27 + ₹5 GST). At 100 bookings, it drops to ₹9.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-cta">
+    <h2 class="fct-title">Ready to pay the real price?</h2>
+    <p class="fct-sub">Join thousands of deal hunters saving more every week on Genoti.</p>
+    <a href="register.html" class="fct-btn">Get started free</a>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+function fmt(n){const a=Math.abs(Math.round(n)).toLocaleString('en-IN');return n<0?'−₹'+a:'₹'+a}
+function fmtP(n){return '₹'+Math.round(n).toLocaleString('en-IN')}
+
+function calcC(){
+  const price=+document.getElementById('c-price').value;
+  const gst=+document.getElementById('c-gst').value;
+  const comm=+document.getElementById('c-comm').value;
+  const disc=+document.getElementById('c-disc').value;
+  const visits=+document.getElementById('c-visits').value;
+
+  document.getElementById('c-price-v').textContent=fmtP(price);
+  document.getElementById('c-gst-v').textContent=gst+'%';
+  document.getElementById('c-comm-v').textContent=comm+'%';
+  document.getElementById('c-disc-v').textContent=disc+'%';
+  document.getElementById('c-visits-v').textContent=visits;
+
+  const inflated=price*(1+comm/100);
+  const afterDisc=inflated*(1-disc/100);
+  const afterDiscGST=afterDisc*(1+gst/100);
+  const genotiExGST=price*0.8;
+  const genotiIncGST=genotiExGST*(1+gst/100);
+
+  document.getElementById('c-f1').textContent=fmtP(price);
+  document.getElementById('c-f2').textContent=fmtP(inflated);
+  document.getElementById('c-f3').textContent=fmtP(afterDisc);
+  document.getElementById('c-f4').textContent=fmtP(afterDiscGST);
+
+  document.getElementById('c-them').textContent=fmtP(afterDiscGST);
+  document.getElementById('c-them-d').textContent='Inflated to '+fmtP(inflated)+' → '+disc+'% off → +'+gst+'% GST = '+fmtP(afterDiscGST)+' for a '+fmtP(price)+' service';
+  document.getElementById('c-us').textContent=fmtP(genotiIncGST);
+  document.getElementById('c-us-d').textContent='Real price '+fmtP(price)+', 20% off = '+fmtP(genotiExGST)+' + '+gst+'% GST = '+fmtP(genotiIncGST);
+
+  const sv=afterDiscGST-genotiIncGST;
+  const svPct=((sv/afterDiscGST)*100).toFixed(0);
+  const svYr=sv*visits*12;
+
+  document.getElementById('c-sv-amt').textContent=fmtP(sv);
+  document.getElementById('c-sv-pct').textContent=svPct+'% less than other platforms';
+  document.getElementById('c-sv-yr').textContent="That's "+fmtP(svYr)+' saved per year across '+(visits*12)+' visits';
+
+  const gstOnThem=afterDisc*(gst/100);
+  const gstOnUs=genotiExGST*(gst/100);
+  document.getElementById('c-gst-diff').textContent=fmtP(gstOnThem-gstOnUs);
+
+  const aT=afterDiscGST*visits*12;
+  const aU=genotiIncGST*visits*12;
+  const total=aT+aU;
+  document.getElementById('c-bar-t').style.width=(aT/total*100)+'%';
+  document.getElementById('c-bar-u').style.width=(aU/total*100)+'%';
+  document.getElementById('c-bar-tl').textContent='Other: '+fmtP(aT)+'/yr';
+  document.getElementById('c-bar-ul').textContent='Genoti: '+fmtP(aU)+'/yr';
+}
+
+function calcM(){
+  const price=+document.getElementById('m-price').value;
+  const gst=+document.getElementById('m-gst').value;
+  const disc=+document.getElementById('m-disc').value;
+  const comm=+document.getElementById('m-comm').value;
+  const bookings=+document.getElementById('m-book').value;
+  const delay=+document.getElementById('m-delay').value;
+
+  document.getElementById('m-price-v').textContent=fmtP(price);
+  document.getElementById('m-gst-v').textContent=gst+'%';
+  document.getElementById('m-disc-v').textContent=disc+'%';
+  document.getElementById('m-comm-v').textContent=comm+'%';
+  document.getElementById('m-book-v').textContent=bookings;
+  document.getElementById('m-delay-v').textContent=delay+' days';
+
+  const discAmt=price*(disc/100);
+  const custExGST=price-discAmt;
+  const custGST=custExGST*(gst/100);
+  const custTotal=custExGST+custGST;
+  const platComm=custExGST*(comm/100);
+  const gstOnComm=platComm*0.18;
+  const themTake=custExGST-platComm-gstOnComm;
+
+  const gDiscAmt=price*0.20;
+  const gCustExGST=price-gDiscAmt;
+  const gCustGST=gCustExGST*(gst/100);
+  const gCustTotal=gCustExGST+gCustGST;
+  const gSub=799;
+  const gPer=gSub/bookings;
+  const gGSTonSub=gPer*0.18;
+  const gTake=gCustExGST-gPer-gGSTonSub;
+
+  document.getElementById('m-r1a').textContent=fmtP(price);
+  document.getElementById('m-r1b').textContent=fmtP(price);
+  document.getElementById('m-r2a').textContent=fmt(-discAmt);
+  document.getElementById('m-r2b').textContent=fmt(-gDiscAmt);
+  document.getElementById('m-r3a').textContent=fmtP(custExGST);
+  document.getElementById('m-r3b').textContent=fmtP(gCustExGST);
+  document.getElementById('m-r4a').textContent='+'+fmtP(custGST);
+  document.getElementById('m-r4b').textContent='+'+fmtP(gCustGST);
+  document.getElementById('m-r5a').textContent=fmtP(custTotal);
+  document.getElementById('m-r5b').textContent=fmtP(gCustTotal);
+  document.getElementById('m-r6a').textContent=fmt(-platComm);
+  document.getElementById('m-r6b').textContent='₹0';
+  document.getElementById('m-r7a').textContent=fmt(-gstOnComm);
+  document.getElementById('m-r7b').textContent='₹0';
+  document.getElementById('m-r8a').textContent=fmt(-custGST);
+  document.getElementById('m-r8b').textContent=fmt(-gCustGST);
+  document.getElementById('m-r9a').textContent='₹0';
+  document.getElementById('m-r9b').textContent=fmt(-gPer);
+  document.getElementById('m-r10a').textContent='₹0';
+  document.getElementById('m-r10b').textContent=fmt(-gGSTonSub);
+  document.getElementById('m-r11a').textContent=fmtP(themTake);
+  document.getElementById('m-r11b').textContent=fmtP(gTake);
+
+  const effComm=((platComm+gstOnComm)/custExGST*100).toFixed(1);
+  document.getElementById('m-comm-eff').textContent=effComm+'%';
+  document.getElementById('m-them').textContent=fmtP(themTake);
+  document.getElementById('m-them-d').textContent='Per booking · paid after '+delay+' days';
+  document.getElementById('m-us').textContent=fmtP(gTake);
+
+  const moExtra=(gTake-themTake)*bookings;
+  const morePct=(((gTake-themTake)/themTake)*100).toFixed(0);
+  const yrExtra=moExtra*12;
+
+  document.getElementById('m-sv-mo').textContent=fmtP(moExtra);
+  document.getElementById('m-sv-pct').textContent=morePct+'% more per booking than other platforms';
+  document.getElementById('m-sv-yr').textContent="That's "+fmtP(yrExtra)+' more revenue per year';
+
+  const locked=custExGST*bookings*(delay/30);
+  document.getElementById('m-lock-val').textContent=fmtP(locked);
+  document.getElementById('m-lock-desc').textContent=fmtP(locked)+' is locked for '+delay+' days. That\'s cash you can\'t use for rent, supplies, or staff salaries.';
+
+  const aT=themTake*bookings*12;
+  const aU=gTake*bookings*12;
+  const total=aT+aU;
+  document.getElementById('m-bar-t').style.width=(aT/total*100)+'%';
+  document.getElementById('m-bar-u').style.width=(aU/total*100)+'%';
+  document.getElementById('m-bar-tl').textContent='Other: '+fmtP(aT)+'/yr';
+  document.getElementById('m-bar-ul').textContent='Genoti: '+fmtP(aU)+'/yr';
+}
+
+function switchPane(i){
+  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('active',i===j));
+  document.querySelectorAll('.cs-btn').forEach((b,j)=>{b.classList.toggle('active',i===j);b.setAttribute('aria-selected',i===j)});
+}
+
+calcC(); calcM();
+</script>
+</body>
+</html>
