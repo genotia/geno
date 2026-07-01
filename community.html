@@ -212,7 +212,7 @@
 
     /* ── SUBMIT FORM VIEW ── */
     .form-view-wrap { max-width: 640px; margin: 0 auto; }
-    .form-topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .form-topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
     .form-back { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; transition: color .15s; }
     .form-back:hover { color: var(--text); }
     .form-topbar h2 { font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
@@ -800,6 +800,7 @@
       </div>
 
       <!-- Submitter type -->
+      <p style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:10px;letter-spacing:.3px;text-transform:uppercase">Who is posting this deal?</p>
       <div class="submitter-tabs">
         <div class="submitter-tab st-community active" onclick="selectSubmitter('community')">
           <div class="submitter-tab-icon">👥</div>
@@ -817,6 +818,7 @@
           <div class="submitter-tab-sub">I own this business</div>
         </div>
       </div>
+      <div style="height:1px;background:var(--border);margin-bottom:20px"></div>
 
       <!-- AI notice (shown after extraction) -->
       <div class="ai-notice" id="ai-notice" style="display:none">
