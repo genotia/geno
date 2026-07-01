@@ -98,7 +98,7 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
 .bk-header-sub{font-size:11px;color:rgba(255,255,255,.55)}
 .bk-cols{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:0}
 .bk-head-row{display:contents}
-.bk-head-cell{padding:10px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);border-top:1px solid rgba(255,255,255,.1)}
+.bk-head-cell{padding:10px 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.6);border-top:1px solid rgba(255,255,255,.1);background:var(--dark-green)}
 .bk-head-cell:not(:first-child){text-align:right}
 .bk-row{display:contents}
 .bk-cell{padding:13px 16px;font-size:13px;border-top:1px solid var(--border);display:flex;align-items:center}
@@ -327,12 +327,46 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
 
   <!-- ━━━━━━━━━━━━━━━ CUSTOMER TAB ━━━━━━━━━━━━━━━ -->
   <div class="pane" id="pane-consumer">
-    <div class="calc-hero-c">
-      <p class="ch-eyebrow">Customer savings calculator</p>
-      <h2 class="ch-title">The real price<br>behind the "deal"</h2>
-      <p class="ch-sub">Platforms charge merchants 15–30% commission. Merchants inflate prices to cover it. You pay the hidden markup — plus GST on that inflated number.</p>
+
+    <!-- ① QUICK GLANCE HERO ─────────────────────── -->
+    <div class="m-hero">
+      <p class="m-hero-eyebrow">Per visit cost comparison</p>
+      <p class="m-hero-context">Based on ₹<span id="c-ctx-price">1,000</span> service · <span id="c-ctx-comm">20</span>% platform commission · <span id="c-ctx-gst">18</span>% GST</p>
+
+      <div class="m-cost-row">
+        <div class="m-cost-card bad">
+          <div class="m-cost-label">What you pay on other platforms</div>
+          <div class="m-cost-who">Zomato · Swiggy · Nearbuy · Magicpin</div>
+          <div class="m-cost-num" id="c-hero-them">₹1,133</div>
+          <div class="m-cost-sub">Inflated price, fake discount, GST on inflated base</div>
+        </div>
+        <div class="m-vs">vs</div>
+        <div class="m-cost-card good">
+          <div class="m-cost-label">What you pay on Genoti</div>
+          <div class="m-cost-who">Real price, genuine discount</div>
+          <div class="m-cost-num" id="c-hero-us">₹944</div>
+          <div class="m-cost-sub">Real price, real discount, GST on real base</div>
+        </div>
+      </div>
+
+      <div class="m-savings-pill">
+        <div class="msp-label">💰 You save per visit</div>
+        <div class="msp-num" id="c-hero-sv">₹189</div>
+        <div class="msp-yr" id="c-hero-yr">That's ₹9,072 saved per year across 48 visits</div>
+      </div>
     </div>
-    <div class="calc-body">
+
+    <div class="scroll-hint">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      Adjust the numbers below to see your actual savings
+    </div>
+
+    <!-- ② SLIDERS ───────────────────────────────── -->
+    <div class="sliders-card">
+      <div class="sliders-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+        Your numbers
+      </div>
       <div class="f-group">
         <div class="f-label"><span>Service actual value (ex-GST)</span><span class="f-val" id="c-price-v">₹1,000</span></div>
         <input type="range" min="200" max="10000" step="100" value="1000" id="c-price" oninput="calcC()"/>
@@ -346,87 +380,81 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
       <div class="f-group">
         <div class="f-label"><span>Platform commission on merchant</span><span class="f-val" id="c-comm-v">20%</span></div>
         <input type="range" min="10" max="35" step="1" value="20" id="c-comm" oninput="calcC()"/>
+        <div class="f-hint">Zomato/Swiggy typically 20–30% · Nearbuy/Magicpin 15–25%</div>
       </div>
       <div class="f-group">
         <div class="f-label"><span>Platform "discount" shown to you</span><span class="f-val" id="c-disc-v">20%</span></div>
         <input type="range" min="5" max="40" step="1" value="20" id="c-disc" oninput="calcC()"/>
-        <div class="f-hint">Advertised discount — but applied on the already-inflated price</div>
+        <div class="f-hint">Advertised discount — applied on the already-inflated price, not the real price</div>
       </div>
       <div class="f-group">
         <div class="f-label"><span>Your visits per month</span><span class="f-val" id="c-visits-v">4</span></div>
         <input type="range" min="1" max="20" step="1" value="4" id="c-visits" oninput="calcC()"/>
       </div>
+    </div>
 
-      <div class="divider"></div>
-      <p class="section-label">What actually happens to your money</p>
-
-      <div class="flow-row">
-        <div class="flow-card">
-          <div class="fc-icon">🏷️</div>
-          <div class="fc-val" id="c-f1">₹1,000</div>
-          <div class="fc-label">Actual price (ex-GST)</div>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-card bad">
-          <div class="fc-icon">📈</div>
-          <div class="fc-val" id="c-f2">₹1,200</div>
-          <div class="fc-label">Inflated for platform fee</div>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-card">
-          <div class="fc-icon">🎟️</div>
-          <div class="fc-val" id="c-f3">₹960</div>
-          <div class="fc-label">"Discounted" ex-GST</div>
-        </div>
-        <div class="flow-arrow">→</div>
-        <div class="flow-card bad">
-          <div class="fc-icon">🧾</div>
-          <div class="fc-val" id="c-f4">₹1,133</div>
-          <div class="fc-label">You pay incl. GST</div>
-        </div>
+    <!-- ③ PRICE JOURNEY BREAKDOWN ───────────────── -->
+    <div class="breakdown-card">
+      <div class="bk-header">
+        <div class="bk-header-title">How the price is built — step by step</div>
+        <div class="bk-header-sub" id="c-bk-sub">₹1,000 service · 20% commission · 20% discount · 18% GST</div>
       </div>
-
-      <div class="compare-grid">
-        <div class="cmp-card them">
-          <div class="cmp-label">On Swiggy / Nearbuy</div>
-          <div class="cmp-price red" id="c-them">₹1,133</div>
-          <div class="cmp-detail" id="c-them-d">Inflated → discounted → GST on inflated-discounted price</div>
+      <div class="bk-cols">
+        <div class="bk-head-row">
+          <div class="bk-head-cell">Step</div>
+          <div class="bk-head-cell">Other platforms</div>
+          <div class="bk-head-cell">Genoti</div>
         </div>
-        <div class="cmp-card us">
-          <div class="cmp-label">On Genoti</div>
-          <div class="cmp-price green" id="c-us">₹944</div>
-          <div class="cmp-detail" id="c-us-d">Real price, 20% off-peak discount, GST on real discounted price</div>
+        <div class="bk-row">
+          <div class="bk-cell bk-label">Real price (ex-GST)</div>
+          <div class="bk-cell" id="c-r1a">₹1,000</div>
+          <div class="bk-cell" id="c-r1b">₹1,000</div>
         </div>
-      </div>
-
-      <div class="savings-box">
-        <div class="sv-label">You save per visit (including GST)</div>
-        <div class="sv-amount" id="c-sv-amt">₹189</div>
-        <div class="sv-pct" id="c-sv-pct">17% less than other platforms</div>
-        <div class="sv-sub" id="c-sv-yr">That's ₹9,072 saved per year across 48 visits</div>
-      </div>
-
-      <div class="callout">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        <div><strong style="color:#854F0B">GST makes the gap even wider.</strong> Other platforms calculate GST on the already-inflated discounted price. On Genoti, GST applies to the real discounted price. The GST gap alone saves you <span id="c-gst-diff">₹29</span> per visit.</div>
-      </div>
-
-      <div class="bar-card" style="margin-top:0">
-        <div class="bar-title">Annual spend comparison (incl. GST)</div>
-        <div class="bc-track">
-          <div class="bc-them" id="c-bar-t" style="width:55%"></div>
-          <div class="bc-us" id="c-bar-u" style="width:45%"></div>
+        <div class="bk-row bk-highlight">
+          <div class="bk-cell bk-label">Price listed on app</div>
+          <div class="bk-cell red" id="c-r2a">₹1,200 (inflated +20%)</div>
+          <div class="bk-cell green" id="c-r2b">₹1,000 (real price)</div>
         </div>
-        <div class="bc-legend">
-          <div class="bc-leg"><div class="bc-dot" style="background:var(--red-bar)"></div><span id="c-bar-tl">Other: ₹54,374/yr</span></div>
-          <div class="bc-leg"><div class="bc-dot" style="background:var(--green)"></div><span id="c-bar-ul">Genoti: ₹45,312/yr</span></div>
+        <div class="bk-row">
+          <div class="bk-cell bk-label">After "discount" (ex-GST)</div>
+          <div class="bk-cell" id="c-r3a">₹960</div>
+          <div class="bk-cell" id="c-r3b">₹800</div>
         </div>
-      </div>
-
-      <div class="note">
-        <strong>Why this happens:</strong> Merchants inflate listed prices 20–30% to cover platform commissions. The "discount" brings the inflated price back toward the real price — then GST is charged on that. On Genoti, the price is real, the off-peak discount is genuine, and GST is on the actual lower base. You save twice.
+        <div class="bk-row">
+          <div class="bk-cell bk-label">GST charged</div>
+          <div class="bk-cell red" id="c-r4a">+₹173 (on ₹960)</div>
+          <div class="bk-cell green" id="c-r4b">+₹144 (on ₹800)</div>
+        </div>
+        <div class="bk-row bk-total">
+          <div class="bk-cell bk-label">You pay (incl. GST)</div>
+          <div class="bk-cell red" id="c-r5a">₹1,133</div>
+          <div class="bk-cell green" id="c-r5b">₹944</div>
+        </div>
       </div>
     </div>
+
+    <!-- ④ ANNUAL BAR ───────────────────────────── -->
+    <div class="bar-card">
+      <div class="bar-title">Annual spend comparison (incl. GST)</div>
+      <div class="bc-track">
+        <div class="bc-them" id="c-bar-t" style="width:55%"></div>
+        <div class="bc-us" id="c-bar-u" style="width:45%"></div>
+      </div>
+      <div class="bc-legend">
+        <div class="bc-leg"><div class="bc-dot" style="background:var(--red-bar)"></div><span id="c-bar-tl">Other: ₹54,374/yr</span></div>
+        <div class="bc-leg"><div class="bc-dot" style="background:var(--green)"></div><span id="c-bar-ul">Genoti: ₹45,312/yr</span></div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <div><strong style="color:#854F0B">The GST double-hit explained.</strong> Other platforms calculate GST on the already-inflated discounted price. On Genoti, GST applies to the real discounted price. The GST gap alone saves you <span id="c-gst-diff">₹29</span> per visit — on top of the base price difference.</div>
+    </div>
+
+    <div class="note">
+      <strong>Why this happens:</strong> Merchants inflate listed prices 20–30% to cover platform commissions. The "discount" brings the inflated price back toward the real price — then GST is charged on that. On Genoti, the price is real, the discount is genuine, and GST is on the actual lower base. You save twice.
+    </div>
+
   </div><!-- /pane-consumer -->
 
   <div class="footer-cta">
@@ -509,40 +537,54 @@ function calcC(){
   document.getElementById('c-disc-v').textContent   = disc+'%';
   document.getElementById('c-visits-v').textContent = visits;
 
-  const inflated     = price*(1+comm/100);
-  const afterDisc    = inflated*(1-disc/100);
-  const afterDiscGST = afterDisc*(1+gst/100);
-  const genotiExGST  = price*0.8;
-  const genotiIncGST = genotiExGST*(1+gst/100);
+  // Price journey
+  const inflated   = price*(1+comm/100);         // platform inflates to cover commission
+  const afterDiscT = inflated*(1-disc/100);       // "discount" on inflated price
+  const gstAmtT    = afterDiscT*(gst/100);
+  const themTotal  = afterDiscT + gstAmtT;
 
-  document.getElementById('c-f1').textContent = fmtP(price);
-  document.getElementById('c-f2').textContent = fmtP(inflated);
-  document.getElementById('c-f3').textContent = fmtP(afterDisc);
-  document.getElementById('c-f4').textContent = fmtP(afterDiscGST);
+  const afterDiscU = price*(1-disc/100);          // same discount % on real price
+  const gstAmtU    = afterDiscU*(gst/100);
+  const usTotal    = afterDiscU + gstAmtU;
 
-  document.getElementById('c-them').textContent   = fmtP(afterDiscGST);
-  document.getElementById('c-them-d').textContent = 'Inflated to '+fmtP(inflated)+' → '+disc+'% off → +'+gst+'% GST = '+fmtP(afterDiscGST);
-  document.getElementById('c-us').textContent     = fmtP(genotiIncGST);
-  document.getElementById('c-us-d').textContent   = 'Real price '+fmtP(price)+', 20% off = '+fmtP(genotiExGST)+' + '+gst+'% GST = '+fmtP(genotiIncGST);
+  const svVisit = themTotal - usTotal;
+  const svYear  = svVisit * visits * 12;
 
-  const sv    = afterDiscGST - genotiIncGST;
-  const svPct = ((sv/afterDiscGST)*100).toFixed(0);
-  const svYr  = sv * visits * 12;
+  // Hero
+  document.getElementById('c-ctx-price').textContent = price.toLocaleString('en-IN');
+  document.getElementById('c-ctx-comm').textContent  = comm;
+  document.getElementById('c-ctx-gst').textContent   = gst;
+  document.getElementById('c-hero-them').textContent = fmtP(themTotal);
+  document.getElementById('c-hero-us').textContent   = fmtP(usTotal);
+  document.getElementById('c-hero-sv').textContent   = fmtP(svVisit);
+  document.getElementById('c-hero-yr').textContent   = "That's "+fmtP(svYear)+' saved per year across '+(visits*12)+' visits';
 
-  document.getElementById('c-sv-amt').textContent = fmtP(sv);
-  document.getElementById('c-sv-pct').textContent = svPct+'% less than other platforms';
-  document.getElementById('c-sv-yr').textContent  = "That's "+fmtP(svYr)+' saved per year across '+(visits*12)+' visits';
+  // Breakdown header
+  document.getElementById('c-bk-sub').textContent = fmtP(price)+' service · '+comm+'% commission · '+disc+'% discount · '+gst+'% GST';
 
-  const gstGap = afterDisc*(gst/100) - genotiExGST*(gst/100);
-  document.getElementById('c-gst-diff').textContent = fmtP(gstGap);
+  // Breakdown rows
+  document.getElementById('c-r1a').textContent = fmtP(price);
+  document.getElementById('c-r1b').textContent = fmtP(price);
+  document.getElementById('c-r2a').textContent = fmtP(inflated)+' (inflated +'+comm+'%)';
+  document.getElementById('c-r2b').textContent = fmtP(price)+' (real price)';
+  document.getElementById('c-r3a').textContent = fmtP(afterDiscT);
+  document.getElementById('c-r3b').textContent = fmtP(afterDiscU);
+  document.getElementById('c-r4a').textContent = '+'+fmtP(gstAmtT)+' (on '+fmtP(afterDiscT)+')';
+  document.getElementById('c-r4b').textContent = '+'+fmtP(gstAmtU)+' (on '+fmtP(afterDiscU)+')';
+  document.getElementById('c-r5a').textContent = fmtP(themTotal);
+  document.getElementById('c-r5b').textContent = fmtP(usTotal);
 
-  const aT = afterDiscGST*visits*12;
-  const aU = genotiIncGST*visits*12;
+  // Annual bar
+  const aT = themTotal*visits*12;
+  const aU = usTotal*visits*12;
   const tot = aT+aU;
   document.getElementById('c-bar-t').style.width = (aT/tot*100)+'%';
   document.getElementById('c-bar-u').style.width = (aU/tot*100)+'%';
   document.getElementById('c-bar-tl').textContent = 'Other: '+fmtP(aT)+'/yr';
   document.getElementById('c-bar-ul').textContent = 'Genoti: '+fmtP(aU)+'/yr';
+
+  // GST gap callout
+  document.getElementById('c-gst-diff').textContent = fmtP(gstAmtT - gstAmtU);
 }
 
 function switchPane(i){
