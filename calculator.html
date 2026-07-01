@@ -72,10 +72,24 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.95);backdrop-
 .m-cost-card.good .m-cost-sub{color:var(--green-md)}
 .m-vs{font-size:13px;font-weight:700;color:rgba(255,255,255,.4);text-align:center}
 
-.m-savings-pill{background:var(--green);border-radius:var(--rl);padding:18px 20px;text-align:center}
-.msp-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.75);margin-bottom:6px}
-.msp-num{font-size:32px;font-weight:900;color:#fff;letter-spacing:-.03em}
-.msp-yr{font-size:13px;color:rgba(255,255,255,.7);margin-top:4px}
+.m-savings-pill{
+  background:linear-gradient(135deg,#1a9968 0%,#0d7050 100%);
+  border-radius:var(--rl);
+  padding:28px 24px;
+  text-align:center;
+  box-shadow:0 0 0 3px rgba(167,243,208,.45),0 0 0 7px rgba(167,243,208,.12),0 16px 40px rgba(0,0,0,.3);
+  position:relative;
+  overflow:hidden;
+}
+.m-savings-pill::before{
+  content:'';position:absolute;top:0;left:0;right:0;
+  height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+}
+.msp-tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--green-md);background:rgba(255,255,255,.08);border:1px solid rgba(167,243,208,.25);border-radius:100px;padding:3px 12px;margin-bottom:12px}
+.msp-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.55);margin-bottom:10px}
+.msp-num{font-size:54px;font-weight:900;color:#fff;letter-spacing:-.05em;line-height:1;text-shadow:0 2px 20px rgba(0,0,0,.25)}
+.msp-divider{height:1px;background:rgba(255,255,255,.12);margin:14px auto;width:60%}
+.msp-yr{font-size:14px;color:rgba(255,255,255,.75);font-weight:600;letter-spacing:-.01em}
 
 /* ── SCROLL HINT ── */
 .scroll-hint{text-align:center;padding:14px;font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:28px}
@@ -238,9 +252,10 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
       </div>
 
       <div class="m-savings-pill">
-        <div class="msp-label">💰 You keep extra every month</div>
+        <div class="msp-tag">Your monthly savings</div>
         <div class="msp-num" id="m-keep-mo">₹5,901</div>
-        <div class="msp-yr" id="m-keep-yr">That's ₹70,812 more revenue per year</div>
+        <div class="msp-divider"></div>
+        <div class="msp-yr" id="m-keep-yr">= ₹70,812 more revenue every year</div>
       </div>
     </div>
 
@@ -350,9 +365,10 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
       </div>
 
       <div class="m-savings-pill">
-        <div class="msp-label">💰 You save per visit</div>
+        <div class="msp-tag">Your savings per visit</div>
         <div class="msp-num" id="c-hero-sv">₹189</div>
-        <div class="msp-yr" id="c-hero-yr">That's ₹9,072 saved per year across 48 visits</div>
+        <div class="msp-divider"></div>
+        <div class="msp-yr" id="c-hero-yr">= ₹9,072 saved per year across 48 visits</div>
       </div>
     </div>
 
@@ -503,7 +519,7 @@ function calcM(){
   document.getElementById('m-plat-cost').textContent = fmtP(platMonthly);
   document.getElementById('m-plat-sub').textContent  = 'per month in commission ('+comm+'% × '+bookings+' bookings)';
   document.getElementById('m-keep-mo').textContent   = fmtP(moSaving);
-  document.getElementById('m-keep-yr').textContent   = "That's "+fmtP(moSaving*12)+' more revenue per year';
+  document.getElementById('m-keep-yr').textContent   = '= '+fmtP(moSaving*12)+' more revenue every year';
 
   // Per booking breakdown
   document.getElementById('m-r1a').textContent = fmtP(price);
@@ -557,7 +573,7 @@ function calcC(){
   document.getElementById('c-hero-them').textContent = fmtP(themTotal);
   document.getElementById('c-hero-us').textContent   = fmtP(usTotal);
   document.getElementById('c-hero-sv').textContent   = fmtP(svVisit);
-  document.getElementById('c-hero-yr').textContent   = "That's "+fmtP(svYear)+' saved per year across '+(visits*12)+' visits';
+  document.getElementById('c-hero-yr').textContent   = '= '+fmtP(svYear)+' saved per year across '+(visits*12)+' visits';
 
   // Breakdown header
   document.getElementById('c-bk-sub').textContent = fmtP(price)+' service · '+comm+'% commission · '+disc+'% discount · '+gst+'% GST';
