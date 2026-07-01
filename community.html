@@ -145,8 +145,18 @@
     .disc-badge { position: absolute; top: 8px; right: 8px; background: #D85A30; color: #fff; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 5px; }
     .verify-badge { position: absolute; top: 8px; left: 8px; font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 4px; display: flex; align-items: center; gap: 3px; }
     .vb-community { background: var(--green-lt); color: var(--dark-green); }
-    .vb-ai { background: var(--blue-bg); color: var(--blue); }
+    .vb-user { background: var(--amber-bg); color: var(--amber); }
     .vb-merchant { background: var(--purple-bg); color: var(--purple); }
+    /* Submitter type selector */
+    .submitter-tabs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+    .submitter-tab { border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 8px; text-align: center; cursor: pointer; background: var(--bg); transition: all .15s; }
+    .submitter-tab:hover { border-color: var(--text); }
+    .submitter-tab.active.st-community { border-color: var(--green); background: var(--green-lt); }
+    .submitter-tab.active.st-user { border-color: var(--amber); background: var(--amber-bg); }
+    .submitter-tab.active.st-merchant { border-color: var(--purple); background: var(--purple-bg); }
+    .submitter-tab-icon { font-size: 20px; margin-bottom: 4px; }
+    .submitter-tab-label { font-size: 12px; font-weight: 700; color: var(--text); }
+    .submitter-tab-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
     .deal-info { padding: 10px 12px; }
     .deal-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .deal-merchant { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
@@ -555,8 +565,8 @@
               ✂️
               <div class="disc-badge">60% off</div>
               <div class="verify-badge vb-community">
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                Community
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                High confidence
               </div>
             </div>
             <div class="deal-info">
@@ -581,9 +591,9 @@
             <div class="deal-thumb deal-thumb-amber">
               🍽️
               <div class="disc-badge">40% off</div>
-              <div class="verify-badge vb-ai">
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-                AI reviewed
+              <div class="verify-badge vb-user">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Med-High confidence
               </div>
             </div>
             <div class="deal-info">
@@ -609,8 +619,8 @@
               💆
               <div class="disc-badge">55% off</div>
               <div class="verify-badge vb-merchant">
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                Merchant
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified
               </div>
             </div>
             <div class="deal-info">
@@ -636,8 +646,8 @@
               🏋️
               <div class="disc-badge">50% off</div>
               <div class="verify-badge vb-community">
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                Community
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                High confidence
               </div>
             </div>
             <div class="deal-info">
@@ -662,9 +672,9 @@
             <div class="deal-thumb deal-thumb-pink">
               💅
               <div class="disc-badge">35% off</div>
-              <div class="verify-badge vb-ai">
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-                AI reviewed
+              <div class="verify-badge vb-user">
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Med-High confidence
               </div>
             </div>
             <div class="deal-info">
@@ -690,8 +700,8 @@
               🩺
               <div class="disc-badge">25% off</div>
               <div class="verify-badge vb-community">
-                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                Community
+                <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                High confidence
               </div>
             </div>
             <div class="deal-info">
@@ -787,6 +797,25 @@
           Back
         </button>
         <h2>Share a deal</h2>
+      </div>
+
+      <!-- Submitter type -->
+      <div class="submitter-tabs">
+        <div class="submitter-tab st-community active" onclick="selectSubmitter('community')">
+          <div class="submitter-tab-icon">👥</div>
+          <div class="submitter-tab-label">Community</div>
+          <div class="submitter-tab-sub">Spotted by you</div>
+        </div>
+        <div class="submitter-tab st-user" onclick="selectSubmitter('user')">
+          <div class="submitter-tab-icon">🙋</div>
+          <div class="submitter-tab-label">User</div>
+          <div class="submitter-tab-sub">Personal deal</div>
+        </div>
+        <div class="submitter-tab st-merchant" onclick="selectSubmitter('merchant')">
+          <div class="submitter-tab-icon">🏪</div>
+          <div class="submitter-tab-label">Merchant</div>
+          <div class="submitter-tab-sub">I own this business</div>
+        </div>
       </div>
 
       <!-- AI notice (shown after extraction) -->
@@ -1186,6 +1215,14 @@
   }
 
   /* ── URL extraction ── */
+  /* ── Submitter type ── */
+  let _submitterType = 'community';
+  function selectSubmitter(type) {
+    _submitterType = type;
+    document.querySelectorAll('.submitter-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.submitter-tab.st-${type}`).classList.add('active');
+  }
+
   let _urlTimer;
 
   let _urlProgressTimer = null;
@@ -1467,13 +1504,20 @@
     card.dataset.cat = 'Community';
     card.dataset.tsMin = '0';
     card.dataset.ts = ts;
+    const badgeMap = {
+      community: { cls: 'vb-community', svg: '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>', label: 'High confidence' },
+      user:      { cls: 'vb-user',      svg: '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>', label: 'Med-High confidence' },
+      merchant:  { cls: 'vb-merchant',  svg: '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>', label: 'Verified' },
+    };
+    const badge = badgeMap[_submitterType] || badgeMap.community;
+
     card.innerHTML = `
       <div class="deal-thumb deal-thumb-green" style="background:#ECFDF5">
         🏷️
         ${dealPrice && origPrice ? `<div class="disc-badge">New</div>` : ''}
-        <div class="verify-badge vb-community">
-          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          Community
+        <div class="verify-badge ${badge.cls}">
+          ${badge.svg}
+          ${badge.label}
         </div>
       </div>
       <div class="deal-info">
