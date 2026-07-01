@@ -214,6 +214,19 @@
     .upload-box { border: 2px dashed var(--border); border-radius: 14px; padding: 16px 24px; cursor: pointer; background: var(--bg); transition: border-color .2s, background .2s; margin-bottom: 16px; }
     .upload-box:hover { border-color: var(--green); background: var(--green-lt); }
     .upload-icon { font-size: 36px; margin-bottom: 10px; }
+    .capture-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .capture-card { border: 2px dashed var(--border); border-radius: 14px; padding: 20px 16px; background: var(--bg); cursor: pointer; text-align: center; transition: border-color .2s, background .2s; user-select: none; }
+    .capture-card:hover { border-color: var(--green); background: var(--green-lt); }
+    .capture-card-cam { border-color: var(--green-md); background: var(--green-lt); }
+    .capture-card-cam:hover { border-color: var(--green); background: #D1FAE5; }
+    .capture-card-icon { font-size: 28px; margin-bottom: 8px; }
+    .capture-card-label { font-size: 13px; font-weight: 700; color: var(--text); }
+    .capture-card-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+    .capture-card-cam .capture-card-label { color: var(--dark-green); }
+    .img-loading { border: 2px dashed var(--green-md); border-radius: 14px; padding: 20px; background: var(--green-lt); display: none; text-align: center; margin-bottom: 16px; }
+    .img-preview { border-radius: 12px; overflow: hidden; margin-bottom: 16px; display: none; position: relative; }
+    .img-preview img { width: 100%; max-height: 160px; object-fit: cover; border-radius: 12px; display: block; }
+    .img-preview-label { position: absolute; bottom: 8px; left: 8px; font-size: 10px; font-weight: 700; background: rgba(0,0,0,.55); color: #fff; padding: 3px 8px; border-radius: 20px; }
     /* URL box — styled like upload-box but with an input inside */
     .url-box { border: 2px dashed var(--border); border-radius: 14px; padding: 16px 20px; background: var(--bg); transition: border-color .2s, background .2s, border-style .2s; margin-bottom: 16px; }
     .url-box.has-url { border-style: solid; border-color: var(--green); background: var(--green-lt); }
@@ -802,29 +815,37 @@
         <div class="url-status-text" id="url-status-text"></div>
       </div>
 
-      <div class="or-row">or upload a screenshot</div>
+      <div class="or-row">or add a photo</div>
 
-      <!-- Upload box -->
-      <div class="upload-box" id="upload-box" onclick="document.getElementById('deal-img-input').click()">
-        <input type="file" accept="image/*" id="deal-img-input" style="display:none" onchange="handleImageUpload(this)" />
-        <div id="upload-preview" style="display:none;margin-bottom:8px">
-          <img id="upload-thumb" style="max-height:80px;border-radius:8px;object-fit:contain" />
+      <!-- Capture cards: Upload + Take photo -->
+      <div class="capture-cards">
+        <div class="capture-card" onclick="document.getElementById('deal-img-input').click()">
+          <input type="file" accept="image/*" id="deal-img-input" style="display:none" onchange="handleImageUpload(this)" />
+          <div class="capture-card-icon">🖼️</div>
+          <div class="capture-card-label">Upload screenshot</div>
+          <div class="capture-card-sub">WhatsApp, Instagram, flyer</div>
         </div>
-        <div id="upload-idle" style="display:flex;align-items:center;gap:12px">
-          <div class="upload-icon" style="font-size:22px;margin:0">📸</div>
-          <div style="text-align:left">
-            <div style="font-size:13px;font-weight:700;color:var(--text)">Upload a screenshot</div>
-            <div style="font-size:11px;color:var(--muted);margin-top:2px">WhatsApp, Instagram, flyer or photo — AI will read it</div>
-          </div>
-          <div style="margin-left:auto;font-size:11px;font-weight:600;color:var(--green);background:var(--green-lt);padding:4px 10px;border-radius:20px;white-space:nowrap;border:1px solid var(--green-md)">AI extract</div>
+        <div class="capture-card capture-card-cam" onclick="document.getElementById('deal-cam-input').click()">
+          <input type="file" accept="image/*" capture="environment" id="deal-cam-input" style="display:none" onchange="handleImageUpload(this)" />
+          <div class="capture-card-icon">📷</div>
+          <div class="capture-card-label">Take a photo</div>
+          <div class="capture-card-sub">Point camera at the deal board</div>
         </div>
-        <div id="upload-loading" style="display:none;text-align:center;padding:4px 0">
-          <div style="font-size:20px;margin-bottom:6px">🤖</div>
-          <div style="font-size:13px;font-weight:600;color:var(--green)">AI is reading the deal…</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">Extracting merchant, price & details</div>
-          <div style="margin-top:10px;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
-            <div id="extract-progress" style="height:100%;background:var(--green);border-radius:2px;width:0%;transition:width 2s ease"></div>
-          </div>
+      </div>
+
+      <!-- Shared photo preview -->
+      <div class="img-preview" id="img-preview">
+        <img id="upload-thumb" src="" alt="" />
+        <div class="img-preview-label" id="img-preview-label">Photo captured</div>
+      </div>
+
+      <!-- Shared loading state -->
+      <div class="img-loading" id="upload-loading">
+        <div style="font-size:24px;margin-bottom:8px">🤖</div>
+        <div style="font-size:13px;font-weight:700;color:var(--dark-green)">AI is reading the deal…</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Extracting merchant, price &amp; details</div>
+        <div style="margin-top:12px;height:4px;background:var(--green-md);border-radius:2px;overflow:hidden">
+          <div id="extract-progress" style="height:100%;background:var(--green);border-radius:2px;width:0%;transition:width 2s ease"></div>
         </div>
       </div>
 
@@ -1327,11 +1348,18 @@
     const file = input.files[0];
     if (!file) return;
 
+    const isCam = input.id === 'deal-cam-input';
+    const label = isCam ? 'Photo taken' : 'Screenshot uploaded';
+
+    // Show preview
     const thumb = document.getElementById('upload-thumb');
     thumb.src = URL.createObjectURL(file);
-    document.getElementById('upload-preview').style.display = 'block';
-    document.getElementById('upload-idle').style.display = 'none';
-    document.getElementById('upload-loading').style.display = 'block';
+    document.getElementById('img-preview-label').textContent = label;
+    document.getElementById('img-preview').style.display = 'block';
+
+    // Show loading
+    const loadingEl = document.getElementById('upload-loading');
+    loadingEl.style.display = 'block';
     const bar = document.getElementById('extract-progress');
     bar.style.width = '0%';
     setTimeout(() => { bar.style.width = '80%'; }, 50);
@@ -1367,13 +1395,13 @@
       const d = json.data;
       fillFields(d);
       const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
-      setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from your screenshot — review and edit below.`);
+      const src = isCam ? 'your photo' : 'your screenshot';
+      setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${src} — review and edit below.`);
 
     } catch (err) {
       setAiNotice('Could not extract details (' + err.message + ') — please fill in manually below.');
     } finally {
-      document.getElementById('upload-loading').style.display = 'none';
-      document.getElementById('upload-idle').style.display = 'block';
+      loadingEl.style.display = 'none';
     }
   }
 
