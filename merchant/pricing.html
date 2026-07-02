@@ -94,19 +94,15 @@
     .hero-title em { font-style: normal; color: #4ADEAB; }
     .hero-sub { font-size: 16px; color: rgba(255,255,255,.58); max-width: 540px; margin: 0 auto 32px; line-height: 1.65; }
 
-    /* ── In-card price block ── */
-    .price-block { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 14px; }
-    .price-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; gap: 8px; }
-    .pr-monthly { border-bottom: 1px solid var(--border); background: var(--surface-2); }
-    .pr-yearly { background: var(--green-light); }
-    .pr-label { font-size: 12px; font-weight: 500; color: var(--text-2); display: flex; align-items: center; gap: 5px; }
-    .pr-yearly .pr-label { color: var(--green-deep); font-weight: 600; }
-    .pr-amt { font-size: 24px; font-weight: 700; letter-spacing: -.03em; color: var(--text-1); }
-    .pr-yearly .pr-amt { color: var(--green-dark); }
-    .pr-per { font-size: 12px; color: var(--text-3); font-weight: 400; }
-    .pr-right { text-align: right; }
-    .pr-sub { font-size: 10px; color: var(--green-deep); margin-top: 2px; }
-    .save-chip { font-size: 10px; font-weight: 700; background: var(--green); color: #fff; padding: 2px 8px; border-radius: 100px; letter-spacing: .02em; }
+    /* ── Billing toggle ── */
+    .billing-toggle-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 28px; }
+    .bt-label { font-size: 14px; font-weight: 500; color: var(--text-3); cursor: pointer; transition: color .15s; user-select: none; }
+    .bt-label.active { color: var(--text-1); font-weight: 700; }
+    .bt-switch { width: 48px; height: 26px; background: #D1D5DB; border-radius: 13px; position: relative; cursor: pointer; border: none; transition: background .25s; padding: 0; flex-shrink: 0; }
+    .bt-switch.on { background: var(--green); }
+    .bt-knob { display: block; position: absolute; width: 20px; height: 20px; background: #fff; border-radius: 50%; top: 3px; left: 3px; transition: left .25s; box-shadow: 0 1px 4px rgba(0,0,0,.2); pointer-events: none; }
+    .bt-switch.on .bt-knob { left: 25px; }
+    .bt-badge { font-size: 11px; font-weight: 700; background: var(--green-light); color: var(--green-deep); padding: 3px 10px; border-radius: 100px; }
 
     /* ── Plan cards ── */
     .plans-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 48px; }
@@ -319,6 +315,15 @@
 <!-- ── Plan cards ── -->
 <section class="section" aria-label="Pricing plans">
   <div class="container">
+    <div class="billing-toggle-row">
+      <span class="bt-label active" id="lbl-m" onclick="setBilling(false)">Monthly</span>
+      <button class="bt-switch" id="bt-sw" onclick="toggleBilling()" role="switch" aria-checked="false" aria-label="Toggle billing period">
+        <span class="bt-knob"></span>
+      </button>
+      <span class="bt-label" id="lbl-a" onclick="setBilling(true)">Yearly</span>
+      <span class="bt-badge">Save 20%</span>
+    </div>
+
     <div class="plans-grid" role="list">
 
       <!-- Starter -->
@@ -326,19 +331,10 @@
         <span class="plan-tier tier-1">Starter</span>
         <h2 class="plan-name">Marketplace</h2>
         <p class="plan-tagline">List services, post off-peak deals, and take bookings online.</p>
-        <div class="price-block">
-          <div class="price-row pr-monthly">
-            <span class="pr-label">Monthly</span>
-            <span><span class="pr-amt">&#8377;199</span><span class="pr-per">/mo</span></span>
-          </div>
-          <div class="price-row pr-yearly">
-            <span class="pr-label">Yearly <span class="save-chip">Save 20%</span></span>
-            <div class="pr-right">
-              <div><span class="pr-amt">&#8377;159</span><span class="pr-per">/mo</span></div>
-              <div class="pr-sub">&#8377;1,908 billed annually · save &#8377;480</div>
-            </div>
-          </div>
+        <div>
+          <span class="price-num" id="p1">&#8377;199</span><span class="price-per">/mo</span>
         </div>
+        <p class="price-note" id="pn1">Billed monthly</p>
         <button class="btn btn-outline" onclick="location.href='../register.html'">Start 14-day free trial</button>
         <p class="trial-note">No credit card required</p>
         <div class="plan-divider"></div>
@@ -371,19 +367,10 @@
         <span class="plan-tier tier-2">Growth</span>
         <h2 class="plan-name">Business</h2>
         <p class="plan-tagline">Full operations suite &mdash; staff, inventory, loyalty, CRM, and more.</p>
-        <div class="price-block">
-          <div class="price-row pr-monthly">
-            <span class="pr-label">Monthly</span>
-            <span><span class="pr-amt">&#8377;599</span><span class="pr-per">/mo</span></span>
-          </div>
-          <div class="price-row pr-yearly">
-            <span class="pr-label">Yearly <span class="save-chip">Save 20%</span></span>
-            <div class="pr-right">
-              <div><span class="pr-amt">&#8377;479</span><span class="pr-per">/mo</span></div>
-              <div class="pr-sub">&#8377;5,748 billed annually · save &#8377;1,440</div>
-            </div>
-          </div>
+        <div>
+          <span class="price-num" id="p2">&#8377;599</span><span class="price-per">/mo</span>
         </div>
+        <p class="price-note" id="pn2">Billed monthly</p>
         <button class="btn btn-primary" onclick="location.href='../register.html'">Start 14-day free trial</button>
         <p class="trial-note">No credit card required</p>
         <div class="plan-divider"></div>
@@ -412,19 +399,10 @@
         <span class="plan-tier tier-3">Pro</span>
         <h2 class="plan-name">AI Pro</h2>
         <p class="plan-tagline">Everything in Business plus AI agents, marketing automation, and ads.</p>
-        <div class="price-block">
-          <div class="price-row pr-monthly">
-            <span class="pr-label">Monthly</span>
-            <span><span class="pr-amt">&#8377;1,199</span><span class="pr-per">/mo</span></span>
-          </div>
-          <div class="price-row pr-yearly">
-            <span class="pr-label">Yearly <span class="save-chip">Save 20%</span></span>
-            <div class="pr-right">
-              <div><span class="pr-amt">&#8377;959</span><span class="pr-per">/mo</span></div>
-              <div class="pr-sub">&#8377;11,508 billed annually · save &#8377;2,880</div>
-            </div>
-          </div>
+        <div>
+          <span class="price-num" id="p3">&#8377;1,199</span><span class="price-per">/mo</span>
         </div>
+        <p class="price-note" id="pn3">Billed monthly</p>
         <button class="btn btn-outline" onclick="location.href='../register.html'">Start 14-day free trial</button>
         <p class="trial-note">No credit card required</p>
         <div class="plan-divider"></div>
@@ -454,19 +432,10 @@
         <span class="plan-tier tier-4">Enterprise</span>
         <h2 class="plan-name">Scale</h2>
         <p class="plan-tagline">Multi-location chains, franchise groups, and enterprise businesses.</p>
-        <div class="price-block">
-          <div class="price-row pr-monthly">
-            <span class="pr-label">Monthly</span>
-            <span><span class="pr-amt">&#8377;2,499</span><span class="pr-per">/mo</span></span>
-          </div>
-          <div class="price-row pr-yearly">
-            <span class="pr-label">Yearly <span class="save-chip">Save 20%</span></span>
-            <div class="pr-right">
-              <div><span class="pr-amt">&#8377;1,999</span><span class="pr-per">/mo</span></div>
-              <div class="pr-sub">&#8377;23,988 billed annually · save &#8377;6,000</div>
-            </div>
-          </div>
+        <div>
+          <span class="price-num" id="p4">&#8377;2,499</span><span class="price-per">/mo</span>
         </div>
+        <p class="price-note" id="pn4">Billed monthly</p>
         <button class="btn btn-dark">Contact sales</button>
         <p class="trial-note">Custom onboarding included</p>
         <div class="plan-divider"></div>
@@ -761,6 +730,39 @@
 </footer>
 
 <script>
+  let isYearly = false;
+
+  const prices = {
+    monthly: { p1:'&#8377;199', p2:'&#8377;599',   p3:'&#8377;1,199', p4:'&#8377;2,499' },
+    yearly:  { p1:'&#8377;159', p2:'&#8377;479',   p3:'&#8377;959',   p4:'&#8377;1,999' }
+  };
+  const notes = {
+    monthly: { p1:'Billed monthly', p2:'Billed monthly', p3:'Billed monthly', p4:'Billed monthly' },
+    yearly:  {
+      p1:'&#8377;1,908/yr &middot; save &#8377;480',
+      p2:'&#8377;5,748/yr &middot; save &#8377;1,440',
+      p3:'&#8377;11,508/yr &middot; save &#8377;2,880',
+      p4:'&#8377;23,988/yr &middot; save &#8377;6,000'
+    }
+  };
+
+  function toggleBilling() { setBilling(!isYearly); }
+
+  function setBilling(yearly) {
+    isYearly = yearly;
+    const sw = document.getElementById('bt-sw');
+    sw.classList.toggle('on', yearly);
+    sw.setAttribute('aria-checked', yearly.toString());
+    document.getElementById('lbl-m').classList.toggle('active', !yearly);
+    document.getElementById('lbl-a').classList.toggle('active', yearly);
+    const p = yearly ? prices.yearly  : prices.monthly;
+    const n = yearly ? notes.yearly   : notes.monthly;
+    ['p1','p2','p3','p4'].forEach(id => {
+      document.getElementById(id).innerHTML = p[id];
+      document.getElementById('pn' + id.slice(1)).innerHTML = n[id];
+    });
+  }
+
   function toggleFaq(i) {
     const a    = document.getElementById('faq-a-' + i);
     const icon = document.getElementById('faq-icon-' + i);
