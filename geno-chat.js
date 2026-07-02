@@ -6,12 +6,12 @@
 (function () {
   /* ── 1. STYLES ────────────────────────────────────────── */
   const css = `
-  #geno-fab{position:fixed;bottom:24px;right:24px;z-index:9000;display:flex;align-items:center;gap:10px;background:#085041;color:#fff;border:none;border-radius:100px;padding:11px 20px 11px 10px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;box-shadow:0 4px 24px rgba(8,80,65,.38);transition:transform .2s,box-shadow .2s}
-  #geno-fab:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(8,80,65,.48)}
+  #geno-fab{position:fixed;bottom:28px;right:28px;z-index:9000;display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#085041 0%,#0d7a5e 100%);color:#fff;border:none;border-radius:100px;padding:14px 24px 14px 14px;cursor:pointer;font-family:inherit;font-size:15px;font-weight:800;letter-spacing:-.01em;box-shadow:0 6px 28px rgba(8,80,65,.5),0 2px 8px rgba(0,0,0,.15);transition:transform .2s,box-shadow .2s}
+  #geno-fab:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(8,80,65,.55),0 4px 12px rgba(0,0,0,.18)}
   #geno-fab.geno-hidden{display:none}
-  .gfab-av{width:34px;height:34px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;flex-shrink:0;position:relative}
-  .gfab-pulse{position:absolute;top:-1px;right:-1px;width:11px;height:11px;border-radius:50%;background:#4ADE80;border:2px solid #085041;animation:gpulse 2s infinite}
-  @keyframes gpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.7}}
+  .gfab-av{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;position:relative}
+  .gfab-pulse{position:absolute;top:0px;right:0px;width:12px;height:12px;border-radius:50%;background:#4ADE80;border:2.5px solid #085041;animation:gpulse 2s infinite}
+  @keyframes gpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.6}}
 
   #geno-chat{position:fixed;bottom:24px;right:24px;z-index:9000;width:360px;border-radius:20px;background:#fff;box-shadow:0 24px 64px rgba(0,0,0,.18),0 4px 16px rgba(0,0,0,.08);display:flex;flex-direction:column;overflow:hidden;height:540px;transform:translateY(24px) scale(.96);opacity:0;pointer-events:none;transition:transform .28s cubic-bezier(.34,1.56,.64,1),opacity .22s ease}
   #geno-chat.geno-open{transform:translateY(0) scale(1);opacity:1;pointer-events:all}
@@ -91,13 +91,13 @@
   const tpl = `
   <button id="geno-fab" onclick="genoOpen()">
     <div class="gfab-av">G<div class="gfab-pulse"></div></div>
-    Ask Geno
+    Ask Geno AI
   </button>
   <div id="geno-chat">
     <div class="gc-head">
       <div class="gc-av">G</div>
       <div class="gc-info">
-        <div class="gc-name">Ask Geno</div>
+        <div class="gc-name">Ask Geno AI</div>
         <div class="gc-status" id="gc-status">AI deals assistant · always on</div>
       </div>
       <button class="gc-close" onclick="genoClose()">✕</button>
