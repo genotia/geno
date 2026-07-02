@@ -95,14 +95,12 @@
     .hero-sub { font-size: 16px; color: rgba(255,255,255,.58); max-width: 540px; margin: 0 auto 32px; line-height: 1.65; }
 
     /* ── Billing toggle ── */
-    .toggle-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 40px; }
-    .tog-label { font-size: 13px; color: rgba(255,255,255,.55); cursor: pointer; user-select: none; }
-    .tog-label.active { color: #fff; font-weight: 500; }
-    .tog-wrap { width: 44px; height: 24px; background: var(--green); border-radius: 12px; position: relative; cursor: pointer; border: none; transition: background .2s; }
-    .tog-wrap.off { background: #D0CFC9; }
-    .tog-knob { position: absolute; width: 18px; height: 18px; background: #fff; border-radius: 50%; top: 3px; right: 3px; transition: right .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
-    .tog-wrap.off .tog-knob { right: 23px; }
-    .save-badge { font-size: 11px; font-weight: 600; background: rgba(29,158,117,.25); color: #4ADEAB; padding: 3px 10px; border-radius: 100px; }
+    .toggle-row { display: flex; align-items: center; justify-content: center; margin-bottom: 40px; }
+    .billing-switch { display: inline-flex; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: 100px; padding: 5px; gap: 4px; }
+    .bs-btn { padding: 10px 26px; border-radius: 100px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: rgba(255,255,255,.5); font-family: inherit; transition: all .2s; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .bs-btn.active { background: #fff; color: var(--green-dark); box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+    .bs-badge { font-size: 11px; font-weight: 700; background: rgba(74,222,171,.2); color: #4ADEAB; padding: 2px 9px; border-radius: 100px; letter-spacing: .02em; }
+    .bs-btn.active .bs-badge { background: var(--green-light); color: var(--green-deep); }
 
     /* ── Plan cards ── */
     .plans-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 48px; }
@@ -308,12 +306,14 @@
     <p class="hero-sub">Every plan includes your Genoti marketplace listing and the AI deal negotiation agent. Pay only for what you need as you grow.</p>
 
     <div class="toggle-row" role="group" aria-label="Billing period">
-      <span class="tog-label" id="lbl-m" onclick="setBilling(false)">Monthly</span>
-      <button class="tog-wrap" id="tog" onclick="setBilling(!isAnnual)" aria-label="Toggle billing period" aria-pressed="true">
-        <div class="tog-knob"></div>
-      </button>
-      <span class="tog-label active" id="lbl-a" onclick="setBilling(true)">Annual</span>
-      <span class="save-badge">Save 20%</span>
+      <div class="billing-switch">
+        <button class="bs-btn" id="btn-monthly" onclick="setBilling(false)" aria-pressed="false">
+          Monthly
+        </button>
+        <button class="bs-btn active" id="btn-annual" onclick="setBilling(true)" aria-pressed="true">
+          Yearly <span class="bs-badge">Save 20%</span>
+        </button>
+      </div>
     </div>
   </div>
 </header>
@@ -752,13 +752,12 @@
 
   function setBilling(annual) {
     isAnnual = annual;
-    const tog = document.getElementById('tog');
-    tog.classList.toggle('off', !annual);
-    tog.setAttribute('aria-pressed', annual.toString());
-    document.getElementById('lbl-m').classList.toggle('active', !annual);
-    document.getElementById('lbl-a').classList.toggle('active', annual);
-    const p = annual ? prices.annual  : prices.monthly;
-    const n = annual ? notes.annual   : notes.monthly;
+    document.getElementById('btn-monthly').classList.toggle('active', !annual);
+    document.getElementById('btn-monthly').setAttribute('aria-pressed', (!annual).toString());
+    document.getElementById('btn-annual').classList.toggle('active', annual);
+    document.getElementById('btn-annual').setAttribute('aria-pressed', annual.toString());
+    const p = annual ? prices.annual : prices.monthly;
+    const n = annual ? notes.annual  : notes.monthly;
     ['p1','p2','p3','p4'].forEach(id => {
       document.getElementById(id).innerHTML = p[id];
       document.getElementById('pn' + id.slice(1)).textContent = n[id];
