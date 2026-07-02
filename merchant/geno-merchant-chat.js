@@ -6,22 +6,20 @@
 (function () {
   /* ── 1. STYLES ────────────────────────────────────────── */
   const css = `
-  #gmbiz-fab{position:fixed;bottom:28px;right:28px;z-index:9000;display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#111827 0%,#1e2f22 100%);color:#fff;border:none;border-radius:100px;padding:13px 22px 13px 13px;cursor:pointer;font-family:inherit;font-weight:800;font-size:14px;letter-spacing:-.01em;box-shadow:0 6px 28px rgba(0,0,0,.4),0 2px 8px rgba(8,80,65,.3);transition:transform .2s,box-shadow .2s}
-  #gmbiz-fab:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,.45),0 4px 12px rgba(8,80,65,.35)}
+  #gmbiz-fab{position:fixed;bottom:28px;right:28px;z-index:9000;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#085041 0%,#0d7a5e 100%);color:#fff;border:none;border-radius:100px;padding:15px 26px 15px 14px;cursor:pointer;font-family:inherit;font-weight:800;font-size:15px;letter-spacing:-.01em;box-shadow:0 8px 32px rgba(8,80,65,.55),0 2px 10px rgba(0,0,0,.2);transition:transform .2s,box-shadow .2s}
+  #gmbiz-fab:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(8,80,65,.6),0 4px 14px rgba(0,0,0,.22)}
   #gmbiz-fab.gmbiz-hidden{display:none}
-  .gmfab-av{width:40px;height:40px;border-radius:50%;background:#1D9E75;border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
-  .gmfab-av-g{font-size:17px;font-weight:800;color:#fff;line-height:1}
-  .gmfab-av-biz{font-size:7.5px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.04em;line-height:1;text-align:center}
-  .gmfab-pulse{position:absolute;top:0;right:0;width:12px;height:12px;border-radius:50%;background:#4ADE80;border:2.5px solid #111827;animation:gmbpulse 2s infinite}
+  .gmfab-av{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+  .gmfab-av-g{font-size:20px;font-weight:800;color:#fff;line-height:1}
+  .gmfab-pulse{position:absolute;top:0;right:0;width:13px;height:13px;border-radius:50%;background:#4ADE80;border:2.5px solid #085041;animation:gmbpulse 2s infinite}
   @keyframes gmbpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.6}}
 
   #gmbiz-chat{position:fixed;bottom:28px;right:28px;z-index:9000;width:370px;border-radius:20px;background:#fff;box-shadow:0 24px 64px rgba(0,0,0,.2),0 4px 16px rgba(0,0,0,.1);display:flex;flex-direction:column;overflow:hidden;height:560px;transform:translateY(24px) scale(.96);opacity:0;pointer-events:none;transition:transform .28s cubic-bezier(.34,1.56,.64,1),opacity .22s ease}
   #gmbiz-chat.gmbiz-open{transform:translateY(0) scale(1);opacity:1;pointer-events:all}
 
   .gmc-head{background:linear-gradient(135deg,#111827 0%,#1a2920 100%);padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.06)}
-  .gmc-av{width:38px;height:38px;border-radius:50%;background:#1D9E75;border:2px solid rgba(255,255,255,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;gap:1px}
-  .gmc-av-g{font-size:15px;font-weight:800;color:#fff;line-height:1}
-  .gmc-av-biz{font-size:7px;font-weight:700;color:rgba(255,255,255,.65);letter-spacing:.03em;line-height:1}
+  .gmc-av{width:38px;height:38px;border-radius:50%;background:#1D9E75;border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .gmc-av-g{font-size:17px;font-weight:800;color:#fff;line-height:1}
   .gmc-info{flex:1;min-width:0}
   .gmc-name{font-size:13px;font-weight:700;color:#fff}
   .gmc-biz{font-size:11px;color:#9FE1CB;margin-top:1px}
@@ -103,7 +101,6 @@
   <button id="gmbiz-fab" onclick="gmbizOpen()">
     <div class="gmfab-av">
       <div class="gmfab-av-g">G</div>
-      <div class="gmfab-av-biz">BIZ</div>
       <div class="gmfab-pulse"></div>
     </div>
     Ask Geno AI for Businesses
@@ -112,7 +109,6 @@
     <div class="gmc-head">
       <div class="gmc-av">
         <div class="gmc-av-g">G</div>
-        <div class="gmc-av-biz">BIZ</div>
       </div>
       <div class="gmc-info">
         <div class="gmc-name">Ask Geno AI for Businesses</div>
