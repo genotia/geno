@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>⚡ Off-Peak Deals — Genoti AI</title>
+  <meta name="theme-color" content="#085041" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Genoti" />
+  <link rel="manifest" href="manifest.json" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -403,6 +409,21 @@
     }
     .login-gate-btn-secondary:hover { color: var(--text); }
 
+    /* ── BOTTOM TAB BAR (mobile only) ── */
+    .mob-tab-bar {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+      background: var(--white); border-top: 1px solid var(--border);
+      padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 16px rgba(0,0,0,.07);
+    }
+    .mob-tab-bar-inner { display: flex; justify-content: space-around; align-items: flex-end; }
+    .mob-tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 10px; border: none; background: none; cursor: pointer; text-decoration: none; flex: 1; }
+    .mob-tab-icon { font-size: 22px; line-height: 1; }
+    .mob-tab-label { font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: .1px; }
+    .mob-tab.active .mob-tab-label { color: var(--green); }
+    .mob-tab.active .mob-tab-icon { filter: drop-shadow(0 0 3px rgba(29,158,117,.5)); }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .nav-links { display: none; }
@@ -414,24 +435,66 @@
       .trust-bar::-webkit-scrollbar { display: none; }
       .trust-badge { flex-shrink: 0; margin-left: 12px; }
     }
-    @media (max-width: 600px) {
-      .deals-grid { grid-template-columns: 1fr; }
-      .stats-inner { grid-template-columns: 1fr; }
-      .footer-top { grid-template-columns: 1fr; }
-      .footer-bottom { flex-direction: column; text-align: center; }
+    @media (max-width: 768px) {
+      /* show bottom tab bar, add breathing room */
+      .mob-tab-bar { display: block; }
+      body { padding-bottom: 72px; }
+
+      /* top nav: logo + menu only */
       .nav-right .btn-login, .nav-right .btn-pill { display: none; }
+      .nav-inner { padding: 0 16px; }
+
+      /* trust bar: scroll horizontally */
       .trust-step { display: none; }
       .trust-arrow { display: none; }
-      .trust-bar { justify-content: center; padding: 7px 12px; overflow-x: unset; }
+      .trust-bar { justify-content: center; padding: 7px 12px; }
       .trust-badge { margin-left: 0; font-size: 11px; }
-      .deals-hero { padding: 56px 16px 48px; }
-      .deals-hero h1 { letter-spacing: -.8px; }
-      .search-bar { flex-direction: column; border-radius: 20px; padding: 0; }
+
+      /* categories sticky: below nav (64px) only, trust bar collapses */
+      .categories-wrap { top: 64px; padding: 10px 12px; gap: 6px; }
+
+      /* hero */
+      .deals-hero { padding: 36px 16px 52px; }
+      .deals-hero h1 { font-size: clamp(26px, 7vw, 40px); letter-spacing: -.8px; }
+      .deals-hero .hero-sub { font-size: 15px; margin-bottom: 24px; }
+
+      /* search bar: stacked */
+      .search-bar { flex-direction: column; border-radius: 16px; padding: 0; margin-bottom: 16px; }
+      .search-bar .field { padding: 12px 16px; }
       .search-bar .field + .field { border-left: none; border-top: 1.5px solid var(--border); }
-      .search-btn { padding: 16px; border-radius: 0 0 18px 18px; width: 100%; }
+      .search-btn { padding: 16px; border-radius: 0 0 14px 14px; width: 100%; font-size: 16px; }
+
+      /* deals grid: 1 column */
+      .deals-grid { grid-template-columns: 1fr; }
+
+      /* deal cards: touch-friendly */
+      .btn-book, .btn-negotiate { min-height: 48px; padding: 12px; font-size: 14px; border-radius: 10px; }
+
+      /* stats */
+      .stats-inner { grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 20px 16px; }
+      .stat-number { font-size: 22px; }
+      .stat-label { font-size: 12px; }
+
+      /* section padding */
+      .section { padding: 32px 16px; }
+      .how-section { padding: 28px 16px; }
+
+      /* footer */
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+
+      /* modal full-screen on mobile */
+      .modal { max-width: 100%; border-radius: 20px 20px 0 0; position: fixed; bottom: 0; left: 0; right: 0; max-height: 92vh; }
+      .modal-overlay { align-items: flex-end; padding: 0; }
       .price-options { grid-template-columns: repeat(2, 1fr); }
-      .chat-window { height: 240px; }
-      .btn-book, .btn-negotiate { min-height: 44px; padding: 12px; font-size: 14px; }
+      .chat-window { height: 220px; }
+    }
+    @media (max-width: 480px) {
+      .stats-inner { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .nav-inner { height: 56px; }
+      .categories-wrap { top: 56px; }
+      .pill { padding: 6px 12px; font-size: 12px; }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1630,6 +1693,33 @@
     showScreen('booked');
   }
 </script>
+
+<!-- ══ MOBILE BOTTOM TAB BAR ══ -->
+<div class="mob-tab-bar">
+  <div class="mob-tab-bar-inner">
+    <a href="index.html" class="mob-tab active">
+      <span class="mob-tab-icon">⚡</span>
+      <span class="mob-tab-label">Deals</span>
+    </a>
+    <a href="negotiate.html" class="mob-tab">
+      <span class="mob-tab-icon">🤝</span>
+      <span class="mob-tab-label">Negotiate</span>
+    </a>
+    <a href="booking.html" class="mob-tab">
+      <span class="mob-tab-icon">📅</span>
+      <span class="mob-tab-label">BookNow</span>
+    </a>
+    <a href="notify.html" class="mob-tab">
+      <span class="mob-tab-icon">🔔</span>
+      <span class="mob-tab-label">NotifyMe</span>
+    </a>
+    <a href="community.html" class="mob-tab">
+      <span class="mob-tab-icon">👥</span>
+      <span class="mob-tab-label">Community</span>
+    </a>
+  </div>
+</div>
+
 <script src="geno-chat.js"></script>
 </body>
 </html>

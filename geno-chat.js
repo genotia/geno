@@ -77,9 +77,9 @@
   .gc-negotiate-info div{display:flex;justify-content:space-between}
   .gc-ni-label{color:#6B7280}.gc-ni-val{font-weight:600;color:#085041}
 
-  @media(max-width:480px){
-    #geno-chat{width:calc(100vw - 16px);right:8px;bottom:8px;height:78vh;border-radius:16px}
-    #geno-fab{right:16px;bottom:16px}
+  @media(max-width:768px){
+    #geno-chat{width:calc(100vw - 16px);right:8px;bottom:calc(72px + env(safe-area-inset-bottom));height:75vh;border-radius:16px}
+    #geno-fab{right:16px;bottom:calc(80px + env(safe-area-inset-bottom))}
   }
   `;
 

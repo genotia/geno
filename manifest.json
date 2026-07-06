@@ -1,0 +1,20 @@
+{
+  "name": "Genoti — Off-Peak Deals",
+  "short_name": "Genoti",
+  "description": "Discover hyperlocal off-peak deals. Save up to 75% on restaurants, spas, gyms and more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#085041",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "genoti_logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "lifestyle", "shopping"],
+  "lang": "en-IN"
+}
