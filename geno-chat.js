@@ -78,8 +78,10 @@
   .gc-ni-label{color:#6B7280}.gc-ni-val{font-weight:600;color:#085041}
 
   @media(max-width:768px){
-    #geno-chat{width:calc(100vw - 16px);right:8px;bottom:calc(72px + env(safe-area-inset-bottom));height:75vh;border-radius:16px}
-    #geno-fab{right:16px;bottom:calc(80px + env(safe-area-inset-bottom))}
+    #geno-fab{width:60px;height:60px;border-radius:50%;padding:0;justify-content:center;right:16px;bottom:calc(84px + env(safe-area-inset-bottom))}
+    .gfab-label{display:none}
+    .gfab-av{width:52px;height:52px;font-size:22px}
+    #geno-chat{width:calc(100vw - 16px);right:8px;bottom:calc(80px + env(safe-area-inset-bottom));height:76vh;border-radius:16px}
   }
   `;
 
@@ -91,7 +93,7 @@
   const tpl = `
   <button id="geno-fab" onclick="genoOpen()">
     <div class="gfab-av">G<div class="gfab-pulse"></div></div>
-    Ask Geno AI
+    <span class="gfab-label">Ask Geno AI</span>
   </button>
   <div id="geno-chat">
     <div class="gc-head">

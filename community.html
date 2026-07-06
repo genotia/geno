@@ -2004,7 +2004,26 @@
     goView('view-feed');
   }
 </script>
-<script src="mobile-tabs.js"></script>
+<!-- ══ MOBILE TAB BAR ══ -->
+<style>
+.mtb{display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;background:#fff;border-top:1.5px solid #E5E7EB;padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 12px rgba(0,0,0,.08)}
+.mtb-row{display:flex;justify-content:space-around;align-items:center;height:56px}
+.mtb-a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:1;text-decoration:none;padding:6px 4px;-webkit-tap-highlight-color:transparent}
+.mtb-i{font-size:20px;line-height:1}
+.mtb-t{font-size:10px;font-weight:600;color:#6B7280;font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+.mtb-a.on .mtb-t{color:#1D9E75}
+.mtb-a.on .mtb-i{transform:scale(1.1)}
+@media(max-width:768px){.mtb{display:block}body{padding-bottom:calc(56px + env(safe-area-inset-bottom)) !important}}
+</style>
+<div class="mtb">
+  <div class="mtb-row">
+    <a href="index.html"     class="mtb-a"><span class="mtb-i">⚡</span><span class="mtb-t">Deals</span></a>
+    <a href="negotiate.html" class="mtb-a"><span class="mtb-i">🤝</span><span class="mtb-t">Negotiate</span></a>
+    <a href="booking.html"   class="mtb-a"><span class="mtb-i">📅</span><span class="mtb-t">BookNow</span></a>
+    <a href="notify.html"    class="mtb-a"><span class="mtb-i">🔔</span><span class="mtb-t">NotifyMe</span></a>
+    <a href="community.html" class="mtb-a on"><span class="mtb-i">👥</span><span class="mtb-t">Community</span></a>
+  </div>
+</div>
 <script src="geno-chat.js"></script>
 </body>
 </html>
