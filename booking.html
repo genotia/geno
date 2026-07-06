@@ -331,35 +331,6 @@
     .modal-sub { font-size:13px; color:var(--muted); margin-bottom:18px; }
     .confirm-icon { width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; margin:0 auto 14px; }
 
-    /* ══ AI CHAT ══ */
-    .ai-fab { position:fixed; bottom:28px; right:28px; z-index:400; width:56px; height:56px; border-radius:50%; background:var(--green); border:none; cursor:pointer; box-shadow:0 8px 28px rgba(29,158,117,.4); display:flex; align-items:center; justify-content:center; font-size:22px; transition:transform .2s,box-shadow .2s; }
-    .ai-fab:hover { transform:scale(1.08); box-shadow:0 12px 36px rgba(29,158,117,.5); }
-    .fab-dot { position:absolute; top:-2px; right:-2px; width:16px; height:16px; background:var(--red); border-radius:50%; border:2px solid white; font-size:9px; font-weight:700; color:white; display:flex; align-items:center; justify-content:center; }
-    .chat-panel { position:fixed; bottom:96px; right:28px; z-index:400; width:330px; background:var(--white); border-radius:18px; border:1px solid var(--border); box-shadow:0 20px 60px rgba(0,0,0,.14); display:none; flex-direction:column; overflow:hidden; max-height:490px; }
-    .chat-panel.open { display:flex; }
-    .chat-hdr { background:var(--green); padding:13px 16px; display:flex; align-items:center; gap:10px; }
-    .chat-av { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-size:16px; }
-    .chat-hdr .cn { font-size:13px; font-weight:700; color:white; }
-    .chat-hdr .cs { font-size:11px; color:rgba(255,255,255,.75); }
-    .chat-x { margin-left:auto; background:none; border:none; color:rgba(255,255,255,.8); font-size:19px; cursor:pointer; }
-    .chat-msgs { flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:8px; }
-    .cmsg { max-width:88%; }
-    .cmsg.bot { align-self:flex-start; }
-    .cmsg.usr { align-self:flex-end; }
-    .cbub { padding:9px 12px; border-radius:13px; font-size:13px; line-height:1.5; }
-    .cmsg.bot .cbub { background:var(--bg); color:var(--text); border-bottom-left-radius:3px; }
-    .cmsg.usr .cbub { background:var(--green); color:white; border-bottom-right-radius:3px; }
-    .ctm { font-size:10px; color:var(--muted); margin-top:2px; padding:0 2px; }
-    .cmsg.usr .ctm { text-align:right; }
-    .chat-qbtns { padding:6px 12px; display:flex; gap:5px; flex-wrap:wrap; border-top:1px solid var(--border); }
-    .qbtn { padding:4px 9px; border-radius:13px; border:1px solid var(--border); background:var(--white); font-size:11px; font-weight:500; color:var(--text); cursor:pointer; transition:all .15s; white-space:nowrap; }
-    .qbtn:hover { border-color:var(--green); color:var(--green); }
-    .chat-inp-row { padding:10px 12px; border-top:1px solid var(--border); display:flex; gap:7px; }
-    .chat-inp { flex:1; padding:8px 11px; border:1.5px solid var(--border); border-radius:9px; font-size:13px; outline:none; font-family:inherit; }
-    .chat-inp:focus { border-color:var(--green); }
-    .chat-send { width:34px; height:34px; border-radius:9px; background:var(--green); border:none; cursor:pointer; color:white; font-size:14px; transition:opacity .15s; flex-shrink:0; }
-    .chat-send:hover { opacity:.88; }
-
     /* ── RESPONSIVE ── */
     @media (max-width:1100px) { .cat-grid { grid-template-columns:repeat(4,1fr); } }
     @media (max-width:700px)  { .cat-grid { grid-template-columns:repeat(3,1fr); } }
@@ -383,7 +354,7 @@
       .cat-grid { grid-template-columns:repeat(4,1fr); }
       .search-bar-wrap { flex-direction:column; gap:0; padding:8px; }
       .sb-divider { width:100%; height:1px; }
-      .chat-panel { width:calc(100vw - 32px); right:16px; }
+
       .footer-inner { grid-template-columns:1fr; }
       .appt-card { flex-wrap:wrap; }
       .appt-actions { width:100%; justify-content:flex-end; margin-top:8px; }
@@ -819,26 +790,6 @@
   </div>
 </footer>
 
-<!-- ══ AI CHAT ══ -->
-<button class="ai-fab" id="ai-fab" onclick="toggleChat()">🤖<span class="fab-dot" id="fab-dot">1</span></button>
-<div class="chat-panel" id="chat-panel">
-  <div class="chat-hdr">
-    <div class="chat-av">🤖</div>
-    <div><div class="cn">OffPeak AI Agent</div><div class="cs">● Online · Booking assistant</div></div>
-    <button class="chat-x" onclick="toggleChat()">×</button>
-  </div>
-  <div class="chat-msgs" id="chat-msgs"></div>
-  <div class="chat-qbtns">
-    <button class="qbtn" onclick="qMsg('Find salons near me')">💇 Salons</button>
-    <button class="qbtn" onclick="qMsg('Book a massage')">💆 Massage</button>
-    <button class="qbtn" onclick="qMsg('Cancel my booking')">✕ Cancel</button>
-    <button class="qbtn" onclick="qMsg('Join waitlist')">⏳ Waitlist</button>
-  </div>
-  <div class="chat-inp-row">
-    <input class="chat-inp" id="chat-inp" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')sendChat()" />
-    <button class="chat-send" onclick="sendChat()">➤</button>
-  </div>
-</div>
 
 <!-- CANCEL MODAL -->
 <div class="modal-overlay" id="m-cancel">
@@ -1003,7 +954,7 @@ let activeVenueId = null;
 let selSvcIdx = null, selStaffIdx = 0, selDate = null, selSlot = null;
 let mcMonth = new Date().getMonth(), mcYear = new Date().getFullYear();
 let cancelId = null, reschedId = null, apptCounter = 300;
-let chatReady = false, chatIsOpen = false;
+
 let activeFilter = 'all', activeSort = 'rel';
 let searchQuery = '', searchType = '';
 let prevView = 'search';
@@ -1550,64 +1501,6 @@ function showSuccess(t,d){document.getElementById('suc-title').textContent=t;doc
 /* ─────────────────────────────────────────────
    AI CHAT
 ───────────────────────────────────────────── */
-const AI_R = {
-  find:["I can help you find the perfect venue! You can search by service (e.g. 'haircut') or browse by category above. What are you looking for?","Use the search bar at the top or click a category tile to discover venues near you. What type of service do you need?"],
-  book:["To book: search for a venue → click it → choose a service → pick a date → select a time slot → fill in your details. That's it!","Find a venue using the search, click 'Book now', choose your service and a free slot. Takes under 2 minutes!"],
-  avail:["Venues with 'Available today' badge have open slots today. Green dots on the calendar show open days. Click a date to see exact times.","Look for the green 'Available today' chip on venue cards. Inside the venue, click any date with a green dot to see all open slots."],
-  cancel:["To cancel, scroll down to 'My Appointments' and click Cancel next to your booking.","Find your booking in 'My Appointments' below and hit Cancel — it's instant."],
-  resched:["To reschedule, go to 'My Appointments' below and click Reschedule on your booking. You'll pick a new date and time.","Easy! Hit Reschedule in 'My Appointments', choose a new slot, and you're done."],
-  wait:["Fully booked? Join the waitlist at the bottom of this page. Our AI monitors cancellations 24/7 and notifies you instantly when a slot opens!","Scroll to the bottom and enter your phone number to join the waitlist. Average wait is just 2 days. 🎯"],
-  price:["Service prices are shown on each venue card and inside the service list. Click a venue to see all prices. Starts from as low as ₹150!","Each service shows its price and duration. Select a category or search for a venue to compare prices."],
-  dflt:["I can help with: 🔍 finding venues, 📅 booking, 🔄 rescheduling, ✕ cancelling, or ⏳ joining the waitlist. What do you need?","Try asking: 'Find a salon', 'Book a massage', 'Cancel my appointment', or 'Join waitlist'."],
-};
-
-function getAIReply(m) {
-  const l=m.toLowerCase();
-  if(/hello|hi |hey|good/.test(l)) return rand(["Hi! 👋 I'm your OffPeak AI booking agent. I can help you find venues, book appointments, check availability, reschedule, or join the waitlist. What can I help with?","Hello! Ready to find and book a great venue? Search above or ask me anything — I'm here to help! 😊"]);
-  if(/find|search|near|where|salon|spa|gym|fitness|clinic|medspa|yoga|nail/.test(l)) return rand(AI_R.find);
-  if(/book|appoint|schedul|reserv/.test(l)) return rand(AI_R.book);
-  if(/availab|open|slot|free|when/.test(l)) return rand(AI_R.avail);
-  if(/cancel|delet/.test(l)) return rand(AI_R.cancel);
-  if(/reschedul|change|move|different/.test(l)) return rand(AI_R.resched);
-  if(/waitlist|wait|full/.test(l)) return rand(AI_R.wait);
-  if(/price|cost|how much|₹|fee/.test(l)) return rand(AI_R.price);
-  return rand(AI_R.dflt);
-}
-
-function rand(a){return a[Math.floor(Math.random()*a.length)];}
-
-function toggleChat(){
-  chatIsOpen=!chatIsOpen;
-  document.getElementById('chat-panel').classList.toggle('open',chatIsOpen);
-  const dot=document.getElementById('fab-dot');
-  if(chatIsOpen&&dot) dot.remove();
-  if(chatIsOpen&&!chatReady){
-    chatReady=true;
-    addChatMsg('bot',"Hi! 👋 I'm your OffPeak AI booking agent. Search for venues above, or ask me to help you find and book an appointment!");
-  }
-}
-
-function addChatMsg(type,text){
-  const msgs=document.getElementById('chat-msgs');
-  const time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  const d=document.createElement('div');
-  d.className=`cmsg ${type}`;
-  d.innerHTML=`<div class="cbub">${text}</div><div class="ctm">${time}</div>`;
-  msgs.appendChild(d);
-  msgs.scrollTop=msgs.scrollHeight;
-}
-
-function sendChat(){
-  const inp=document.getElementById('chat-inp');
-  const msg=inp.value.trim(); if(!msg) return;
-  addChatMsg('usr',msg); inp.value='';
-  setTimeout(()=>addChatMsg('bot',getAIReply(msg)),600);
-}
-
-function qMsg(msg){
-  if(!chatIsOpen) toggleChat();
-  setTimeout(()=>{addChatMsg('usr',msg);setTimeout(()=>addChatMsg('bot',getAIReply(msg)),600);},chatReady?0:450);
-}
 
 /* ─────────────────────────────────────────────
    INIT
