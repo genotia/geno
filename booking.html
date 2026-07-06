@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Booking — OffPeak</title>
+  <meta name="theme-color" content="#085041" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Genoti" />
+  <link rel="manifest" href="manifest.json" />
   <style>
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     :root {
@@ -363,10 +369,16 @@
       .booking-panel { position:static; }
       .footer-inner { grid-template-columns:1fr 1fr; }
     }
-    @media (max-width:640px) {
+    @media (max-width:768px) {
       .nav-links { display:none; }
+      .nav-right .btn-ghost, .nav-right .btn-login, .nav-right .btn-pill { display:none; }
+      .nav-inner { padding:0 16px; }
+      .hero { padding:32px 16px 48px; }
+      .trust-step, .trust-arrow { display:none; }
+      .trust-bar { justify-content:center; padding:7px 12px; }
+    }
+    @media (max-width:640px) {
       .hamburger { display:flex; }
-      .nav-right .btn-ghost { display:none; }
       .venues-grid, .results-grid { grid-template-columns:1fr; }
       .cat-grid { grid-template-columns:repeat(4,1fr); }
       .search-bar-wrap { flex-direction:column; gap:0; padding:8px; }
@@ -1604,6 +1616,7 @@ renderCats();
 renderFeatured();
 renderAppts();
 </script>
+<script src="mobile-tabs.js"></script>
 <script src="geno-chat.js"></script>
 </body>
 </html>

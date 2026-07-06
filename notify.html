@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>NotifyMe — AI Smart Alerts · Genoti AI</title>
+  <meta name="theme-color" content="#085041" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Genoti" />
+  <link rel="manifest" href="manifest.json" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -298,10 +304,17 @@
       .nm-merchant-callout { flex-direction: column; align-items: flex-start; padding: 32px; }
       .nm-prefs-grid { grid-template-columns: 1fr 1fr; }
     }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-right .btn-login, .nav-right .btn-pill { display: none; }
+      .nav-inner { padding: 0 16px; }
+      .trust-step, .trust-arrow { display: none; }
+      .trust-bar { justify-content: center; padding: 7px 12px; }
+      .hero { padding: 36px 16px 48px; }
+      .page-section { padding: 32px 16px; }
+    }
     @media (max-width: 600px) {
-      .hero { padding: 48px 16px 44px; }
       .hero-channels { flex-wrap: wrap; gap: 8px; }
-      .page-section { padding: 48px 16px; }
       .nm-features { grid-template-columns: 1fr; gap: 14px; }
       .nm-prefs-grid { grid-template-columns: 1fr; }
       .nm-flow { flex-direction: column; gap: 24px; }
@@ -1445,6 +1458,7 @@
     }, 4000);
   }
 </script>
+<script src="mobile-tabs.js"></script>
 <script src="geno-chat.js"></script>
 </body>
 </html>

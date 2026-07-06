@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Negotiate — Genoti AI</title>
+  <meta name="theme-color" content="#085041" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Genoti" />
+  <link rel="manifest" href="manifest.json" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -425,6 +431,17 @@
       .neg-body { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr 1fr; }
       .gsetup-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-right .btn-login, .nav-right .btn-pill { display: none; }
+      .nav-inner { padding: 0 16px; }
+      .trust-step { display: none; }
+      .trust-arrow { display: none; }
+      .trust-bar { justify-content: center; padding: 7px 12px; }
+      .trust-badge { margin-left: 0; }
+      .neg-hero { padding: 36px 16px 48px; }
+      .neg-stats { flex-wrap: wrap; }
+      .section { padding: 28px 16px; }
     }
     @media (max-width: 600px) {
       .footer-top { grid-template-columns: 1fr; }
@@ -1675,6 +1692,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 </script>
+<script src="mobile-tabs.js"></script>
 <script src="geno-chat.js"></script>
 </body>
 </html>
