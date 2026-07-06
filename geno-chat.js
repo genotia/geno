@@ -11,6 +11,7 @@
   #geno-fab.geno-hidden{display:none}
   .gfab-av{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;position:relative}
   .gfab-pulse{position:absolute;top:0px;right:0px;width:12px;height:12px;border-radius:50%;background:#4ADE80;border:2.5px solid #085041;animation:gpulse 2s infinite}
+  .gfab-logo{display:none;position:absolute;top:0;left:0;width:100%;height:100%;border-radius:50%}
   @keyframes gpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.6}}
 
   #geno-chat{position:fixed;bottom:24px;right:24px;z-index:9000;width:360px;border-radius:20px;background:#fff;box-shadow:0 24px 64px rgba(0,0,0,.18),0 4px 16px rgba(0,0,0,.08);display:flex;flex-direction:column;overflow:hidden;height:540px;transform:translateY(24px) scale(.96);opacity:0;pointer-events:none;transition:transform .28s cubic-bezier(.34,1.56,.64,1),opacity .22s ease}
@@ -78,9 +79,11 @@
   .gc-ni-label{color:#6B7280}.gc-ni-val{font-weight:600;color:#085041}
 
   @media(max-width:768px){
-    #geno-fab{width:60px;height:60px;border-radius:50%;padding:0;justify-content:center;right:16px;bottom:calc(84px + env(safe-area-inset-bottom))}
+    #geno-fab{width:60px;height:60px;border-radius:50%;padding:0;justify-content:center;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));background:none;box-shadow:0 4px 20px rgba(8,80,65,.5),0 2px 8px rgba(0,0,0,.2)}
     .gfab-label{display:none}
-    .gfab-av{width:52px;height:52px;font-size:22px}
+    .gfab-av{width:58px;height:58px;font-size:0;background:none;border:none}
+    .gfab-logo{display:block}
+    .gfab-pulse{border-color:#fff}
     #geno-chat{width:calc(100vw - 16px);right:8px;bottom:calc(80px + env(safe-area-inset-bottom));height:76vh;border-radius:16px}
   }
   `;
@@ -92,7 +95,7 @@
   /* ── 2. DOM ───────────────────────────────────────────── */
   const tpl = `
   <button id="geno-fab" onclick="genoOpen()">
-    <div class="gfab-av">G<div class="gfab-pulse"></div></div>
+    <div class="gfab-av">G<img src="genoti_logo.svg" class="gfab-logo" alt=""><div class="gfab-pulse"></div></div>
     <span class="gfab-label">Ask Geno AI</span>
   </button>
   <div id="geno-chat">
