@@ -1249,12 +1249,15 @@
     .assign-select:focus { border-color: var(--green); }
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
-      .sidebar { position: fixed; left: -230px; z-index: 200; transition: left .2s; }
+      /* iOS Safari fix: overflow:hidden on body + position:fixed elements causes crashes */
+      body { overflow-x: hidden; overflow-y: auto; height: auto; min-height: 100vh; }
+      .main-wrap { overflow: visible; height: auto; width: 100%; }
+      .content-scroll { overflow: visible; height: auto; }
+      .sidebar { position: fixed; left: -230px; z-index: 200; transition: left .2s; height: 100vh; }
       .sidebar.open { left: 0; }
       .sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 199; }
       .sidebar-backdrop.open { display: block; }
       .hamburger { display: flex; }
-      .main-wrap { width: 100%; }
       .home-grid { grid-template-columns: 1fr; }
       .hw-sales-num { font-size: 28px; }
       .setup-grid { grid-template-columns: 1fr; }
@@ -4140,6 +4143,7 @@
 
   /* ── INIT ── */
   async function init() {
+    try {
     const { data: { session } } = await db.auth.getSession();
     if (!session) { location.href = 'index.html'; return; }
     currentUser = session.user;
@@ -4175,6 +4179,7 @@
     document.getElementById('home-greeting-sub').textContent = new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
     await Promise.all([loadDeals(), loadHome()]);
+    } catch (e) { console.error('Dashboard init error:', e); location.href = 'index.html'; }
   }
 
   /* ── HOME ── */
