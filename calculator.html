@@ -33,7 +33,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.95);backdrop-
 .btn-try:hover{opacity:.88}
 
 /* ── LAYOUT ── */
-.container{max-width:760px;margin:0 auto;padding:40px 20px 60px}
+.container{max-width:1080px;margin:0 auto;padding:40px 20px 60px}
 
 /* ── PAGE HEADER ── */
 .page-header{text-align:center;margin-bottom:32px}
@@ -46,6 +46,9 @@ nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.95);backdrop-
 .cs-btn{flex:1;padding:14px 10px;font-size:15px;font-weight:700;text-align:center;cursor:pointer;border:none;background:transparent;font-family:inherit;color:var(--dark-green);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
 .cs-btn.active{background:var(--dark-green);color:#fff}
 .pane{display:none}.pane.active{display:block}
+.two-col-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:24px;align-items:start;margin-bottom:24px}
+.two-col-grid .m-hero{margin-bottom:0}
+.two-col-grid .sliders-card{margin-bottom:0;position:sticky;top:80px}
 
 /* ── MERCHANT HERO (quick-glance) ── */
 .m-hero{background:linear-gradient(135deg,#085041 0%,#0f3d2a 100%);border-radius:var(--rxl);padding:36px 28px;margin-bottom:4px;position:relative;overflow:hidden}
@@ -179,6 +182,7 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
 .fct-btn{display:inline-block;padding:13px 32px;background:var(--green);color:#fff;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:inherit;text-decoration:none;transition:opacity .15s}
 .fct-btn:hover{opacity:.88}
 
+@media(max-width:900px){.two-col-grid{grid-template-columns:1fr}}
 @media(max-width:600px){
   .m-cost-row{grid-template-columns:1fr;gap:10px}
   .m-vs{display:none}
@@ -213,7 +217,7 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
       TruePrice Calculator
     </div>
     <h1 class="page-title">See the real numbers</h1>
-    <p class="page-sub">Zomato, Swiggy, Nearbuy, Magicpin take 15–30% per transaction. Genoti charges ₹99/month flat — no commission ever.</p>
+    <p class="page-sub">Zomato, Swiggy, Nearbuy, Magicpin take 15–30% per transaction. Genoti charges ₹299/month flat — no commission ever.</p>
   </div>
 
   <div class="calc-switch" role="tablist">
@@ -230,10 +234,11 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
   <!-- ━━━━━━━━━━━━━━━ MERCHANT TAB ━━━━━━━━━━━━━━━ -->
   <div class="pane active" id="pane-merchant">
 
+    <div class="two-col-grid">
     <!-- ① QUICK GLANCE HERO ─────────────────────── -->
     <div class="m-hero">
       <p class="m-hero-eyebrow">Monthly platform cost comparison</p>
-      <p class="m-hero-context" id="m-context">Based on <span id="m-ctx-bookings">30</span> bookings · ₹<span id="m-ctx-price">1,000</span>/service · <span id="m-ctx-comm">20</span>% commission</p>
+      <p class="m-hero-context" id="m-context">Based on <span id="m-ctx-bookings">100</span> bookings · ₹<span id="m-ctx-price">1,000</span>/service · <span id="m-ctx-comm">20</span>% commission</p>
 
       <div class="m-cost-row">
         <div class="m-cost-card bad">
@@ -246,7 +251,7 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
         <div class="m-cost-card good">
           <div class="m-cost-label">What you pay on Genoti</div>
           <div class="m-cost-who">Zero commission, ever</div>
-          <div class="m-cost-num">₹99</div>
+          <div class="m-cost-num">₹299</div>
           <div class="m-cost-sub">flat monthly subscription</div>
         </div>
       </div>
@@ -259,11 +264,6 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
       </div>
     </div>
 
-    <div class="scroll-hint">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
-      Adjust the numbers below to match your business
-    </div>
-
     <!-- ② SLIDERS ───────────────────────────────── -->
     <div class="sliders-card">
       <div class="sliders-title">
@@ -271,8 +271,8 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
         Your numbers
       </div>
       <div class="f-group">
-        <div class="f-label"><span>Monthly bookings</span><span class="f-val" id="m-book-v">30</span></div>
-        <input type="range" min="5" max="300" step="5" value="30" id="m-book" oninput="calcM()"/>
+        <div class="f-label"><span>Monthly bookings</span><span class="f-val" id="m-book-v">100</span></div>
+        <input type="range" min="5" max="1000" step="5" value="100" id="m-book" oninput="calcM()"/>
         <div class="f-hint">How many bookings/orders you get from the platform per month</div>
       </div>
       <div class="f-group">
@@ -285,12 +285,13 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
         <div class="f-hint">Zomato/Swiggy typically 20–30% · Nearbuy/Magicpin 15–25%</div>
       </div>
     </div>
+    </div><!-- /two-col-grid -->
 
     <!-- ③ PER-BOOKING BREAKDOWN ───────────────────── -->
     <div class="breakdown-card">
       <div class="bk-header">
         <div class="bk-header-title">Per booking — where does your money go?</div>
-        <div class="bk-header-sub" id="m-bk-sub">₹1,000 service · 20% commission · 30 bookings/month</div>
+        <div class="bk-header-sub" id="m-bk-sub">₹1,000 service · 20% commission · 100 bookings/month</div>
       </div>
       <div class="bk-cols">
         <div class="bk-head-row">
@@ -316,7 +317,7 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
         <div class="bk-row bk-total">
           <div class="bk-cell bk-label">You keep</div>
           <div class="bk-cell red" id="m-r4a">₹800</div>
-          <div class="bk-cell green" id="m-r4b">₹997</div>
+          <div class="bk-cell green" id="m-r4b">₹2997</div>
         </div>
       </div>
     </div>
@@ -335,7 +336,7 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
     </div>
 
     <div class="note">
-      <strong>How Genoti works:</strong> One flat subscription of ₹99/month — that's it. No commission on any transaction, no GST on commission, no payout delays. The ₹99 subscription GST (18% = ₹17.82) is fully claimable as input tax credit if you're GST-registered, making your effective cost even lower.
+      <strong>How Genoti works:</strong> One flat subscription of ₹299/month — that's it. No commission on any transaction, no GST on commission, no payout delays. The ₹299 subscription GST (18% = ₹53.82) is fully claimable as input tax credit if you're GST-registered, making your effective cost even lower.
     </div>
 
   </div><!-- /pane-merchant -->
@@ -343,6 +344,7 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
   <!-- ━━━━━━━━━━━━━━━ CUSTOMER TAB ━━━━━━━━━━━━━━━ -->
   <div class="pane" id="pane-consumer">
 
+    <div class="two-col-grid">
     <!-- ① QUICK GLANCE HERO ─────────────────────── -->
     <div class="m-hero">
       <p class="m-hero-eyebrow">Per visit cost comparison</p>
@@ -357,7 +359,7 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
         </div>
         <div class="m-vs">vs</div>
         <div class="m-cost-card good">
-          <div class="m-cost-label">What you pay on Genoti</div>
+          <div class="m-cost-label">What you pay using Genoti</div>
           <div class="m-cost-who">Real price, genuine discount</div>
           <div class="m-cost-num" id="c-hero-us">₹944</div>
           <div class="m-cost-sub">Real price, real discount, GST on real base</div>
@@ -370,11 +372,6 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
         <div class="msp-divider"></div>
         <div class="msp-yr" id="c-hero-yr">= ₹9,072 saved per year across 48 visits</div>
       </div>
-    </div>
-
-    <div class="scroll-hint">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
-      Adjust the numbers below to see your actual savings
     </div>
 
     <!-- ② SLIDERS ───────────────────────────────── -->
@@ -408,6 +405,7 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
         <input type="range" min="1" max="20" step="1" value="4" id="c-visits" oninput="calcC()"/>
       </div>
     </div>
+    </div><!-- /two-col-grid -->
 
     <!-- ③ PRICE JOURNEY BREAKDOWN ───────────────── -->
     <div class="breakdown-card">
@@ -475,7 +473,7 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
 
   <div class="footer-cta">
     <h2 class="fct-title" id="fct-title">Stop giving away 20% of your revenue</h2>
-    <p class="fct-sub" id="fct-sub">Switch to Genoti. ₹99/month flat. Zero commission. Keep what you earn.</p>
+    <p class="fct-sub" id="fct-sub">Switch to Genoti. ₹299/month flat. Zero commission. Keep what you earn.</p>
     <a href="register.html" class="fct-btn">Get started free</a>
   </div>
 
@@ -485,7 +483,7 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
 function fmtP(n){return '₹'+Math.round(Math.abs(n)).toLocaleString('en-IN')}
 function fmtD(n){return (n<0?'−':'')+fmtP(n)}
 
-const GENOTI_SUB = 99; // ₹99/month flat subscription
+const GENOTI_SUB = 299; // ₹299/month flat subscription
 
 function calcM(){
   const bookings = +document.getElementById('m-book').value;
@@ -504,7 +502,7 @@ function calcM(){
 
   // Per booking
   const commAmt     = price * comm / 100;           // platform takes this
-  const perSubGenoti = GENOTI_SUB / bookings;       // ₹99 spread across bookings
+  const perSubGenoti = GENOTI_SUB / bookings;       // ₹299 spread across bookings
   const themKeep    = price - commAmt;
   const genotiKeep  = price - perSubGenoti;
 
@@ -613,7 +611,7 @@ function switchPane(i){
   const fctSub   = document.getElementById('fct-sub');
   if(i===0){
     fctTitle.textContent = 'Stop giving away 20% of your revenue';
-    fctSub.textContent   = 'Switch to Genoti. ₹99/month flat. Zero commission. Keep what you earn.';
+    fctSub.textContent   = 'Switch to Genoti. ₹299/month flat. Zero commission. Keep what you earn.';
   } else {
     fctTitle.textContent = 'Ready to pay the real price?';
     fctSub.textContent   = 'Join thousands of deal hunters saving more every week on Genoti.';
