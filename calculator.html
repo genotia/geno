@@ -182,7 +182,47 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
 .fct-btn{display:inline-block;padding:13px 32px;background:var(--green);color:#fff;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:inherit;text-decoration:none;transition:opacity .15s}
 .fct-btn:hover{opacity:.88}
 
-@media(max-width:900px){.two-col-grid{grid-template-columns:1fr}}
+/* ── PLATFORM PANE ── */
+.plat-inner{max-width:720px;margin:0 auto}
+.plat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:20px}
+.pg-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:9px 6px;text-align:center;cursor:pointer;transition:all .15s}
+.pg-btn:hover{border-color:#bbb}
+.pg-btn.on{border-color:var(--red-dk);background:var(--red-lt)}
+.pg-name{font-size:10px;font-weight:700;line-height:1.3;color:var(--text)}
+.pg-rate{font-size:9px;color:var(--red-dk);font-weight:600;margin-top:2px}
+.pg-cat{font-size:8px;color:#9CA3AF;margin-top:1px}
+.plat-detail-card{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--rl);padding:16px;margin-bottom:16px;display:none}
+.plat-detail-card.show{display:block}
+.pdc-name{font-size:17px;font-weight:800;margin-bottom:6px}
+.pdc-info{font-size:11px;color:var(--muted);line-height:1.65}
+.pdc-badge{display:inline-flex;margin-top:10px;font-size:12px;font-weight:700;color:var(--red-dk);background:var(--red-lt);padding:5px 14px;border-radius:6px;border:1px solid var(--red-bar)}
+.plat-big-loss{text-align:center;padding:24px;background:linear-gradient(135deg,#FEF0F0,var(--red-lt));border-radius:var(--rl);border:1px solid #F0C0C0;margin-bottom:16px}
+.pbl-label{font-size:11px;font-weight:700;color:var(--red-dk);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.pbl-num{font-size:44px;font-weight:900;color:var(--red-dk);letter-spacing:-.05em;line-height:1}
+.pbl-sub{font-size:12px;color:var(--muted);margin-top:8px}
+.plat-big-save{text-align:center;padding:24px;background:linear-gradient(135deg,#F0FAF5,var(--green-lt));border-radius:var(--rl);border:1px solid var(--green-md);margin-bottom:16px}
+.pbs-label{font-size:11px;font-weight:700;color:var(--dark-green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.pbs-num{font-size:44px;font-weight:900;color:var(--dark-green);letter-spacing:-.05em;line-height:1}
+.pbs-sub{font-size:12px;color:var(--muted);margin-top:8px}
+.plat-genoti{background:linear-gradient(135deg,#085041 0%,#0f3d2a 100%);border-radius:var(--rl);padding:22px;color:#fff;margin-bottom:16px}
+.plat-genoti h4{font-size:14px;font-weight:700;margin-bottom:12px}
+.pgr{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:rgba(255,255,255,.6)}
+.pgr span:last-child{color:var(--green-md);font-weight:600}
+.pgr.pgr-total{border-top:1px solid rgba(255,255,255,.15);margin-top:8px;padding-top:10px}
+.pgr.pgr-total span:last-child{color:#fff;font-weight:800;font-size:15px}
+.plat-table-wrap{background:var(--surface);border:1px solid var(--border-md);border-radius:var(--rxl);overflow:hidden;margin-bottom:16px}
+.plat-table{width:100%;border-collapse:collapse}
+.plat-table th{background:var(--dark-green);color:#fff;padding:10px 16px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.plat-table td{padding:10px 16px;font-size:12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.plat-table tbody tr:last-child td{border-bottom:none}
+.plat-table tbody tr:hover td{background:var(--bg);cursor:pointer}
+.ptd-name{font-weight:700}
+.ptd-rate{color:var(--red-dk);font-weight:700}
+.ptd-cat{color:var(--muted)}
+.plat-two-col{display:grid;grid-template-columns:1.15fr 1fr;gap:24px;align-items:start;margin-bottom:24px}
+.plat-right-sticky{position:sticky;top:80px}
+@media(max-width:700px){.plat-grid{grid-template-columns:repeat(3,1fr)}.pbl-num,.pbs-num{font-size:34px}}
+@media(max-width:900px){.two-col-grid{grid-template-columns:1fr}.plat-two-col{grid-template-columns:1fr}.plat-right-sticky{position:static}}
 @media(max-width:600px){
   .m-cost-row{grid-template-columns:1fr;gap:10px}
   .m-vs{display:none}
@@ -228,6 +268,10 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
     <button class="cs-btn" role="tab" onclick="switchPane(1)" aria-selected="false">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       Customer savings
+    </button>
+    <button class="cs-btn" role="tab" onclick="switchPane(2)" aria-selected="false">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+      Losses by Platform Commission Fee
     </button>
   </div>
 
@@ -471,6 +515,137 @@ input[type=range]{width:100%;accent-color:var(--green);height:6px;cursor:pointer
 
   </div><!-- /pane-consumer -->
 
+  <!-- ━━━━━━━━━━━━━━━ PLATFORM TAB ━━━━━━━━━━━━━━━ -->
+  <div class="pane" id="pane-platform">
+
+    <div class="plat-two-col">
+
+      <!-- ① LEFT: Annual loss → Numbers → Breakdown -->
+      <div>
+
+        <!-- Annual loss hero (Genoti dark-green theme) -->
+        <div class="m-hero" style="margin-bottom:16px">
+          <p class="m-hero-eyebrow">Annual platform commission loss</p>
+          <p class="m-hero-context">Based on <span id="p-ctx-book">200</span> bookings · ₹<span id="p-ctx-aov">1,000</span>/service · <span id="p-ctx-comm">20</span>% commission</p>
+          <div class="m-savings-pill">
+            <div class="msp-tag">Your annual loss to this platform</div>
+            <div class="msp-num" id="p-annual-loss">₹6,14,400</div>
+            <div class="msp-divider"></div>
+            <div class="msp-yr" id="p-loss-ctx">= ₹51,200 every month to Swiggy — not your pocket</div>
+          </div>
+        </div>
+
+        <!-- Your business numbers -->
+        <div class="sliders-card" style="margin-bottom:16px">
+          <div class="sliders-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+            Your business numbers
+          </div>
+          <div class="f-group">
+            <div class="f-label"><span>Monthly bookings / orders</span><span class="f-val" id="p-book-v">200</span></div>
+            <input type="range" min="10" max="2000" step="10" value="200" id="p-book" oninput="calcP()"/>
+            <div class="f-hint">Transactions you get from this platform per month</div>
+          </div>
+          <div class="f-group">
+            <div class="f-label"><span>Average order / service value (ex-GST)</span><span class="f-val" id="p-aov-v">₹1,000</span></div>
+            <input type="range" min="100" max="20000" step="100" value="1000" id="p-aov" oninput="calcP()"/>
+          </div>
+          <div class="f-group">
+            <div class="f-label"><span>Platform commission rate</span><span class="f-val" id="p-comm-v" style="color:var(--red-dk)">20%</span></div>
+            <input type="range" min="5" max="55" step="1" value="20" id="p-comm" oninput="calcP()"/>
+            <div class="f-hint" id="p-hint">Select a platform on the right to auto-fill the verified rate</div>
+          </div>
+        </div>
+
+        <!-- Full cost breakdown -->
+        <div class="breakdown-card">
+          <div class="bk-header">
+            <div class="bk-header-title">Full annual cost breakdown</div>
+            <div class="bk-header-sub" id="p-bk-sub">200 bookings · ₹1,000 AOV · 20% commission</div>
+          </div>
+          <div class="bk-cols">
+            <div class="bk-head-row">
+              <div class="bk-head-cell">Item</div>
+              <div class="bk-head-cell">Monthly</div>
+              <div class="bk-head-cell">Annual</div>
+            </div>
+            <div class="bk-row">
+              <div class="bk-cell bk-label">Gross revenue</div>
+              <div class="bk-cell" id="p-gross-mo">₹2,00,000</div>
+              <div class="bk-cell" id="p-gross-yr">₹24,00,000</div>
+            </div>
+            <div class="bk-row bk-highlight">
+              <div class="bk-cell bk-label">Commission (<span id="p-comm-pct">20</span>%)</div>
+              <div class="bk-cell red" id="p-comm-mo">−₹40,000</div>
+              <div class="bk-cell red" id="p-comm-yr">−₹4,80,000</div>
+            </div>
+            <div class="bk-row">
+              <div class="bk-cell bk-label">GST on commission (18%)</div>
+              <div class="bk-cell red" id="p-gst-mo">−₹7,200</div>
+              <div class="bk-cell red" id="p-gst-yr">−₹86,400</div>
+            </div>
+            <div class="bk-row">
+              <div class="bk-cell bk-label">Payment gateway (~2%)</div>
+              <div class="bk-cell red" id="p-pg-mo">−₹4,000</div>
+              <div class="bk-cell red" id="p-pg-yr">−₹48,000</div>
+            </div>
+            <div class="bk-row bk-total">
+              <div class="bk-cell bk-label">Total platform cost</div>
+              <div class="bk-cell red" id="p-total-mo">−₹51,200</div>
+              <div class="bk-cell red" id="p-total-yr">−₹6,14,400</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ② RIGHT: Platform selector (sticky) -->
+      <div class="plat-right-sticky">
+        <div class="sliders-card">
+          <div class="sliders-title" style="margin-bottom:6px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            Booking platforms — commission rates
+          </div>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.5">Select a platform to auto-fill commission rate</p>
+          <div class="plat-grid" id="platGrid" style="margin-bottom:0;grid-template-columns:repeat(3,1fr)"></div>
+        </div>
+        <div class="plat-detail-card" id="platDetail">
+          <div class="pdc-name" id="pdcName"></div>
+          <div class="pdc-info" id="pdcInfo"></div>
+          <div class="pdc-badge" id="pdcBadge"></div>
+        </div>
+      </div>
+
+    </div><!-- /plat-two-col -->
+
+    <!-- Full-width below the grid -->
+    <div class="plat-inner">
+
+      <!-- Genoti comparison -->
+      <div class="plat-genoti">
+        <h4>On Genoti instead</h4>
+        <div class="pgr"><span>Platform commission</span><span>₹0 — zero commission, ever</span></div>
+        <div class="pgr"><span>Genoti subscription</span><span>₹299/month flat</span></div>
+        <div class="pgr"><span>Payment gateway</span><span>₹0 (pay at venue)</span></div>
+        <div class="pgr"><span>GST on ₹299 (claimable as ITC)</span><span>₹53.82/month</span></div>
+        <div class="pgr pgr-total"><span>Total annual cost on Genoti</span><span>₹3,588/year</span></div>
+      </div>
+
+      <!-- Savings highlight -->
+      <div class="plat-big-save">
+        <div class="pbs-label">You save by switching to Genoti</div>
+        <div class="pbs-num" id="p-savings">₹6,10,812</div>
+        <div class="pbs-sub" id="p-savings-ctx">That's 99% less than what you're paying this platform today</div>
+      </div>
+
+      <div class="note">
+        <strong>About these rates:</strong> Verified from platform partner portals, company filings, and industry reports (2025–2026). Effective rates are often higher due to merchant-funded discounts, packaging fees, and surge events. GST on commission (18%) is an additional cost not highlighted by platforms but fully borne by you.
+      </div>
+
+    </div>
+
+  </div><!-- /pane-platform -->
+
   <div class="footer-cta">
     <h2 class="fct-title" id="fct-title">Stop giving away 20% of your revenue</h2>
     <p class="fct-sub" id="fct-sub">Switch to Genoti. ₹299/month flat. Zero commission. Keep what you earn.</p>
@@ -612,13 +787,114 @@ function switchPane(i){
   if(i===0){
     fctTitle.textContent = 'Stop giving away 20% of your revenue';
     fctSub.textContent   = 'Switch to Genoti. ₹299/month flat. Zero commission. Keep what you earn.';
-  } else {
+  } else if(i===1){
     fctTitle.textContent = 'Ready to pay the real price?';
     fctSub.textContent   = 'Join thousands of deal hunters saving more every week on Genoti.';
+  } else {
+    fctTitle.textContent = 'Stop paying platform commission. Start keeping revenue.';
+    fctSub.textContent   = 'List on Genoti for ₹299/month flat. Zero commission. Zero transaction fees.';
   }
 }
 
-calcM(); calcC();
+// ── PLATFORM PANE ──
+const platData = [
+  {name:"Swiggy",    rate:22, min:18, max:25, cat:"Food",      info:"18–25% per order plus platform fees of ₹17.58/order (incl. GST). Average effective rate with discounts and packaging: 25–30%."},
+  {name:"Zomato",    rate:22, min:15, max:30, cat:"Food",      info:"15–30% depending on city and account manager. Cloud kitchens often pay 25%+. Zomato Gold requires extra merchant-funded discounts on top."},
+  {name:"Urban Co.", rate:28, min:20, max:28, cat:"Services",  info:"28.3% of service value for all partners. High performers (30+ services/month) pay 27.9%. Plus mandatory subscription packs."},
+  {name:"Booking.com",rate:15,min:10, max:25, cat:"Hotels",   info:"Global average 15%, ranging 10–25%. Preferred Partner program adds 3–5% more. Genius program adds 10% merchant-funded discount."},
+  {name:"Airbnb",    rate:16, min:15, max:16, cat:"Homestays", info:"Flat 15.5% host-only fee since late 2025. Applies to nightly rate plus cleaning fees. Payment processing included."},
+  {name:"MakeMyTrip",rate:18, min:15, max:22, cat:"Travel",   info:"MakeMyTrip + Goibibo (combined) charge 15–22% per booking. #1 OTA in India — expensive but hard to avoid for visibility."},
+  {name:"OYO",       rate:22, min:20, max:25, cat:"Hotels",    info:"20–25% commission plus revenue share arrangements. Hotel owners report losing pricing control, with OYO setting rates."},
+  {name:"Agoda",     rate:18, min:15, max:25, cat:"Travel",    info:"#3 OTA in India hotel bookings (2025). Commission 15–25% depending on market and property type."},
+  {name:"Expedia",   rate:20, min:15, max:30, cat:"Hotels",    info:"15–30% commission. Higher rates for visibility programs. Part of Expedia Group which owns Hotels.com, Vrbo."},
+  {name:"Practo",    rate:15, min:10, max:20, cat:"Health",    info:"10–20% on online consultations plus ₹5,000–₹25,000/month SaaS fees. For a ₹500 consult, Practo keeps ₹100+."},
+  {name:"ClassPass", rate:40, min:30, max:50, cat:"Fitness",   info:"Pays studios 30–50% below retail rate. A ₹500 class earns the studio only ₹250–350. Designed to fill empty slots."},
+  {name:"Cult.fit",  rate:35, min:30, max:40, cat:"Fitness",   info:"Partner gym revenue share model: 30–40%. Cult.fit provides the members; you provide the space and trainers."},
+  {name:"Fresha",    rate:20, min:20, max:20, cat:"Salons",    info:"20% on new clients from its marketplace (post-Nov 2025 pricing change). Previously marketed as 'free forever'."},
+  {name:"EaseMyTrip",rate:12, min:10, max:15, cat:"Travel",   info:"10–15% commission — positioned as a lower-cost OTA alternative to MakeMyTrip. Growing market share."},
+  {name:"Nearbuy",   rate:15, min:10, max:15, cat:"All",       info:"Nearbuy charges merchants 10–15% commission on deal redemptions. Lower than Groupon-era rates, but merchants still fund deep discounts (30–70% off) and pay commission on top — eroding margins significantly."},
+  {name:"Groupon",   rate:45, min:40, max:50, cat:"All",       info:"Groupon takes 40–50% of the deal value globally. Merchants list a discounted offer and Groupon keeps up to half the revenue. You receive 50–60% of your already-discounted price, with no customer relationship ownership."},
+  {name:"Magicpin",  rate:15, min:10, max:20, cat:"All",       info:"Magicpin charges 10–20% commission on transactions driven through the app. Additionally requires merchant-funded cashback (5–15%) to stay visible in the feed, making effective cost 20–30% of transaction value."},
+  {name:"Dineout",   rate:12, min:10, max:15, cat:"Dining",    info:"Dineout (acquired by Swiggy) charges restaurants 10–15% commission per cover/booking. Premium listing and featured placement require additional fees. Complimentary diner credits are also funded by the restaurant."},
+];
+
+let selPlatIdx = 0;
+
+function initPlatPane(){
+  const grid = document.getElementById('platGrid');
+  platData.forEach((p,i)=>{
+    const btn = document.createElement('div');
+    btn.className = 'pg-btn'+(i===0?' on':'');
+    btn.innerHTML = '<div class="pg-name">'+p.name+'</div><div class="pg-rate">'+p.min+'–'+p.max+'%</div><div class="pg-cat">'+p.cat+'</div>';
+    btn.onclick = ()=>selectPlat(i);
+    grid.appendChild(btn);
+  });
+}
+
+function selectPlat(i){
+  selPlatIdx = i;
+  const p = platData[i];
+  document.querySelectorAll('.pg-btn').forEach((b,j)=>b.classList.toggle('on',j===i));
+  const det = document.getElementById('platDetail');
+  det.classList.add('show');
+  document.getElementById('pdcName').textContent  = p.name;
+  document.getElementById('pdcInfo').textContent  = p.info;
+  document.getElementById('pdcBadge').textContent = p.min+'–'+p.max+'% commission';
+  const sl = document.getElementById('p-comm');
+  sl.min   = Math.max(5,  p.min - 2);
+  sl.max   = Math.min(55, p.max + 5);
+  sl.value = p.rate;
+  document.getElementById('p-hint').textContent = 'Verified rate for '+p.name+' — adjust if your actual rate differs';
+  calcP();
+}
+
+function calcP(){
+  const bookings = +document.getElementById('p-book').value;
+  const aov      = +document.getElementById('p-aov').value;
+  const comm     = +document.getElementById('p-comm').value;
+
+  document.getElementById('p-book-v').textContent   = bookings;
+  document.getElementById('p-aov-v').textContent    = fmtP(aov);
+  document.getElementById('p-comm-v').textContent   = comm+'%';
+  document.getElementById('p-comm-pct').textContent = comm;
+  document.getElementById('p-bk-sub').textContent   = bookings+' bookings · '+fmtP(aov)+' AOV · '+comm+'% commission';
+  document.getElementById('p-ctx-book').textContent = bookings;
+  document.getElementById('p-ctx-aov').textContent  = aov.toLocaleString('en-IN');
+  document.getElementById('p-ctx-comm').textContent = comm;
+
+  const grossMo  = bookings * aov;
+  const grossYr  = grossMo * 12;
+  const commMo   = grossMo * comm / 100;
+  const commYr   = commMo * 12;
+  const gstMo    = commMo * 0.18;
+  const gstYr    = gstMo * 12;
+  const pgMo     = grossMo * 0.02;
+  const pgYr     = pgMo * 12;
+  const totalMo  = commMo + gstMo + pgMo;
+  const totalYr  = totalMo * 12;
+  const genotiYr = GENOTI_SUB * 12;
+  const savingsYr= Math.max(0, totalYr - genotiYr);
+  const savPct   = totalYr > 0 ? Math.round(savingsYr / totalYr * 100) : 0;
+
+  document.getElementById('p-annual-loss').textContent = fmtP(totalYr);
+  document.getElementById('p-loss-ctx').textContent    = '= '+fmtP(totalMo)+' every month to '+platData[selPlatIdx].name+' — not your pocket';
+
+  document.getElementById('p-gross-mo').textContent = fmtP(grossMo);
+  document.getElementById('p-gross-yr').textContent = fmtP(grossYr);
+  document.getElementById('p-comm-mo').textContent  = '−'+fmtP(commMo);
+  document.getElementById('p-comm-yr').textContent  = '−'+fmtP(commYr);
+  document.getElementById('p-gst-mo').textContent   = '−'+fmtP(gstMo);
+  document.getElementById('p-gst-yr').textContent   = '−'+fmtP(gstYr);
+  document.getElementById('p-pg-mo').textContent    = '−'+fmtP(pgMo);
+  document.getElementById('p-pg-yr').textContent    = '−'+fmtP(pgYr);
+  document.getElementById('p-total-mo').textContent = '−'+fmtP(totalMo);
+  document.getElementById('p-total-yr').textContent = '−'+fmtP(totalYr);
+
+  document.getElementById('p-savings').textContent      = fmtP(savingsYr);
+  document.getElementById('p-savings-ctx').textContent  = 'That\'s '+savPct+'% less than what you\'re paying '+platData[selPlatIdx].name+' today';
+}
+
+calcM(); calcC(); initPlatPane(); selectPlat(0);
 </script>
 </body>
 </html>
