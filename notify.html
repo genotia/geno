@@ -71,6 +71,14 @@
     .menu-sub-item.highlight { color: var(--green); font-weight: 600; }
     .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
 
+    /* ── TRUST BAR ── */
+    .trust-bar { position: sticky; top: 64px; z-index: 99; background: linear-gradient(90deg,#0f172a 0%,#1e293b 100%); padding: 9px 32px; display: flex; align-items: center; justify-content: center; gap: 0; }
+    .trust-step { display: flex; align-items: center; gap: 8px; padding: 0 18px; }
+    .trust-step-icon { width: 28px; height: 28px; background: rgba(255,255,255,.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+    .trust-step-title { font-size: 12px; font-weight: 700; color: white; }
+    .trust-arrow { color: #1D9E75; font-size: 16px; font-weight: 700; opacity: .8; padding: 0 4px; }
+    .trust-badge { margin-left: 24px; padding: 4px 12px; background: rgba(29,158,117,.2); border: 1px solid rgba(29,158,117,.4); border-radius: 20px; font-size: 11px; font-weight: 700; color: #4ade80; white-space: nowrap; }
+
     /* ── HERO ── */
     .hero {
       background: linear-gradient(160deg, #051a12 0%, #0b2d1e 55%, #071710 100%);
@@ -310,7 +318,7 @@
       .nav-right .btn-login, .nav-right .btn-pill { display: none; }
       .nav-inner { padding: 0 16px; }
       .trust-step, .trust-arrow { display: none; }
-      .trust-bar { justify-content: center; padding: 7px 12px; }
+      .trust-bar { justify-content: center; padding: 7px 12px; position: static; }
       .hero { padding: 36px 16px 48px; }
       .page-section { padding: 32px 16px; }
     }
@@ -637,6 +645,16 @@
     </div>
   </div>
 </nav>
+
+<!-- ══ TRUST BAR ══ -->
+<div class="trust-bar">
+  <div class="trust-step"><div class="trust-step-icon">🔔</div><div><div class="trust-step-title">Set your alert</div></div></div>
+  <div class="trust-arrow">→</div>
+  <div class="trust-step"><div class="trust-step-icon">🤖</div><div><div class="trust-step-title">AI watches 24/7</div></div></div>
+  <div class="trust-arrow">→</div>
+  <div class="trust-step"><div class="trust-step-icon">📲</div><div><div class="trust-step-title">Get notified instantly</div></div></div>
+  <div class="trust-badge">🎉 Zero platform fees &nbsp;·&nbsp; Zero commission fees</div>
+</div>
 
 <!-- ══ HERO ══ -->
 <div class="hero">
@@ -1181,6 +1199,7 @@
           <li><a href="merchant/merchants.html">Merchant OS</a></li>
           <li><a href="#">Agentic PODs</a></li>
           <li><a href="merchant/pricing.html">Pricing</a></li>
+          <li><a href="merchant/migrate.html">Switch to Genoti</a></li>
         </ul>
       </div>
       <div class="footer-col">
