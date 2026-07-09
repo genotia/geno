@@ -80,15 +80,17 @@
     #live-count { font-weight: 700; color: #D97706; }
 
     /* ── HERO ── */
-    .lm-hero { background: linear-gradient(165deg, #085041 0%, #0a6050 60%, #0d1f17 100%); padding: 52px 0 88px; position: relative; overflow: hidden; }
+    .lm-hero { background: linear-gradient(165deg, #051a12 0%, #0b2d1e 55%, #071710 100%); padding: 32px 0 60px; position: relative; overflow: hidden; }
     .lm-hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 200px; height: 200px; border-radius: 50%; background: rgba(229,62,62,.06); }
     .lm-hero::after { content: ''; position: absolute; bottom: -40px; left: -20px; right: -20px; height: 80px; background: var(--bg); border-radius: 50% 50% 0 0; }
-    .hero-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
-    .hero-inner h1 { font-size: clamp(28px, 5vw, 52px); font-weight: 800; color: #fff; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 14px; }
+    .hero-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 48px; }
+    .hero-inner h1 { font-size: clamp(26px, 4vw, 46px); font-weight: 800; color: #fff; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 12px; }
     .hero-inner h1 em { font-style: normal; color: #7EDDB8; }
-    .hero-inner p { font-size: 16px; color: rgba(255,255,255,.68); max-width: 500px; line-height: 1.6; margin-bottom: 32px; }
+    .hero-inner p { font-size: 15px; color: rgba(255,255,255,.68); max-width: 480px; line-height: 1.6; margin-bottom: 0; }
+    .hero-right { display: flex; flex-direction: column; align-items: center; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 24px 28px; flex-shrink: 0; }
+    .hero-right-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
 
-    .live-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.14); color: #fff; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px; margin-bottom: 20px; letter-spacing: .3px; }
+    .live-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.14); color: #fff; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px; margin-bottom: 18px; letter-spacing: .3px; }
     .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); animation: pulse 1.5s infinite; flex-shrink: 0; }
 
     /* ── COUNTDOWN ── */
@@ -97,7 +99,7 @@
     .countdown-num { font-size: 28px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; letter-spacing: -1px; line-height: 1; }
     .countdown-label { font-size: 9px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .6px; margin-top: 3px; }
     .countdown-sep { font-size: 22px; font-weight: 700; color: rgba(255,255,255,.3); padding-bottom: 12px; }
-    .countdown-note { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 10px; }
+    .countdown-note { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 12px; text-align: center; }
 
     /* ── PAGE WRAPPER ── */
     .page-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
@@ -124,7 +126,8 @@
     .step p { font-size: 13px; color: var(--muted); line-height: 1.55; }
 
     /* ── LIVE FEED ── */
-    .feed-section { background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 32px 0 28px; }
+    .feed-section { background: var(--bg); border-bottom: 1px solid var(--border); padding: 16px 0 28px; }
+    .lm-card.hidden { display: none; }
     .feed-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
     .feed-title { font-size: 17px; font-weight: 800; letter-spacing: -.3px; }
     .feed-live-badge { font-size: 11px; font-weight: 700; background: var(--green-lt); color: var(--dark-green); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
@@ -137,51 +140,53 @@
     .cat-pill:hover { border-color: var(--green); color: var(--green); }
     .cat-pill.active { background: var(--dark-green); color: #fff; border-color: var(--dark-green); }
 
-    /* Deal cards */
-    .deal-card { background: var(--white); border-radius: 14px; border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,.06); margin-bottom: 10px; overflow: hidden; transition: transform .2s, box-shadow .2s; animation: slideUp .4s ease both; }
-    .deal-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.1); }
-    .deal-card:nth-child(2) { animation-delay: .08s; }
-    .deal-card:nth-child(3) { animation-delay: .15s; }
-    .deal-card:nth-child(4) { animation-delay: .22s; }
-    .deal-card:nth-child(5) { animation-delay: .28s; }
-    .deal-card:nth-child(6) { animation-delay: .33s; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    /* Deal cards grid */
+    @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .lm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 4px; }
+    .lm-card { background: var(--white); border-radius: 18px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,.06); transition: transform .2s, box-shadow .2s; display: flex; flex-direction: column; animation: slideUp .4s ease both; }
+    .lm-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,.11); }
+    .lm-card:nth-child(2) { animation-delay: .07s; }
+    .lm-card:nth-child(3) { animation-delay: .13s; }
+    .lm-card:nth-child(4) { animation-delay: .19s; }
+    .lm-card:nth-child(5) { animation-delay: .24s; }
+    .lm-card:nth-child(6) { animation-delay: .29s; }
 
-    .deal-banner { display: flex; align-items: center; gap: 6px; padding: 7px 14px; font-size: 11px; font-weight: 700; letter-spacing: .2px; }
-    .deal-banner.cancelled { background: var(--red-lt); color: var(--red-dk); }
-    .deal-banner.flash     { background: var(--amber-lt); color: var(--amber); }
-    .deal-banner.slots     { background: var(--blue-lt); color: var(--blue-dk); }
-    .deal-banner.sameday   { background: var(--green-lt); color: var(--dark-green); }
-    .deal-body { padding: 14px; }
-    .deal-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-    .deal-name { font-size: 15px; font-weight: 700; }
-    .deal-biz  { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .deal-timer { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; color: var(--red); background: var(--red-lt); padding: 5px 10px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
-    .deal-pricing { display: flex; align-items: baseline; gap: 8px; margin: 10px 0 8px; }
-    .deal-was { font-size: 13px; color: var(--muted); text-decoration: line-through; }
-    .deal-now { font-size: 22px; font-weight: 800; color: var(--green); letter-spacing: -.5px; }
-    .deal-off { font-size: 11px; font-weight: 700; color: var(--red-dk); background: var(--red-lt); padding: 2px 8px; border-radius: 6px; }
-    .deal-meta { display: flex; gap: 14px; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
-    .deal-meta span { display: flex; align-items: center; gap: 3px; }
-    .deal-cta { display: block; width: 100%; padding: 11px; border: none; border-radius: 10px; background: var(--dark-green); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; text-align: center; margin-top: 12px; transition: background .18s; font-family: inherit; }
-    .deal-cta:hover { background: #0a6050; }
+    .lm-card-head { padding: 16px 16px 14px; }
+    .lm-card-head.cancelled { background: linear-gradient(135deg,#FEF2F0 0%,#FDDDD9 100%); }
+    .lm-card-head.flash     { background: linear-gradient(135deg,#FFFBEB 0%,#FEF0C2 100%); }
+    .lm-card-head.slots     { background: linear-gradient(135deg,#EFF6FF 0%,#DBEAFE 100%); }
+    .lm-card-head.sameday   { background: linear-gradient(135deg,#F0FDF4 0%,#DCFCE7 100%); }
+    .lm-head-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .lm-type { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; letter-spacing: .2px; white-space: nowrap; }
+    .lm-type.cancelled { background: var(--red-lt); color: var(--red-dk); }
+    .lm-type.flash     { background: var(--amber-lt); color: var(--amber); }
+    .lm-type.slots     { background: var(--blue-lt); color: var(--blue-dk); }
+    .lm-type.sameday   { background: var(--green-lt); color: var(--dark-green); }
+    .lm-timer { font-size: 12px; font-weight: 700; color: var(--red); display: flex; align-items: center; gap: 3px; }
+    .lm-emoji-row { display: flex; justify-content: space-between; align-items: flex-end; }
+    .lm-emoji { font-size: 46px; line-height: 1; }
+    .lm-discount { font-size: 26px; font-weight: 800; letter-spacing: -1px; color: var(--text); opacity: .85; }
+
+    .lm-card-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
+    .lm-deal-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; line-height: 1.3; }
+    .lm-deal-biz { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+    .lm-price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+    .lm-price-now { font-size: 22px; font-weight: 800; color: var(--green); letter-spacing: -.5px; }
+    .lm-price-was { font-size: 13px; color: #9CA3AF; text-decoration: line-through; }
+    .lm-meta { display: flex; gap: 10px; font-size: 11px; color: var(--muted); flex-wrap: wrap; margin-bottom: 14px; flex: 1; align-content: flex-start; }
+    .lm-cta { display: block; width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--dark-green); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; text-align: center; transition: background .18s; font-family: inherit; margin-top: auto; }
+    .lm-cta:hover { background: #0a6050; }
 
     /* ── CATEGORIES GRID ── */
-    .cats-section { padding: 44px 0; }
-    .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .cat-grid-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
-    .cat-grid-card.wide { grid-column: 1 / -1; }
-    .cat-emoji { font-size: 28px; margin-bottom: 8px; }
-    .cat-name  { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
-    .cat-count { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
-    .cat-examples { display: flex; flex-direction: column; gap: 0; }
-    .cat-example { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); padding: 6px 0; border-bottom: 1px solid var(--border); line-height: 1.4; gap: 6px; }
-    .cat-example:last-child { border-bottom: none; }
-    .ex-type { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
-    .ex-cancel  { background: var(--red-lt); color: var(--red-dk); }
-    .ex-flash   { background: var(--amber-lt); color: var(--amber); }
-    .ex-slots   { background: var(--blue-lt); color: var(--blue-dk); }
-    .ex-sameday { background: var(--green-lt); color: var(--dark-green); }
+    .cats-section { padding: 20px 0 0; background: var(--bg); }
+    .cat-tile.active { background: #1f2937; box-shadow: 0 0 0 2px var(--green); }
+    .cat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .cat-tile { background: #111827; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background .18s, transform .18s; border: 1px solid rgba(255,255,255,.05); }
+    .cat-tile:hover { background: #1f2937; transform: translateY(-2px); }
+    .cat-tile-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cat-tile-info { flex: 1; min-width: 0; }
+    .cat-tile-name { font-size: 14px; font-weight: 700; color: #F9FAFB; margin-bottom: 4px; line-height: 1.2; }
+    .cat-tile-count { font-size: 12px; color: #6B7280; }
 
     /* ── MERCHANT CTA ── */
     .merchant-cta-section { padding: 0 0 44px; }
@@ -238,15 +243,38 @@
     @media (max-width: 900px) {
       .nav-links { display: none; }
       .footer-top { grid-template-columns: 1fr 1fr; }
+      .lm-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-inner { grid-template-columns: 1fr; gap: 24px; }
+      .hero-right { align-self: flex-start; }
+      .cat-grid { grid-template-columns: repeat(3, 1fr); }
     }
     @media (max-width: 600px) {
       .stats-grid { gap: 8px; }
       .stat-num { font-size: 22px; }
-      .cat-grid { gap: 8px; }
+      .cat-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
       .hero-inner p { font-size: 14px; }
       .footer-top { grid-template-columns: 1fr; }
       .footer-bottom { flex-direction: column; text-align: center; }
+      .lm-grid { grid-template-columns: 1fr; gap: 12px; }
     }
+
+    /* ── EXPLORE LOCAL DEALS ── */
+    .explore-section { background: #0f172a; padding: 44px 0 52px; }
+    .explore-title { font-size: clamp(20px, 2.5vw, 28px); font-weight: 800; color: #F9FAFB; margin-bottom: 18px; letter-spacing: -.5px; }
+    .explore-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+    .explore-tab { background: none; border: 1.5px solid rgba(255,255,255,.18); border-radius: 20px; color: rgba(255,255,255,.5); font-size: 13px; font-weight: 600; padding: 7px 18px; cursor: pointer; font-family: inherit; transition: all .18s; }
+    .explore-tab:hover { border-color: rgba(255,255,255,.45); color: #fff; }
+    .explore-tab.active { background: #fff; color: #111827; border-color: #fff; }
+    .explore-region { display: none; }
+    .explore-region.active { display: block; }
+    .explore-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .explore-city { display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); border-radius: 14px; padding: 14px 16px; cursor: pointer; transition: background .18s; text-decoration: none; }
+    .explore-city:hover { background: rgba(255,255,255,.09); }
+    .explore-city-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .explore-city-name { font-size: 14px; font-weight: 700; color: #F9FAFB; margin-bottom: 2px; line-height: 1.2; }
+    .explore-city-count { font-size: 12px; color: #6B7280; }
+    @media (max-width: 900px) { .explore-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px) { .explore-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } .explore-tab { font-size: 12px; padding: 6px 14px; } }
   </style>
 </head>
 <body>
@@ -256,7 +284,7 @@
   <div class="nav-inner">
     <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
       <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
-      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover Local Deals · Pay Less</span>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover Local Deals · Save more</span>
     </div>
     <ul class="nav-links">
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
@@ -339,78 +367,120 @@
 <!-- ══ HERO ══ -->
 <section class="lm-hero">
   <div class="hero-inner">
-    <div class="live-badge"><span class="badge-dot"></span> Live near you — updated every 5 min</div>
-    <h1>Last minute deals.<br><em>Grab before they're gone.</em></h1>
-    <p>Cancelled appointments, flash sales, and expiring slots from salons, spas, restaurants, and gyms near you — at prices you won't see twice.</p>
-
-    <div class="countdown-wrap">
-      <div class="countdown-block">
-        <div class="countdown-num" id="cd-h">01</div>
-        <div class="countdown-label">Hours</div>
-      </div>
-      <span class="countdown-sep">:</span>
-      <div class="countdown-block">
-        <div class="countdown-num" id="cd-m">47</div>
-        <div class="countdown-label">Mins</div>
-      </div>
-      <span class="countdown-sep">:</span>
-      <div class="countdown-block">
-        <div class="countdown-num" id="cd-s">32</div>
-        <div class="countdown-label">Secs</div>
-      </div>
+    <div class="hero-left">
+      <div class="live-badge"><span class="badge-dot"></span> Live near you — updated every 5 min</div>
+      <h1>Last minute deals.<br><em>Grab before they're gone.</em></h1>
+      <p>Cancelled appointments, flash sales, and expiring slots from salons, spas, restaurants, and gyms near you — at prices you won't see twice.</p>
     </div>
-    <div class="countdown-note">⏳ Next batch of deals drops when this timer hits zero</div>
+    <div class="hero-right">
+      <div class="hero-right-label">Next deals drop in</div>
+      <div class="countdown-wrap">
+        <div class="countdown-block">
+          <div class="countdown-num" id="cd-h">01</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-block">
+          <div class="countdown-num" id="cd-m">47</div>
+          <div class="countdown-label">Mins</div>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-block">
+          <div class="countdown-num" id="cd-s">32</div>
+          <div class="countdown-label">Secs</div>
+        </div>
+      </div>
+      <div class="countdown-note">⏳ Grab deals before this timer resets</div>
+    </div>
   </div>
 </section>
 
-<!-- ══ STATS ══ -->
-<div class="stats-section">
+<!-- ══ CATEGORIES ══ -->
+<div class="cats-section">
   <div class="page-wrap">
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-num" id="live-num">23</div>
-        <div class="stat-lbl">Deals live<br>right now</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">40%</div>
-        <div class="stat-lbl">Average<br>savings</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">28m</div>
-        <div class="stat-lbl">Avg time<br>to fill</div>
-      </div>
-    </div>
-  </div>
-</div>
+    <div class="section-label">Browse by Category</div>
+    <div class="cat-grid">
 
-<!-- ══ HOW IT WORKS ══ -->
-<div class="hiw-section">
-  <div class="page-wrap">
-    <div class="section-label">How it works</div>
-    <div class="section-title">From alert to booking in 30 seconds</div>
-    <div class="section-desc">A merchant has an empty slot. You get a deal that didn't exist 5 minutes ago. Everyone wins.</div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-icon alert">⚡</div>
-        <div>
-          <h3>A slot opens up</h3>
-          <p>A client cancels, a class has empty spots, or a chef has extra prep — the merchant posts a time-limited deal instantly.</p>
+      <div class="cat-tile active" onclick="filterCat(this,'all')">
+        <div class="cat-tile-icon" style="background:rgba(29,158,117,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">All Categories</div>
+          <div class="cat-tile-count">23 deals live now</div>
         </div>
       </div>
-      <div class="step">
-        <div class="step-icon grab">📍</div>
-        <div>
-          <h3>You get notified</h3>
-          <p>If you've turned on alerts for your favourite categories, you'll get a push or WhatsApp message for deals within 3 km of you.</p>
+
+      <div class="cat-tile" onclick="filterCat(this,'restaurants')">
+        <div class="cat-tile-icon" style="background:rgba(249,115,22,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="21" y1="15" x2="21" y2="22"/><path d="M21 2a5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Restaurants &amp; Dining</div>
+          <div class="cat-tile-count">8 deals live now</div>
         </div>
       </div>
-      <div class="step">
-        <div class="step-icon book">✓</div>
-        <div>
-          <h3>Book in one tap</h3>
-          <p>Tap the deal, confirm the slot, pay at the venue. No advance payment, no vouchers. The deal price is locked the moment you book.</p>
+
+      <div class="cat-tile" onclick="filterCat(this,'salons')">
+        <div class="cat-tile-icon" style="background:rgba(236,72,153,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Salons &amp; Beauty</div>
+          <div class="cat-tile-count">6 deals live now</div>
         </div>
       </div>
+
+      <div class="cat-tile" onclick="filterCat(this,'spas')">
+        <div class="cat-tile-icon" style="background:rgba(20,184,166,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Spas &amp; Wellness</div>
+          <div class="cat-tile-count">3 deals live now</div>
+        </div>
+      </div>
+
+      <div class="cat-tile" onclick="filterCat(this,'gyms')">
+        <div class="cat-tile-icon" style="background:rgba(239,68,68,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Gyms &amp; Fitness</div>
+          <div class="cat-tile-count">4 deals live now</div>
+        </div>
+      </div>
+
+      <div class="cat-tile" onclick="filterCat(this,'yoga')">
+        <div class="cat-tile-icon" style="background:rgba(139,92,246,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Yoga &amp; Meditation</div>
+          <div class="cat-tile-count">2 deals live now</div>
+        </div>
+      </div>
+
+      <div class="cat-tile" onclick="filterCat(this,'cafes')">
+        <div class="cat-tile-icon" style="background:rgba(217,119,6,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Cafés &amp; Bakeries</div>
+          <div class="cat-tile-count">3 deals live now</div>
+        </div>
+      </div>
+
+      <div class="cat-tile" onclick="filterCat(this,'coworking')">
+        <div class="cat-tile-icon" style="background:rgba(59,130,246,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Co-working Spaces</div>
+          <div class="cat-tile-count">1 deal live now</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -423,131 +493,128 @@
       <div class="feed-live-badge"><span class="feed-live-dot"></span> <span id="feed-count">23</span> live</div>
     </div>
 
-    <div class="cat-filters">
-      <button class="cat-pill active" onclick="filterCat(this)">All</button>
-      <button class="cat-pill" onclick="filterCat(this)">💇 Salons</button>
-      <button class="cat-pill" onclick="filterCat(this)">🧖 Spas</button>
-      <button class="cat-pill" onclick="filterCat(this)">🍽️ Dining</button>
-      <button class="cat-pill" onclick="filterCat(this)">🏋️ Fitness</button>
-      <button class="cat-pill" onclick="filterCat(this)">☕ Cafés</button>
-      <button class="cat-pill" onclick="filterCat(this)">🧘 Yoga</button>
-      <button class="cat-pill" onclick="filterCat(this)">🏢 Co-work</button>
-    </div>
+    <div class="lm-grid">
 
-    <div id="deals-feed">
-      <div class="deal-card">
-        <div class="deal-banner cancelled">⚡ Cancelled appointment — grab this slot</div>
-        <div class="deal-body">
-          <div class="deal-top">
-            <div><div class="deal-name">Haircut + blow dry</div><div class="deal-biz">Bloom Salon · Koramangala</div></div>
-            <div class="deal-timer">⏱ 1h 47m</div>
+      <div class="lm-card" data-cat="salons">
+        <div class="lm-card-head cancelled">
+          <div class="lm-head-top">
+            <span class="lm-type cancelled">⚡ Cancelled slot</span>
+            <span class="lm-timer">⏱ 1h 47m</span>
           </div>
-          <div class="deal-pricing">
-            <span class="deal-was">₹800</span>
-            <span class="deal-now">₹480</span>
-            <span class="deal-off">–40%</span>
+          <div class="lm-emoji-row">
+            <span class="lm-emoji">💇</span>
+            <span class="lm-discount">–40%</span>
           </div>
-          <div class="deal-meta">
-            <span>📍 800m</span><span>⭐ 4.6</span><span>⏰ Today, 3:00 PM</span>
-          </div>
-          <button class="deal-cta" onclick="openLoginGate()">Book now — ₹480</button>
+        </div>
+        <div class="lm-card-body">
+          <div class="lm-deal-name">Haircut + blow dry</div>
+          <div class="lm-deal-biz">Bloom Salon · Koramangala</div>
+          <div class="lm-price-row"><span class="lm-price-now">₹480</span><span class="lm-price-was">₹800</span></div>
+          <div class="lm-meta"><span>📍 800m</span><span>⭐ 4.6</span><span>⏰ Today, 3:00 PM</span></div>
+          <button class="lm-cta" onclick="openLoginGate()">Book now — ₹480</button>
         </div>
       </div>
 
-      <div class="deal-card">
-        <div class="deal-banner flash">🔥 Flash sale — next 3 hours only</div>
-        <div class="deal-body">
-          <div class="deal-top">
-            <div><div class="deal-name">Deep tissue massage (60 min)</div><div class="deal-biz">Zen Spa & Wellness · HSR Layout</div></div>
-            <div class="deal-timer">⏱ 2h 58m</div>
+      <div class="lm-card" data-cat="spas">
+        <div class="lm-card-head flash">
+          <div class="lm-head-top">
+            <span class="lm-type flash">🔥 Flash sale</span>
+            <span class="lm-timer">⏱ 2h 58m</span>
           </div>
-          <div class="deal-pricing">
-            <span class="deal-was">₹2,400</span>
-            <span class="deal-now">₹1,680</span>
-            <span class="deal-off">–30%</span>
+          <div class="lm-emoji-row">
+            <span class="lm-emoji">🧖</span>
+            <span class="lm-discount">–30%</span>
           </div>
-          <div class="deal-meta">
-            <span>📍 1.2km</span><span>⭐ 4.8</span><span>⏰ Today, 4:30 PM</span>
-          </div>
-          <button class="deal-cta" onclick="openLoginGate()">Book now — ₹1,680</button>
+        </div>
+        <div class="lm-card-body">
+          <div class="lm-deal-name">Deep tissue massage (60 min)</div>
+          <div class="lm-deal-biz">Zen Spa &amp; Wellness · HSR Layout</div>
+          <div class="lm-price-row"><span class="lm-price-now">₹1,680</span><span class="lm-price-was">₹2,400</span></div>
+          <div class="lm-meta"><span>📍 1.2km</span><span>⭐ 4.8</span><span>⏰ Today, 4:30 PM</span></div>
+          <button class="lm-cta" onclick="openLoginGate()">Book now — ₹1,680</button>
         </div>
       </div>
 
-      <div class="deal-card">
-        <div class="deal-banner slots">🎯 Only 3 spots left in this class</div>
-        <div class="deal-body">
-          <div class="deal-top">
-            <div><div class="deal-name">HIIT class — 5:30 PM</div><div class="deal-biz">CoreFit Studio · Indiranagar</div></div>
-            <div class="deal-timer">⏱ 4h 12m</div>
+      <div class="lm-card" data-cat="gyms">
+        <div class="lm-card-head slots">
+          <div class="lm-head-top">
+            <span class="lm-type slots">🎯 Last slots</span>
+            <span class="lm-timer">⏱ 4h 12m</span>
           </div>
-          <div class="deal-pricing">
-            <span class="deal-was">₹500</span>
-            <span class="deal-now">₹250</span>
-            <span class="deal-off">–50%</span>
+          <div class="lm-emoji-row">
+            <span class="lm-emoji">🏋️</span>
+            <span class="lm-discount">–50%</span>
           </div>
-          <div class="deal-meta">
-            <span>📍 2.1km</span><span>⭐ 4.5</span><span>👥 3 spots left</span>
-          </div>
-          <button class="deal-cta" onclick="openLoginGate()">Book spot — ₹250</button>
+        </div>
+        <div class="lm-card-body">
+          <div class="lm-deal-name">HIIT class — 5:30 PM</div>
+          <div class="lm-deal-biz">CoreFit Studio · Indiranagar</div>
+          <div class="lm-price-row"><span class="lm-price-now">₹250</span><span class="lm-price-was">₹500</span></div>
+          <div class="lm-meta"><span>📍 2.1km</span><span>⭐ 4.5</span><span>👥 3 spots left</span></div>
+          <button class="lm-cta" onclick="openLoginGate()">Book spot — ₹250</button>
         </div>
       </div>
 
-      <div class="deal-card">
-        <div class="deal-banner sameday">📅 Same-day special</div>
-        <div class="deal-body">
-          <div class="deal-top">
-            <div><div class="deal-name">Lunch thali — chef's special</div><div class="deal-biz">Spice Route · JP Nagar</div></div>
-            <div class="deal-timer">⏱ 1h 30m</div>
+      <div class="lm-card" data-cat="restaurants">
+        <div class="lm-card-head sameday">
+          <div class="lm-head-top">
+            <span class="lm-type sameday">📅 Same-day special</span>
+            <span class="lm-timer">⏱ 1h 30m</span>
           </div>
-          <div class="deal-pricing">
-            <span class="deal-was">₹350</span>
-            <span class="deal-now">₹210</span>
-            <span class="deal-off">–40%</span>
+          <div class="lm-emoji-row">
+            <span class="lm-emoji">🍽️</span>
+            <span class="lm-discount">–40%</span>
           </div>
-          <div class="deal-meta">
-            <span>📍 1.5km</span><span>⭐ 4.4</span><span>🍽️ Dine-in only</span>
-          </div>
-          <button class="deal-cta" onclick="openLoginGate()">Reserve table — ₹210</button>
+        </div>
+        <div class="lm-card-body">
+          <div class="lm-deal-name">Lunch thali — chef's special</div>
+          <div class="lm-deal-biz">Spice Route · JP Nagar</div>
+          <div class="lm-price-row"><span class="lm-price-now">₹210</span><span class="lm-price-was">₹350</span></div>
+          <div class="lm-meta"><span>📍 1.5km</span><span>⭐ 4.4</span><span>🍽️ Dine-in only</span></div>
+          <button class="lm-cta" onclick="openLoginGate()">Reserve table — ₹210</button>
         </div>
       </div>
 
-      <div class="deal-card">
-        <div class="deal-banner flash">🔥 Flash sale — closing time discount</div>
-        <div class="deal-body">
-          <div class="deal-top">
-            <div><div class="deal-name">Fresh croissants + cold brew combo</div><div class="deal-biz">Bean & Flour Café · Whitefield</div></div>
-            <div class="deal-timer">⏱ 52m</div>
+      <div class="lm-card" data-cat="cafes">
+        <div class="lm-card-head flash">
+          <div class="lm-head-top">
+            <span class="lm-type flash">🔥 Flash sale</span>
+            <span class="lm-timer">⏱ 52m</span>
           </div>
-          <div class="deal-pricing">
-            <span class="deal-was">₹380</span>
-            <span class="deal-now">₹190</span>
-            <span class="deal-off">–50%</span>
+          <div class="lm-emoji-row">
+            <span class="lm-emoji">☕</span>
+            <span class="lm-discount">–50%</span>
           </div>
-          <div class="deal-meta">
-            <span>📍 3.2km</span><span>⭐ 4.3</span><span>🥐 4 combos left</span>
-          </div>
-          <button class="deal-cta" onclick="openLoginGate()">Grab it — ₹190</button>
+        </div>
+        <div class="lm-card-body">
+          <div class="lm-deal-name">Fresh croissants + cold brew combo</div>
+          <div class="lm-deal-biz">Bean &amp; Flour Café · Whitefield</div>
+          <div class="lm-price-row"><span class="lm-price-now">₹190</span><span class="lm-price-was">₹380</span></div>
+          <div class="lm-meta"><span>📍 3.2km</span><span>⭐ 4.3</span><span>🥐 4 combos left</span></div>
+          <button class="lm-cta" onclick="openLoginGate()">Grab it — ₹190</button>
         </div>
       </div>
 
-      <div class="deal-card">
-        <div class="deal-banner cancelled">⚡ Cancelled booking — meeting room free</div>
-        <div class="deal-body">
-          <div class="deal-top">
-            <div><div class="deal-name">4-person meeting room (3 hrs)</div><div class="deal-biz">WorkHub Co-working · BTM Layout</div></div>
-            <div class="deal-timer">⏱ 2h 15m</div>
+      <div class="lm-card" data-cat="coworking">
+        <div class="lm-card-head cancelled">
+          <div class="lm-head-top">
+            <span class="lm-type cancelled">⚡ Cancelled booking</span>
+            <span class="lm-timer">⏱ 2h 15m</span>
           </div>
-          <div class="deal-pricing">
-            <span class="deal-was">₹1,200</span>
-            <span class="deal-now">₹720</span>
-            <span class="deal-off">–40%</span>
+          <div class="lm-emoji-row">
+            <span class="lm-emoji">🏢</span>
+            <span class="lm-discount">–40%</span>
           </div>
-          <div class="deal-meta">
-            <span>📍 1.8km</span><span>⭐ 4.2</span><span>⏰ Today, 2:00 PM</span>
-          </div>
-          <button class="deal-cta" onclick="openLoginGate()">Book room — ₹720</button>
+        </div>
+        <div class="lm-card-body">
+          <div class="lm-deal-name">4-person meeting room (3 hrs)</div>
+          <div class="lm-deal-biz">WorkHub Co-working · BTM Layout</div>
+          <div class="lm-price-row"><span class="lm-price-now">₹720</span><span class="lm-price-was">₹1,200</span></div>
+          <div class="lm-meta"><span>📍 1.8km</span><span>⭐ 4.2</span><span>⏰ Today, 2:00 PM</span></div>
+          <button class="lm-cta" onclick="openLoginGate()">Book room — ₹720</button>
         </div>
       </div>
+
     </div>
 
     <div style="text-align:center;margin-top:16px">
@@ -556,103 +623,180 @@
   </div>
 </div>
 
-<!-- ══ CATEGORIES ══ -->
-<div class="cats-section">
+<!-- ══ EXPLORE LOCAL DEALS ══ -->
+<div class="explore-section">
   <div class="page-wrap">
-    <div class="section-label">Categories</div>
-    <div class="section-title">7 categories. Real deals. Real urgency.</div>
-    <div class="section-desc">Every deal on this page exists because a merchant has an empty slot right now. No fake discounts. No inflated prices. Just genuine last-minute availability.</div>
+    <div class="explore-title">Explore Local Deals</div>
+    <div class="explore-tabs">
+      <button class="explore-tab active" onclick="showRegion(this,'india')">India</button>
+      <button class="explore-tab" onclick="showRegion(this,'indonesia')">Indonesia</button>
+      <button class="explore-tab" onclick="showRegion(this,'thailand')">Thailand</button>
+      <button class="explore-tab" onclick="showRegion(this,'vietnam')">Vietnam</button>
+      <button class="explore-tab" onclick="showRegion(this,'singapore')">Singapore</button>
+    </div>
 
-    <div class="cat-grid">
-      <div class="cat-grid-card">
-        <div class="cat-emoji">💇</div>
-        <div class="cat-name">Salons</div>
-        <div class="cat-count">14,000 in Bangalore</div>
-        <div class="cat-examples">
-          <div class="cat-example"><span>Cancelled haircut slot</span><span class="ex-type ex-cancel">Cancelled</span></div>
-          <div class="cat-example"><span>Empty chair, 2pm–4pm</span><span class="ex-type ex-sameday">Same-day</span></div>
-        </div>
-      </div>
-      <div class="cat-grid-card">
-        <div class="cat-emoji">🧖</div>
-        <div class="cat-name">Spas</div>
-        <div class="cat-count">3,000 in Bangalore</div>
-        <div class="cat-examples">
-          <div class="cat-example"><span>Massage cancellation</span><span class="ex-type ex-cancel">Cancelled</span></div>
-          <div class="cat-example"><span>End-of-day facial deal</span><span class="ex-type ex-flash">Flash sale</span></div>
-        </div>
-      </div>
-      <div class="cat-grid-card">
-        <div class="cat-emoji">🏋️</div>
-        <div class="cat-name">Gyms</div>
-        <div class="cat-count">6,000 in Bangalore</div>
-        <div class="cat-examples">
-          <div class="cat-example"><span>3 spots left in HIIT class</span><span class="ex-type ex-slots">Last slots</span></div>
-          <div class="cat-example"><span>Trial day pass — today only</span><span class="ex-type ex-sameday">Same-day</span></div>
-        </div>
-      </div>
-      <div class="cat-grid-card">
-        <div class="cat-emoji">🧘</div>
-        <div class="cat-name">Yoga</div>
-        <div class="cat-count">2,000 in Bangalore</div>
-        <div class="cat-examples">
-          <div class="cat-example"><span>Morning class needs 2 more</span><span class="ex-type ex-slots">Last slots</span></div>
-          <div class="cat-example"><span>Workshop half-price today</span><span class="ex-type ex-flash">Flash sale</span></div>
-        </div>
-      </div>
-      <div class="cat-grid-card">
-        <div class="cat-emoji">🍽️</div>
-        <div class="cat-name">Restaurants</div>
-        <div class="cat-count">35,000 in Bangalore</div>
-        <div class="cat-examples">
-          <div class="cat-example"><span>Lunch thali overstock deal</span><span class="ex-type ex-flash">Flash sale</span></div>
-          <div class="cat-example"><span>Party cancellation — table for 8</span><span class="ex-type ex-cancel">Cancelled</span></div>
-        </div>
-      </div>
-      <div class="cat-grid-card">
-        <div class="cat-emoji">☕</div>
-        <div class="cat-name">Cafés</div>
-        <div class="cat-count">9,000 in Bangalore</div>
-        <div class="cat-examples">
-          <div class="cat-example"><span>Pastries 50% off before close</span><span class="ex-type ex-flash">Flash sale</span></div>
-          <div class="cat-example"><span>Happy hour — next 90 min</span><span class="ex-type ex-sameday">Same-day</span></div>
-        </div>
-      </div>
-      <div class="cat-grid-card wide">
-        <div class="cat-emoji">🏢</div>
-        <div class="cat-name">Co-working</div>
-        <div class="cat-count">1,200 in Bangalore</div>
-        <div class="cat-examples">
-          <div class="cat-example"><span>Meeting room cancelled — 3hr block available</span><span class="ex-type ex-cancel">Cancelled</span></div>
-          <div class="cat-example"><span>Weekend day pass — 60% off</span><span class="ex-type ex-sameday">Same-day</span></div>
-        </div>
+    <!-- India -->
+    <div class="explore-region active" id="region-india">
+      <div class="explore-grid">
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#F97316">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="5" height="12" rx="1"/><rect x="9" y="5" width="6" height="16" rx="1"/><rect x="16" y="13" width="5" height="8" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg>
+          </div>
+          <div><div class="explore-city-name">Mumbai</div><div class="explore-city-count">42 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#8B5CF6">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg>
+          </div>
+          <div><div class="explore-city-name">Delhi</div><div class="explore-city-count">38 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#14B8A6">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="5" height="12" rx="1"/><rect x="9" y="5" width="6" height="16" rx="1"/><rect x="16" y="13" width="5" height="8" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg>
+          </div>
+          <div><div class="explore-city-name">Bangalore</div><div class="explore-city-count">31 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#F59E0B">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="5"/><path d="M8 5h8"/><path d="M7 5l1 6h8l1-6"/><rect x="7" y="11" width="10" height="10" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg>
+          </div>
+          <div><div class="explore-city-name">Chennai</div><div class="explore-city-count">24 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#EC4899">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg>
+          </div>
+          <div><div class="explore-city-name">Hyderabad</div><div class="explore-city-count">19 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#10B981">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div><div class="explore-city-name">Pune</div><div class="explore-city-count">15 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#3B82F6">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21h20"/><path d="M4 21V15"/><path d="M20 21V15"/><path d="M12 8v13"/><path d="M4 15c0-4.42 3.58-8 8-8s8 3.58 8 8"/></svg>
+          </div>
+          <div><div class="explore-city-name">Kolkata</div><div class="explore-city-count">12 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#EF4444">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="5"/><path d="M8 5h8"/><path d="M7 5l1 6h8l1-6"/><rect x="7" y="11" width="10" height="10" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg>
+          </div>
+          <div><div class="explore-city-name">Ahmedabad</div><div class="explore-city-count">9 deals</div></div>
+        </a>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ══ MERCHANT CTA ══ -->
-<div class="merchant-cta-section">
-  <div class="page-wrap">
-    <div class="merchant-cta-card">
-      <h2>Got empty slots? Fill them in minutes.</h2>
-      <p>A cancellation doesn't have to mean lost revenue. Post a last-minute deal and reach nearby customers instantly. Geno AI suggests the optimal discount. One tap to publish.</p>
-      <div class="m-steps">
-        <div class="m-step">
-          <div class="m-step-num">1</div>
-          <div class="m-step-text">A booking cancels → <b>Geno alerts you instantly</b></div>
-        </div>
-        <div class="m-step">
-          <div class="m-step-num">2</div>
-          <div class="m-step-text">AI suggests <b>40% off</b> → you approve with <b>one tap</b></div>
-        </div>
-        <div class="m-step">
-          <div class="m-step-num">3</div>
-          <div class="m-step-text"><b>47 nearby customers</b> get notified → slot fills in <b>28 min avg</b></div>
-        </div>
+    <!-- Indonesia -->
+    <div class="explore-region" id="region-indonesia">
+      <div class="explore-grid">
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#F97316">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="5" height="12" rx="1"/><rect x="9" y="5" width="6" height="16" rx="1"/><rect x="16" y="13" width="5" height="8" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg>
+          </div>
+          <div><div class="explore-city-name">Jakarta</div><div class="explore-city-count">28 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#14B8A6">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg>
+          </div>
+          <div><div class="explore-city-name">Bali</div><div class="explore-city-count">22 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#3B82F6">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21h20"/><path d="M4 21V15"/><path d="M20 21V15"/><path d="M12 8v13"/><path d="M4 15c0-4.42 3.58-8 8-8s8 3.58 8 8"/></svg>
+          </div>
+          <div><div class="explore-city-name">Surabaya</div><div class="explore-city-count">14 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#EC4899">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div><div class="explore-city-name">Bandung</div><div class="explore-city-count">11 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#8B5CF6">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="5"/><path d="M8 5h8"/><path d="M7 5l1 6h8l1-6"/><rect x="7" y="11" width="10" height="10" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg>
+          </div>
+          <div><div class="explore-city-name">Medan</div><div class="explore-city-count">8 deals</div></div>
+        </a>
       </div>
-      <a href="register.html" class="btn-merchant-cta">List your business on Genoti →</a>
     </div>
+
+    <!-- Thailand -->
+    <div class="explore-region" id="region-thailand">
+      <div class="explore-grid">
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#D97706">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg>
+          </div>
+          <div><div class="explore-city-name">Bangkok</div><div class="explore-city-count">35 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#14B8A6">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg>
+          </div>
+          <div><div class="explore-city-name">Chiang Mai</div><div class="explore-city-count">18 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#3B82F6">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div><div class="explore-city-name">Phuket</div><div class="explore-city-count">14 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#EC4899">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21h20"/><path d="M4 21V15"/><path d="M20 21V15"/><path d="M12 8v13"/><path d="M4 15c0-4.42 3.58-8 8-8s8 3.58 8 8"/></svg>
+          </div>
+          <div><div class="explore-city-name">Pattaya</div><div class="explore-city-count">9 deals</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Vietnam -->
+    <div class="explore-region" id="region-vietnam">
+      <div class="explore-grid">
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#EF4444">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="5" height="12" rx="1"/><rect x="9" y="5" width="6" height="16" rx="1"/><rect x="16" y="13" width="5" height="8" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg>
+          </div>
+          <div><div class="explore-city-name">Ho Chi Minh City</div><div class="explore-city-count">26 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#8B5CF6">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg>
+          </div>
+          <div><div class="explore-city-name">Hanoi</div><div class="explore-city-count">21 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#3B82F6">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21h20"/><path d="M4 21V15"/><path d="M20 21V15"/><path d="M12 8v13"/><path d="M4 15c0-4.42 3.58-8 8-8s8 3.58 8 8"/></svg>
+          </div>
+          <div><div class="explore-city-name">Da Nang</div><div class="explore-city-count">12 deals</div></div>
+        </a>
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#F59E0B">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="5"/><path d="M8 5h8"/><path d="M7 5l1 6h8l1-6"/><rect x="7" y="11" width="10" height="10" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg>
+          </div>
+          <div><div class="explore-city-name">Hoi An</div><div class="explore-city-count">7 deals</div></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Singapore -->
+    <div class="explore-region" id="region-singapore">
+      <div class="explore-grid">
+        <a class="explore-city" href="#">
+          <div class="explore-city-icon" style="background:#14B8A6">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="5" height="12" rx="1"/><rect x="9" y="5" width="6" height="16" rx="1"/><rect x="16" y="13" width="5" height="8" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg>
+          </div>
+          <div><div class="explore-city-name">Singapore</div><div class="explore-city-count">44 deals</div></div>
+        </a>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -662,22 +806,26 @@
     <div class="footer-top">
       <div class="footer-brand">
         <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
-        <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
+        <p>Discover local deals at the real price.</p>
       </div>
       <div class="footer-col">
-        <h4>Product</h4>
+        <h4>For Users</h4>
         <ul>
-          <li><a href="index.html">Off-Peak</a></li>
-          <li><a href="last-minute.html">LastMinute</a></li>
-          <li><a href="negotiate.html">Negotiate</a></li>
-          <li><a href="download-the-app.html">Download app</a></li>
+          <li><a href="index.html">OffPeak Deals</a></li>
+          <li><a href="last-minute.html">LastMinute Deals</a></li>
+          <li><a href="negotiate.html">Negotiate Deals by AI</a></li>
+          <li><a href="notify.html">Notify Me the Deals</a></li>
+          <li><a href="community.html">ByCommunity Deals</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Merchants</h4>
+        <h4>For Merchants</h4>
         <ul>
-          <li><a href="register.html">List your business</a></li>
+          <li><a href="calculator.html">True Price Calculator</a></li>
+          <li><a href="register.html">List your Business</a></li>
+          <li><a href="#">Merchant Dashboard</a></li>
           <li><a href="merchant/merchants.html">Merchant OS</a></li>
+          <li><a href="#">Agentic PODs</a></li>
           <li><a href="merchant/pricing.html">Pricing</a></li>
         </ul>
       </div>
@@ -751,9 +899,21 @@
   });
 
   /* ── Category filter ── */
-  function filterCat(btn) {
-    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
+  function filterCat(el, cat) {
+    document.querySelectorAll('.cat-tile').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.lm-card').forEach(card => {
+      card.classList.toggle('hidden', cat !== 'all' && card.dataset.cat !== cat);
+    });
+    document.querySelector('.feed-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ── Explore regions ── */
+  function showRegion(el, region) {
+    document.querySelectorAll('.explore-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.explore-region').forEach(r => r.classList.remove('active'));
+    document.getElementById('region-' + region).classList.add('active');
   }
 
   /* ── Login gate ── */

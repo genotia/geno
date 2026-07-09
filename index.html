@@ -90,7 +90,7 @@
     /* ── DARK HERO ── */
     .deals-hero {
       background: linear-gradient(160deg, #051a12 0%, #0b2d1e 55%, #071710 100%);
-      padding: 48px 24px 72px;
+      padding: 16px 24px 36px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -109,27 +109,27 @@
       font-weight: 600;
       padding: 5px 14px;
       border-radius: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       letter-spacing: .4px;
       text-transform: uppercase;
       border: 1px solid rgba(29,158,117,.35);
     }
     .deals-hero h1 {
-      font-size: clamp(28px, 4vw, 52px);
+      font-size: clamp(26px, 4vw, 46px);
       font-weight: 800;
       letter-spacing: -1.5px;
       line-height: 1.08;
       color: var(--white);
       max-width: 800px;
-      margin: 0 auto 16px;
+      margin: 0 auto 8px;
     }
     .deals-hero h1 em { font-style: normal; color: #4ade80; }
-    .deals-hero .hero-sub { font-size: 17px; color: rgba(255,255,255,.65); max-width: 580px; margin: 0 auto 36px; line-height: 1.6; }
-    .hero-stats { font-size: 15px; color: rgba(255,255,255,.6); margin-bottom: 20px; }
+    .deals-hero .hero-sub { font-size: 15px; color: rgba(255,255,255,.65); max-width: 580px; margin: 0 auto 12px; line-height: 1.6; }
+    .hero-stats { font-size: 14px; color: rgba(255,255,255,.6); margin-bottom: 10px; }
     .hero-stats strong { font-weight: 800; color: rgba(255,255,255,.9); }
 
     /* ── SEARCH BAR ── */
-    .search-bar { display: flex; align-items: center; max-width: 780px; width: 100%; margin: 0 auto 24px; background: var(--white); border: 1.5px solid #c4b5e8; border-radius: 60px; overflow: hidden; box-shadow: 0 4px 24px rgba(139,92,246,.12), 0 1px 4px rgba(0,0,0,.06); padding: 6px 6px 6px 0; }
+    .search-bar { display: flex; align-items: center; max-width: 780px; width: 100%; margin: 0 auto 10px; background: var(--white); border: 1.5px solid #c4b5e8; border-radius: 60px; overflow: hidden; box-shadow: 0 4px 24px rgba(139,92,246,.12), 0 1px 4px rgba(0,0,0,.06); padding: 6px 6px 6px 0; }
     .search-bar .field { display: flex; align-items: center; gap: 10px; flex: 1; padding: 10px 20px; }
     .search-bar .field + .field { border-left: 1.5px solid var(--border); }
     .search-bar .field svg { color: #9CA3AF; flex-shrink: 0; }
@@ -140,11 +140,6 @@
     .btn-get-app { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.2); border-radius: 40px; padding: 10px 22px; font-size: 14px; font-weight: 600; color: rgba(255,255,255,.85); cursor: pointer; transition: border-color .15s, background .15s; font-family: inherit; text-decoration: none; }
     .btn-get-app:hover { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.12); }
 
-    /* ── CATEGORY PILLS ── */
-    .categories-wrap { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; position: sticky; top: 108px; z-index: 98; }
-    .pill { display: flex; align-items: center; gap: 5px; border: 1.5px solid var(--border); background: var(--white); border-radius: 20px; padding: 7px 16px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all .15s; }
-    .pill:hover, .pill.active { border-color: var(--green); color: var(--green); background: #F0FDF8; }
-    .pill.active { font-weight: 600; }
 
     /* ── DEALS SECTION ── */
     .section { max-width: 1200px; margin: 0 auto; padding: 56px 24px; }
@@ -452,7 +447,6 @@
       .trust-badge { margin-left: 0; font-size: 11px; }
 
       /* categories sticky: below nav (64px) only, trust bar collapses */
-      .categories-wrap { top: 64px; padding: 10px 12px; gap: 6px; }
 
       /* hero */
       .deals-hero { padding: 36px 16px 52px; }
@@ -494,9 +488,38 @@
       .stats-inner { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr; }
       .nav-inner { height: 56px; }
-      .categories-wrap { top: 56px; }
-      .pill { padding: 6px 12px; font-size: 12px; }
     }
+    /* ── Browse by Category ── */
+    .cats-section{padding:20px 0 16px;background:var(--bg);}
+    .cats-wrap{max-width:1200px;margin:0 auto;padding:0 24px;}
+    .cats-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1D9E75;margin-bottom:10px;}
+    .cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+    .cat-tile{background:#111827;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .18s,transform .18s;border:1px solid rgba(255,255,255,.05);}
+    .cat-tile:hover{background:#1f2937;transform:translateY(-2px);}
+    .cat-tile.active{background:#1f2937;box-shadow:0 0 0 2px #1D9E75;}
+    .cat-tile-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .cat-tile-info{flex:1;min-width:0;}
+    .cat-tile-name{font-size:14px;font-weight:700;color:#F9FAFB;margin-bottom:4px;line-height:1.2;}
+    .cat-tile-count{font-size:12px;color:#6B7280;}
+    @media(max-width:900px){.cat-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:600px){.cat-grid{grid-template-columns:repeat(2,1fr);gap:8px;}}
+    /* ── EXPLORE LOCAL DEALS ── */
+    .explore-section{background:#0f172a;padding:44px 0 52px;}
+    .explore-title{font-size:clamp(20px,2.5vw,28px);font-weight:800;color:#F9FAFB;margin-bottom:18px;letter-spacing:-.5px;}
+    .explore-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
+    .explore-tab{background:none;border:1.5px solid rgba(255,255,255,.18);border-radius:20px;color:rgba(255,255,255,.5);font-size:13px;font-weight:600;padding:7px 18px;cursor:pointer;font-family:inherit;transition:all .18s;}
+    .explore-tab:hover{border-color:rgba(255,255,255,.45);color:#fff;}
+    .explore-tab.active{background:#fff;color:#111827;border-color:#fff;}
+    .explore-region{display:none;}
+    .explore-region.active{display:block;}
+    .explore-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+    .explore-city{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 16px;cursor:pointer;transition:background .18s;text-decoration:none;}
+    .explore-city:hover{background:rgba(255,255,255,.09);}
+    .explore-city-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .explore-city-name{font-size:14px;font-weight:700;color:#F9FAFB;margin-bottom:2px;line-height:1.2;}
+    .explore-city-count{font-size:12px;color:#6B7280;}
+    @media(max-width:900px){.explore-grid{grid-template-columns:repeat(3,1fr);}}
+    @media(max-width:600px){.explore-grid{grid-template-columns:repeat(2,1fr);gap:8px;}.explore-tab{font-size:12px;padding:6px 14px;}}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/md5@2.3.0/dist/md5.min.js"></script>
@@ -508,7 +531,7 @@
   <div class="nav-inner">
     <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
       <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
-      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover Local Deals · Pay Less</span>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover Local Deals · Save more</span>
     </div>
     <ul class="nav-links">
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
@@ -674,19 +697,87 @@
   </a>
 </section>
 
-<!-- ══ CATEGORY PILLS ══ -->
-<div class="categories-wrap">
-  <button class="pill active" data-cat="All" onclick="setActive(this, 'All')">🏷️ All</button>
-  <button class="pill" data-cat="Restaurants &amp; Dining" onclick="setActive(this, 'Restaurants &amp; Dining')">🍽️ Restaurants &amp; Dining</button>
-  <button class="pill" data-cat="Fitness &amp; Sports" onclick="setActive(this, 'Fitness &amp; Sports')">🏋️ Fitness &amp; Sports</button>
-  <button class="pill" data-cat="Health &amp; Medical" onclick="setActive(this, 'Health &amp; Medical')">🏥 Health &amp; Medical</button>
-  <button class="pill" data-cat="Beauty &amp; Wellness" onclick="setActive(this, 'Beauty &amp; Wellness')">💅 Beauty &amp; Wellness</button>
-  <button class="pill" data-cat="Diagnostics" onclick="setActive(this, 'Diagnostics')">🔬 Diagnostics</button>
-  <button class="pill" data-cat="Hospitals" onclick="setActive(this, 'Hospitals')">🏨 Hospitals</button>
-  <button class="pill" data-cat="Hospitality" onclick="setActive(this, 'Hospitality')">🏩 Hospitality</button>
-  <button class="pill" data-cat="Shared Spaces" onclick="setActive(this, 'Shared Spaces')">🖥️ Shared Spaces</button>
-  <button class="pill" data-cat="Sports Facilities" onclick="setActive(this, 'Sports Facilities')">🏸 Sports Facilities</button>
+<!-- ══ CATEGORIES ══ -->
+<div class="cats-section">
+  <div class="cats-wrap">
+    <div class="cats-section-label">Browse by Category</div>
+    <div class="cat-grid">
+      <div class="cat-tile active" onclick="filterByTile(this,'all')">
+        <div class="cat-tile-icon" style="background:rgba(29,158,117,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">All Categories</div>
+          <div class="cat-tile-count">23 deals live now</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="filterByTile(this,'restaurants')">
+        <div class="cat-tile-icon" style="background:rgba(249,115,22,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="21" y1="15" x2="21" y2="22"/><path d="M21 2a5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Restaurants &amp; Dining</div>
+          <div class="cat-tile-count">8 deals live now</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="filterByTile(this,'salons')">
+        <div class="cat-tile-icon" style="background:rgba(236,72,153,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Salons &amp; Beauty</div>
+          <div class="cat-tile-count">6 deals live now</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="filterByTile(this,'spas')">
+        <div class="cat-tile-icon" style="background:rgba(20,184,166,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Spas &amp; Wellness</div>
+          <div class="cat-tile-count">3 deals live now</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="filterByTile(this,'gyms')">
+        <div class="cat-tile-icon" style="background:rgba(239,68,68,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Gyms &amp; Fitness</div>
+          <div class="cat-tile-count">4 deals live now</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="filterByTile(this,'yoga')">
+        <div class="cat-tile-icon" style="background:rgba(139,92,246,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Yoga &amp; Meditation</div>
+          <div class="cat-tile-count">2 deals live now</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="filterByTile(this,'cafes')">
+        <div class="cat-tile-icon" style="background:rgba(217,119,6,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Cafés &amp; Bakeries</div>
+          <div class="cat-tile-count">3 deals live now</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="filterByTile(this,'coworking')">
+        <div class="cat-tile-icon" style="background:rgba(59,130,246,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Co-working Spaces</div>
+          <div class="cat-tile-count">1 deal live now</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
 
 <!-- ══ DEALS SECTION ══ -->
 <div class="section">
@@ -771,30 +862,89 @@
   </div>
 </div>
 
+<!-- ══ EXPLORE LOCAL DEALS ══ -->
+<div class="explore-section">
+  <div class="cats-wrap">
+    <div class="explore-title">Explore Local Deals</div>
+    <div class="explore-tabs">
+      <button class="explore-tab active" onclick="showRegion(this,'india')">India</button>
+      <button class="explore-tab" onclick="showRegion(this,'indonesia')">Indonesia</button>
+      <button class="explore-tab" onclick="showRegion(this,'thailand')">Thailand</button>
+      <button class="explore-tab" onclick="showRegion(this,'vietnam')">Vietnam</button>
+      <button class="explore-tab" onclick="showRegion(this,'singapore')">Singapore</button>
+    </div>
+    <div class="explore-region active" id="region-india">
+      <div class="explore-grid">
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#F97316"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="5" height="12" rx="1"/><rect x="9" y="5" width="6" height="16" rx="1"/><rect x="16" y="13" width="5" height="8" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg></div><div><div class="explore-city-name">Mumbai</div><div class="explore-city-count">42 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#8B5CF6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg></div><div><div class="explore-city-name">Delhi</div><div class="explore-city-count">38 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#14B8A6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="5" height="12" rx="1"/><rect x="9" y="5" width="6" height="16" rx="1"/><rect x="16" y="13" width="5" height="8" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg></div><div><div class="explore-city-name">Bangalore</div><div class="explore-city-count">31 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#F59E0B"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="5"/><path d="M8 5h8"/><path d="M7 5l1 6h8l1-6"/><rect x="7" y="11" width="10" height="10" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg></div><div><div class="explore-city-name">Chennai</div><div class="explore-city-count">24 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#EC4899"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg></div><div><div class="explore-city-name">Hyderabad</div><div class="explore-city-count">19 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#10B981"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="explore-city-name">Pune</div><div class="explore-city-count">15 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#3B82F6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21h20"/><path d="M4 21V15"/><path d="M20 21V15"/><path d="M12 8v13"/><path d="M4 15c0-4.42 3.58-8 8-8s8 3.58 8 8"/></svg></div><div><div class="explore-city-name">Kolkata</div><div class="explore-city-count">12 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#EF4444"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="5"/><path d="M8 5h8"/><path d="M7 5l1 6h8l1-6"/><rect x="7" y="11" width="10" height="10" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg></div><div><div class="explore-city-name">Ahmedabad</div><div class="explore-city-count">9 deals</div></div></a>
+      </div>
+    </div>
+    <div class="explore-region" id="region-indonesia">
+      <div class="explore-grid">
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#F97316"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="5" height="12" rx="1"/><rect x="9" y="5" width="6" height="16" rx="1"/><rect x="16" y="13" width="5" height="8" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg></div><div><div class="explore-city-name">Jakarta</div><div class="explore-city-count">28 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#14B8A6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg></div><div><div class="explore-city-name">Bali</div><div class="explore-city-count">22 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#3B82F6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21h20"/><path d="M4 21V15"/><path d="M20 21V15"/><path d="M12 8v13"/><path d="M4 15c0-4.42 3.58-8 8-8s8 3.58 8 8"/></svg></div><div><div class="explore-city-name">Surabaya</div><div class="explore-city-count">14 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#EC4899"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="explore-city-name">Bandung</div><div class="explore-city-count">11 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#8B5CF6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="5"/><path d="M8 5h8"/><path d="M7 5l1 6h8l1-6"/><rect x="7" y="11" width="10" height="10" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg></div><div><div class="explore-city-name">Medan</div><div class="explore-city-count">8 deals</div></div></a>
+      </div>
+    </div>
+    <div class="explore-region" id="region-thailand">
+      <div class="explore-grid">
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#D97706"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg></div><div><div class="explore-city-name">Bangkok</div><div class="explore-city-count">35 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#14B8A6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg></div><div><div class="explore-city-name">Chiang Mai</div><div class="explore-city-count">18 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#3B82F6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="explore-city-name">Phuket</div><div class="explore-city-count">14 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#EC4899"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21h20"/><path d="M4 21V15"/><path d="M20 21V15"/><path d="M12 8v13"/><path d="M4 15c0-4.42 3.58-8 8-8s8 3.58 8 8"/></svg></div><div><div class="explore-city-name">Pattaya</div><div class="explore-city-count">9 deals</div></div></a>
+      </div>
+    </div>
+    <div class="explore-region" id="region-vietnam">
+      <div class="explore-grid">
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#EF4444"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="5" height="12" rx="1"/><rect x="9" y="5" width="6" height="16" rx="1"/><rect x="16" y="13" width="5" height="8" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg></div><div><div class="explore-city-name">Ho Chi Minh City</div><div class="explore-city-count">26 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#8B5CF6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16"/><path d="M6 21V10"/><path d="M18 21V10"/><path d="M6 10l6-7 6 7"/><path d="M9 21v-8h6v8"/></svg></div><div><div class="explore-city-name">Hanoi</div><div class="explore-city-count">21 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#3B82F6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 21h20"/><path d="M4 21V15"/><path d="M20 21V15"/><path d="M12 8v13"/><path d="M4 15c0-4.42 3.58-8 8-8s8 3.58 8 8"/></svg></div><div><div class="explore-city-name">Da Nang</div><div class="explore-city-count">12 deals</div></div></a>
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#F59E0B"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="5"/><path d="M8 5h8"/><path d="M7 5l1 6h8l1-6"/><rect x="7" y="11" width="10" height="10" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg></div><div><div class="explore-city-name">Hoi An</div><div class="explore-city-count">7 deals</div></div></a>
+      </div>
+    </div>
+    <div class="explore-region" id="region-singapore">
+      <div class="explore-grid">
+        <a class="explore-city" href="last-minute.html"><div class="explore-city-icon" style="background:#14B8A6"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="5" height="12" rx="1"/><rect x="9" y="5" width="6" height="16" rx="1"/><rect x="16" y="13" width="5" height="8" rx="1"/><line x1="2" y1="21" x2="22" y2="21"/></svg></div><div><div class="explore-city-name">Singapore</div><div class="explore-city-count">44 deals</div></div></a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══ FOOTER ══ -->
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
       <div class="footer-brand">
         <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
-        <p>India's hyperlocal marketplace for off-peak hour deals. Save when it's slow. Win when others sleep.</p>
+        <p>Discover local deals at the real price.</p>
       </div>
       <div class="footer-col">
-        <h4>Product</h4>
+        <h4>For Users</h4>
         <ul>
-          <li><a href="index.html">Browse deals</a></li>
-          <li><a href="#">How it works</a></li>
-          <li><a href="#">Cities</a></li>
-          <li><a href="download-the-app.html">Download app</a></li>
+          <li><a href="index.html">OffPeak Deals</a></li>
+          <li><a href="last-minute.html">LastMinute Deals</a></li>
+          <li><a href="negotiate.html">Negotiate Deals by AI</a></li>
+          <li><a href="notify.html">Notify Me the Deals</a></li>
+          <li><a href="community.html">ByCommunity Deals</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Merchants</h4>
+        <h4>For Merchants</h4>
         <ul>
-          <li><a href="register.html">List your business</a></li>
-          <li><a href="#">Merchant dashboard</a></li>
-          <li><a href="#">Pricing</a></li>
-          <li><a href="#">Success stories</a></li>
+          <li><a href="calculator.html">True Price Calculator</a></li>
+          <li><a href="register.html">List your Business</a></li>
+          <li><a href="#">Merchant Dashboard</a></li>
+          <li><a href="merchant/merchants.html">Merchant OS</a></li>
+          <li><a href="#">Agentic PODs</a></li>
+          <li><a href="merchant/pricing.html">Pricing</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -940,6 +1090,14 @@
 </div>
 
 <script>
+  /* ── Explore regions ── */
+  function showRegion(el, region) {
+    document.querySelectorAll('.explore-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.explore-region').forEach(r => r.classList.remove('active'));
+    document.getElementById('region-' + region).classList.add('active');
+  }
+
   /* ── Supabase auth ── */
   const _sb = supabase.createClient(
     'https://ijsxmgkzwvamwctbkgjo.supabase.co',
@@ -1025,9 +1183,19 @@
   });
 
   /* ── Category filter ── */
-  function setActive(el, cat) {
-    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  let _activeCat = 'All';
+
+  function filterByTile(el, tileCat) {
+    document.querySelectorAll('.cat-tile').forEach(t => t.classList.remove('active'));
+    const map = {all:'All',restaurants:'Restaurants & Dining',salons:'Beauty & Wellness',spas:'Beauty & Wellness',gyms:'Fitness & Sports',yoga:'Fitness & Sports',cafes:'Restaurants & Dining',coworking:'Shared Spaces'};
+    _activeCat = map[tileCat] || 'All';
     el.classList.add('active');
+    renderDeals(_activeCat);
+    document.getElementById('deals-section-header').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function setActive(el, cat) {
+    _activeCat = cat;
     renderDeals(cat);
   }
 
@@ -1059,8 +1227,7 @@
       });
     }
     _persistBM();
-    const activeCategory = document.querySelector('.pill.active');
-    renderDeals(activeCategory ? activeCategory.getAttribute('data-cat') : 'All');
+    renderDeals(_activeCat);
   }
 
   /* ── Live deal counter ── */
@@ -1094,9 +1261,7 @@
       };
     });
     allDeals = [...live, ...staticDeals];
-    const activeCategory = document.querySelector('.pill.active');
-    const cat = activeCategory ? activeCategory.getAttribute('data-cat') : 'All';
-    renderDeals(cat);
+    renderDeals(_activeCat);
   }
 
   /* ── Deal data ── */
@@ -1380,8 +1545,7 @@
     document.getElementById('deals-count-label').textContent = '';
     const clearBtn = document.getElementById('search-clear-btn');
     if (clearBtn) clearBtn.remove();
-    const activeCategory = document.querySelector('.pill.active');
-    renderDeals(activeCategory ? activeCategory.getAttribute('data-cat') : 'All');
+    renderDeals(_activeCat);
   }
 
   /* ══ BOOKING FLOW ══ */
