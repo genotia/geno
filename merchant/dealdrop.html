@@ -6,7 +6,7 @@
 <title>Genoti — DealDrop · No Cost</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--teal:#085041;--green:#1D9E75;--green-lt:#E1F5EE;--green-dk:#064434;--red:#E24B4A;--red-lt:#FCEBEB;--amber:#BA7517;--amber-lt:#FAEEDA;--bg:#FAFAF8;--card:#FFFFFF;--text:#1A1A18;--text2:#5F5E5A;--text3:#888780;--border:#E8E6E0;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--white:#ffffff;--muted:#5F5E5A}
+:root{--teal:#085041;--green:#1D9E75;--green-lt:#E1F5EE;--green-dk:#064434;--red:#E24B4A;--red-lt:#FCEBEB;--red-dk:#A32D2D;--amber:#BA7517;--amber-lt:#FAEEDA;--bg:#FAFAF8;--card:#FFFFFF;--text:#1A1A18;--text2:#5F5E5A;--text3:#888780;--border:#E8E6E0;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,0.06);--white:#ffffff;--muted:#5F5E5A}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
 .container{max-width:440px;margin:0 auto;padding:0 16px}
@@ -137,6 +137,9 @@ nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-b
 .dont-card h3{font-size:15px;font-weight:600;margin-bottom:10px;color:var(--amber)}
 .dont-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2);padding:5px 0}
 .dont-item .x{width:24px;height:24px;border-radius:50%;background:var(--red-lt);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;font-weight:700}
+.paired-cards{display:grid;grid-template-columns:1fr;gap:16px}
+.paired-cards .dont-card,.paired-cards .already{margin-bottom:0}
+@media(min-width:900px){.paired-cards{grid-template-columns:1fr 1fr;align-items:start}}
 
 /* Stats bar */
 .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
@@ -146,10 +149,11 @@ nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-b
 
 /* FAQ */
 .faq{margin-bottom:16px}
-.faq-item{border-bottom:1px solid var(--border);padding:14px 0}
+.faq-item{border-bottom:1px solid var(--border);padding:14px 0;break-inside:avoid}
 .faq-q{font-size:14px;font-weight:600;margin-bottom:4px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .faq-q::after{content:'+';font-size:18px;color:var(--text3);font-weight:400}
 .faq-a{font-size:13px;color:var(--text2);line-height:1.6;margin-top:6px}
+@media(min-width:900px){.faq{column-count:2;column-gap:32px}}
 
 /* CTA bottom */
 .cta-bottom{background:var(--teal);border-radius:16px;padding:24px 20px;text-align:center;color:#fff;margin-bottom:24px;position:relative;overflow:hidden}
@@ -160,6 +164,11 @@ nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-b
 .cta-bottom-btn:hover{transform:translateY(-1px)}
 .cta-bottom-num{font-size:18px;font-weight:700;color:#7EDDB8;margin-top:12px;position:relative}
 
+/* Hero + CTA side by side */
+.hero-grid{display:grid;grid-template-columns:1fr;gap:28px;align-items:center}
+.hero-grid .cta-bottom{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);margin-bottom:0;backdrop-filter:blur(4px)}
+@media(min-width:900px){.hero-grid{grid-template-columns:1.15fr 1fr}}
+
 /* Comparison */
 .compare{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;margin-bottom:16px;box-shadow:var(--shadow)}
 .compare-row{display:grid;grid-template-columns:1fr 1fr 1fr;font-size:12px}
@@ -169,6 +178,100 @@ nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-b
 .compare-cell.label{font-weight:500;color:var(--text)}
 .compare-cell .yes{color:var(--green);font-weight:600}
 .compare-cell .no{color:var(--red);font-weight:500}
+
+/* ROI: Problem / Solution */
+.roi-intro-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:900px){.roi-intro-grid{grid-template-columns:1fr 1fr;align-items:start}}
+.problem-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
+.problem-header{background:var(--red-lt);padding:12px 16px;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--red-dk)}
+.problem-body{padding:14px 16px}
+.funnel{display:flex;flex-direction:column;gap:0}
+.funnel-step{display:flex;align-items:center;gap:12px;padding:8px 0}
+.funnel-bar{height:28px;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:12px;font-weight:600;color:#fff;min-width:40px}
+.funnel-label{font-size:12px;color:var(--text2);flex:1}
+.funnel-num{font-size:13px;font-weight:700;min-width:36px;text-align:right}
+.funnel-arrow{text-align:center;font-size:14px;color:var(--text3);padding:2px 0}
+
+.solution-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
+.solution-header{background:var(--green-lt);padding:12px 16px;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--teal)}
+.solution-body{padding:14px 16px}
+.vs-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin:8px 0}
+.vs-box{text-align:center;padding:12px 8px;border-radius:var(--radius);border:1px solid var(--border)}
+.vs-box.before{background:#FFF5F5}
+.vs-box.after{background:#F0FAF5}
+.vs-label{font-size:10px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
+.vs-num{font-size:26px;font-weight:800}
+.vs-num.red{color:var(--red-dk)}
+.vs-num.green{color:var(--green)}
+.vs-sub{font-size:10px;color:var(--text2);margin-top:2px}
+.vs-arrow{font-size:20px;color:var(--green);font-weight:700;text-align:center}
+
+/* ROI: category tabs */
+.cat-tabs{display:flex;gap:4px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:4px;margin-bottom:14px}
+.cat-tab{flex:1;text-align:center;font-size:12px;font-weight:500;padding:8px 4px;border-radius:8px;cursor:pointer;color:var(--text3);transition:all 0.15s;background:none;border:none;font-family:inherit}
+.cat-tab.active{background:var(--teal);color:#fff;box-shadow:var(--shadow)}
+.cat-tab .emoji{display:block;font-size:18px;margin-bottom:2px}
+
+.roi-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden}
+.roi-header{padding:14px 16px;border-bottom:1px solid var(--border)}
+.roi-cat-name{font-size:16px;font-weight:700;margin-bottom:2px}
+.roi-cat-detail{font-size:12px;color:var(--text2)}
+.roi-body{padding:14px 16px}
+.roi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+@media(min-width:600px){.roi-grid{grid-template-columns:repeat(4,1fr)}}
+.roi-stat{text-align:center;padding:10px 8px;background:var(--bg);border-radius:8px}
+.roi-stat-num{font-size:22px;font-weight:800;color:var(--green)}
+.roi-stat-num.amber{color:var(--amber)}
+.roi-stat-label{font-size:10px;color:var(--text3);margin-top:2px;line-height:1.3}
+.roi-big{text-align:center;padding:14px;background:linear-gradient(135deg,#F0FAF5,var(--green-lt));border-radius:var(--radius);border:1px solid #B5E5D0;margin-bottom:12px}
+.roi-big-label{font-size:11px;font-weight:500;color:var(--teal);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.roi-big-num{font-size:28px;font-weight:800;color:var(--teal)}
+.roi-big-sub{font-size:11px;color:var(--text2);margin-top:4px}
+.roi-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:var(--text2)}
+.roi-row span:last-child{font-weight:500;color:var(--text)}
+.roi-row.green span:last-child{color:var(--green);font-weight:700}
+.roi-row.red span:last-child{color:var(--red-dk);font-weight:700}
+.divider{border:none;border-top:1px solid var(--border);margin:6px 0}
+
+/* ROI: cost comparison (renamed to avoid clashing with .compare above) */
+.roi-compare{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
+.roi-compare-row{display:grid;grid-template-columns:1.4fr 1fr 1fr;font-size:12px}
+.roi-compare-header{padding:10px 8px;font-weight:500;color:#fff}
+.roi-compare-header.platform{background:var(--text3)}
+.roi-compare-header.dealdrop{background:var(--green)}
+.roi-compare-header.label-h{background:var(--teal)}
+.roi-compare-cell{padding:9px 8px;border-bottom:1px solid var(--border);color:var(--text2)}
+.roi-compare-cell.label{font-weight:500;color:var(--text)}
+.roi-compare-cell .red{color:var(--red-dk);font-weight:600}
+.roi-compare-cell .green{color:var(--green);font-weight:600}
+.roi-compare-cell .bold{font-weight:600;color:var(--text)}
+
+/* ROI: time saved */
+.time-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(min-width:900px){.time-grid{grid-template-columns:repeat(4,1fr)}}
+.time-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:14px;text-align:center;box-shadow:var(--shadow)}
+.time-card.highlight{background:var(--green-lt);border-color:#B5E5D0}
+.time-icon{font-size:28px;margin-bottom:6px}
+.time-num{font-size:22px;font-weight:800;color:var(--text)}
+.time-num.green{color:var(--green)}
+.time-label{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.3}
+
+/* ROI: growth flywheel */
+.flywheel{display:flex;flex-direction:column;gap:0;position:relative}
+.fly-step{display:flex;gap:12px;align-items:flex-start;position:relative;z-index:1}
+.fly-line{position:absolute;left:19px;top:40px;bottom:40px;width:2px;background:linear-gradient(to bottom,var(--green),var(--teal))}
+.fly-dot{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:#fff}
+.fly-content{flex:1;padding:4px 0 20px}
+.fly-title{font-size:14px;font-weight:600;margin-bottom:2px}
+.fly-text{font-size:12px;color:var(--text2);line-height:1.5}
+.fly-text b{color:var(--text)}
+.fly-stat{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--green);background:var(--green-lt);padding:2px 8px;border-radius:6px;margin-top:4px}
+@media(min-width:900px){
+  .flywheel{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .flywheel .fly-line{display:none}
+  .flywheel .fly-step{flex-direction:column;align-items:center;text-align:center}
+  .flywheel .fly-content{padding:0}
+}
 
 /* ── FOOTER (site chrome) ── */
 footer { background: #111827; color: rgba(255,255,255,.6); padding: 48px 24px 32px; }
@@ -260,29 +363,20 @@ footer { background: #111827; color: rgba(255,255,255,.6); padding: 48px 24px 32
 
 <!-- HERO -->
 <div class="hero">
-<div class="container">
-<div class="hero-breadcrumb"><a href="../index.html">genoti.ai</a> / <a href="merchants.html">For merchants</a> / <span>DealDrop</span></div>
+<div class="container container-wide">
+<div class="hero-grid">
+<div>
 <div class="hero-tag">📲 For merchants</div>
-<h1><span class="green">DealDrop</span> —<br><span class="free">no cost.</span></h1>
+<h1><span class="green">DealDrop</span> — <span class="free">no cost.</span></h1>
 <div class="hero-sub">You already send deals to your customers on WhatsApp. Add one more number. Your deals automatically reach hundreds of nearby consumers on Genoti. Zero effort. Zero cost.</div>
-<a href="#" class="hero-cta"><span class="wa">📱</span> Add Genoti on WhatsApp</a>
+</div>
+<div class="cta-bottom">
+<h2>₹54,000–₹1.3L in new revenue. ₹0 cost.</h2>
+<p>Save the number. Add to broadcast list. Send your next deal. Your deals reach 500+ consumers nearby — automatically.</p>
+<button class="cta-bottom-btn">📱 Add Genoti on WhatsApp</button>
+<div class="cta-bottom-num">+91 XXXXX XXXXX</div>
 </div>
 </div>
-
-<!-- ALREADY SENDING -->
-<div class="section">
-<div class="container">
-<div class="already">
-<h3>You're already doing this every week:</h3>
-<div class="already-items">
-<div class="already-item"><div class="check">✓</div><span>Sending <b>discount offers</b> to customers on WhatsApp</span></div>
-<div class="already-item"><div class="check">✓</div><span>Broadcasting <b>weekend specials</b> and festive deals</span></div>
-<div class="already-item"><div class="check">✓</div><span>Sharing <b>empty slot deals</b> to fill last-minute cancellations</span></div>
-<div class="already-item"><div class="check">✓</div><span>Posting <b>flash sales</b> when business is slow</span></div>
-</div>
-</div>
-<div style="font-size:14px;font-weight:600;color:var(--text);text-align:center;margin-bottom:8px">What if those same messages reached 500+ new customers nearby?</div>
-<div style="font-size:13px;color:var(--text2);text-align:center;line-height:1.6">That's DealDrop. Add Genoti's WhatsApp number to your broadcast list. Every deal you send gets automatically listed on Genoti — visible to consumers searching for deals in your area.</div>
 </div>
 </div>
 
@@ -393,43 +487,276 @@ Your next deal will reach even more people. Post weekly for best results!</div>
 </div>
 </div>
 
-<!-- STATS -->
-<div class="section">
-<div class="container">
-<div class="stats">
-<div class="stat"><div class="stat-num">500+</div><div class="stat-label">Consumers<br>near you</div></div>
-<div class="stat"><div class="stat-num">28m</div><div class="stat-label">Avg time<br>to fill a slot</div></div>
-<div class="stat"><div class="stat-num">₹0</div><div class="stat-label">Cost to<br>list a deal</div></div>
-</div>
-</div>
-</div>
-
-<!-- WHAT WE DON'T NEED -->
+<!-- ROI: PROBLEM + SOLUTION -->
 <div class="section" style="padding-top:0">
-<div class="container">
-<div class="dont-card">
-<h3>What we don't need from you</h3>
-<div class="dont-item"><div class="x">✗</div><span>No app to download or dashboard to learn</span></div>
-<div class="dont-item"><div class="x">✗</div><span>No photos to upload or descriptions to write</span></div>
-<div class="dont-item"><div class="x">✗</div><span>No commission on bookings — ever</span></div>
-<div class="dont-item"><div class="x">✗</div><span>No subscription fees for DealDrop</span></div>
-<div class="dont-item"><div class="x">✗</div><span>No contracts or lock-in periods</span></div>
+<div class="container container-wide">
+<div class="section-label">DealDrop ROI</div>
+<div class="section-title">Your WhatsApp reach has a ceiling — here's the math</div>
+<div class="section-desc">Same message, same effort. Here's what actually happens before and after DealDrop.</div>
+
+<div class="roi-intro-grid">
+<div class="problem-card">
+<div class="problem-header">📱 Your current WhatsApp broadcast</div>
+<div class="problem-body">
+<div class="funnel">
+<div class="funnel-step"><div class="funnel-bar" style="width:100%;background:var(--teal)">100%</div><div class="funnel-label">Contacts on your list</div><div class="funnel-num">150</div></div>
+<div class="funnel-arrow">↓</div>
+<div class="funnel-step"><div class="funnel-bar" style="width:40%;background:var(--amber)">40%</div><div class="funnel-label">Actually receive it (not muted)</div><div class="funnel-num">60</div></div>
+<div class="funnel-arrow">↓</div>
+<div class="funnel-step"><div class="funnel-bar" style="width:17%;background:var(--red)">17%</div><div class="funnel-label">Open and read the message</div><div class="funnel-num">25</div></div>
+<div class="funnel-arrow">↓</div>
+<div class="funnel-step"><div class="funnel-bar" style="width:3%;background:var(--red-dk)">3%</div><div class="funnel-label">Actually book or walk in</div><div class="funnel-num" style="color:var(--red-dk)">4</div></div>
+</div>
+<div style="text-align:center;margin-top:12px;font-size:13px;color:var(--red-dk);font-weight:600">150 contacts → 4 bookings. Same list every week.</div>
+</div>
 </div>
 
-<div class="already">
-<h3>What we do need — just once</h3>
-<div class="already-items">
-<div class="already-item"><div class="check">✓</div><span>Save our WhatsApp number</span></div>
-<div class="already-item"><div class="check">✓</div><span>Add it to your broadcast list</span></div>
-<div class="already-item"><div class="check">✓</div><span>Send deals like you always do</span></div>
+<div class="solution-card">
+<div class="solution-header">🚀 Add DealDrop — same message, new audience</div>
+<div class="solution-body">
+<div class="vs-row">
+<div class="vs-box before">
+<div class="vs-label">Without DealDrop</div>
+<div class="vs-num red">150</div>
+<div class="vs-sub">Same contacts every week</div>
+</div>
+<div class="vs-arrow">→</div>
+<div class="vs-box after">
+<div class="vs-label">With DealDrop</div>
+<div class="vs-num green">650+</div>
+<div class="vs-sub">150 contacts + 500+ new consumers</div>
+</div>
+</div>
+<div style="text-align:center;font-size:12px;color:var(--text2);margin-top:8px;line-height:1.6">Your deal reaches <b style="color:var(--green)">500+ active deal-seekers</b> near your location on Genoti — people who are browsing for exactly what you offer, right now.</div>
 </div>
 </div>
 </div>
 </div>
+</div>
+
+<!-- ROI: CATEGORY REVENUE IMPACT -->
+<div class="section" style="background:#F3F2EE;padding:24px 0">
+<div class="container container-wide">
+<div class="section-label">Revenue impact by category</div>
+<div class="section-title">What DealDrop means for your business</div>
+<div class="section-desc">Tap your business type to see the numbers:</div>
+
+<div class="cat-tabs" id="catTabs">
+<div class="cat-tab active" onclick="showCat(0)"><span class="emoji">💇</span>Salon</div>
+<div class="cat-tab" onclick="showCat(1)"><span class="emoji">🧖</span>Spa</div>
+<div class="cat-tab" onclick="showCat(2)"><span class="emoji">🍽️</span>Restaurant</div>
+<div class="cat-tab" onclick="showCat(3)"><span class="emoji">🏋️</span>Gym</div>
+</div>
+
+<div class="roi-card cat-content" id="cat0">
+<div class="roi-header"><div class="roi-cat-name">💇 Salon / Beauty Parlour</div><div class="roi-cat-detail">Avg ticket: ₹800 · 4 DealDrops/month · 30% avg discount</div></div>
+<div class="roi-body">
+<div class="roi-grid">
+<div class="roi-stat"><div class="roi-stat-num">8–12</div><div class="roi-stat-label">New bookings<br>per month</div></div>
+<div class="roi-stat"><div class="roi-stat-num">₹560</div><div class="roi-stat-label">Avg deal<br>booking value</div></div>
+<div class="roi-stat"><div class="roi-stat-num amber">30%</div><div class="roi-stat-label">New customers<br>who return</div></div>
+<div class="roi-stat"><div class="roi-stat-num">3–4</div><div class="roi-stat-label">Repeat customers<br>gained/month</div></div>
+</div>
+<div class="roi-big">
+<div class="roi-big-label">Annual new revenue from DealDrop</div>
+<div class="roi-big-num">₹54,000 – ₹81,000</div>
+<div class="roi-big-sub">Plus growing repeat customer base — 24+ new regulars by month 6</div>
+</div>
+<div class="roi-row"><span>Monthly new bookings via DealDrop</span><span>8–12</span></div>
+<div class="roi-row"><span>Revenue per booking (after 30% off)</span><span>₹560</span></div>
+<div class="roi-row"><span>Monthly new revenue</span><span>₹4,480 – ₹6,720</span></div>
+<div class="roi-row green"><span>Annual new revenue</span><span>₹53,760 – ₹80,640</span></div>
+<hr class="divider">
+<div class="roi-row red"><span>Cost to you</span><span>₹0</span></div>
+<div class="roi-row red"><span>Commission paid</span><span>₹0</span></div>
+<div class="roi-row red"><span>Time spent per deal</span><span>0 minutes</span></div>
+</div>
+</div>
+
+<div class="roi-card cat-content" id="cat1" style="display:none">
+<div class="roi-header"><div class="roi-cat-name">🧖 Spa / Medspa</div><div class="roi-cat-detail">Avg ticket: ₹2,000 · 3 DealDrops/month · 30% avg discount</div></div>
+<div class="roi-body">
+<div class="roi-grid">
+<div class="roi-stat"><div class="roi-stat-num">5–8</div><div class="roi-stat-label">New bookings<br>per month</div></div>
+<div class="roi-stat"><div class="roi-stat-num">₹1,400</div><div class="roi-stat-label">Avg deal<br>booking value</div></div>
+<div class="roi-stat"><div class="roi-stat-num amber">25%</div><div class="roi-stat-label">New customers<br>who return</div></div>
+<div class="roi-stat"><div class="roi-stat-num">1–2</div><div class="roi-stat-label">Repeat customers<br>gained/month</div></div>
+</div>
+<div class="roi-big">
+<div class="roi-big-label">Annual new revenue from DealDrop</div>
+<div class="roi-big-num">₹84,000 – ₹1,34,000</div>
+<div class="roi-big-sub">Highest ticket size category — even 5 bookings/month adds up fast</div>
+</div>
+<div class="roi-row"><span>Monthly new bookings via DealDrop</span><span>5–8</span></div>
+<div class="roi-row"><span>Revenue per booking (after 30% off)</span><span>₹1,400</span></div>
+<div class="roi-row"><span>Monthly new revenue</span><span>₹7,000 – ₹11,200</span></div>
+<div class="roi-row green"><span>Annual new revenue</span><span>₹84,000 – ₹1,34,400</span></div>
+<hr class="divider">
+<div class="roi-row red"><span>Cost to you</span><span>₹0</span></div>
+<div class="roi-row red"><span>Commission paid</span><span>₹0</span></div>
+</div>
+</div>
+
+<div class="roi-card cat-content" id="cat2" style="display:none">
+<div class="roi-header"><div class="roi-cat-name">🍽️ Restaurant / Café</div><div class="roi-cat-detail">Avg ticket: ₹400 · 4 DealDrops/month · 35% avg discount</div></div>
+<div class="roi-body">
+<div class="roi-grid">
+<div class="roi-stat"><div class="roi-stat-num">10–15</div><div class="roi-stat-label">New diners<br>per month</div></div>
+<div class="roi-stat"><div class="roi-stat-num">₹260</div><div class="roi-stat-label">Avg deal<br>ticket value</div></div>
+<div class="roi-stat"><div class="roi-stat-num amber">35%</div><div class="roi-stat-label">New diners<br>who return</div></div>
+<div class="roi-stat"><div class="roi-stat-num">4–5</div><div class="roi-stat-label">Repeat diners<br>gained/month</div></div>
+</div>
+<div class="roi-big">
+<div class="roi-big-label">Annual new revenue from DealDrop</div>
+<div class="roi-big-num">₹31,000 – ₹47,000</div>
+<div class="roi-big-sub">Highest impulse conversion — "40% off lunch, next 2 hours" fills tables fast</div>
+</div>
+<div class="roi-row"><span>Monthly new diners via DealDrop</span><span>10–15</span></div>
+<div class="roi-row"><span>Revenue per diner (after 35% off)</span><span>₹260</span></div>
+<div class="roi-row"><span>Monthly new revenue</span><span>₹2,600 – ₹3,900</span></div>
+<div class="roi-row green"><span>Annual new revenue</span><span>₹31,200 – ₹46,800</span></div>
+<hr class="divider">
+<div class="roi-row red"><span>Cost to you</span><span>₹0</span></div>
+<div class="roi-row"><span>Same deal on Swiggy (22% commission)</span><span style="color:var(--red-dk);font-weight:600">-₹6,864 – ₹10,296/yr</span></div>
+</div>
+</div>
+
+<div class="roi-card cat-content" id="cat3" style="display:none">
+<div class="roi-header"><div class="roi-cat-name">🏋️ Gym / Fitness Studio</div><div class="roi-cat-detail">Avg class: ₹500 · 4 DealDrops/month · 40% avg discount</div></div>
+<div class="roi-body">
+<div class="roi-grid">
+<div class="roi-stat"><div class="roi-stat-num">6–10</div><div class="roi-stat-label">Trial attendees<br>per month</div></div>
+<div class="roi-stat"><div class="roi-stat-num">₹300</div><div class="roi-stat-label">Avg trial<br>ticket value</div></div>
+<div class="roi-stat"><div class="roi-stat-num amber">20%</div><div class="roi-stat-label">Trial → member<br>conversion</div></div>
+<div class="roi-stat"><div class="roi-stat-num">1–2</div><div class="roi-stat-label">New members<br>gained/month</div></div>
+</div>
+<div class="roi-big">
+<div class="roi-big-label">Annual value including memberships</div>
+<div class="roi-big-num">₹48,000 – ₹72,000</div>
+<div class="roi-big-sub">The real win: trial → membership at ₹2,000/month = ₹24,000 LTV each</div>
+</div>
+<div class="roi-row"><span>Monthly trial revenue</span><span>₹1,800 – ₹3,000</span></div>
+<div class="roi-row"><span>Members converted/month</span><span>1–2</span></div>
+<div class="roi-row"><span>Monthly membership revenue (cumulative)</span><span>₹2,000 – ₹4,000</span></div>
+<div class="roi-row green"><span>Annual value (trials + memberships)</span><span>₹48,000 – ₹72,000</span></div>
+<hr class="divider">
+<div class="roi-row red"><span>Cost to you</span><span>₹0</span></div>
+<div class="roi-row"><span>Same on ClassPass (40% cut)</span><span style="color:var(--red-dk);font-weight:600">-₹14,400 – ₹24,000/yr</span></div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ROI: COST COMPARISON -->
+<div class="section" style="padding-top:0">
+<div class="container container-wide">
+<div class="section-label">Cost comparison</div>
+<div class="section-title">What 10 new customers/month costs you</div>
+<div class="section-desc">Same result — 10 new bookings per month. Very different cost:</div>
+
+<div class="roi-compare">
+<div class="roi-compare-row">
+<div class="roi-compare-header label-h">Platform</div>
+<div class="roi-compare-header platform">Annual cost</div>
+<div class="roi-compare-header dealdrop">You keep</div>
+</div>
+<div class="roi-compare-row">
+<div class="roi-compare-cell label">Urban Company<br><span style="font-size:10px;color:var(--text3)">28% commission</span></div>
+<div class="roi-compare-cell"><span class="red">₹26,880/yr</span></div>
+<div class="roi-compare-cell"><span class="bold">₹69,120</span></div>
+</div>
+<div class="roi-compare-row">
+<div class="roi-compare-cell label">Swiggy<br><span style="font-size:10px;color:var(--text3)">22% commission</span></div>
+<div class="roi-compare-cell"><span class="red">₹13,200/yr</span></div>
+<div class="roi-compare-cell"><span class="bold">₹46,800</span></div>
+</div>
+<div class="roi-compare-row">
+<div class="roi-compare-cell label">ClassPass<br><span style="font-size:10px;color:var(--text3)">40% below retail</span></div>
+<div class="roi-compare-cell"><span class="red">₹24,000/yr</span></div>
+<div class="roi-compare-cell"><span class="bold">₹36,000</span></div>
+</div>
+<div class="roi-compare-row">
+<div class="roi-compare-cell label">Booking.com<br><span style="font-size:10px;color:var(--text3)">15% commission</span></div>
+<div class="roi-compare-cell"><span class="red">₹18,000/yr</span></div>
+<div class="roi-compare-cell"><span class="bold">₹1,02,000</span></div>
+</div>
+<div class="roi-compare-row" style="background:var(--green-lt)">
+<div class="roi-compare-cell label" style="font-weight:700">DealDrop<br><span style="font-size:10px;color:var(--teal)">0% commission</span></div>
+<div class="roi-compare-cell"><span class="green" style="font-size:16px">₹0/yr</span></div>
+<div class="roi-compare-cell"><span class="green" style="font-size:14px">100% yours</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ROI: TIME SAVED -->
+<div class="section" style="padding-top:0">
+<div class="container container-wide">
+<div class="section-label">Time saved</div>
+<div class="section-title">Minutes per deal across platforms</div>
+
+<div class="time-grid">
+<div class="time-card"><div class="time-icon">📱</div><div class="time-num">15 min</div><div class="time-label">Urban Company<br>dashboard per deal</div></div>
+<div class="time-card"><div class="time-icon">🛵</div><div class="time-num">10 min</div><div class="time-label">Swiggy partner<br>portal per deal</div></div>
+<div class="time-card"><div class="time-icon">📸</div><div class="time-num">20 min</div><div class="time-label">Instagram post<br>with design</div></div>
+<div class="time-card highlight"><div class="time-icon">📲</div><div class="time-num green">0 min</div><div class="time-label">DealDrop<br>already sent on WhatsApp</div></div>
+</div>
+
+<div style="background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:14px 16px;text-align:center;box-shadow:var(--shadow);margin-top:14px">
+<div style="font-size:12px;color:var(--text2);margin-bottom:6px">If you post 4 deals/week across 3 platforms:</div>
+<div style="font-size:13px;font-weight:600;color:var(--red-dk);margin-bottom:4px">2–3 hours/week spent on deal management</div>
+<div style="font-size:13px;font-weight:600;color:var(--green)">DealDrop eliminates this entirely</div>
+<div style="font-size:11px;color:var(--text3);margin-top:4px">That's 100+ hours saved per year — use it to serve customers</div>
+</div>
+</div>
+</div>
+
+<!-- ROI: GROWTH FLYWHEEL -->
+<div class="section" style="background:#F3F2EE;padding:24px 0">
+<div class="container container-wide">
+<div class="section-label">The growth effect</div>
+<div class="section-title">What happens over 6 months</div>
+<div class="section-desc">DealDrop doesn't just bring customers today. It builds your visibility over time:</div>
+
+<div class="flywheel">
+<div class="fly-line"></div>
+
+<div class="fly-step">
+<div class="fly-dot" style="background:var(--teal)">🚀</div>
+<div class="fly-content">
+<div class="fly-title">Month 1 — First DealDrops</div>
+<div class="fly-text">You send 4 deals. <b>50–80 consumers</b> see each deal on Genoti. You get <b>8–12 new bookings</b> from people who've never visited before.</div>
+<div class="fly-stat">+12 new customers</div>
+</div>
+</div>
+
+<div class="fly-step">
+<div class="fly-dot" style="background:var(--green)">📈</div>
+<div class="fly-content">
+<div class="fly-title">Month 3 — Profile builds up</div>
+<div class="fly-text">After 12 DealDrops, your business has reviews and history on Genoti. The AI starts <b>recommending you</b> in "salon near me" searches even without active deals. <b>30% of first-timers have returned</b> as regulars.</div>
+<div class="fly-stat">+36 total new customers · 10 repeating</div>
+</div>
+</div>
+
+<div class="fly-step">
+<div class="fly-dot" style="background:#25D366">🌟</div>
+<div class="fly-content">
+<div class="fly-title">Month 6 — Organic discovery kicks in</div>
+<div class="fly-text">Your business now gets bookings <b>even on weeks you don't send a deal</b>. You've gained <b>24+ repeat customers</b> and your profile ranks in local search results. Revenue from Genoti: <b>₹27,000–40,000</b> in 6 months.</div>
+<div class="fly-stat">+72 total new customers · 24 repeating · ₹40K revenue</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
 
 <!-- COMPARISON -->
 <div class="section" style="padding-top:0">
-<div class="container">
+<div class="container container-wide">
 <div class="section-label">Compare</div>
 <div class="section-title">DealDrop vs other platforms</div>
 <div class="compare">
@@ -479,7 +806,7 @@ Your next deal will reach even more people. Post weekly for best results!</div>
 
 <!-- FAQ -->
 <div class="section" style="padding-top:0">
-<div class="container">
+<div class="container container-wide">
 <div class="section-label">Questions</div>
 <div class="section-title">Frequently asked</div>
 <div class="faq">
@@ -514,18 +841,6 @@ Your next deal will reach even more people. Post weekly for best results!</div>
 <div class="faq-a">DealDrop is genuinely free — no commission, no subscription, no hidden fees. We want merchants on the Genoti platform. When you're ready for advanced features like booking management, CRM, and AI pricing, we have paid plans starting at ₹199/month. But DealDrop stays free forever.</div>
 </div>
 
-</div>
-</div>
-</div>
-
-<!-- CTA BOTTOM -->
-<div class="section" style="padding-top:0">
-<div class="container">
-<div class="cta-bottom">
-<h2>Start DealDropping in 2 minutes</h2>
-<p>Save the number. Add to broadcast list. Send your next deal. That's it — your deals will reach hundreds of consumers nearby, instantly.</p>
-<button class="cta-bottom-btn">📱 Add Genoti on WhatsApp</button>
-<div class="cta-bottom-num">+91 XXXXX XXXXX</div>
 </div>
 </div>
 </div>
@@ -593,6 +908,11 @@ Your next deal will reach even more people. Post weekly for best results!</div>
       a.style.display = (a.style.display === 'none') ? 'block' : 'none';
     });
   });
+  function showCat(n) {
+    document.querySelectorAll('.cat-content').forEach(c => c.style.display = 'none');
+    document.getElementById('cat' + n).style.display = 'block';
+    document.querySelectorAll('.cat-tab').forEach((t, i) => t.classList.toggle('active', i === n));
+  }
 </script>
 <script src="geno-merchant-chat.js"></script>
 </body>
