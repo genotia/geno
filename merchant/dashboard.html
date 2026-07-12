@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard — Genoti Merchant</title>
+  <title>Dashboard: Genoti Merchant</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -826,7 +826,7 @@
     .adv-format-pill  { background:var(--bg); border:1.5px solid var(--border); border-radius:20px; padding:6px 14px; font-size:12px; font-weight:700; color:var(--muted); cursor:pointer; transition:all .15s; }
     .adv-format-pill:hover    { border-color:var(--green); color:var(--text); }
     .adv-format-pill.selected { background:var(--text); color:#fff; border-color:var(--text); }
-    /* Creative step — two panel */
+    /* Creative step: two panel */
     .adv-creative-panels { display:grid; grid-template-columns:1fr 280px; gap:20px; align-items:start; }
     .adv-tmpl-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
     .adv-tmpl-chip  { background:#EDE9FE; color:#6D28D9; font-size:11px; font-weight:700; padding:4px 10px; border-radius:6px; cursor:pointer; white-space:nowrap; }
@@ -914,7 +914,7 @@
     .seg-color-swatch { width:28px; height:28px; border-radius:50%; border:3px solid transparent; cursor:pointer; transition:transform .1s,border-color .15s; flex-shrink:0; }
     .seg-color-swatch:hover { transform:scale(1.15); }
     .seg-color-swatch.selected { border-color:var(--text); transform:scale(1.1); }
-    /* Template cards — extra action row */
+    /* Template cards: extra action row */
     .ntmpl-actions { display:flex; gap:8px; }
     .ntmpl-edit { flex:0 0 auto; background:var(--bg); border:1.5px solid var(--border); color:var(--text); border-radius:8px; padding:8px 14px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; }
     .ntmpl-edit:hover { border-color:var(--green); background:#F0FDF9; }
@@ -2539,7 +2539,7 @@
     <div class="cl-topbar">
       <div>
         <div class="cl-page-title">Notifications</div>
-        <div class="cl-page-sub">Analytics · New Campaign · Templates · Segments — all in one place</div>
+        <div class="cl-page-sub">Analytics · New Campaign · Templates · Segments (all in one place)</div>
       </div>
     </div>
 
@@ -2638,7 +2638,7 @@
         <div class="ncmp-field">
           <label>Use a template (optional)</label>
           <select class="am-input" id="ncmp-tmpl-select" onchange="applyNotifTemplate(this.value)">
-            <option value="">— start from scratch —</option>
+            <option value="">Start from scratch</option>
           </select>
         </div>
 
@@ -2795,7 +2795,7 @@
           <div class="fb-connect-logo">📘</div>
           <div class="fb-connect-body">
             <div class="fb-connect-title">Connect your Facebook Business account</div>
-            <div class="fb-connect-sub">Link your Meta Ads account to create Facebook campaigns, track performance and manage budgets — all from this dashboard.</div>
+            <div class="fb-connect-sub">Link your Meta Ads account to create Facebook campaigns, track performance and manage budgets, all from this dashboard.</div>
             <button class="fb-connect-btn" onclick="connectFacebook()">Connect Facebook →</button>
           </div>
         </div>
@@ -2842,7 +2842,7 @@
       </div>
       <div class="adv-page" id="adv-page-fb-audiences">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
-          <div style="font-size:13px;color:var(--muted)">Saved targeting audiences — reuse in any Facebook campaign</div>
+          <div style="font-size:13px;color:var(--muted)">Saved targeting audiences you can reuse in any Facebook campaign</div>
           <button class="ntab-new-btn" onclick="openSaveAudienceOverlay()">+ Save audience</button>
         </div>
         <div class="adv-aud-grid" id="adv-fb-aud-grid">
@@ -2857,7 +2857,7 @@
         <div style="font-size:36px">📸</div>
         <div>
           <div style="font-size:14px;font-weight:800;color:#7C3AED;margin-bottom:4px">Instagram uses your Meta / Facebook login</div>
-          <div style="font-size:12px;color:#6D28D9;line-height:1.6">Connect Facebook first (in the Facebook tab) — Instagram campaigns run through the same Meta Ads account. Ads target <strong>Instagram Feed, Stories, Reels and Explore</strong> placements.</div>
+          <div style="font-size:12px;color:#6D28D9;line-height:1.6">Connect Facebook first (in the Facebook tab). Instagram campaigns run through the same Meta Ads account. Ads target <strong>Instagram Feed, Stories, Reels and Explore</strong> placements.</div>
         </div>
       </div>
       <div class="adv-ptabs">
@@ -2895,7 +2895,7 @@
       </div>
       <div class="adv-page" id="adv-page-ig-audiences">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
-          <div style="font-size:13px;color:var(--muted)">Saved targeting audiences — reuse in any Instagram campaign</div>
+          <div style="font-size:13px;color:var(--muted)">Saved targeting audiences you can reuse in any Instagram campaign</div>
           <button class="ntab-new-btn" onclick="openSaveAudienceOverlay()">+ Save audience</button>
         </div>
         <div class="adv-aud-grid" id="adv-ig-aud-grid">
@@ -2914,7 +2914,7 @@
             <div class="fb-connect-sub">Link your WhatsApp Business account to send broadcast messages and track Click-to-Chat ad performance. Requires WhatsApp Business API access.</div>
             <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
               <button class="wa-connect-btn" onclick="connectWhatsApp()">Connect via Meta →</button>
-              <button class="wa-connect-btn" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.5);font-weight:700" onclick="skipWaConnect()">Skip — use Click-to-Chat Ads only</button>
+              <button class="wa-connect-btn" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.5);font-weight:700" onclick="skipWaConnect()">Skip and use Click-to-Chat Ads only</button>
             </div>
           </div>
         </div>
@@ -2922,7 +2922,7 @@
       <div id="wa-connected-bar" style="display:none">
         <div class="wa-connected-bar">
           <span style="font-size:20px">✅</span>
-          <span>WhatsApp Business connected — <strong id="wa-phone-display">—</strong></span>
+          <span>WhatsApp Business connected: <strong id="wa-phone-display">—</strong></span>
           <button onclick="disconnectWhatsApp()" style="margin-left:auto;background:none;border:1.5px solid #6EE7B7;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:#065F46;cursor:pointer;font-family:inherit">Disconnect</button>
         </div>
       </div>
@@ -2950,7 +2950,7 @@
       </div>
       <div class="adv-page" id="adv-page-wa-ctc">
         <div style="background:#F0FDF4;border:1.5px solid #A7F3D0;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#065F46;font-weight:600">
-          💡 <strong>Click-to-Chat ads</strong> appear on Facebook or Instagram and open a WhatsApp conversation when tapped. They use your Meta Ads account — no separate WhatsApp Business API is needed.
+          💡 <strong>Click-to-Chat ads</strong> appear on Facebook or Instagram and open a WhatsApp conversation when tapped. They use your Meta Ads account, so no separate WhatsApp Business API is needed.
         </div>
         <div class="adv-steps" id="adv-wa-steps"></div>
         <div id="adv-wa-wizard-body"></div>
@@ -3491,7 +3491,7 @@
             <div class="am-field">
               <label>Reports to</label>
               <select class="am-input" id="am-manager">
-                <option value="">— Select manager —</option>
+                <option value="">Select manager</option>
               </select>
             </div>
           </div>
@@ -3761,11 +3761,11 @@
       <div id="assign-booking-summary" style="background:var(--bg);border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.7"></div>
       <div class="assign-field">
         <label>Therapist *</label>
-        <select id="assign-staff" class="assign-select"><option value="">— select therapist —</option></select>
+        <select id="assign-staff" class="assign-select"><option value="">Select therapist</option></select>
       </div>
       <div class="assign-field">
         <label>Room *</label>
-        <select id="assign-room" class="assign-select"><option value="">— select room —</option></select>
+        <select id="assign-room" class="assign-select"><option value="">Select room</option></select>
       </div>
       <div class="form-err" id="assign-err"></div>
       <button class="btn-submit" onclick="confirmAssign()">Confirm Assignment →</button>
@@ -4704,7 +4704,7 @@
   }
 
   /* ════════════════════════════════════════════
-     SETUP — STAFF
+     SETUP: STAFF
   ════════════════════════════════════════════ */
   const STAFF_COLORS = ['#1D9E75','#7C3AED','#2563EB','#DC2626','#D97706','#DB2777','#0891B2','#059669','#EA580C','#65A30D'];
   let currentStaff = [];
@@ -4723,7 +4723,7 @@
     if (countEl) countEl.textContent = count + ' active';
     const ul = document.getElementById('staff-list');
     if (!ul) return;
-    if (!currentStaff.length) { ul.innerHTML = '<li class="setup-item" style="color:var(--muted);padding:14px 16px">No therapists yet — add your first one above.</li>'; return; }
+    if (!currentStaff.length) { ul.innerHTML = '<li class="setup-item" style="color:var(--muted);padding:14px 16px">No therapists yet. Add your first one above.</li>'; return; }
     ul.innerHTML = currentStaff.map(s => `
       <li class="setup-item ${s.active ? '' : 'inactive-row'}">
         <div class="staff-dot" style="background:${s.color}"></div>
@@ -4803,7 +4803,7 @@
     await loadStaff();
   }
 
-  /* ── SETUP — ROOMS ── */
+  /* ── SETUP: ROOMS ── */
   async function loadRooms() {
     const { data } = await db.from('rooms').select('*')
       .eq('merchant_id', currentMerchant.id).order('name');
@@ -4815,7 +4815,7 @@
     const count = currentRooms.filter(r => r.active).length;
     document.getElementById('room-count').textContent = count + ' active';
     const ul = document.getElementById('room-list');
-    if (!currentRooms.length) { ul.innerHTML = '<li class="setup-item" style="color:var(--muted);padding:14px 16px">No rooms yet — add your first one above.</li>'; return; }
+    if (!currentRooms.length) { ul.innerHTML = '<li class="setup-item" style="color:var(--muted);padding:14px 16px">No rooms yet. Add your first one above.</li>'; return; }
     ul.innerHTML = currentRooms.map(r => `
       <li class="setup-item ${r.active ? '' : 'inactive-row'}">
         <span style="font-size:18px">🚪</span>
@@ -4929,9 +4929,9 @@
     const rosterDay = currentRoster.filter(r => r.day_of_week === dow).map(r => r.staff_id);
     const onDuty = currentStaff.filter(s => s.active && (rosterDay.includes(s.id) || !rosterDay.length));
 
-    staffSel.innerHTML = '<option value="">— select therapist —</option>' +
+    staffSel.innerHTML = '<option value="">Select therapist</option>' +
       onDuty.map(s => `<option value="${s.id}">${s.name}${s.role ? ' · ' + s.role : ''}</option>`).join('');
-    roomSel.innerHTML = '<option value="">— select room —</option>' +
+    roomSel.innerHTML = '<option value="">Select room</option>' +
       currentRooms.filter(r => r.active).map(r => `<option value="${r.id}">${r.name} (${r.room_type})</option>`).join('');
 
     // Pre-select existing assignment
@@ -5034,7 +5034,7 @@
     );
 
     const prev = sel.value;
-    sel.innerHTML = `<option value="">— Select ${filterRole} —</option>` +
+    sel.innerHTML = `<option value="">Select ${filterRole}</option>` +
       candidates.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
     if (prev && candidates.find(m => m.id === prev)) sel.value = prev;
   }
@@ -5245,7 +5245,7 @@
 
     btn.disabled = false; btn.textContent = amEditingId ? 'Save' : 'Add';
 
-    // Always close — show non-blocking error if save failed
+    // Always close: show non-blocking error if save failed
     closeAddMember();
     if (error) {
       console.warn('Staff save error:', error.message);
@@ -5805,7 +5805,7 @@
     const r  = currentRoster.find(x => x.staff_id === staffId && x.day_of_week === day);
     const lv = dateStr ? currentLeaves.find(l => l.staff_id === staffId && l.date === dateStr) : null;
 
-    document.getElementById('shift-modal-title').textContent = (day || '') + ' — ' + (s?.name || '');
+    document.getElementById('shift-modal-title').textContent = (day || '') + ': ' + (s?.name || '');
     document.getElementById('shift-modal-sub').textContent   = dateStr ? new Date(dateStr + 'T00:00:00').toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'}) : '';
 
     const startSel = document.getElementById('shift-start-sel');
@@ -6164,7 +6164,7 @@
   }
 
   /* ════════════════════════════════════════════
-     CLIENTDB — NAV TOGGLE
+     CLIENTDB: NAV TOGGLE
   ════════════════════════════════════════════ */
   function toggleClientNav(btn) {
     const willOpen = !btn.classList.contains('open');
@@ -6399,7 +6399,7 @@
     {
       id:'new-users', icon:'🎉', color:'#8B5CF6',
       name:'New Users',
-      desc:'Recently registered with no bookings yet — convert their first visit',
+      desc:'Recently registered with no bookings yet: convert their first visit',
       sample:'🎉 Get ₹300 off your first booking!',
       filter: c => c._daysSince <= 30 && c._pastBookings === 0,
     },
@@ -6413,7 +6413,7 @@
     {
       id:'first-time', icon:'⭐', color:'#3B82F6',
       name:'First-Time Customers',
-      desc:'Completed exactly 1 booking — nudge them to return',
+      desc:'Completed exactly 1 booking: nudge them to return',
       sample:'Book again within 30 days and earn 2× points',
       filter: c => c._pastBookings === 1,
     },
@@ -6427,35 +6427,35 @@
     {
       id:'high-value', icon:'💎', color:'#EAB308',
       name:'High-Value Customers',
-      desc:'₹10,000+ in annual spend — reward loyalty',
+      desc:'₹10,000+ in annual spend: reward loyalty',
       sample:'VIP access to our premium deals',
       filter: c => c._spend12m >= 10000,
     },
     {
       id:'inactive', icon:'⏰', color:'#6366F1',
       name:'Inactive Customers',
-      desc:'No booking in 30+ days despite past visits — win them back',
+      desc:'No booking in 30+ days despite past visits: win them back',
       sample:'We miss you! Here\'s ₹500 off your next visit',
       filter: c => c._pastBookings > 0 && (!c._lastBooking || c._lastBooking > 30),
     },
     {
       id:'off-peak', icon:'🕐', color:'#0EA5E9',
       name:'Off-Peak Deal Seekers',
-      desc:'Clients with 3+ bookings — likely to respond to off-peak offers',
+      desc:'Clients with 3+ bookings: likely to respond to off-peak offers',
       sample:'Save up to 70% on Off-Peak Deals',
       filter: c => c._bookings12m >= 3,
     },
     {
       id:'last-minute', icon:'⚡', color:'#F43F5E',
       name:'Last-Minute Bookers',
-      desc:'Clients with upcoming bookings — receptive to same-day deals',
+      desc:'Clients with upcoming bookings: receptive to same-day deals',
       sample:'Last-minute spa slot today at 50% off',
       filter: c => c._upcomingBookings > 0,
     },
     {
       id:'weekend', icon:'📅', color:'#EC4899',
       name:'Weekend Customers',
-      desc:'Active clients who visit regularly — encourage weekday bookings',
+      desc:'Active clients who visit regularly: encourage weekday bookings',
       sample:'Earn 2× points on weekday visits',
       filter: c => c._bookings12m >= 2,
     },
@@ -6476,14 +6476,14 @@
     {
       id:'referral', icon:'🤝', color:'#14B8A6',
       name:'Referral Candidates',
-      desc:'Highly engaged clients (5+ bookings) — ideal for referral campaigns',
+      desc:'Highly engaged clients (5+ bookings): ideal for referral campaigns',
       sample:'Refer a friend and earn 500 points',
       filter: c => c._pastBookings >= 5,
     },
     {
       id:'nearby', icon:'📍', color:'#84CC16',
       name:'Nearby Customers',
-      desc:'All clients — use for hyperlocal area-specific campaigns',
+      desc:'All clients: use for hyperlocal area-specific campaigns',
       sample:'Deals available near you today',
       filter: c => !!c,
     },
@@ -6825,7 +6825,7 @@
     const redeemRsEl = document.getElementById('bill-redeem-rs-charge');
 
     if (!clientId) {
-      // No client / walk-in — hide bar, lock field
+      // No client / walk-in: hide bar, lock field
       bar.classList.remove('show');
       billClientBalance = 0;
       if (availEl)    availEl.textContent = '';
@@ -6850,18 +6850,18 @@
     billClientBalance = Math.max(0, earned - redeemed);
     const tier = tierFor(billClientBalance);
 
-    // Loyalty bar — always show for registered clients
+    // Loyalty bar: always show for registered clients
     document.getElementById('bl-points').textContent    = billClientBalance.toLocaleString('en-IN');
     document.getElementById('bl-tier').textContent      = `${tier.icon} ${tier.name}`;
     document.getElementById('bl-tier-disc').textContent = `${tier.discount_pct}% tier discount`;
     bar.classList.add('show');
 
-    // Charges-row reward field — always enabled for registered clients
+    // Charges-row reward field: always enabled for registered clients
     const maxRedeemable = Math.floor(billClientBalance * 0.5); // 50% cap
     if (availEl) {
       availEl.textContent = billClientBalance > 0
         ? `${billClientBalance.toLocaleString('en-IN')} pts (max ${maxRedeemable} redeemable)`
-        : '0 pts — no balance yet';
+        : '0 pts, no balance yet';
       availEl.style.color = billClientBalance > 0 ? 'var(--green)' : 'var(--muted)';
     }
     if (redeemEl) {
@@ -6925,7 +6925,7 @@
       if (!currentStaff.length) jobs.push(loadStaff());
       if (!allServices.length)  jobs.push(loadServiceMenu().catch(()=>{}));
       if (!allProducts.length)  jobs.push(loadProducts().catch(()=>{}));
-      // allClients is loaded lazily via searchBillClient — no bulk load here
+      // allClients is loaded lazily via searchBillClient, no bulk load here
       if (jobs.length) await Promise.all(jobs);
       billPageReady = true;
     }
@@ -6949,7 +6949,7 @@
         (c.phone||'').includes(q)
       ).slice(0, 8);
     } else {
-      // allClients not loaded yet — query DB directly (fast, no bulk load)
+      // allClients not loaded yet, query DB directly (fast, no bulk load)
       const { data: dbRes } = await db.from('clients').select('id,name,phone,email')
         .eq('merchant_id', currentMerchant.id)
         .or(`name.ilike.%${q}%,phone.ilike.%${q}%,email.ilike.%${q}%`)
@@ -6976,7 +6976,7 @@
     document.getElementById('bill-client-dd').classList.remove('open');
     document.getElementById('bill-client-tag-name').textContent = c.name + (c.phone ? ' · ' + c.phone : '');
     document.getElementById('bill-client-tag').style.display = 'flex';
-    // Resolve real client DB id — look up by phone/email if this is a booking-only entry
+    // Resolve real client DB id: look up by phone/email if this is a booking-only entry
     let loyaltyId = (c.source !== 'booking' && c.id) ? c.id : null;
     if (!loyaltyId && (c.phone || c.email)) {
       let q = db.from('clients').select('id').eq('merchant_id', currentMerchant.id);
@@ -7045,13 +7045,13 @@
     if (item.type === 'service' && allServices.length) {
       return `<select class="bill-item-sel" onchange="onBillItemNameChange(${item.id},this)" >
         <option value="">Select Service</option>
-        ${allServices.map(s => `<option value="${s.id}" ${s.id===item.name?'selected':''}>${s.name} — ₹${s.price}</option>`).join('')}
+        ${allServices.map(s => `<option value="${s.id}" ${s.id===item.name?'selected':''}>${s.name} (₹${s.price})</option>`).join('')}
       </select>`;
     }
     if (item.type === 'product' && allProducts.length) {
       return `<select class="bill-item-sel" onchange="onBillItemNameChange(${item.id},this)">
         <option value="">Select Product</option>
-        ${allProducts.map(p => `<option value="${p.id}" ${p.id===item.name?'selected':''}>${p.name} — ₹${p.price}</option>`).join('')}
+        ${allProducts.map(p => `<option value="${p.id}" ${p.id===item.name?'selected':''}>${p.name} (₹${p.price})</option>`).join('')}
       </select>`;
     }
     const placeholder = { service:'Service name', product:'Product name', membership:'Membership plan', package:'Package name', giftcard:'Gift card', tip:'Tip' }[item.type] || 'Item name';
@@ -7061,7 +7061,7 @@
   function renderBillItems() {
     const wrap = document.getElementById('bill-items-wrap');
     if (!billItems.length) {
-      wrap.innerHTML = `<div style="border:1.5px dashed var(--border);border-top:none;border-radius:0 0 8px 8px;padding:20px;text-align:center;color:var(--muted);font-size:13px">No items — click a button below to add</div>`;
+      wrap.innerHTML = `<div style="border:1.5px dashed var(--border);border-top:none;border-radius:0 0 8px 8px;padding:20px;text-align:center;color:var(--muted);font-size:13px">No items. Click a button below to add.</div>`;
       return;
     }
     const staffOpts = currentStaff.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
@@ -7121,7 +7121,7 @@
   function applyCoupon() {
     const code = document.getElementById('bill-coupon').value.trim().toUpperCase();
     if (!code) return;
-    alert(`Coupon "${code}" applied! (Feature coming soon — configure coupons in Deals)`);
+    alert(`Coupon "${code}" applied! (Feature coming soon: configure coupons in Deals)`);
   }
 
   /* ── Calculation ── */
@@ -7487,7 +7487,7 @@
         }).join('')
       : '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">✅ All items are well stocked</div>';
 
-    // Recent activity — pull last 8 from each source, merge, sort
+    // Recent activity: pull last 8 from each source, merge, sort
     const [{ data: intk }, { data: usg }, { data: adj }] = await Promise.all([
       db.from('inventory_intakes').select('*').eq('merchant_id', currentMerchant.id).order('created_at',{ascending:false}).limit(5),
       db.from('inventory_usage').select('*').eq('merchant_id', currentMerchant.id).order('created_at',{ascending:false}).limit(5),
@@ -7967,7 +7967,7 @@
 
   /* ── Load campaigns ── */
   /* ════════════════════════════════════════════
-     NOTIFICATIONS — 4-tab page
+     NOTIFICATIONS: 4-tab page
   ════════════════════════════════════════════ */
 
   const NOTIF_CHANNEL_CFG = {
@@ -7988,7 +7988,7 @@
     { id:'wa-loyalty',  channel:'whatsapp', name:'Loyalty reward',    icon:'👑', body:'Hi {{name}}, you\'ve earned a reward at {{business}}! Visit us to claim your exclusive member perk 🌟' },
     { id:'em-newslttr', channel:'email',    name:'Monthly newsletter', icon:'📰', subject:'Your exclusive update from {{business}}', body:'Dear {{name}},\n\nWe have exciting news and offers this month!\n\n✨ New services added\n💰 Exclusive member discounts\n📅 Upcoming events\n\nBook your next appointment today.\n\nWarm regards,\n{{business}} Team' },
     { id:'em-winback',  channel:'email',    name:'Win-back email',     icon:'💌', subject:'We miss you, {{name}}!',                  body:'Dear {{name}},\n\nIt\'s been a while since we last saw you at {{business}}. We\'d love to welcome you back!\n\nAs a special gesture, enjoy ₹500 off your next booking. Valid for 14 days.\n\nBest wishes,\n{{business}} Team' },
-    { id:'em-promo',    channel:'email',    name:'Seasonal promotion',  icon:'🌟', subject:'Special offer this season — {{business}}', body:'Dear {{name}},\n\nThe season is here and so are our special offers!\n\n🎉 Up to 30% off select services\n⭐ Double reward points this week\n🎁 Free add-on with bookings over ₹2000\n\n{{business}} Team' },
+    { id:'em-promo',    channel:'email',    name:'Seasonal promotion',  icon:'🌟', subject:'Special offer this season: {{business}}', body:'Dear {{name}},\n\nThe season is here and so are our special offers!\n\n🎉 Up to 30% off select services\n⭐ Double reward points this week\n🎁 Free add-on with bookings over ₹2000\n\n{{business}} Team' },
     { id:'sms-flash',   channel:'sms',      name:'Flash deal',          icon:'⚡', body:'{{business}}: Flash deal! 40% off today only. Book now. Reply STOP to opt out.' },
     { id:'sms-remind',  channel:'sms',      name:'Appointment reminder',icon:'📅', body:'{{business}}: Hi {{name}}, reminder for your upcoming appointment. See you soon! Reply STOP to opt out.' },
     { id:'sms-points',  channel:'sms',      name:'Points update',       icon:'🏆', body:'{{business}}: Hi {{name}}, you have loyalty points ready to redeem on your next visit! Reply STOP to opt out.' },
@@ -8235,7 +8235,7 @@
   }
 
   /* ──────────────────────────────────────────
-     TEMPLATE OVERLAY — Create / Edit
+     TEMPLATE OVERLAY: Create / Edit
   ────────────────────────────────────────── */
   function openTmplOverlay(dbId) {
     _tmplEditingId = dbId;
@@ -8331,7 +8331,7 @@
   }
 
   /* ──────────────────────────────────────────
-     SEGMENT OVERLAY — Create / Edit
+     SEGMENT OVERLAY: Create / Edit
   ────────────────────────────────────────── */
   let _segSelectedColor = '#8B5CF6';
 
@@ -8549,7 +8549,7 @@
   function updateTmplDropdown(channel) {
     const sel = document.getElementById('ncmp-tmpl-select');
     const filtered = NOTIF_TEMPLATES.filter(t => t.channel === channel);
-    sel.innerHTML = '<option value="">— start from scratch —</option>' +
+    sel.innerHTML = '<option value="">Start from scratch</option>' +
       filtered.map(t => `<option value="${t.id}">${t.icon} ${t.name}</option>`).join('');
   }
 
@@ -8669,7 +8669,7 @@
     sendBtn.disabled = false; sendBtn.textContent = 'Send now →';
     if (error) { errEl.textContent = error.message; errEl.classList.add('show'); return; }
 
-    // Success — show toast then switch to analytics
+    // Success: show toast then switch to analytics
     document.getElementById('ncmp-name').value=''; document.getElementById('ncmp-body').value='';
     document.getElementById('ncmp-char-count').textContent='';
     errEl.style.background='#D1FAE5'; errEl.style.color='#065F46'; errEl.style.borderColor='#6EE7B7';
@@ -8847,7 +8847,7 @@
   }
 
   /* ════════════════════════════════════════════════════════
-     ADVERTISING — Facebook · Instagram · WhatsApp
+     ADVERTISING: Facebook · Instagram · WhatsApp
   ════════════════════════════════════════════════════════ */
 
   const FB_APP_ID  = 'YOUR_FB_APP_ID';   // ← replace before go-live
@@ -8872,7 +8872,7 @@
     { id:'gift',    name:'Gift a Spa Day',   headline:'Gift someone a day of bliss 🎁', body:'Buy a gift voucher for someone special and give the gift of relaxation.' },
     { id:'monsoon', name:'Monsoon Wellness', headline:'Monsoon glow-up awaits ☔',       body:'Our special monsoon wellness package is here. Rejuvenate with seasonal treatments.' },
     { id:'loyalty', name:'Loyalty Reward',   headline:'Exclusive offer for members 👑', body:'As a valued member, you get first access to our premium packages.' },
-    { id:'new-svc', name:'New Treatment',    headline:'Introducing our new treatment ✨', body:'Experience our latest addition. Slots filling fast — book yours now!' },
+    { id:'new-svc', name:'New Treatment',    headline:'Introducing our new treatment ✨', body:'Experience our latest addition. Slots filling fast. Book yours now!' },
     { id:'summer',  name:'Summer Glow',      headline:'Summer-ready skin starts here ☀️', body:'Our summer glow treatment leaves you radiant. Book before slots fill up!' },
   ];
 
@@ -8971,7 +8971,7 @@
     if (r.data.length === 1) {
       await onAdAccountSelected(r.data[0]);
     } else {
-      // Multiple accounts — let user pick
+      // Multiple accounts: let user pick
       const opts = r.data.map(a => `• ${a.name} (${a.id})`).join('\n');
       const choice = prompt(`You have ${r.data.length} ad accounts. Enter the account ID to use:\n\n${opts}`);
       const picked = r.data.find(a => a.id === choice || a.id === 'act_' + choice);
@@ -9262,7 +9262,7 @@
   function renderStepObjective() {
     return `<div class="adv-step-body">
       <div class="adv-step-title">What's your campaign goal?</div>
-      <div class="adv-step-sub">Choose an objective — Facebook will optimise delivery toward this goal</div>
+      <div class="adv-step-sub">Choose an objective: Facebook will optimise delivery toward this goal</div>
       <div class="adv-obj-grid">${ADV_OBJECTIVES.map(o=>`
         <div class="adv-obj-card ${advData.objective===o.id?'selected':''}" data-id="${o.id}" onclick="selectAdvObjective('${o.id}')">
           <div class="adv-obj-icon">${o.icon}</div>
@@ -9282,12 +9282,12 @@
     const isIG = plat === 'ig';
     const isWA = plat === 'wa';
     let note = '';
-    if (isIG) note = `<div style="background:#FDF2F8;border:1.5px solid #D8B4FE;border-radius:10px;padding:12px;margin-bottom:16px;font-size:12px;font-weight:600;color:#7C3AED">📸 For Instagram campaigns, only Instagram placements are selected by default — you can also extend to Facebook for broader reach.</div>`;
+    if (isIG) note = `<div style="background:#FDF2F8;border:1.5px solid #D8B4FE;border-radius:10px;padding:12px;margin-bottom:16px;font-size:12px;font-weight:600;color:#7C3AED">📸 For Instagram campaigns, only Instagram placements are selected by default. You can also extend to Facebook for broader reach.</div>`;
     if (isWA) note = `<div style="background:#F0FDF4;border:1.5px solid #A7F3D0;border-radius:10px;padding:12px;margin-bottom:16px;font-size:12px;font-weight:600;color:#065F46">💬 Your Click-to-Chat ad will show on Facebook and/or Instagram. When someone taps it, WhatsApp opens so they can message your business directly.</div>`;
     const fmts = isIG ? ['Reel','Story','Feed (Square)','Explore'] : ['Single image','Carousel','Story','Reel'];
     return `<div class="adv-step-body">
       <div class="adv-step-title">Choose placements &amp; format</div>
-      <div class="adv-step-sub">${isWA ? 'Where should your Click-to-Chat ad appear?' : isIG ? 'Instagram placements are pre-selected — extend to Facebook for more reach' : 'Pick one or both platforms, then choose your ad format'}</div>
+      <div class="adv-step-sub">${isWA ? 'Where should your Click-to-Chat ad appear?' : isIG ? 'Instagram placements are pre-selected, but you can extend to Facebook for more reach' : 'Pick one or both platforms, then choose your ad format'}</div>
       ${note}
       <div class="adv-platform-grid">
         <div class="adv-platform-card ${advData.platform==='facebook'?'selected':''}" data-p="facebook" onclick="selectAdvPlatform('facebook')">
@@ -9549,7 +9549,7 @@
       // Step 3: Create ad set
       const budgetField = advData.budget_type === 'daily' ? 'daily_budget' : 'lifetime_budget';
       const adset = await fbPost(`/${advFbAccountId}/adsets`, {
-        name: advData.name + ' — Ad Set',
+        name: advData.name + ' (Ad Set)',
         campaign_id: campaign.id,
         [budgetField]: Math.round(advData.budget_amount * 100),
         billing_event: 'IMPRESSIONS',
@@ -9564,7 +9564,7 @@
 
       // Step 4: Create ad creative
       const creative = await fbPost(`/${advFbAccountId}/adcreatives`, {
-        name: advData.name + ' — Creative',
+        name: advData.name + ' (Creative)',
         object_story_spec: {
           page_id: advFbPageId,
           link_data: {
@@ -9579,7 +9579,7 @@
 
       // Step 5: Create ad
       const ad = await fbPost(`/${advFbAccountId}/ads`, {
-        name: advData.name + ' — Ad',
+        name: advData.name + ' (Ad)',
         adset_id: adset.id,
         creative: { creative_id: creative.id },
         status: 'ACTIVE',
@@ -9634,7 +9634,7 @@
         <div class="adv-lib-body">
           <div class="adv-lib-name">${c.name}</div>
           <div class="adv-lib-meta">${c.platform} · ${(c.created_at||'').split('T')[0]}</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${(c.headline||'')} — ${(c.primary_text||'').slice(0,50)}…</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${(c.headline||'')}: ${(c.primary_text||'').slice(0,50)}…</div>
           <div class="adv-lib-actions">
             <button class="nseg-use-btn" onclick="reuseCreative('${c.id}','${plat}')">Reuse in campaign</button>
           </div>
@@ -9649,7 +9649,7 @@
     setTimeout(() => { advStep = 3; renderAdvSteps(plat); renderAdvWizardStep(plat); }, 50);
   }
 
-  function openSaveCreativeOverlay() { alert('Creative saving from existing campaigns — coming in a future update.'); }
+  function openSaveCreativeOverlay() { alert('Creative saving from existing campaigns is coming in a future update.'); }
 
   /* ─── Audiences ─── */
   async function loadAdvAudiences(plat) {

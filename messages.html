@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Messages — Genoti AI</title>
+  <title>Messages: Genoti AI</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -483,7 +483,7 @@
     msgs.innerHTML = '';
     appendAIMsg(`Hi ${userName}! 👋 I'm your **Negotiate**.
 
-I can help you craft the perfect message to get a better deal from any merchant on Genoti — whether it's a discount, a free upgrade, a flexible reschedule, or a refund.
+I can help you craft the perfect message to get a better deal from any merchant on Genoti, whether it's a discount, a free upgrade, a flexible reschedule, or a refund.
 
 Just tell me what you want and which merchant/service, and I'll draft a professional negotiation message for you to review and send.`, 'ai');
   }
@@ -550,8 +550,8 @@ Just tell me what you want and which merchant/service, and I'll draft a professi
     let strategy, draft;
 
     if (wantRefund) {
-      strategy = `I'll draft a firm but polite refund request for you. The key is to state what went wrong clearly without being aggressive — merchants respond much better to constructive feedback.`;
-      draft = `Hi ${merchant} team,\n\nI recently visited and unfortunately the experience didn't meet my expectations. I'd like to discuss a refund for my last booking.\n\nI've been a returning customer and genuinely value the services you offer. I hope we can resolve this amicably — I'm happy to provide more details if needed.\n\nThank you for your understanding.\n\nWarm regards,\n${userName}`;
+      strategy = `I'll draft a firm but polite refund request for you. The key is to state what went wrong clearly without being aggressive. Merchants respond much better to constructive feedback.`;
+      draft = `Hi ${merchant} team,\n\nI recently visited and unfortunately the experience didn't meet my expectations. I'd like to discuss a refund for my last booking.\n\nI've been a returning customer and genuinely value the services you offer. I hope we can resolve this amicably. I'm happy to provide more details if needed.\n\nThank you for your understanding.\n\nWarm regards,\n${userName}`;
 
     } else if (wantReschedule) {
       strategy = `Here's a friendly reschedule request. Offering flexibility on your end and showing understanding of their schedule usually gets a positive response.`;
@@ -559,14 +559,14 @@ Just tell me what you want and which merchant/service, and I'll draft a professi
 
     } else if (wantUpgrade) {
       strategy = `Asking for an upgrade works best when you mention your loyalty and frame it as a trial. Here's a warm, effective message.`;
-      draft = `Hi ${merchant} team,\n\nI'm a regular customer and always love the quality of your services. I'd love to try ${lower.includes('specific') ? 'the service I mentioned' : 'your premium offering'} — is there any chance you could include a complimentary upgrade or add-on with my next visit?\n\nI'd be happy to leave a detailed review and recommend you to friends if the experience is as great as I'm expecting!\n\nLooking forward to it,\n${userName}`;
+      draft = `Hi ${merchant} team,\n\nI'm a regular customer and always love the quality of your services. I'd love to try ${lower.includes('specific') ? 'the service I mentioned' : 'your premium offering'}. Is there any chance you could include a complimentary upgrade or add-on with my next visit?\n\nI'd be happy to leave a detailed review and recommend you to friends if the experience is as great as I'm expecting!\n\nLooking forward to it,\n${userName}`;
 
     } else {
       /* Default: discount / better deal */
       const pctMatch = userMsg.match(/(\d+)\s*%/);
       const pct = pctMatch ? pctMatch[1] + '%' : '10–15%';
-      strategy = `Great goal! A personalised discount ask — especially from a returning customer — has a high success rate. Here's a message that's polite, specific, and gives them an easy way to say yes.`;
-      draft = `Hi ${merchant} team,\n\nI've been a loyal customer and truly enjoy your services. I'd love to book another appointment soon and was wondering if there's any possibility of a ${pct} discount for returning customers?\n\nI understand if this isn't always possible, but I wanted to ask before booking. Happy to be flexible on timing if that helps!\n\nThanks so much for your time — looking forward to visiting again.\n\nWarm regards,\n${userName}`;
+      strategy = `Great goal! A personalised discount ask (especially from a returning customer) has a high success rate. Here's a message that's polite, specific, and gives them an easy way to say yes.`;
+      draft = `Hi ${merchant} team,\n\nI've been a loyal customer and truly enjoy your services. I'd love to book another appointment soon and was wondering if there's any possibility of a ${pct} discount for returning customers?\n\nI understand if this isn't always possible, but I wanted to ask before booking. Happy to be flexible on timing if that helps!\n\nThanks so much for your time. Looking forward to visiting again.\n\nWarm regards,\n${userName}`;
     }
 
     const text = isFirst

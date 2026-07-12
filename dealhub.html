@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Community Deals — Discover Deals Together · Genoti</title>
+  <title>DealHub · Discover Deals · Genoti</title>
   <meta name="theme-color" content="#085041" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -181,6 +181,44 @@
     .vote-btn.down:hover, .vote-btn.down.active { color: #dc2626; border-color: #dc2626; background: #fef2f2; }
     .vote-btn.active { font-weight: 700; }
     .vote-score { font-size: 10px; color: var(--muted); margin-left: auto; }
+    .vote-btn.redeem:hover, .vote-btn.redeem.active { color: #1D4ED8; border-color: #1D4ED8; background: var(--blue-bg); }
+    .vote-btn[disabled] { opacity: .55; cursor: not-allowed; }
+
+    /* ── ADDITIVE: temperature scoring, grace period, redeem, comments, tiers ── */
+    .temp-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 20px; margin-top: 6px; }
+    .temp-chip.hot { background: #FEF2F2; color: #DC2626; }
+    .temp-chip.warm { background: var(--amber-bg); color: var(--amber); }
+    .temp-chip.cool { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+    .temp-chip.grace { background: var(--green-lt); color: var(--dark-green); }
+    .redeem-line { font-size: 10.5px; font-weight: 700; color: var(--dark-green); margin-top: 6px; }
+    .stack-line { font-size: 10.5px; font-weight: 700; color: var(--dark-green); margin-top: 4px; }
+    .gold-badge { background: linear-gradient(135deg,#F6D365,#D9A441); color: #5A3B00; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 10px; display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; width: fit-content; }
+    .grace-card { border: 2px dashed var(--green) !important; background: linear-gradient(180deg,#F2FAF6,#fff 55%); }
+    .grace-banner { font-size: 9.5px; font-weight: 700; color: var(--dark-green); background: var(--green-lt); padding: 5px 10px; border-bottom: 1px dashed var(--green); }
+    .grace-badge-note { font-size: 8px; opacity: .85; }
+    .vote-weight { font-size: 9.5px; color: var(--dark-green); font-weight: 700; margin-top: 1px; }
+    .comment-toggle-link { font-size: 10.5px; font-weight: 700; color: var(--muted); background: none; border: none; cursor: pointer; margin-top: 8px; padding: 0; font-family: inherit; display: flex; align-items: center; gap: 4px; }
+    .comments-panel { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); }
+    .comments-panel.open { display: block; }
+    .cmt { display: flex; gap: 6px; margin-bottom: 8px; }
+    .cmt:last-child { margin-bottom: 0; }
+    .cmt-av { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .cmt-name { font-size: 10.5px; font-weight: 700; }
+    .cmt-text { font-size: 10.5px; color: var(--muted); line-height: 1.5; margin-top: 1px; }
+    .cmt-verify { font-size: 9.5px; font-weight: 700; margin-top: 2px; }
+    .cmt-verify.valid { color: var(--dark-green); }
+    .cmt-verify.invalid { color: #DC2626; }
+    .cmt-input-row { display: flex; gap: 6px; margin-top: 6px; }
+    .cmt-input-row input { flex: 1; font-size: 11px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 20px; font-family: inherit; }
+    .cmt-input-row button { background: var(--dark-green); color: #fff; border: none; border-radius: 50%; width: 24px; height: 24px; flex-shrink: 0; cursor: pointer; font-size: 11px; }
+    .tier-ref-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 18px; margin-top: 16px; }
+    .tier-ref-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+    .tier-ref-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+    .tier-ref-row:last-child { border-bottom: none; }
+    .toast-wrap { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 900; display: flex; flex-direction: column-reverse; gap: 8px; pointer-events: none; }
+    .toast-pill { background: var(--dark-green); color: #fff; font-size: 12px; font-weight: 700; padding: 9px 16px; border-radius: 30px; box-shadow: 0 6px 18px rgba(0,0,0,.2); animation: toast-in .2s ease, toast-out .3s ease 2.3s forwards; white-space: nowrap; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }
+    @keyframes toast-out { to { opacity: 0; transform: translateY(-6px);} }
 
     /* ── SIDEBAR ── */
     .sidebar { display: contents; }
@@ -353,7 +391,7 @@
     .img-preview { border-radius: 12px; overflow: hidden; margin-bottom: 16px; display: none; position: relative; }
     .img-preview img { width: 100%; max-height: 160px; object-fit: cover; border-radius: 12px; display: block; }
     .img-preview-label { position: absolute; bottom: 8px; left: 8px; font-size: 10px; font-weight: 700; background: rgba(0,0,0,.55); color: #fff; padding: 3px 8px; border-radius: 20px; }
-    /* URL box — styled like upload-box but with an input inside */
+    /* URL box: styled like upload-box but with an input inside */
     .url-box { border: 2px dashed var(--border); border-radius: 14px; padding: 16px 20px; background: var(--bg); transition: border-color .2s, background .2s, border-style .2s; margin-bottom: 16px; }
     .url-box.has-url { border-style: solid; border-color: var(--green); background: var(--green-lt); }
     .url-box.is-loading { border-style: solid; border-color: var(--green); background: var(--green-lt); }
@@ -485,6 +523,27 @@
     .footer-bottom { border-top: 1px solid rgba(255,255,255,.1); padding-top: 20px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; max-width: 1200px; margin: 0 auto; }
     .footer-bottom a { color: rgba(255,255,255,.5); text-decoration: none; }
 
+    /* ── PRODUCT NOTES (PS / FYI) ── */
+    .notes-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px 40px; }
+    .notes-card { border: 1.5px dashed var(--border); border-radius: 16px; background: var(--white); padding: 18px 24px; }
+    .notes-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; text-align: left; }
+    .notes-toggle-label { font-size: 13px; font-weight: 700; color: var(--muted); }
+    .notes-toggle-label b { color: var(--text); }
+    .notes-toggle-caret { font-size: 12px; color: var(--muted); transition: transform .2s; flex-shrink: 0; }
+    .notes-toggle-caret.open { transform: rotate(180deg); }
+    .notes-body { display: none; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+    .notes-body.open { display: block; }
+    .notes-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+    .notes-col-label { font-size: 11px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+    .notes-item { display: flex; gap: 9px; margin-bottom: 12px; align-items: flex-start; }
+    .notes-item:last-child { margin-bottom: 0; }
+    .notes-item-dot { color: var(--green); font-size: 12px; line-height: 1.5; flex-shrink: 0; }
+    .notes-item-title { font-size: 12.5px; font-weight: 700; color: var(--text); }
+    .notes-item-desc { font-size: 11.5px; color: var(--muted); line-height: 1.5; margin-top: 1px; }
+    @media (max-width: 800px) {
+      .notes-cols { grid-template-columns: 1fr; gap: 4px; }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 1024px) {
       .below-grid { grid-template-columns: 1fr 1fr; }
@@ -565,12 +624,12 @@
         <span style="font-size:10px;color:#6B7280;margin-top:1px;white-space:nowrap">AI deal maker</span>
       </div></li>
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
-        <a href="notify.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> NotifyMe</a>
-        <span style="font-size:10px;color:#6B7280;margin-top:1px;white-space:nowrap">Smart alerts</span>
+        <a href="dealbook.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> DealBook</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px;white-space:nowrap">Personal Savings Tracker</span>
       </div></li>
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
-        <a href="community.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Community</a>
-        <span style="font-size:10px;color:#6B7280;margin-top:1px;white-space:nowrap">Discover together</span>
+        <a href="dealhub.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> DealHub</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px;white-space:nowrap">Discover Deals</span>
       </div></li>
     </ul>
     <div class="nav-right">
@@ -659,10 +718,10 @@
   <div class="hero-inner">
     <div class="hero-eyebrow">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      Community Deals
+      DealHub
     </div>
     <h1>Discover Deals <em>Together</em></h1>
-    <p class="hero-sub">Real deals spotted by real people near you — verified by AI and the community.</p>
+    <p class="hero-sub">Real deals spotted by real people near you, verified by AI and the community.</p>
     <div class="hero-search">
       <input type="text" placeholder="Search deals, restaurants, salons, gyms…" id="hero-search-input" onkeydown="if(event.key==='Enter')filterDeals()" />
       <button class="hero-search-btn" onclick="filterDeals()">
@@ -790,29 +849,89 @@
         </div>
         <div class="deal-grid" id="deal-grid">
 
+          <div class="deal-card grace-card" data-cat="Beauty & Wellness" data-ts-min="3" data-grace="1" data-created="__NOW__">
+            <div class="grace-banner" id="grace-banner-d0">⏱ New deal: voting open. Temperature hidden for 7:00 more minutes for fair scoring.</div>
+            <div class="deal-thumb deal-thumb-sage">
+              💆‍♀️
+              <div class="disc-badge">60% off</div>
+              <div class="verify-badge vb-community" style="flex-direction:column;align-items:flex-start;gap:1px;line-height:1.3">
+                <span style="display:flex;align-items:center;gap:3px"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Community</span>
+                <span class="grace-badge-note">&middot; Grace period</span>
+              </div>
+            </div>
+            <div class="deal-info">
+              <div class="deal-name">Full-body massage</div>
+              <div class="deal-merchant">GlowUp Spa · Koramangala</div>
+              <div class="deal-price-row"><span class="price-new">₹800</span><span class="price-old">₹2,000</span><span class="price-dist">0.8 km</span></div>
+              <div class="temp-chip grace" id="temp-chip-d0">🌡️ New · Voting</div>
+              <div class="deal-source-row">💬 Found on WhatsApp broadcast · by Meera S. · 3 min ago</div>
+              <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
+              <div class="vote-row" onclick="event.stopPropagation()" data-deal="d0">
+                <button class="vote-btn up" onclick="castVote(this,'hot')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                  Hot
+                </button>
+                <button class="vote-btn down" onclick="castVote(this,'cold')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                  Cold
+                </button>
+                <button class="comment-toggle-link" style="margin:0;margin-left:auto" onclick="toggleComments('d0')">💬 0</button>
+              </div>
+            </div>
+          </div>
+
           <div class="deal-card" onclick="goView('view-detail')" data-cat="Beauty & Wellness" data-ts-min="10">
             <div class="deal-thumb deal-thumb-green">
               ✂️
               <div class="disc-badge">60% off</div>
               <div class="verify-badge vb-community" style="flex-direction:column;align-items:flex-start;gap:1px;line-height:1.3">
                 <span style="display:flex;align-items:center;gap:3px"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Community</span>
-                <span style="font-size:8px;opacity:.85">&middot; High confidence</span>
+                <span style="font-size:8px;opacity:.85">&middot; Verified</span>
               </div>
             </div>
             <div class="deal-info">
               <div class="deal-name">Full hair spa + cut</div>
               <div class="deal-merchant">Glam Studio · Koramangala</div>
               <div class="deal-price-row"><span class="price-new">₹499</span><span class="price-old">₹1,250</span><span class="price-dist">0.8 km</span></div>
+              <div class="stack-line">+ HDFC Regalia 5% cashback → you pay ₹474</div>
+              <div class="temp-chip hot" id="temp-chip-d1">🌡️ 247° Hot</div>
+              <div class="gold-badge">★ Redeemed</div>
+              <div class="deal-source-row">📸 Found on Instagram · by Priya K. · 3h ago</div>
+              <div class="redeem-line">✓ 12 people redeemed this deal</div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
-                            <div class="vote-row" onclick="event.stopPropagation()">
-                <button class="vote-btn up" onclick="castVote(this,'up')">
+                            <div class="vote-row" onclick="event.stopPropagation()" data-deal="d1">
+                <button class="vote-btn up" onclick="castVote(this,'hot')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                  <span>24</span>
+                  Hot
                 </button>
-                <button class="vote-btn down" onclick="castVote(this,'down')">
+                <button class="vote-btn down" onclick="castVote(this,'cold')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
-                  <span>3</span>
+                  Cold
                 </button>
+                <button class="vote-btn redeem" onclick="castVote(this,'redeem')">✓ Redeemed</button>
+              </div>
+              <button class="comment-toggle-link" onclick="event.stopPropagation();toggleComments('d1')">💬 2 comments</button>
+              <div class="comments-panel" id="comments-d1">
+                <div class="cmt">
+                  <div class="cmt-av" style="background:#085041">AM</div>
+                  <div>
+                    <div class="cmt-name">Ananya M. <span class="hunter-chip" style="font-size:8px">Expert</span></div>
+                    <div class="cmt-text">"Went there today. Deal is real. They honour the Instagram price. Ask for Priya, she does the best spa."</div>
+                    <div class="cmt-verify valid">✓ Voted valid (vote weight: 5×)</div>
+                  </div>
+                </div>
+                <div class="cmt">
+                  <div class="cmt-av" style="background:#1D4ED8">VK</div>
+                  <div>
+                    <div class="cmt-name">Vikram K. <span class="hunter-chip" style="font-size:8px">Hunter</span></div>
+                    <div class="cmt-text">"Can confirm. Just walked out. Paid ₹499 exactly. They also have a mani-pedi combo at 40% off that's not advertised."</div>
+                    <div class="cmt-verify valid">✓ Voted valid + redeemed</div>
+                  </div>
+                </div>
+                <div class="cmt-input-row" onclick="event.stopPropagation()">
+                  <input type="text" placeholder="Verify this deal: did it work for you?" id="cmt-input-d1" />
+                  <button onclick="postComment('d1')">➤</button>
+                </div>
               </div>
             </div>
           </div>
@@ -830,16 +949,35 @@
               <div class="deal-name">Lunch buffet for 2</div>
               <div class="deal-merchant">Spice Route · Indiranagar</div>
               <div class="deal-price-row"><span class="price-new">₹599</span><span class="price-old">₹999</span><span class="price-dist">1.4 km</span></div>
+              <div class="temp-chip warm" id="temp-chip-d2">🌡️ 70° Warm</div>
+              <div class="deal-source-row">📋 Found on flyer · by Neha K. · 1d ago</div>
+              <div class="redeem-line">✓ 1 person redeemed this deal</div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
-                            <div class="vote-row" onclick="event.stopPropagation()">
-                <button class="vote-btn up" onclick="castVote(this,'up')">
+                            <div class="vote-row" onclick="event.stopPropagation()" data-deal="d2">
+                <button class="vote-btn up" onclick="castVote(this,'hot')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                  <span>18</span>
+                  Hot
                 </button>
-                <button class="vote-btn down" onclick="castVote(this,'down')">
+                <button class="vote-btn down" onclick="castVote(this,'cold')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
-                  <span>5</span>
+                  Cold
                 </button>
+                <button class="vote-btn redeem" onclick="castVote(this,'redeem')">✓ Redeemed</button>
+              </div>
+              <button class="comment-toggle-link" onclick="event.stopPropagation();toggleComments('d2')">💬 1 comment</button>
+              <div class="comments-panel" id="comments-d2">
+                <div class="cmt">
+                  <div class="cmt-av" style="background:#6D28D9">SM</div>
+                  <div>
+                    <div class="cmt-name">Sunita M. <span class="hunter-chip" style="font-size:8px">Hunter</span></div>
+                    <div class="cmt-text">"Deal is real but they've reduced the menu to 4 items during the buffet. Not the full spread."</div>
+                    <div class="cmt-verify invalid">✗ Voted partially invalid</div>
+                  </div>
+                </div>
+                <div class="cmt-input-row" onclick="event.stopPropagation()">
+                  <input type="text" placeholder="Verify this deal: did it work for you?" id="cmt-input-d2" />
+                  <button onclick="postComment('d2')">➤</button>
+                </div>
               </div>
             </div>
           </div>
@@ -857,16 +995,28 @@
               <div class="deal-name">Deep tissue massage</div>
               <div class="deal-merchant">Serenity Spa · HSR Layout</div>
               <div class="deal-price-row"><span class="price-new">₹899</span><span class="price-old">₹1,999</span><span class="price-dist">2.1 km</span></div>
+              <div class="temp-chip hot" id="temp-chip-d3">🌡️ 165° Warm</div>
+              <div class="gold-badge">★ Redeemed</div>
+              <div class="deal-source-row">🏪 Posted by merchant · DealDrop · 5h ago</div>
+              <div class="redeem-line">✓ 6 people redeemed this deal</div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
-                            <div class="vote-row" onclick="event.stopPropagation()">
-                <button class="vote-btn up" onclick="castVote(this,'up')">
+                            <div class="vote-row" onclick="event.stopPropagation()" data-deal="d3">
+                <button class="vote-btn up" onclick="castVote(this,'hot')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                  <span>31</span>
+                  Hot
                 </button>
-                <button class="vote-btn down" onclick="castVote(this,'down')">
+                <button class="vote-btn down" onclick="castVote(this,'cold')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
-                  <span>2</span>
+                  Cold
                 </button>
+                <button class="vote-btn redeem" onclick="castVote(this,'redeem')">✓ Redeemed</button>
+              </div>
+              <button class="comment-toggle-link" onclick="event.stopPropagation();toggleComments('d3')">💬 0 comments</button>
+              <div class="comments-panel" id="comments-d3">
+                <div class="cmt-input-row" onclick="event.stopPropagation()">
+                  <input type="text" placeholder="Verify this deal: did it work for you?" id="cmt-input-d3" />
+                  <button onclick="postComment('d3')">➤</button>
+                </div>
               </div>
             </div>
           </div>
@@ -884,16 +1034,26 @@
               <div class="deal-name">Monthly gym pass</div>
               <div class="deal-merchant">FitStop · BTM Layout</div>
               <div class="deal-price-row"><span class="price-new">₹999</span><span class="price-old">₹1,999</span><span class="price-dist">3.0 km</span></div>
+              <div class="temp-chip cool" id="temp-chip-d4">🌡️ 32° Cool</div>
+              <div class="deal-source-row">📷 Photo of poster at gym entrance · by Dev J. · 6h ago</div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
-                            <div class="vote-row" onclick="event.stopPropagation()">
-                <button class="vote-btn up" onclick="castVote(this,'up')">
+                            <div class="vote-row" onclick="event.stopPropagation()" data-deal="d4">
+                <button class="vote-btn up" onclick="castVote(this,'hot')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                  <span>12</span>
+                  Hot
                 </button>
-                <button class="vote-btn down" onclick="castVote(this,'down')">
+                <button class="vote-btn down" onclick="castVote(this,'cold')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
-                  <span>7</span>
+                  Cold
                 </button>
+                <button class="vote-btn redeem" onclick="castVote(this,'redeem')">✓ Redeemed</button>
+              </div>
+              <button class="comment-toggle-link" onclick="event.stopPropagation();toggleComments('d4')">💬 0 comments</button>
+              <div class="comments-panel" id="comments-d4">
+                <div class="cmt-input-row" onclick="event.stopPropagation()">
+                  <input type="text" placeholder="Verify this deal: did it work for you?" id="cmt-input-d4" />
+                  <button onclick="postComment('d4')">➤</button>
+                </div>
               </div>
             </div>
           </div>
@@ -911,16 +1071,26 @@
               <div class="deal-name">Nail art + pedicure</div>
               <div class="deal-merchant">Nails & Co · Jayanagar</div>
               <div class="deal-price-row"><span class="price-new">₹649</span><span class="price-old">₹999</span><span class="price-dist">1.9 km</span></div>
+              <div class="temp-chip cool" id="temp-chip-d5">🌡️ 15° Cool</div>
+              <div class="deal-source-row">👀 Spotted while walking by · by Sunita M. · 4h ago</div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
-                            <div class="vote-row" onclick="event.stopPropagation()">
-                <button class="vote-btn up" onclick="castVote(this,'up')">
+                            <div class="vote-row" onclick="event.stopPropagation()" data-deal="d5">
+                <button class="vote-btn up" onclick="castVote(this,'hot')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                  <span>9</span>
+                  Hot
                 </button>
-                <button class="vote-btn down" onclick="castVote(this,'down')">
+                <button class="vote-btn down" onclick="castVote(this,'cold')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
-                  <span>1</span>
+                  Cold
                 </button>
+                <button class="vote-btn redeem" onclick="castVote(this,'redeem')">✓ Redeemed</button>
+              </div>
+              <button class="comment-toggle-link" onclick="event.stopPropagation();toggleComments('d5')">💬 0 comments</button>
+              <div class="comments-panel" id="comments-d5">
+                <div class="cmt-input-row" onclick="event.stopPropagation()">
+                  <input type="text" placeholder="Verify this deal: did it work for you?" id="cmt-input-d5" />
+                  <button onclick="postComment('d5')">➤</button>
+                </div>
               </div>
             </div>
           </div>
@@ -931,23 +1101,41 @@
               <div class="disc-badge">25% off</div>
               <div class="verify-badge vb-community" style="flex-direction:column;align-items:flex-start;gap:1px;line-height:1.3">
                 <span style="display:flex;align-items:center;gap:3px"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Community</span>
-                <span style="font-size:8px;opacity:.85">&middot; High confidence</span>
+                <span style="font-size:8px;opacity:.85">&middot; Disputed</span>
               </div>
             </div>
             <div class="deal-info">
               <div class="deal-name">Full body checkup</div>
               <div class="deal-merchant">HealthFirst · Whitefield</div>
               <div class="deal-price-row"><span class="price-new">₹1,499</span><span class="price-old">₹1,999</span><span class="price-dist">4.2 km</span></div>
+              <div class="temp-chip cool" id="temp-chip-d6">🌡️ -8° Cold</div>
+              <div class="deal-source-row">📰 Found in newspaper ad · by Vikram K. · 2d ago</div>
               <div class="deal-time"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ts-label"></span></div>
-                            <div class="vote-row" onclick="event.stopPropagation()">
-                <button class="vote-btn up" onclick="castVote(this,'up')">
+                            <div class="vote-row" onclick="event.stopPropagation()" data-deal="d6">
+                <button class="vote-btn up" onclick="castVote(this,'hot')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                  <span>22</span>
+                  Hot
                 </button>
-                <button class="vote-btn down" onclick="castVote(this,'down')">
+                <button class="vote-btn down" onclick="castVote(this,'cold')">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
-                  <span>4</span>
+                  Cold
                 </button>
+                <button class="vote-btn redeem" onclick="castVote(this,'redeem')">✓ Redeemed</button>
+              </div>
+              <button class="comment-toggle-link" onclick="event.stopPropagation();toggleComments('d6')">💬 1 comment</button>
+              <div class="comments-panel" id="comments-d6">
+                <div class="cmt">
+                  <div class="cmt-av" style="background:#B45309">RT</div>
+                  <div>
+                    <div class="cmt-name">Ritu T. <span class="hunter-chip" style="font-size:8px">Hunter</span></div>
+                    <div class="cmt-text">"Called them, the 25% off is only for the premium package, not the basic checkup shown in the ad. A bit misleading."</div>
+                    <div class="cmt-verify invalid">✗ Voted expired</div>
+                  </div>
+                </div>
+                <div class="cmt-input-row" onclick="event.stopPropagation()">
+                  <input type="text" placeholder="Verify this deal: did it work for you?" id="cmt-input-d6" />
+                  <button onclick="postComment('d6')">➤</button>
+                </div>
               </div>
             </div>
           </div>
@@ -1014,6 +1202,7 @@
               <div class="hzl-info">
                 <div class="hzl-name">Vikram K.</div>
                 <div class="hzl-meta">7 deals · Sobha wing B</div>
+                <div class="vote-weight">Vote weight: 3×</div>
               </div>
               <div class="hzl-right">
                 <div class="hzl-pts">380 pts</div>
@@ -1026,6 +1215,7 @@
               <div class="hzl-info">
                 <div class="hzl-name">Sunita M.</div>
                 <div class="hzl-meta">5 deals · Tower 3</div>
+                <div class="vote-weight">Vote weight: 3×</div>
               </div>
               <div class="hzl-right">
                 <div class="hzl-pts">290 pts</div>
@@ -1038,6 +1228,7 @@
               <div class="hzl-info">
                 <div class="hzl-name">Dev J.</div>
                 <div class="hzl-meta">4 deals · Wing A</div>
+                <div class="vote-weight">Vote weight: 3×</div>
               </div>
               <div class="hzl-right">
                 <div class="hzl-pts">210 pts</div>
@@ -1050,6 +1241,7 @@
               <div class="hzl-info">
                 <div class="hzl-name">Neha K.</div>
                 <div class="hzl-meta">3 deals · Block C</div>
+                <div class="vote-weight">Vote weight: 3×</div>
               </div>
               <div class="hzl-right">
                 <div class="hzl-pts">175 pts</div>
@@ -1062,6 +1254,7 @@
               <div class="hzl-info">
                 <div class="hzl-name" style="color:#085041">You</div>
                 <div class="hzl-meta" style="color:#0F6E56">2 deals · Brigade Tower</div>
+                <div class="vote-weight" style="color:#0F6E56">Vote weight: 1× (New tier)</div>
               </div>
               <div class="hzl-right">
                 <div class="hzl-pts">98 pts</div>
@@ -1084,6 +1277,26 @@
               <div class="yp-hint-label">to reach top 10</div>
             </div>
           </div>
+
+          <div class="tier-ref-card">
+            <h4>Hunter tiers &amp; vote weight</h4>
+            <div class="tier-ref-row">
+              <span><span class="hunter-chip" style="background:var(--bg);color:var(--muted);border-color:var(--border)">New</span> 0–99 pts</span>
+              <span class="vote-weight" style="margin-top:0">1× weight</span>
+            </div>
+            <div class="tier-ref-row">
+              <span><span class="hunter-chip">Hunter</span> 100–999 pts</span>
+              <span class="vote-weight" style="margin-top:0">3× weight</span>
+            </div>
+            <div class="tier-ref-row">
+              <span><span class="hunter-chip" style="background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)">Expert</span> 1,000–2,499 pts</span>
+              <span class="vote-weight" style="margin-top:0">5× weight</span>
+            </div>
+            <div class="tier-ref-row">
+              <span><span class="hunter-chip" style="background:#FEF2F2;color:#991B1B;border-color:#FECACA">Legend</span> 2,500+ pts</span>
+              <span class="vote-weight" style="margin-top:0">8× weight</span>
+            </div>
+          </div>
           </div><!-- /lb-panel -->
 
           <!-- ── Panel: Hunter tier / points dashboard (tab 4) ── -->
@@ -1093,9 +1306,9 @@
               <div class="ph-avatar">BK</div>
               <div>
                 <div class="ph-name">Balaji K.</div>
-                <div class="ph-tier">
+                <div class="ph-tier" id="ph-tier-label">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  Hunter tier
+                  Hunter tier · 3× vote weight
                 </div>
               </div>
               <div class="ph-city-rank">
@@ -1199,10 +1412,26 @@
             <div class="activity-row">
               <div class="act-icon" style="background:var(--blue-bg)">🔥</div>
               <div class="act-body">
-                <div class="act-title">5-day streak bonus</div>
-                <div class="act-meta">Keep going — 7-day streak = double points</div>
+                <div class="act-title">7-day streak bonus</div>
+                <div class="act-meta">Submitted a deal every day last week</div>
               </div>
               <div class="act-pts-col">+75</div>
+            </div>
+            <div class="activity-row">
+              <div class="act-icon" style="background:var(--green-lt)">✓</div>
+              <div class="act-body">
+                <div class="act-title">Someone redeemed your deal</div>
+                <div class="act-meta">Full hair spa + cut · Glam Studio</div>
+              </div>
+              <div class="act-pts-col">+5</div>
+            </div>
+            <div class="activity-row">
+              <div class="act-icon" style="background:var(--purple-bg)">💬</div>
+              <div class="act-body">
+                <div class="act-title">Verification comment posted</div>
+                <div class="act-meta">"Went there today, deal is real…" on Deep tissue massage</div>
+              </div>
+              <div class="act-pts-col">+3</div>
             </div>
             <div class="activity-row">
               <div class="act-icon" style="background:var(--bg)">📤</div>
@@ -1220,6 +1449,20 @@
               </div>
               <div class="act-pts-col">+5</div>
             </div>
+          </div>
+
+          <div class="tier-ref-card" style="margin:16px 18px 0">
+            <h4>How you earn (and lose) points</h4>
+            <div class="tier-ref-row"><span>Submit a deal</span><span style="color:var(--green);font-weight:700">+10</span></div>
+            <div class="tier-ref-row"><span>Your deal gets verified (3+ community votes)</span><span style="color:var(--green);font-weight:700">+25</span></div>
+            <div class="tier-ref-row"><span>Someone redeems your deal</span><span style="color:var(--green);font-weight:700">+5 each</span></div>
+            <div class="tier-ref-row"><span>Your vote matches the majority outcome</span><span style="color:var(--green);font-weight:700">+5</span></div>
+            <div class="tier-ref-row"><span>Verification comment with your vote (10+ chars)</span><span style="color:var(--green);font-weight:700">+3</span></div>
+            <div class="tier-ref-row"><span>Mark "I redeemed" on a deal</span><span style="color:var(--green);font-weight:700">+5</span></div>
+            <div class="tier-ref-row"><span>7-day submission streak</span><span style="color:var(--green);font-weight:700">+75</span></div>
+            <div class="tier-ref-row"><span>5-day submission streak</span><span style="color:var(--green);font-weight:700">+25</span></div>
+            <div class="tier-ref-row"><span>Deal flagged as fake (5+ cold votes)</span><span style="color:#DC2626;font-weight:700">-15</span></div>
+            <div class="tier-ref-row"><span>Deal expired within 1 hour of posting</span><span style="color:#DC2626;font-weight:700">-5</span></div>
           </div>
           </div><!-- /pts-panel -->
 
@@ -1241,6 +1484,7 @@
                 <div class="hzl-info">
                   <div class="hzl-name">Priya K. <span class="lb-badge">Hunter</span></div>
                   <div class="hzl-meta">47 deals · Brigade Tower</div>
+                  <div class="vote-weight">Vote weight: 3×</div>
                 </div>
                 <div class="hzl-right">
                   <div class="hzl-pts">840 pts</div>
@@ -1253,6 +1497,7 @@
                 <div class="hzl-info">
                   <div class="hzl-name">Arjun R.</div>
                   <div class="hzl-meta">31 deals · Sobha wing B</div>
+                  <div class="vote-weight">Vote weight: 3×</div>
                 </div>
                 <div class="hzl-right">
                   <div class="hzl-pts">620 pts</div>
@@ -1265,6 +1510,7 @@
                 <div class="hzl-info">
                   <div class="hzl-name">Sunita M.</div>
                   <div class="hzl-meta">28 deals · Tower 3</div>
+                  <div class="vote-weight">Vote weight: 3×</div>
                 </div>
                 <div class="hzl-right">
                   <div class="hzl-pts">510 pts</div>
@@ -1277,6 +1523,7 @@
                 <div class="hzl-info">
                   <div class="hzl-name">Vikram N.</div>
                   <div class="hzl-meta">22 deals · Wing A</div>
+                  <div class="vote-weight">Vote weight: 3×</div>
                 </div>
                 <div class="hzl-right">
                   <div class="hzl-pts">380 pts</div>
@@ -1289,6 +1536,7 @@
                 <div class="hzl-info">
                   <div class="hzl-name">Ritu T.</div>
                   <div class="hzl-meta">19 deals · Block C</div>
+                  <div class="vote-weight">Vote weight: 3×</div>
                 </div>
                 <div class="hzl-right">
                   <div class="hzl-pts">290 pts</div>
@@ -1302,13 +1550,13 @@
 
       </div><!-- /hunter-zone -->
 
-      <!-- How it works — flat section -->
+      <!-- How it works: flat section -->
       <div class="how-flat">
         <div class="how-flat-title">How it works</div>
         <div class="how-steps-row">
           <div class="how-step-col">
             <div class="how-num">1</div>
-            <div class="how-text"><strong>Spot a deal</strong> — screenshot, link, or type it in manually.</div>
+            <div class="how-text"><strong>Spot a deal</strong>: screenshot, link, or type it in manually.</div>
           </div>
           <div class="how-step-col">
             <div class="how-num">2</div>
@@ -1316,11 +1564,11 @@
           </div>
           <div class="how-step-col">
             <div class="how-num">3</div>
-            <div class="how-text"><strong>Community votes</strong> — 3 confirmations and it goes live for everyone.</div>
+            <div class="how-text"><strong>Community votes</strong>: 3 confirmations and it goes live for everyone.</div>
           </div>
           <div class="how-step-col">
             <div class="how-num">4</div>
-            <div class="how-text"><strong>Earn Hunter points</strong> — top contributors get exclusive perks.</div>
+            <div class="how-text"><strong>Earn Hunter points</strong>: top contributors get exclusive perks.</div>
           </div>
         </div>
       </div>
@@ -1362,7 +1610,7 @@
       <!-- AI notice (shown after extraction) -->
       <div class="ai-notice" id="ai-notice" style="display:none">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-        <span id="ai-notice-text">AI pre-filled the details below — review and edit if needed.</span>
+        <span id="ai-notice-text">AI pre-filled the details below. Review and edit if needed.</span>
       </div>
 
       <!-- URL box -->
@@ -1381,7 +1629,7 @@
         </div>
         <div class="url-source-chip" id="url-source-chip"></div>
         <div class="url-bar-wrap" id="url-bar-wrap"><div class="url-bar" id="url-bar"></div></div>
-        <div class="url-loading-text" id="url-loading-text">🤖 Reading link — AI is extracting deal details…</div>
+        <div class="url-loading-text" id="url-loading-text">🤖 Reading link. AI is extracting deal details…</div>
         <div class="url-status-text" id="url-status-text"></div>
       </div>
 
@@ -1463,7 +1711,7 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         Post this deal
       </button>
-      <p class="form-hint">Your deal will appear in the feed immediately.</p>
+      <p class="form-hint">Your deal will appear in the feed immediately with a 10-minute grace period for fair voting. You'll earn +10 points right away.</p>
     </div>
   </div>
 
@@ -1528,7 +1776,7 @@
         <div class="contrib-info">
           <div class="contrib-avatar">PK</div>
           <div>
-            <p class="contrib-name">Priya K. <span class="hunter-chip">Hunter</span></p>
+            <p class="contrib-name">Priya K. <span class="hunter-chip">Hunter</span><span class="vote-weight" style="margin-top:0">3× vote weight</span></p>
             <p class="contrib-meta">Found on Instagram · <span class="ts-label" data-ts-min="180"></span> · 12 people claimed this deal</p>
           </div>
         </div>
@@ -1541,7 +1789,7 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"/></svg>
             Yes, still active
           </button>
-          <button class="sv-btn sv-btn-invalid" onclick="this.textContent='Reported — thanks!'">
+          <button class="sv-btn sv-btn-invalid" onclick="this.textContent='Reported, thanks!'">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             Expired or fake
           </button>
@@ -1552,6 +1800,41 @@
   </div>
 
 </div><!-- /main-wrap -->
+
+<!-- ══ PRODUCT NOTES (PS / FYI) ══ -->
+<div class="notes-wrap">
+  <div class="notes-card">
+    <button class="notes-toggle" onclick="toggleProductNotes()">
+      <span class="notes-toggle-label">PS: <b>how DealHub keeps every deal trustworthy</b></span>
+      <span class="notes-toggle-caret open" id="notes-caret">▾</span>
+    </button>
+    <div class="notes-body open" id="notes-body">
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 20px;max-width:640px">A deal's score is never one person's opinion. Every listing passes through four checkpoints: how it's sourced, how the crowd verifies it, how confidence is labeled, and how contributors earn the right to be trusted, before you'd ever see it as reliable.</p>
+      <div class="notes-cols">
+        <div>
+          <div class="notes-col-label">01. Nothing arrives anonymously</div>
+          <div class="notes-item"><span class="notes-item-dot">●</span><div><div class="notes-item-title">Source is always disclosed</div><div class="notes-item-desc">Every deal states where it was found: Instagram, WhatsApp, a photo of a poster, DealDrop, word of mouth, and more. No deal shows up without a paper trail.</div></div></div>
+          <div class="notes-item"><span class="notes-item-dot">●</span><div><div class="notes-item-title">A fair start, not a sprint</div><div class="notes-item-desc">New deals sit in a short grace period before their score goes public, so a rival business, or an overexcited friend, can't snipe or inflate it in the first minutes.</div></div></div>
+          <div class="notes-item"><span class="notes-item-dot">●</span><div><div class="notes-item-title">Attribution shapes starting trust</div><div class="notes-item-desc">Community find, personal tip, or verified Merchant post via DealDrop: each carries a different starting confidence level, never treated the same.</div></div></div>
+
+          <div class="notes-col-label" style="margin-top:22px">02. The crowd verifies it, weighted by trust</div>
+          <div class="notes-item"><span class="notes-item-dot">●</span><div><div class="notes-item-title">Votes are weighted, not just counted</div><div class="notes-item-desc">A Hunter, Expert, or Legend-tier member's vote counts for up to 8× a brand-new account's, so the score reflects earned trust, not just traffic.</div></div></div>
+          <div class="notes-item"><span class="notes-item-dot">●</span><div><div class="notes-item-title">Evidence beats a click</div><div class="notes-item-desc">Every vote can carry a verification comment, so "still valid" or "expired" comes with a real explanation attached, not just a silent tally.</div></div></div>
+        </div>
+        <div>
+          <div class="notes-col-label">03. Redemption is the highest signal</div>
+          <div class="notes-item"><span class="notes-item-dot">●</span><div><div class="notes-item-title">"I redeemed" outweighs everything else</div><div class="notes-item-desc">Someone who actually walked in and used the deal counts for double a normal vote, because they're the only one with real proof.</div></div></div>
+          <div class="notes-item"><span class="notes-item-dot">●</span><div><div class="notes-item-title">Gold badge at scale</div><div class="notes-item-desc">Once 5 or more people confirm they've redeemed a deal, it earns a gold "Redeemed" badge: the clearest signal DealHub can give.</div></div></div>
+
+          <div class="notes-col-label" style="margin-top:22px">04. Confidence is labeled, never hidden</div>
+          <div class="notes-item"><span class="notes-item-dot">●</span><div><div class="notes-item-title">Every deal is tagged plainly</div><div class="notes-item-desc">Verified, High confidence, Disputed, or still in its Grace period: trust level is visible before you ever click into a deal.</div></div></div>
+          <div class="notes-item"><span class="notes-item-dot">●</span><div><div class="notes-item-title">Deals are re-checked, not just posted once</div><div class="notes-item-desc">A live expiry countdown and an ongoing "is this still valid?" prompt catch deals that quietly go stale after launch.</div></div></div>
+          <div class="notes-item"><span class="notes-item-dot">●</span><div><div class="notes-item-title">Contributors are publicly accountable</div><div class="notes-item-desc">A fully transparent points ledger (including penalties for deals flagged as fake or found expired within the hour) plus a public leaderboard, so reputation is earned and visible, not claimed.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ══ EXPLORE LOCAL DEALS ══ -->
 <div class="explore-section">
@@ -1609,6 +1892,7 @@
   </div>
 </div>
 
+
 <!-- ══ FOOTER ══ -->
 <footer>
   <div class="footer-inner">
@@ -1623,7 +1907,7 @@
         <li><a href="last-minute.html">LastMinute Deals</a></li>
         <li><a href="negotiate.html">Negotiate Deals by AI</a></li>
         <li><a href="notify.html">Notify Me the Deals</a></li>
-        <li><a href="community.html">ByCommunity Deals</a></li>
+        <li><a href="dealhub.html">DealHub · Discover Deals</a></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -1636,7 +1920,7 @@
         <li><a href="#">Agentic PODs</a></li>
         <li><a href="merchant/pricing.html">Pricing</a></li>
         <li><a href="merchant/migrate.html">Switch to Genoti</a></li>
-        <li><a href="merchant/dealdrop.html">DealDrop — free WhatsApp listing</a></li>
+        <li><a href="merchant/dealdrop.html">DealDrop · free WhatsApp listing</a></li>
       </ul>
     </div>
     <div class="footer-col">
@@ -1723,6 +2007,10 @@
   /* ── Menu / profile toggles ── */
   function toggleMenu() { document.getElementById('menu-dropdown').classList.toggle('open'); }
   function toggleProfile() { document.getElementById('profile-dropdown').classList.toggle('open'); }
+  function toggleProductNotes() {
+    document.getElementById('notes-body').classList.toggle('open');
+    document.getElementById('notes-caret').classList.toggle('open');
+  }
   document.addEventListener('click', e => {
     if (!e.target.closest('.menu-dropdown-wrap')) {
       document.getElementById('menu-dropdown').classList.remove('open');
@@ -1783,25 +2071,145 @@
     });
   }
 
-  /* ── Vote ── */
-  function castVote(btn, type) {
-    const card = btn.closest('.vote-card');
-    card.querySelectorAll('.vbtn').forEach(b => { b.disabled = true; b.style.opacity = '.5'; });
-    btn.style.opacity = '1';
-    btn.style.outline = '2px solid currentColor';
-    const rows = card.querySelectorAll('.vp-row');
-    rows.forEach(r => {
-      const label = r.querySelector('.vp-label').textContent.trim().toLowerCase();
-      if (label === type) {
-        const fill  = r.querySelector('.vp-fill');
-        const count = r.querySelector('.vp-count');
-        const cur   = parseInt(count.textContent) || 0;
-        const next  = cur + 1;
-        count.textContent = next;
-        fill.style.width = Math.min(next * 33, 100) + '%';
-      }
-    });
+  /* ── Hunter tiers & weighted voting ── */
+  const TIER_WEIGHT = { New: 1, Hunter: 3, Expert: 5, Legend: 8 };
+  function tierForPoints(p){ if (p >= 2500) return 'Legend'; if (p >= 1000) return 'Expert'; if (p >= 100) return 'Hunter'; return 'New'; }
+  let myPoints = 620; // matches the demo "Balaji K." Hunter-tier user already shown in the points panel
+  function myTier(){ return tierForPoints(myPoints); }
+  function myWeight(){ return TIER_WEIGHT[myTier()]; }
+
+  function showToast(msg){
+    let wrap = document.getElementById('toast-wrap');
+    if (!wrap) { wrap = document.createElement('div'); wrap.id = 'toast-wrap'; wrap.className = 'toast-wrap'; document.body.appendChild(wrap); }
+    const el = document.createElement('div');
+    el.className = 'toast-pill'; el.textContent = msg;
+    wrap.appendChild(el);
+    setTimeout(() => el.remove(), 2600);
   }
+
+  function awardPoints(n, reason){
+    myPoints += n;
+    const ptsNumberEl = document.querySelector('.pts-number');
+    if (ptsNumberEl) ptsNumberEl.textContent = myPoints.toLocaleString('en-IN');
+    const tierLabel = document.getElementById('ph-tier-label');
+    if (tierLabel) {
+      tierLabel.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> ${myTier()} tier · ${myWeight()}× vote weight`;
+    }
+    showToast((n > 0 ? '+' : '') + n + ' pts · ' + reason);
+  }
+
+  function heatMeta(temp){
+    if (temp >= 200) return { label: 'Hot', cls: 'hot' };
+    if (temp >= 50)  return { label: 'Warm', cls: 'warm' };
+    return { label: temp <= 0 ? 'Cold' : 'Cool', cls: 'cool' };
+  }
+
+  /* ── Vote: Hot / Cold / I redeemed, weighted by hunter tier ── */
+  function castVote(btn, type) {
+    const row = btn.closest('.vote-row');
+    if (!row || row.dataset.voted) return;
+    row.dataset.voted = type;
+    row.querySelectorAll('.vote-btn').forEach(b => b.disabled = true);
+    btn.classList.add('active');
+
+    const card = row.closest('.deal-card');
+    const weight = myWeight();
+    const delta = weight * (type === 'redeem' ? 2 : (type === 'hot' ? 1 : -1));
+    const chip = card.querySelector('.temp-chip');
+    const isGrace = card.classList.contains('grace-card');
+
+    if (isGrace) {
+      showToast('Vote recorded. Hidden until grace period ends.');
+    } else if (chip) {
+      const cur = parseInt(chip.textContent.replace(/[^-\d]/g, '')) || 0;
+      const next = cur + delta;
+      const meta = heatMeta(next);
+      chip.className = 'temp-chip ' + meta.cls;
+      chip.textContent = `🌡️ ${next}° ${meta.label}`;
+      showToast(`Your vote added ${delta > 0 ? '+' : ''}${delta}° (${myTier()} tier)`);
+    }
+
+    if (type === 'redeem') {
+      const info = card.querySelector('.deal-info');
+      let redeemLine = card.querySelector('.redeem-line');
+      if (redeemLine) {
+        const n = (parseInt((redeemLine.textContent.match(/\d+/) || ['0'])[0]) || 0) + 1;
+        redeemLine.textContent = `✓ ${n} people redeemed this deal`;
+        if (n >= 5 && !card.querySelector('.gold-badge')) {
+          const gb = document.createElement('div');
+          gb.className = 'gold-badge'; gb.textContent = '★ Redeemed';
+          info.insertBefore(gb, redeemLine);
+        }
+      } else {
+        redeemLine = document.createElement('div');
+        redeemLine.className = 'redeem-line';
+        redeemLine.textContent = '✓ 1 person redeemed this deal';
+        info.insertBefore(redeemLine, card.querySelector('.deal-time'));
+      }
+      awardPoints(5, 'you redeemed this deal');
+    }
+  }
+
+  /* ── Comment-driven verification ── */
+  function toggleComments(id){
+    const panel = document.getElementById('comments-' + id);
+    if (panel) panel.classList.toggle('open');
+  }
+  function postComment(id){
+    const input = document.getElementById('cmt-input-' + id);
+    const text = (input?.value || '').trim();
+    if (!text) return;
+    const panel = document.getElementById('comments-' + id);
+    const row = document.createElement('div');
+    row.className = 'cmt';
+    row.innerHTML = `<div class="cmt-av" style="background:#1D9E75">YOU</div><div><div class="cmt-name">You <span class="hunter-chip" style="font-size:8px">${myTier()}</span></div><div class="cmt-text">"${text}"</div><div class="cmt-verify valid">✓ Voted valid (vote weight: ${myWeight()}×)</div></div>`;
+    panel.insertBefore(row, panel.querySelector('.cmt-input-row'));
+    input.value = '';
+    panel.classList.add('open');
+    const card = panel.closest('.deal-card');
+    const toggle = card.querySelector('.comment-toggle-link');
+    if (toggle) {
+      const n = panel.querySelectorAll('.cmt').length;
+      toggle.textContent = `💬 ${n} comment${n !== 1 ? 's' : ''}`;
+    }
+    if (text.length >= 10) awardPoints(3, 'verification comment');
+  }
+
+  /* ── Grace period countdown (10 min from submission) ── */
+  function startGraceCountdown(card, createdAt){
+    const id = card.querySelector('.vote-row').dataset.deal;
+    const banner = document.getElementById('grace-banner-' + id);
+    const chip = document.getElementById('temp-chip-' + id);
+    const timer = setInterval(() => {
+      const remain = 10 * 60 * 1000 - (Date.now() - createdAt);
+      if (remain <= 0) {
+        clearInterval(timer);
+        card.classList.remove('grace-card');
+        if (banner) banner.remove();
+        const badgeNote = card.querySelector('.grace-badge-note');
+        if (badgeNote) badgeNote.textContent = '· Unverified';
+        const row = card.querySelector('.vote-row');
+        const hotVoted = row.dataset.voted === 'hot';
+        const coldVoted = row.dataset.voted === 'cold';
+        const seedTemp = (hotVoted ? myWeight() : 0) - (coldVoted ? myWeight() : 0) + 4; // small seed engagement
+        const meta = heatMeta(seedTemp);
+        if (chip) { chip.className = 'temp-chip ' + meta.cls; chip.textContent = `🌡️ ${seedTemp}° ${meta.label}`; }
+        const redeemBtn = document.createElement('button');
+        redeemBtn.className = 'vote-btn redeem';
+        redeemBtn.textContent = '✓ Redeemed';
+        redeemBtn.setAttribute('onclick', "castVote(this,'redeem')");
+        if (row.dataset.voted) redeemBtn.disabled = true;
+        row.insertBefore(redeemBtn, row.querySelector('.comment-toggle-link'));
+        return;
+      }
+      const m = Math.floor(remain / 60000), s = Math.floor((remain % 60000) / 1000);
+      const label = `${m}:${String(s).padStart(2, '0')}`;
+      if (banner) banner.textContent = `⏱ New deal: voting open. Temperature hidden for ${label} more minutes for fair scoring.`;
+    }, 1000);
+  }
+  document.querySelectorAll('.grace-card[data-created]').forEach(card => {
+    startGraceCountdown(card, Date.now() - 3 * 60 * 1000);
+  });
 
   /* ── AI Image Extraction ── */
   const EXTRACT_FN_URL = 'https://ijsxmgkzwvamwctbkgjo.supabase.co/functions/v1/extract-deal';
@@ -1820,33 +2228,6 @@
         setTimeout(() => { el.style.background = ''; }, 2000);
       }
     });
-  }
-
-  /* ── Voting ── */
-  function castVote(btn, type) {
-    const row = btn.closest('.vote-row');
-    const upBtn = row.querySelector('.vote-btn.up');
-    const downBtn = row.querySelector('.vote-btn.down');
-    const upCount = upBtn.querySelector('span');
-    const downCount = downBtn.querySelector('span');
-    const wasActive = btn.classList.contains('active');
-
-    // Clear both
-    if (upBtn.classList.contains('active')) {
-      upBtn.classList.remove('active');
-      upCount.textContent = Math.max(0, parseInt(upCount.textContent) - 1);
-    }
-    if (downBtn.classList.contains('active')) {
-      downBtn.classList.remove('active');
-      downCount.textContent = Math.max(0, parseInt(downCount.textContent) - 1);
-    }
-
-    // Toggle on if wasn't active
-    if (!wasActive) {
-      btn.classList.add('active');
-      const countEl = btn.querySelector('span');
-      countEl.textContent = parseInt(countEl.textContent) + 1;
-    }
   }
 
   /* ── URL extraction ── */
@@ -2008,11 +2389,11 @@
       completeUrlProgress();
       setTimeout(() => {
         setUrlBoxState('ok', `${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} extracted from ${srcLabel}`);
-        setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${srcLabel} — review and edit below.`);
+        setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${srcLabel}. Review and edit below.`);
       }, 350);
     } catch(err) {
       completeUrlProgress();
-      setUrlBoxState('error', 'Could not read link — please fill in manually below.');
+      setUrlBoxState('error', 'Could not read link. Please fill in manually below.');
     }
   }
 
@@ -2068,10 +2449,10 @@
       fillFields(d);
       const fieldsFound = [d.merchant_name, d.deal_price, d.service_name].filter(Boolean).length;
       const src = isCam ? 'your photo' : 'your screenshot';
-      setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${src} — review and edit below.`);
+      setAiNotice(`AI extracted ${fieldsFound} field${fieldsFound !== 1 ? 's' : ''} from ${src}. Review and edit below.`);
 
     } catch (err) {
-      setAiNotice('Could not extract details (' + err.message + ') — please fill in manually below.');
+      setAiNotice('Could not extract details (' + err.message + '). Please fill in manually below.');
     } finally {
       loadingEl.style.display = 'none';
     }
@@ -2135,24 +2516,27 @@
       : (srcLabel ? { label: srcLabel, icon: '🌐', color: '#6B7280' } : null);
 
     const card = document.createElement('div');
-    card.className = 'deal-card';
+    const dealId = 'dnew' + ts;
+    card.className = 'deal-card grace-card';
     card.dataset.cat = 'Community';
     card.dataset.tsMin = '0';
     card.dataset.ts = ts;
+    card.dataset.created = '1';
     const badgeMap = {
-      community: { cls: 'vb-community', svg: '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>', type: 'Community', conf: '· High confidence' },
-      user:      { cls: 'vb-user',      svg: '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',                                                                                                                                                                     type: 'User',      conf: '· Med-High confidence' },
-      merchant:  { cls: 'vb-merchant',  svg: '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',                                                                                                                                                                                              type: 'Merchant',  conf: '· Verified' },
+      community: { cls: 'vb-community', svg: '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>', type: 'Community' },
+      user:      { cls: 'vb-user',      svg: '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',                                                                                                                                                                     type: 'User' },
+      merchant:  { cls: 'vb-merchant',  svg: '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',                                                                                                                                                                                              type: 'Merchant' },
     };
     const badge = badgeMap[_submitterType] || badgeMap.community;
 
     card.innerHTML = `
+      <div class="grace-banner" id="grace-banner-${dealId}">⏱ New deal: voting open. Temperature hidden for 10:00 more minutes for fair scoring.</div>
       <div class="deal-thumb deal-thumb-green" style="background:#ECFDF5">
         🏷️
         ${dealPrice && origPrice ? `<div class="disc-badge">New</div>` : ''}
         <div class="verify-badge ${badge.cls}" style="flex-direction:column;align-items:flex-start;gap:1px;line-height:1.3">
           <span style="display:flex;align-items:center;gap:3px">${badge.svg} ${badge.type}</span>
-          <span style="font-size:8px;opacity:.85">${badge.conf}</span>
+          <span class="grace-badge-note">&middot; Grace period</span>
         </div>
       </div>
       <div class="deal-info">
@@ -2162,24 +2546,34 @@
           ${dealPrice ? `<span class="price-new">${dealPrice}</span>` : ''}
           ${origPrice ? `<span class="price-old">${origPrice}</span>` : ''}
         </div>
-        ${src ? `<div class="deal-source-row" style="border-color:${src.color}40;color:${src.color};background:${src.color}0f">${src.icon} ${src.label}</div>` : ''}
+        <div class="temp-chip grace" id="temp-chip-${dealId}">🌡️ New · Voting</div>
+        ${src ? `<div class="deal-source-row" style="border-color:${src.color}40;color:${src.color};background:${src.color}0f">${src.icon} Found on ${src.label} · by You · Just now</div>` : ''}
         <div class="deal-time">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           <span class="ts-label" data-ts="${ts}">Just now</span>
         </div>
-        <div class="vote-row" onclick="event.stopPropagation()">
-          <button class="vote-btn up" onclick="castVote(this,'up')">
+        <div class="vote-row" onclick="event.stopPropagation()" data-deal="${dealId}">
+          <button class="vote-btn up" onclick="castVote(this,'hot')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-            <span>0</span>
+            Hot
           </button>
-          <button class="vote-btn down" onclick="castVote(this,'down')">
+          <button class="vote-btn down" onclick="castVote(this,'cold')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
-            <span>0</span>
+            Cold
           </button>
+          <button class="comment-toggle-link" style="margin:0;margin-left:auto" onclick="toggleComments('${dealId}')">💬 0</button>
+        </div>
+        <div class="comments-panel" id="comments-${dealId}">
+          <div class="cmt-input-row" onclick="event.stopPropagation()">
+            <input type="text" placeholder="Verify this deal: did it work for you?" id="cmt-input-${dealId}" />
+            <button onclick="postComment('${dealId}')">➤</button>
+          </div>
         </div>
       </div>`;
     grid.prepend(card);
+    startGraceCountdown(card, ts);
     goView('view-feed');
+    awardPoints(10, 'deal submitted');
   }
 </script>
 <!-- ══ MOBILE TAB BAR ══ -->
@@ -2212,9 +2606,9 @@
       <span class="mtb-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
       <span class="mtb-t">NotifyMe</span>
     </a>
-    <a href="community.html" class="mtb-a on">
+    <a href="dealhub.html" class="mtb-a on">
       <span class="mtb-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-      <span class="mtb-t">Community</span>
+      <span class="mtb-t">DealHub</span>
     </a>
   </div>
 </div>

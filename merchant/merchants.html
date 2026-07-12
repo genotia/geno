@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>For Merchants — Genoti AI</title>
+  <title>For Merchants | Genoti AI</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -182,34 +182,23 @@
     .h-stat-v em { color: #4ADEAB; font-style: normal; }
     .h-stat-l { font-size: 11px; color: rgba(255,255,255,.42); margin-top: 2px; }
 
-    /* ── VERTICAL FILTER BAR ── */
-    .vertical-filter { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 24px; }
-    .vertical-tabs { max-width: 1200px; margin: 0 auto; display: flex; overflow-x: auto; scrollbar-width: none; }
-    .vertical-tabs::-webkit-scrollbar { display: none; }
-    .vtab-btn {
-      display: flex; flex-direction: column; align-items: center; gap: 2px;
-      padding: 14px 22px; border: none; background: none;
-      font-size: 13px; font-weight: 600; color: var(--muted);
-      cursor: pointer; border-bottom: 3px solid transparent;
-      white-space: nowrap; transition: all .15s; flex-shrink: 0;
-    }
-    .vtab-btn:hover { color: var(--text); }
-    .vtab-btn.active { color: var(--green); border-bottom-color: var(--green); }
-    .vtab-icon { font-size: 18px; }
-    .vtab-sub { font-size: 10px; font-weight: 400; color: inherit; opacity: .65; }
-    .vertical-chips-bar {
-      max-width: 1200px; margin: 0 auto; padding: 8px 0 12px;
-      display: flex; gap: 6px; flex-wrap: wrap;
-    }
-    .vertical-chips-bar.hidden { display: none; }
-    .vchip {
-      font-size: 11px; padding: 3px 10px; border-radius: 20px;
-      background: rgba(29,158,117,.08); color: var(--green);
-      border: 1px solid rgba(29,158,117,.2);
-    }
+    /* ── BROWSE BY CATEGORY (same theme as index.html) ── */
+    .cats-section { padding: 24px 0 20px; background: var(--bg); border-bottom: 1px solid var(--border); }
+    .cats-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .cats-section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #1D9E75; margin-bottom: 10px; }
+    .cat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .cat-tile { background: #111827; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background .18s, transform .18s; border: 1px solid rgba(255,255,255,.05); }
+    .cat-tile:hover { background: #1f2937; transform: translateY(-2px); }
+    .cat-tile.active { background: #1f2937; box-shadow: 0 0 0 2px #1D9E75; }
+    .cat-tile-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .cat-tile-info { flex: 1; min-width: 0; }
+    .cat-tile-name { font-size: 14px; font-weight: 700; color: #F9FAFB; margin-bottom: 4px; line-height: 1.2; }
+    .cat-tile-count { font-size: 12px; color: #6B7280; }
+    @media (max-width: 1000px) { .cat-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px) { .cat-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } }
 
     /* ── SPLIT SECTION WRAPPER ── */
-    .split-section-bg { background: #0d1f17; }
+    .split-section-bg { background: var(--bg); }
 
     /* ── SPLIT COLUMN HEADERS ── */
     .split-header { display: grid; grid-template-columns: 1fr 1fr; max-width: 1400px; margin: 0 auto; }
@@ -217,109 +206,132 @@
       padding: 24px 32px;
       display: flex; align-items: center; gap: 14px;
     }
-    .split-col-header.left { background: #111827; border-right: 1px solid #1E3030; }
-    .split-col-header.right { background: #071f16; }
+    .split-col-header.left { background: var(--white); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .split-col-header.right { background: #FBFAFF; border-bottom: 1px solid var(--border); }
     .sch-icon {
       width: 44px; height: 44px; border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
       font-size: 22px; flex-shrink: 0;
     }
-    .sch-icon.os { background: rgba(29,158,117,.15); border: 1px solid rgba(29,158,117,.25); }
-    .sch-icon.ai { background: rgba(139,92,246,.15); border: 1px solid rgba(139,92,246,.25); }
-    .sch-label { font-size: 10px; font-weight: 700; letter-spacing: .7px; text-transform: uppercase; margin-bottom: 2px; }
-    .left .sch-label { color: #4ADEAB; }
-    .right .sch-label { color: #C4B5FD; }
-    .sch-title { font-size: 18px; font-weight: 800; color: #fff; }
-    .sch-sub { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 2px; }
+    .sch-icon.os { background: rgba(29,158,117,.15); color: #1D9E75; }
+    .sch-icon.ai { background: rgba(124,58,237,.15); color: #7C3AED; }
+    .sch-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+    .left .sch-label { color: var(--green); }
+    .right .sch-label { color: #7C3AED; }
+    .sch-title { font-size: 18px; font-weight: 800; color: var(--text); }
+    .sch-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
     .sch-count { margin-left: auto; text-align: right; }
-    .sch-count-num { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -1px; line-height: 1; }
-    .left .sch-count-num em { color: #4ADEAB; font-style: normal; }
-    .right .sch-count-num em { color: #C4B5FD; font-style: normal; }
-    .sch-count-lbl { font-size: 11px; color: rgba(255,255,255,.35); }
+    .sch-count-num { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -1px; line-height: 1; }
+    .left .sch-count-num em { color: var(--green); font-style: normal; }
+    .right .sch-count-num em { color: #7C3AED; font-style: normal; }
+    .sch-count-lbl { font-size: 11px; color: var(--muted); }
 
     /* ── SPLIT CONTENT ── */
-    .split-wrap { display: grid; grid-template-columns: 1fr 1fr; min-height: 680px; max-width: 1400px; margin: 0 auto; }
+    .split-wrap { display: grid; grid-template-columns: 1fr 1fr; max-width: 1400px; margin: 0 auto; }
 
     /* LEFT: MERCHANT OS */
-    .col-os { background: #111827; border-right: 1px solid #1E3030; padding: 0 28px 56px; }
-    .os-legend { display: flex; gap: 16px; flex-wrap: wrap; padding-top: 20px; margin-bottom: 4px; }
-    .os-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,.35); }
-    .os-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
-    .os-tabs {
-      display: flex; gap: 0; border-bottom: 1px solid #2D3E3E;
-      margin-bottom: 20px; padding-top: 12px;
-      overflow-x: auto; scrollbar-width: none;
-    }
-    .os-tabs::-webkit-scrollbar { display: none; }
+    .col-os { background: var(--white); border-right: 1px solid var(--border); padding: 0 28px 56px; }
+    .os-tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 20px 0 16px; }
     .os-tab {
-      padding: 8px 16px; font-size: 12px; font-weight: 700;
-      color: rgba(255,255,255,.38); background: none; border: none;
-      border-bottom: 2px solid transparent; margin-bottom: -1px;
-      cursor: pointer; white-space: nowrap; transition: all .15s;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      font-size: 12px; font-weight: 700; color: var(--muted);
+      cursor: pointer; transition: all .15s; white-space: nowrap;
     }
-    .os-tab:hover { color: rgba(255,255,255,.7); }
-    .os-tab.active { color: #4ADEAB; border-bottom-color: #4ADEAB; }
-    .os-list { display: flex; flex-direction: column; gap: 10px; }
+    .os-tab:hover { border-color: #9CA3AF; color: var(--text); }
+    .os-tab.active { color: #fff; border-color: transparent; }
+    .os-tab-count { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; background: rgba(255,255,255,.3); }
+    .os-tab:not(.active) .os-tab-count { background: var(--bg); color: var(--muted); }
+    .os-cat-group { margin-bottom: 20px; }
+    .os-cat-group-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 10px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .os-list-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 14px; align-content: start; }
     .os-item {
-      background: #1A2633; border: 1px solid #2D3E3E; border-left: 3px solid;
-      border-radius: 10px; padding: 14px 16px; transition: background .15s;
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 9px 4px; border-bottom: 1px solid var(--border);
+      transition: background .15s; border-radius: 6px;
     }
-    .os-item:hover { background: #1F2E3E; }
-    .os-item.p1 { border-left-color: #1D9E75; }
-    .os-item.p2 { border-left-color: #3B82F6; }
-    .os-item.p3 { border-left-color: #4B5563; }
-    .os-item-head { display: flex; align-items: center; gap: 9px; margin-bottom: 5px; }
-    .os-item-icon { font-size: 18px; }
-    .os-item-name { font-size: 14px; font-weight: 700; color: #F0FDF8; }
-    .os-item-badge {
-      margin-left: auto; font-size: 10px; font-weight: 700;
-      padding: 2px 8px; border-radius: 20px; white-space: nowrap;
+    .os-item:hover { background: var(--bg); }
+    .os-item-icon {
+      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
     }
-    .os-item-badge.p1 { background: rgba(29,158,117,.18); color: #4ADEAB; border: 1px solid rgba(29,158,117,.3); }
-    .os-item-badge.p2 { background: rgba(59,130,246,.18); color: #93C5FD; border: 1px solid rgba(59,130,246,.3); }
-    .os-item-badge.p3 { background: rgba(107,114,128,.18); color: #9CA3AF; border: 1px solid rgba(107,114,128,.3); }
-    .os-item-desc { font-size: 12px; color: rgba(255,255,255,.42); line-height: 1.5; margin-bottom: 8px; }
-    .os-chips { display: flex; flex-wrap: wrap; gap: 4px; }
-    .os-chip { font-size: 10px; padding: 2px 7px; border-radius: 20px; background: rgba(255,255,255,.05); color: rgba(255,255,255,.38); border: 1px solid #2D3E3E; }
+    .os-item-body { flex: 1; min-width: 0; }
+    .os-item-head { display: flex; align-items: baseline; gap: 6px; }
+    .os-item-name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .os-item-badge { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 20px; flex-shrink: 0; margin-left: auto; }
+    .os-item-desc {
+      font-size: 11px; color: var(--muted); line-height: 1.4; margin-top: 1px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    @media (max-width: 560px) { .os-list-grid { grid-template-columns: 1fr; } }
 
     /* RIGHT: AI AGENTS */
-    .col-ai { background: #071f16; padding: 0 28px 56px; }
+    .col-ai { background: #FBFAFF; padding: 0 28px 56px; }
     .ai-tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 20px 0 16px; }
     .ai-tab {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 7px 14px; border-radius: 20px;
-      border: 1.5px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      font-size: 12px; font-weight: 700; color: rgba(240,253,248,.5);
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      font-size: 12px; font-weight: 700; color: var(--muted);
       cursor: pointer; transition: all .15s; white-space: nowrap;
     }
-    .ai-tab:hover { border-color: rgba(255,255,255,.28); color: #F0FDF8; }
+    .ai-tab:hover { border-color: #9CA3AF; color: var(--text); }
     .ai-tab.active { color: #fff; border-color: transparent; }
-    .ai-tab-count { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; background: rgba(255,255,255,.18); }
+    .ai-tab-count { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; background: rgba(255,255,255,.3); }
+    .ai-tab:not(.active) .ai-tab-count { background: var(--bg); color: var(--muted); }
     .ai-legend { display: flex; gap: 16px; flex-wrap: wrap; padding-top: 20px; margin-bottom: 4px; }
-    .ai-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,.35); }
+    .ai-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
     .ai-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
     .ai-cat-group { margin-bottom: 20px; }
     .ai-cat-group-label {
       display: flex; align-items: center; gap: 8px;
       font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
-      color: rgba(240,253,248,.4); margin-bottom: 10px; padding-bottom: 8px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      color: var(--muted); margin-bottom: 10px; padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
     }
     .ai-cat-group-label span { font-size: 13px; }
-    .agents-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .agents-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 14px; }
     .agent-card {
-      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
-      border-radius: 12px; padding: 16px; transition: background .15s, transform .15s;
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 9px 4px; border-bottom: 1px solid var(--border);
+      transition: background .15s; border-radius: 6px;
     }
-    .agent-card:hover { background: rgba(255,255,255,.08); transform: translateY(-1px); }
-    .ac-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
-    .ac-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
-    .ac-live { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
-    .ac-live.live { background: rgba(29,158,117,.18); color: #4ADEAB; }
-    .ac-live.soon { background: rgba(255,255,255,.08); color: rgba(255,255,255,.4); }
-    .ac-name { font-size: 13px; font-weight: 700; color: #F0FDF8; margin-bottom: 4px; }
-    .ac-desc { font-size: 11px; color: rgba(240,253,248,.45); line-height: 1.5; }
+    .agent-card:hover { background: rgba(124,58,237,.04); }
+    .ac-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ac-body { flex: 1; min-width: 0; }
+    .ac-head { display: flex; align-items: baseline; gap: 6px; }
+    .ac-live { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 20px; flex-shrink: 0; margin-left: auto; }
+    .ac-live.live { background: rgba(29,158,117,.12); color: #0F7A56; }
+    .ac-live.soon { background: var(--bg); color: var(--muted); }
+    .ac-name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .ac-desc {
+      font-size: 11px; color: var(--muted); line-height: 1.4; margin-top: 1px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    @media (max-width: 560px) { .agents-grid { grid-template-columns: 1fr; } }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { padding: 64px 24px; max-width: 1100px; margin: 0 auto; }
+    .testi-label { font-size: 12px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .8px; text-align: center; margin-bottom: 8px; }
+    .testi-title { font-size: 26px; font-weight: 800; color: var(--text); text-align: center; letter-spacing: -.5px; margin-bottom: 40px; }
+    .testi-grid { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 20px; align-items: start; }
+    .testi-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
+    .testi-card.big { background: #F8FBF9; border-color: #D7EEE2; }
+    .testi-quote { font-size: 14.5px; line-height: 1.65; color: #1F2937; margin-bottom: 16px; }
+    .testi-card.big .testi-quote { font-size: 16px; }
+    .testi-who { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .testi-name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .testi-biz { font-size: 12px; color: var(--muted); }
+    @media (max-width: 900px) { .testi-grid { grid-template-columns: 1fr; } }
 
     /* ── BOTTOM CTA ── */
     .bottom-cta { background: var(--dark-green); padding: 72px 24px; text-align: center; }
@@ -348,8 +360,9 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 1000px) {
       .split-header, .split-wrap { grid-template-columns: 1fr; }
-      .split-col-header.left { border-right: none; border-bottom: 1px solid #1E3030; }
+      .split-col-header.left { border-right: none; }
       .agents-grid { grid-template-columns: 1fr 1fr; }
+      .os-list-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 900px) {
       .nav-links { display: none; }
@@ -361,6 +374,7 @@
     }
     @media (max-width: 600px) {
       .agents-grid { grid-template-columns: 1fr; }
+      .os-list-grid { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr; }
       .footer-bottom { flex-direction: column; text-align: center; }
       .nav-right .btn-ghost { display: none; }
@@ -435,56 +449,101 @@
 
 <!-- ══ HERO ══ -->
 <section class="hero">
-  <div class="hero-eyebrow">💼 For Merchants — Manage your local business on one system</div>
-  <h1>Run your business. <em>Grow your revenue.</em><br>Fill every slot.</h1>
+  <div class="hero-eyebrow">For salons, spas, gyms, studios &amp; restaurants</div>
+  <h1>Your booking software probably wasn't built for <em>how you actually run your day.</em></h1>
+  <div class="hero-sub">Genoti started because a salon owner in Koramangala was running her business off three different apps and a WhatsApp group. We built the thing she actually needed.</div>
   <div class="hero-cta">
-    <a href="../register.html" class="btn-hero-primary">Start free — no credit card</a>
+    <a href="../register.html" class="btn-hero-primary">Start free, no credit card</a>
     <button class="btn-hero-outline">Watch 2-min demo</button>
-  </div>
-  <div class="hero-stats">
-    <div class="h-stat"><div class="h-stat-v">2,400<em>+</em></div><div class="h-stat-l">Merchants on Genoti</div></div>
-    <div class="h-stat"><div class="h-stat-v">₹3.2<em>Cr</em></div><div class="h-stat-l">Revenue unlocked / month</div></div>
-    <div class="h-stat"><div class="h-stat-v">38<em>%</em></div><div class="h-stat-l">Drop in no-shows</div></div>
-    <div class="h-stat"><div class="h-stat-v">4.8<em>★</em></div><div class="h-stat-l">Merchant satisfaction</div></div>
   </div>
 </section>
 
-<!-- ══ VERTICAL FILTER BAR ══ -->
-<div class="vertical-filter" id="business-types">
-  <div class="vertical-tabs">
-    <button class="vtab-btn active" onclick="setVertical('all',this)">
-      <span class="vtab-icon">📋</span> All Businesses
-      <span class="vtab-sub">All categories</span>
-    </button>
-    <button class="vtab-btn" onclick="setVertical('health',this)">
-      <span class="vtab-icon">🏥</span> Health &amp; Medical
-      <span class="vtab-sub">Doctors · Clinics · Dentists · Labs</span>
-    </button>
-    <button class="vtab-btn" onclick="setVertical('beauty',this)">
-      <span class="vtab-icon">💅</span> Wellness &amp; Beauty
-      <span class="vtab-sub">Salons · Spa · MedSpa · Laser</span>
-    </button>
-    <button class="vtab-btn" onclick="setVertical('fitness',this)">
-      <span class="vtab-icon">🏋️</span> Fitness &amp; Sports
-      <span class="vtab-sub">Gyms · Yoga · Training · Sports</span>
-    </button>
-    <button class="vtab-btn" onclick="setVertical('food',this)">
-      <span class="vtab-icon">🍽️</span> Food &amp; Dining
-      <span class="vtab-sub">Restaurants · Cafes</span>
-    </button>
-    <button class="vtab-btn" onclick="setVertical('diagnostics',this)">
-      <span class="vtab-icon">🔬</span> Diagnostics
-      <span class="vtab-sub">Blood Test · MRI · CT Scan · X-Ray</span>
-    </button>
+<!-- ══ BROWSE BY CATEGORY ══ -->
+<div class="cats-section" id="business-types">
+  <div class="cats-wrap">
+    <div class="cats-section-label">Browse by Category</div>
+    <div class="cat-grid" id="cat-grid">
+      <div class="cat-tile active" onclick="setVertical('all',this)">
+        <div class="cat-tile-icon" style="background:rgba(29,158,117,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">All Categories</div>
+          <div class="cat-tile-count">Every module &amp; agent</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="setVertical('restaurants',this)">
+        <div class="cat-tile-icon" style="background:rgba(249,115,22,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="21" y1="15" x2="21" y2="22"/><path d="M21 2a5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Restaurants &amp; Dining</div>
+          <div class="cat-tile-count">Table &amp; queue management</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="setVertical('salons',this)">
+        <div class="cat-tile-icon" style="background:rgba(236,72,153,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Salons &amp; Beauty</div>
+          <div class="cat-tile-count">Stylist scheduling &amp; packages</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="setVertical('spas',this)">
+        <div class="cat-tile-icon" style="background:rgba(20,184,166,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Spas &amp; Wellness</div>
+          <div class="cat-tile-count">Membership &amp; room booking</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="setVertical('gyms',this)">
+        <div class="cat-tile-icon" style="background:rgba(239,68,68,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Gyms &amp; Fitness</div>
+          <div class="cat-tile-count">Class &amp; membership tools</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="setVertical('yoga',this)">
+        <div class="cat-tile-icon" style="background:rgba(139,92,246,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Yoga &amp; Meditation</div>
+          <div class="cat-tile-count">Class packs &amp; drop-ins</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="setVertical('cafes',this)">
+        <div class="cat-tile-icon" style="background:rgba(217,119,6,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Cafés &amp; Bakeries</div>
+          <div class="cat-tile-count">Walk-in queue &amp; pre-orders</div>
+        </div>
+      </div>
+      <div class="cat-tile" onclick="setVertical('coworking',this)">
+        <div class="cat-tile-icon" style="background:rgba(59,130,246,.15)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <div class="cat-tile-info">
+          <div class="cat-tile-name">Co-working Spaces</div>
+          <div class="cat-tile-count">Desk &amp; room reservations</div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="vertical-chips-bar hidden" id="vertical-chips"></div>
 </div>
 
 <!-- ══ SPLIT COLUMN HEADERS ══ -->
 <div class="split-section-bg" id="features">
 <div class="split-header">
   <div class="split-col-header left">
-    <div class="sch-icon os">🏪</div>
+    <div class="sch-icon os"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
     <div>
       <div class="sch-label">SaaS Foundation</div>
       <div class="sch-title">Merchant OS</div>
@@ -496,14 +555,14 @@
     </div>
   </div>
   <div class="split-col-header right">
-    <div class="sch-icon ai">🤖</div>
+    <div class="sch-icon ai"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/></svg></div>
     <div>
       <div class="sch-label">Intelligence Layer</div>
       <div class="sch-title">AI Agents</div>
       <div class="sch-sub">AI employees working 24/7</div>
     </div>
     <div class="sch-count">
-      <div class="sch-count-num">22<em>+</em></div>
+      <div class="sch-count-num">23<em>+</em></div>
       <div class="sch-count-lbl">AI agents</div>
     </div>
   </div>
@@ -514,18 +573,8 @@
 
   <!-- LEFT: MERCHANT OS -->
   <div class="col-os">
-    <div class="os-legend">
-      <div class="os-legend-item"><div class="os-legend-dot" style="background:#1D9E75"></div>Revenue driver</div>
-      <div class="os-legend-item"><div class="os-legend-dot" style="background:#3B82F6"></div>Retention driver</div>
-      <div class="os-legend-item"><div class="os-legend-dot" style="background:#4B5563"></div>Completeness</div>
-    </div>
-    <div class="os-tabs">
-      <button class="os-tab active" onclick="filterOS('all',this)">All modules</button>
-      <button class="os-tab" onclick="filterOS('p1',this)">⚡ Priority 1</button>
-      <button class="os-tab" onclick="filterOS('p2',this)">🔄 Priority 2</button>
-      <button class="os-tab" onclick="filterOS('p3',this)">📦 Priority 3</button>
-    </div>
-    <div class="os-list" id="os-list"></div>
+    <div class="os-tabs" id="os-tabs"></div>
+    <div id="os-list"></div>
   </div>
 
   <!-- RIGHT: AI AGENTS -->
@@ -541,10 +590,39 @@
 </div>
 </div><!-- /split-section-bg -->
 
+<!-- ══ TESTIMONIALS ══ -->
+<section class="testimonials">
+  <div class="testi-label">From merchants</div>
+  <div class="testi-title">What actually changed for them</div>
+  <div class="testi-grid">
+    <div class="testi-card big">
+      <div class="testi-quote">"I used to close the salon books manually every night. Literally a notebook. Switched in March, and the biggest thing honestly isn't the AI stuff, it's that my two stylists can see their own schedule on their phone now and stop calling me on my day off."</div>
+      <div class="testi-who">
+        <div class="testi-avatar" style="background:#1D9E75">RM</div>
+        <div><div class="testi-name">Radhika M.</div><div class="testi-biz">Bloom Salon, Koramangala</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-quote">"The no-show reminders paid for the subscription in the first week. Not exaggerating: we went from about 6-7 no-shows a week to maybe 2."</div>
+      <div class="testi-who">
+        <div class="testi-avatar" style="background:#3B82F6">AK</div>
+        <div><div class="testi-name">Arjun K.</div><div class="testi-biz">CoreFit Studio, HSR Layout</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-quote">"Support replied on WhatsApp within a few minutes when our booking page went down before a Saturday rush. That mattered more to me than any feature list."</div>
+      <div class="testi-who">
+        <div class="testi-avatar" style="background:#8B5CF6">SN</div>
+        <div><div class="testi-name">Dr. Sunita N.</div><div class="testi-biz">Wellspring Dental Clinic</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══ BOTTOM CTA ══ -->
 <div class="bottom-cta">
-  <h2>Ready to fill every slot<br>and grow faster?</h2>
-  <p>Join 2,400+ merchants across India who use Genoti AI to run a smarter business.</p>
+  <h2>Free for 14 days.<br>No card, no sales call.</h2>
+  <p>Set it up yourself in about 20 minutes, or have our team do it for you on a call.</p>
   <div class="bottom-cta-btns">
     <a href="../register.html" class="btn-hero-primary">List your business free →</a>
     <button class="btn-hero-outline">Talk to our team</button>
@@ -566,7 +644,8 @@
           <li><a href="../last-minute.html">LastMinute Deals</a></li>
           <li><a href="../negotiate.html">Negotiate Deals by AI</a></li>
           <li><a href="../notify.html">Notify Me the Deals</a></li>
-          <li><a href="../community.html">ByCommunity Deals</a></li>
+          <li><a href="../dealhub.html">DealHub: Discover Deals</a></li>
+          <li><a href="../dealbook.html">DealBook: Personal Savings Tracker</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -579,7 +658,7 @@
           <li><a href="#">Agentic PODs</a></li>
           <li><a href="pricing.html">Pricing</a></li>
           <li><a href="migrate.html">Switch to Genoti</a></li>
-          <li><a href="dealdrop.html">DealDrop — free WhatsApp listing</a></li>
+          <li><a href="dealdrop.html">DealDrop: free WhatsApp listing</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -614,57 +693,134 @@
     }
   });
 
-  /* ── VERTICAL CONFIG ── */
-  const VERTICALS = {
-    health:  { label:'Health & Medical',   icon:'🏥', chips:['Doctors','Clinics','Dentists','Labs','Diagnostics'] },
-    beauty:  { label:'Wellness & Beauty',  icon:'💅', chips:['Salons','Spa','MedSpa','Laser Clinics'] },
-    fitness: { label:'Fitness & Sports',   icon:'🏋️', chips:['Gyms','Yoga','Personal Training','Sports Facilities'] },
-    food:        { label:'Food & Dining',  icon:'🍽️', chips:['Restaurants','Cafes'] },
-    diagnostics: { label:'Diagnostics',   icon:'🔬', chips:['Blood Test','MRI','CT Scan','X-Ray','Ultrasound'] },
+  /* ── ICONS (same line-icon style as the Browse by Category tiles) ── */
+  const ICONS = {
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+    ticket: '<path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 1 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 1 0 0-4V8z"/>',
+    star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+    megaphone: '<path d="M3 11l18-6v14l-18-6v-2z"/><path d="M8.5 16.5A3 3 0 0 0 11 21"/>',
+    gift: '<rect x="3" y="8" width="18" height="4"/><path d="M12 8v13"/><path d="M19 12v7a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7"/><path d="M7.5 8a2.5 2.5 0 1 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 1 1 0 5"/>',
+    barChart: '<line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>',
+    globe: '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+    message: '<path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 8.5-8.5h.4a8.5 8.5 0 0 1 8 8v.5z"/>',
+    users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    box: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+    mic: '<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="23"/>',
+    briefcase: '<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>',
+    trendingUp: '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+    percent: '<line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
+    activity: '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>',
+    phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+    compass: '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>',
+    refresh: '<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
+    cart: '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>',
+    search: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+    image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',
+    mapPin: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+    link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+    database: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>',
+    eye: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+    store: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
   };
+  const ICONS_FILL = {
+    sparkles: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/>',
+  };
+  function svgIcon(name, size) {
+    size = size || 17;
+    return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ''}</svg>`;
+  }
+  function svgIconFilled(name, size) {
+    size = size || 17;
+    return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor">${ICONS_FILL[name] || ''}</svg>`;
+  }
+
   let activeVertical = 'all';
   let activePriority = 'all';
 
   /* ── MERCHANT OS ── */
+  const ALL_V = ['restaurants','salons','spas','gyms','yoga','cafes','coworking'];
+  const P_STYLE = {
+    p1: { bg:'rgba(29,158,117,.15)', color:'#1D9E75' },
+    p2: { bg:'rgba(59,130,246,.15)', color:'#3B82F6' },
+    p3: { bg:'rgba(107,114,128,.15)', color:'#6B7280' },
+  };
+  const PRIORITY_GROUPS = [
+    { id:'p1', label:'Fills your calendar',        badge:'Core',       icon:'⚡', color:'#1D9E75' },
+    { id:'p2', label:'Keeps them coming back',      badge:'Growth',     icon:'🔁', color:'#3B82F6' },
+    { id:'p3', label:'Runs in the background',      badge:'Background', icon:'⚙️', color:'#6B7280' },
+  ];
   const OS_MODULES = [
-    { p:'p1', v:['health','beauty','fitness','food','diagnostics'], icon:'📅', name:'Booking Management',    badge:'Priority 1', desc:'Core engine — online slot booking, table reservations, staff calendar, WhatsApp reminders, no-show handling.', chips:['Web + app booking','Table reservations','Staff calendar','WhatsApp reminders','Walk-in queue'] },
-    { p:'p1', v:['beauty','fitness'],                              icon:'🎟️', name:'Membership & Packages', badge:'Priority 1', desc:'Recurring revenue — monthly/annual plans, session packs, auto-renewal, package tracking.', chips:['Monthly / annual','Session packs','Auto-renewal','Expired nudges'] },
-    { p:'p1', v:['health','beauty','fitness','food','diagnostics'], icon:'⭐', name:'Reputation Management',  badge:'Priority 1', desc:'Automate Google review collection, monitor ratings, draft AI responses to feedback.', chips:['Review automation','AI responses','Rating trends','Negative alerts'] },
-    { p:'p2', v:['beauty','fitness','food'],                        icon:'📣', name:'Marketing Management',   badge:'Priority 2', desc:'Fill seats — hyperlocal deals, WhatsApp campaigns, AI offer generator, re-engagement.', chips:['WhatsApp campaigns','AI offer generator','Segmentation','Re-engagement'] },
-    { p:'p2', v:['beauty','fitness','food'],                        icon:'🎁', name:'Loyalty & Referrals',    badge:'Priority 2', desc:'Keep customers coming back — points, gift cards, referral rewards, birthday offers.', chips:['Points loyalty','Gift cards','Referral rewards','Birthday offers'] },
-    { p:'p2', v:['health','beauty','fitness','food','diagnostics'], icon:'📊', name:'Analytics Dashboard',    badge:'Priority 2', desc:'Revenue, bookings, LTV, staff utilisation and effort sizing — all in one view.', chips:['Revenue dashboard','Peak vs off-peak','Customer LTV','Staff utilisation'] },
-    { p:'p2', v:['health','beauty','fitness','food','diagnostics'], icon:'🌐', name:'Presence Management',    badge:'Priority 2', desc:'Google Business sync, near-me SEO, keyword rank tracking, social media posting.', chips:['Google Business sync','Near-me SEO','Keyword tracking','Social posting'] },
-    { p:'p3', v:['health','beauty','food','diagnostics'],           icon:'💬', name:'Support Suite',           badge:'Priority 3', desc:'AI chat widget, AI voice receptionist, ticketing, FAQ auto-responder and escalation.', chips:['AI chat','AI voice','Ticketing','FAQ auto-responder'] },
-    { p:'p3', v:['health','beauty','fitness','food','diagnostics'], icon:'👥', name:'Employee Management',    badge:'Priority 3', desc:'Shift scheduling, commission tracking, performance reports, leave management.', chips:['Shift scheduling','Commission tracking','Performance','Leave mgmt'] },
-    { p:'p3', v:['beauty'],                                         icon:'📦', name:'Inventory Management',   badge:'Priority 3', desc:'Product stock tracking, low-stock alerts, supplier management, retail POS integration.', chips:['Stock tracking','Low-stock alerts','Supplier mgmt','Retail POS'] },
-    { p:'p3', v:['health','beauty','food','diagnostics'],           icon:'🎙️', name:'AI Voice Receptionist',  badge:'Priority 3', desc:'Answers inbound calls 24/7, books appointments and reservations via voice, sends missed-call SMS.', chips:['24/7 call handling','Voice booking','Call transcripts','Multilingual'] },
+    { p:'p1', v:ALL_V,                                              icon:'calendar', name:'Booking Management',    badge:'Priority 1', desc:'Core engine: online slot booking, table reservations, staff calendar, WhatsApp reminders, no-show handling.', chips:['Web + app booking','Table reservations','Staff calendar','WhatsApp reminders','Walk-in queue'] },
+    { p:'p1', v:['salons','spas','gyms','yoga'],                    icon:'ticket', name:'Membership & Packages', badge:'Priority 1', desc:'Recurring revenue: monthly/annual plans, session packs, auto-renewal, package tracking.', chips:['Monthly / annual','Session packs','Auto-renewal','Expired nudges'] },
+    { p:'p1', v:ALL_V,                                              icon:'star', name:'Reputation Management',  badge:'Priority 1', desc:'Automate Google review collection, monitor ratings, draft AI responses to feedback.', chips:['Review automation','AI responses','Rating trends','Negative alerts'] },
+    { p:'p2', v:['salons','spas','gyms','yoga','restaurants','cafes'], icon:'megaphone', name:'Marketing Management',   badge:'Priority 2', desc:'Fill seats: hyperlocal deals, WhatsApp campaigns, AI offer generator, re-engagement.', chips:['WhatsApp campaigns','AI offer generator','Segmentation','Re-engagement'] },
+    { p:'p2', v:['salons','spas','gyms','yoga','restaurants','cafes'], icon:'gift', name:'Loyalty & Referrals',    badge:'Priority 2', desc:'Keep customers coming back: points, gift cards, referral rewards, birthday offers.', chips:['Points loyalty','Gift cards','Referral rewards','Birthday offers'] },
+    { p:'p2', v:ALL_V,                                              icon:'barChart', name:'Analytics Dashboard',    badge:'Priority 2', desc:'Revenue, bookings, LTV, staff utilisation and effort sizing (all in one view).', chips:['Revenue dashboard','Peak vs off-peak','Customer LTV','Staff utilisation'] },
+    { p:'p2', v:ALL_V,                                              icon:'globe', name:'Presence Management',    badge:'Priority 2', desc:'Google Business sync, near-me SEO, keyword rank tracking, social media posting.', chips:['Google Business sync','Near-me SEO','Keyword tracking','Social posting'] },
+    { p:'p3', v:['salons','spas','restaurants','cafes'],            icon:'message', name:'Support Suite',           badge:'Priority 3', desc:'AI chat widget, AI voice receptionist, ticketing, FAQ auto-responder and escalation.', chips:['AI chat','AI voice','Ticketing','FAQ auto-responder'] },
+    { p:'p3', v:ALL_V,                                              icon:'users', name:'Employee Management',    badge:'Priority 3', desc:'Shift scheduling, commission tracking, performance reports, leave management.', chips:['Shift scheduling','Commission tracking','Performance','Leave mgmt'] },
+    { p:'p3', v:['salons','spas'],                                  icon:'box', name:'Inventory Management',   badge:'Priority 3', desc:'Product stock tracking, low-stock alerts, supplier management, retail POS integration.', chips:['Stock tracking','Low-stock alerts','Supplier mgmt','Retail POS'] },
+    { p:'p3', v:['salons','spas','restaurants','cafes'],            icon:'mic', name:'AI Voice Receptionist',  badge:'Priority 3', desc:'Answers inbound calls 24/7, books appointments and reservations via voice, sends missed-call SMS.', chips:['24/7 call handling','Voice booking','Call transcripts','Multilingual'] },
   ];
 
-  function renderOS() {
-    let modules = activeVertical === 'all'
-      ? OS_MODULES
-      : OS_MODULES.filter(m => m.v.includes(activeVertical));
-    if (activePriority !== 'all') modules = modules.filter(m => m.p === activePriority);
-    document.getElementById('os-list').innerHTML = modules.length ? modules.map(m => `
-      <div class="os-item ${m.p}">
-        <div class="os-item-head">
-          <span class="os-item-icon">${m.icon}</span>
-          <span class="os-item-name">${m.name}</span>
-          <span class="os-item-badge ${m.p}">${m.badge}</span>
+  function renderOsTabs() {
+    const allActive = activePriority === 'all';
+    document.getElementById('os-tabs').innerHTML =
+      `<button class="os-tab${allActive?' active':''}"
+        style="${allActive?'background:#475569;border-color:#475569':''}"
+        onclick="switchPriority('all')">
+        🧩 All modules <span class="os-tab-count">${OS_MODULES.length}</span>
+      </button>` +
+      PRIORITY_GROUPS.map(g => `
+        <button class="os-tab${g.id===activePriority?' active':''}"
+          style="${g.id===activePriority?`background:${g.color};border-color:${g.color}`:''}"
+          onclick="switchPriority('${g.id}')">
+          ${g.icon} ${g.label} <span class="os-tab-count">${OS_MODULES.filter(m=>m.p===g.id).length}</span>
+        </button>
+      `).join('');
+  }
+
+  function filterOsByVertical(list) {
+    return activeVertical === 'all' ? list : list.filter(m => m.v.includes(activeVertical));
+  }
+
+  function osItemHtml(m) {
+    const g = PRIORITY_GROUPS.find(x => x.id === m.p);
+    return `
+      <div class="os-item" title="${m.desc.replace(/"/g,'&quot;')}">
+        <div class="os-item-icon" style="background:${P_STYLE[m.p].bg};color:${P_STYLE[m.p].color}">${svgIcon(m.icon)}</div>
+        <div class="os-item-body">
+          <div class="os-item-head">
+            <span class="os-item-name">${m.name}</span>
+            <span class="os-item-badge" style="background:${P_STYLE[m.p].bg};color:${P_STYLE[m.p].color}">${g.badge}</span>
+          </div>
+          <div class="os-item-desc">${m.desc}</div>
         </div>
-        <div class="os-item-desc">${m.desc}</div>
-        <div class="os-chips">${m.chips.map(c=>`<span class="os-chip">${c}</span>`).join('')}</div>
-      </div>
-    `).join('') : '<div style="color:rgba(255,255,255,.3);font-size:13px;padding:16px 0">No modules for this filter combination.</div>';
+      </div>`;
   }
 
-  function filterOS(p, btn) {
-    document.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    activePriority = p;
-    renderOS();
+  function renderOS() {
+    const wrap = document.getElementById('os-list');
+    if (activePriority === 'all') {
+      wrap.innerHTML = PRIORITY_GROUPS.map(g => {
+        const modules = filterOsByVertical(OS_MODULES.filter(m => m.p === g.id));
+        if (!modules.length) return '';
+        return `<div class="os-cat-group">
+          <div class="os-cat-group-label"><span>${g.icon}</span> ${g.label}</div>
+          <div class="os-list-grid">${modules.map(osItemHtml).join('')}</div>
+        </div>`;
+      }).join('') || '<div style="color:#9CA3AF;font-size:13px;padding:16px 0">No modules for this filter combination.</div>';
+    } else {
+      const modules = filterOsByVertical(OS_MODULES.filter(m => m.p === activePriority));
+      wrap.innerHTML = modules.length
+        ? `<div class="os-list-grid">${modules.map(osItemHtml).join('')}</div>`
+        : '<div style="color:#9CA3AF;font-size:13px;padding:16px 0">No modules for this filter combination.</div>';
+    }
   }
 
+  function switchPriority(p) { activePriority = p; renderOsTabs(); renderOS(); }
+
+  renderOsTabs();
   renderOS();
 
   /* ── AI AGENTS ── */
@@ -678,37 +834,37 @@
 
   const AGENTS = {
     revenue: [
-      { v:['beauty','fitness','food'],                        icon:'💼', name:'AI Sales Agent',             desc:'Converts inquiries into confirmed bookings and table reservations via chat and voice, 24/7.' },
-      { v:['beauty','fitness','food'],                        icon:'⬆️', name:'AI Upsell Agent',            desc:'Recommends premium add-ons and upgrades at the right moment in the customer journey.' },
-      { v:['beauty','fitness','food'],                        icon:'💱', name:'AI Dynamic Pricing Agent',   desc:'Adjusts prices in real-time based on demand, time of day, and slot occupancy.' },
-      { v:['health','beauty','fitness','food','diagnostics'], icon:'📈', name:'AI Yield Management Agent',  desc:'Fills appointment and table gaps intelligently to maximise revenue per slot.' },
-      { v:['beauty','fitness'],                               icon:'🎟️', name:'AI Membership Agent',        desc:'Sells, manages, and auto-renews subscription plans effortlessly.' },
+      { live:true,  v:['salons','spas','gyms','yoga','restaurants','cafes'], icon:'briefcase', name:'AI Sales Agent',             desc:'Converts inquiries into confirmed bookings and table reservations via chat and voice, 24/7.' },
+      { live:false, v:['salons','spas','gyms','yoga','restaurants','cafes'], icon:'trendingUp', name:'AI Upsell Agent',            desc:'Recommends premium add-ons and upgrades at the right moment in the customer journey.' },
+      { live:false, v:['salons','spas','gyms','yoga','restaurants','cafes'], icon:'percent', name:'AI Dynamic Pricing Agent',   desc:'Adjusts prices in real-time based on demand, time of day, and slot occupancy.' },
+      { live:true,  v:ALL_V,                                                 icon:'activity', name:'AI Yield Management Agent',  desc:'Fills appointment and table gaps intelligently to maximise revenue per slot.' },
+      { live:false, v:['salons','spas','gyms','yoga'],                       icon:'ticket', name:'AI Membership Agent',        desc:'Sells, manages, and auto-renews subscription plans effortlessly.' },
     ],
     cx: [
-      { v:['health','beauty','fitness','food','diagnostics'], icon:'📞', name:'AI Receptionist',            desc:'Handles calls, messages, and walk-ins 24/7 — never miss a customer or booking.' },
-      { v:['health','beauty','food','diagnostics'],           icon:'🛎️', name:'AI Concierge Agent',         desc:'Guides patients or customers to the right service based on their needs and history.' },
-      { v:['health','beauty','fitness','food','diagnostics'], icon:'⭐', name:'AI Review Agent',             desc:'Collects and responds to reviews across Google, Zomato, and all platforms automatically.' },
-      { v:['beauty','fitness','food'],                        icon:'🎁', name:'AI Loyalty Agent',            desc:'Manages points, rewards, and repeat-visit incentives automatically.' },
-      { v:['beauty','fitness','food','diagnostics'],          icon:'🔄', name:'AI Retention Agent',          desc:'Re-engages lapsed customers or patients with timely reminders and offers.' },
+      { live:true,  v:ALL_V,                                                 icon:'phone', name:'AI Receptionist',            desc:'Handles calls, messages, and walk-ins 24/7. Never miss a customer or booking.' },
+      { live:false, v:['salons','spas','restaurants','cafes'],               icon:'compass', name:'AI Concierge Agent',         desc:'Guides customers to the right service based on their needs and past visits.' },
+      { live:true,  v:ALL_V,                                                 icon:'star', name:'AI Review Agent',             desc:'Collects and responds to reviews across Google, Zomato, and all platforms automatically.' },
+      { live:true,  v:['salons','spas','gyms','yoga','restaurants','cafes'], icon:'gift', name:'AI Loyalty Agent',            desc:'Manages points, rewards, and repeat-visit incentives automatically.' },
+      { live:false, v:['salons','spas','gyms','yoga','restaurants','cafes'], icon:'refresh', name:'AI Retention Agent',          desc:'Re-engages lapsed customers with timely reminders and offers.' },
     ],
     ops: [
-      { v:['health','beauty','fitness','food','diagnostics'], icon:'📅', name:'AI Scheduler',               desc:'Optimises staff rosters, test slots, and resource allocation automatically.' },
-      { v:['health','fitness','food','diagnostics'],          icon:'👥', name:'AI Workforce Manager',        desc:'Tracks attendance, performance, and team productivity in one view.' },
-      { v:['beauty'],                                         icon:'📦', name:'AI Inventory Agent',          desc:'Monitors stock and triggers automatic reorders before you run out.' },
-      { v:['beauty'],                                         icon:'🛒', name:'AI Procurement Agent',        desc:'Automates supplier orders with cost-optimised recommendations.' },
-      { v:['health','beauty','fitness','food','diagnostics'], icon:'🔍', name:'AI Expense Auditor',          desc:'Flags anomalies and generates expense reports in real time.' },
+      { live:true,  v:ALL_V,                                                 icon:'calendar', name:'AI Scheduler',               desc:'Optimises staff rosters, class slots, and resource allocation automatically.' },
+      { live:false, v:['gyms','yoga','restaurants','cafes'],                 icon:'users', name:'AI Workforce Manager',        desc:'Tracks attendance, performance, and team productivity in one view.' },
+      { live:false, v:['salons','spas'],                                    icon:'box', name:'AI Inventory Agent',          desc:'Monitors stock and triggers automatic reorders before you run out.' },
+      { live:false, v:['salons','spas'],                                    icon:'cart', name:'AI Procurement Agent',        desc:'Automates supplier orders with cost-optimised recommendations.' },
+      { live:false, v:ALL_V,                                                 icon:'search', name:'AI Expense Auditor',          desc:'Flags anomalies and generates expense reports in real time.' },
     ],
     marketing: [
-      { v:['beauty','fitness','food'],                        icon:'📣', name:'AI Campaign Manager',         desc:'Plans and executes targeted promotions across WhatsApp, SMS, email, and social.' },
-      { v:['beauty','fitness','food'],                        icon:'📱', name:'AI Social Media Agent',       desc:'Creates and publishes branded content to Instagram, Google, and Facebook.' },
-      { v:['health','beauty','fitness','food','diagnostics'], icon:'📍', name:'AI Local SEO Agent',          desc:'Boosts Google Maps ranking and local search visibility without paid ads.' },
-      { v:['health','beauty','fitness','food','diagnostics'], icon:'🤝', name:'AI Referral Agent',           desc:'Automates doctor and customer referral programs that consistently drive new bookings.' },
+      { live:false, v:['salons','spas','gyms','yoga','restaurants','cafes'], icon:'megaphone', name:'AI Campaign Manager',         desc:'Plans and executes targeted promotions across WhatsApp, SMS, email, and social.' },
+      { live:false, v:['salons','spas','gyms','yoga','restaurants','cafes'], icon:'image', name:'AI Social Media Agent',       desc:'Creates and publishes branded content to Instagram, Google, and Facebook.' },
+      { live:true,  v:ALL_V,                                                 icon:'mapPin', name:'AI Local SEO Agent',          desc:'Boosts Google Maps ranking and local search visibility without paid ads.' },
+      { live:false, v:ALL_V,                                                 icon:'link', name:'AI Referral Agent',           desc:'Automates customer referral programs that consistently drive new bookings.' },
     ],
     data: [
-      { v:['health','beauty','fitness','food','diagnostics'], icon:'🗄️', name:'AI Customer Data Platform',  desc:'Unifies data from bookings, payments, and reviews into one patient or customer profile.' },
-      { v:['health','beauty','fitness','food','diagnostics'], icon:'📊', name:'AI Business Analyst',         desc:'Delivers daily KPIs and insights — no spreadsheets needed.' },
-      { v:['health','fitness','food','diagnostics'],          icon:'🔮', name:'AI Forecasting Agent',        desc:'Predicts appointment demand, test volumes, and revenue trends weeks in advance.' },
-      { v:['beauty','fitness','food','diagnostics'],          icon:'🕵️', name:'AI Competitive Intelligence', desc:'Monitors competitor pricing and promotions in your local area.' },
+      { live:true,  v:ALL_V,                                  icon:'database', name:'AI Customer Data Platform',  desc:'Unifies data from bookings, payments, and reviews into one customer profile.' },
+      { live:true,  v:ALL_V,                                  icon:'barChart', name:'AI Business Analyst',         desc:'Delivers daily KPIs and insights. No spreadsheets needed.' },
+      { live:false, v:['gyms','yoga','restaurants','cafes'],  icon:'trendingUp', name:'AI Forecasting Agent',        desc:'Predicts booking demand and revenue trends weeks in advance.' },
+      { live:false, v:ALL_V,                                  icon:'eye', name:'AI Competitive Intelligence', desc:'Monitors competitor pricing and promotions in your local area.' },
     ],
   };
 
@@ -718,13 +874,15 @@
 
   function agentCard(a, i, cat) {
     return `
-      <div class="agent-card">
-        <div class="ac-head">
-          <div class="ac-icon" style="background:${cat.bg}">${a.icon}</div>
-          <span class="ac-live ${i<2?'live':'soon'}">${i<2?'● Live':'Soon'}</span>
+      <div class="agent-card" title="${a.desc.replace(/"/g,'&quot;')}">
+        <div class="ac-icon" style="background:${cat.bg};color:${cat.color}">${svgIcon(a.icon)}</div>
+        <div class="ac-body">
+          <div class="ac-head">
+            <span class="ac-name">${a.name}</span>
+            <span class="ac-live ${a.live?'live':'soon'}">${a.live?'● Live':'Soon'}</span>
+          </div>
+          <div class="ac-desc">${a.desc}</div>
         </div>
-        <div class="ac-name">${a.name}</div>
-        <div class="ac-desc">${a.desc}</div>
       </div>`;
   }
 
@@ -759,29 +917,22 @@
           <div class="ai-cat-group-label"><span>${cat.icon}</span> ${cat.label}</div>
           <div class="agents-grid">${agents.map((a,i) => agentCard(a,i,cat)).join('')}</div>
         </div>`;
-      }).join('') || '<div style="color:rgba(255,255,255,.3);font-size:13px;padding:16px 0">No agents for this filter combination.</div>';
+      }).join('') || '<div style="color:#9CA3AF;font-size:13px;padding:16px 0">No agents for this filter combination.</div>';
     } else {
       const cat = CATS.find(c => c.id === activeCat);
       const agents = filterAgents(AGENTS[activeCat] || []);
       wrap.innerHTML = agents.length
         ? `<div class="agents-grid">${agents.map((a,i) => agentCard(a,i,cat)).join('')}</div>`
-        : '<div style="color:rgba(255,255,255,.3);font-size:13px;padding:16px 0">No agents for this filter combination.</div>';
+        : '<div style="color:#9CA3AF;font-size:13px;padding:16px 0">No agents for this filter combination.</div>';
     }
   }
 
   function switchCat(id) { activeCat = id; renderAiTabs(); renderAgents(); }
 
-  function setVertical(v, btn) {
+  function setVertical(v, tile) {
     activeVertical = v;
-    document.querySelectorAll('.vtab-btn').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    const chipsBar = document.getElementById('vertical-chips');
-    if (v === 'all') {
-      chipsBar.classList.add('hidden');
-    } else {
-      chipsBar.classList.remove('hidden');
-      chipsBar.innerHTML = VERTICALS[v].chips.map(c => `<span class="vchip">${c}</span>`).join('');
-    }
+    document.querySelectorAll('.cat-tile').forEach(t => t.classList.remove('active'));
+    tile.classList.add('active');
     renderOS();
     renderAgents();
   }

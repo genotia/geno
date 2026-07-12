@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   Geno Smart Search — Consumer AI Widget
+   Geno Smart Search: Consumer AI Widget
    Drop <script src="geno-chat.js"></script> into any page.
    Self-injects styles + DOM, no external dependencies.
 
@@ -359,12 +359,12 @@
   function resultCardHtml(r, isBest) {
     return `<div class="gs-result">
       ${isBest ? `<div class="gs-result-badge">${svg('sparkles',11,true)} Best match</div>` : ''}
-      <div class="gs-result-name">${r.merchant} — ${r.name}</div>
+      <div class="gs-result-name">${r.merchant}: ${r.name}</div>
       <div class="gs-result-loc">${r.loc}</div>
       <div class="gs-result-pricing"><span class="gs-result-old">₹${r.was}</span><span class="gs-result-new">₹${r.now}</span><span class="gs-result-disc">${r.disc}</span></div>
       <div class="gs-result-meta"><span>${r.time}</span>${r.rating?`<span>${r.rating}</span>`:''}${r.extra?`<span>${r.extra}</span>`:''}</div>
       <div class="gs-result-btns">
-        <button class="gs-btn gs-primary gs-book-btn" data-name="${escapeAttr(r.merchant)}" data-svc="${escapeAttr(r.name)}" data-price="${r.now}" data-time="${escapeAttr(r.time)}">Book now — ₹${r.now}</button>
+        <button class="gs-btn gs-primary gs-book-btn" data-name="${escapeAttr(r.merchant)}" data-svc="${escapeAttr(r.name)}" data-price="${r.now}" data-time="${escapeAttr(r.time)}">Book now at ₹${r.now}</button>
         <button class="gs-btn gs-outline gs-neg-btn" data-idx="${DEALS.indexOf(r)}">Negotiate</button>
       </div>
     </div>`;
@@ -385,7 +385,7 @@
     c.innerHTML = `<strong>${svg('check',14,true)} Booking confirmed!</strong>
       📍 ${item.merchant}<br>
       📅 ${item.time}<br>
-      💰 ₹${item.now} — pay at counter<br>
+      💰 ₹${item.now}, pay at counter<br>
       WhatsApp confirmation sent.`;
     body.appendChild(c);
     body.scrollTop = body.scrollHeight;
@@ -451,7 +451,7 @@
           const note = document.createElement('div');
           note.className = 'gs-empty';
           note.style.marginTop = '2px';
-          note.textContent = `${item.merchant} holds firm at ₹${finalPrice} — that's already their best rate today.`;
+          note.textContent = `${item.merchant} holds firm at ₹${finalPrice}. That's already their best rate today.`;
           btn.closest('.gs-ai-card').appendChild(note);
           btn.remove();
         }, 900);

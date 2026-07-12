@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>DealBook: Personal Savings Tracker · Genoti AI</title>
+  <meta name="theme-color" content="#085041" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Genoti" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #1D9E75;
+      --dark-green: #085041;
+      --text: #111827;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --white: #ffffff;
+      --amber: #BA7517;
+      --amber-bg: #FAEEDA;
+      --blue: #378ADD;
+      --blue-bg: #E6F1FB;
+      --purple: #8B5CF6;
+      --purple-bg: #F1EAFE;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text); background: var(--white); line-height: 1.5; }
+
+    /* ── NAVBAR ── */
+    nav { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 14px; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted); transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--green); font-weight: 700; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+    .btn-login { font-size: 14px; font-weight: 500; color: var(--text); background: none; border: none; cursor: pointer; padding: 8px 12px; text-decoration: none; transition: color .15s; font-family: inherit; }
+    .btn-login:hover { color: var(--green); }
+    .btn-pill { display: inline-flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid var(--text); border-radius: 40px; padding: 9px 22px; cursor: pointer; white-space: nowrap; transition: background .15s, color .15s; text-decoration: none; font-family: inherit; }
+    .btn-pill:hover { background: var(--text); color: var(--white); }
+    .btn-pill-menu { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid #D1D5DB; border-radius: 40px; padding: 9px 18px; cursor: pointer; transition: border-color .15s, background .15s; font-family: inherit; }
+    .btn-pill-menu:hover { border-color: var(--text); background: var(--bg); }
+    .menu-icon { display: flex; flex-direction: column; gap: 4px; }
+    .menu-icon span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; }
+    .menu-dropdown-wrap { position: relative; display: flex; align-items: center; gap: 8px; }
+    .menu-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500; padding: 8px 0; }
+    .menu-dropdown.open { display: block; }
+    .menu-main-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; font-size: 16px; font-weight: 700; color: var(--text); text-decoration: none; cursor: default; font-family: inherit; }
+    .menu-sub-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; font-weight: 400; color: #374151; text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s; }
+    .menu-sub-item:hover { background: var(--bg); }
+    .menu-sub-item.highlight { color: var(--green); font-weight: 600; }
+    .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
+    .menu-main-arrow { font-size: 18px; color: var(--muted); font-weight: 400; }
+
+    /* ── TRUST BAR ── */
+    .trust-bar { position: sticky; top: 64px; z-index: 99; background: linear-gradient(90deg,#0f172a 0%,#1e293b 100%); padding: 9px 32px; display: flex; align-items: center; justify-content: center; gap: 0; }
+    .trust-step { display: flex; align-items: center; gap: 8px; padding: 0 18px; }
+    .trust-step-icon { width: 28px; height: 28px; background: rgba(255,255,255,.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+    .trust-step-title { font-size: 12px; font-weight: 700; color: white; }
+    .trust-arrow { color: #1D9E75; font-size: 16px; font-weight: 700; opacity: .8; padding: 0 4px; }
+    .trust-badge { margin-left: 24px; padding: 4px 12px; background: rgba(29,158,117,.2); border: 1px solid rgba(29,158,117,.4); border-radius: 20px; font-size: 11px; font-weight: 700; color: #4ade80; white-space: nowrap; }
+
+    /* ── HERO ── */
+    .hero { background: linear-gradient(160deg, #051a12 0%, #0b2d1e 55%, #071710 100%); padding: 16px 24px 64px; text-align: center; position: relative; overflow: hidden; }
+    .hero::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 48px; background: var(--bg); clip-path: ellipse(55% 100% at 50% 100%); }
+    .hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.1); color: rgba(255,255,255,.8); font-size: 11px; font-weight: 700; padding: 5px 14px; border-radius: 20px; margin-bottom: 10px; letter-spacing: .6px; text-transform: uppercase; }
+    .hero h1 { font-size: clamp(28px, 4.5vw, 48px); font-weight: 800; letter-spacing: -1.5px; line-height: 1.1; color: #fff; margin-bottom: 10px; }
+    .hero h1 em { font-style: normal; color: #4ADEAB; }
+    .hero-sub { font-size: 15px; color: rgba(255,255,255,.6); max-width: 900px; margin: 0 auto 20px; line-height: 1.6; }
+    .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero-btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--green); color: white; font-size: 15px; font-weight: 700; border: none; border-radius: 12px; padding: 14px 28px; cursor: pointer; text-decoration: none; transition: opacity .15s; font-family: inherit; }
+    .hero-btn-primary:hover { opacity: .88; }
+    .hero-btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.1); color: white; font-size: 15px; font-weight: 600; border: 1.5px solid rgba(255,255,255,.2); border-radius: 12px; padding: 13px 28px; cursor: pointer; text-decoration: none; transition: background .15s; font-family: inherit; }
+    .hero-btn-secondary:hover { background: rgba(255,255,255,.15); }
+    .hero-btn-primary:focus, .hero-btn-secondary:focus { outline: none; box-shadow: 0 0 0 3px rgba(74,222,171,.55); }
+
+    /* ── SHARED ── */
+    .page-section { max-width: 1200px; margin: 0 auto; padding: 56px 24px; }
+    .section-label { display: inline-flex; align-items: center; gap: 6px; background: #CCFBEF; color: #065F46; font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; letter-spacing: .6px; text-transform: uppercase; }
+    .section-title { font-size: clamp(22px, 2.5vw, 32px); font-weight: 800; letter-spacing: -.8px; color: var(--text); margin-bottom: 10px; }
+    .section-sub { font-size: 15px; color: var(--muted); max-width: 560px; line-height: 1.65; margin-bottom: 32px; }
+    .section-sub.center { margin-left: auto; margin-right: auto; text-align: center; }
+
+    /* ── TIER CARDS ── */
+    .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .tier-card { background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+    .tier-card.t1 { border-top: 3px solid var(--green); }
+    .tier-card.t2 { border-top: 3px solid var(--blue); }
+    .tier-card.t3 { border-top: 3px solid var(--amber); }
+    .tier-card.t4 { border-top: 3px solid var(--purple); }
+    .tier-num { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 14px; }
+    .tier-card.t1 .tier-num { background: var(--green); }
+    .tier-card.t2 .tier-num { background: var(--blue); }
+    .tier-card.t3 .tier-num { background: var(--amber); }
+    .tier-card.t4 .tier-num { background: var(--purple); }
+    .tier-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 6px; letter-spacing: -.3px; }
+    .tier-desc { font-size: 13.5px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+    .tier-example { background: var(--bg); border-radius: 10px; padding: 10px 12px; font-size: 12.5px; color: var(--text); line-height: 1.6; }
+    .tier-example b { color: var(--dark-green); }
+
+    /* ── STACK EXAMPLE ── */
+    .stack-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+    .stack-visual { background: var(--dark-green); border-radius: 20px; padding: 28px; color: #fff; }
+    .stack-visual-badge { display: inline-block; background: rgba(255,255,255,.15); font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-bottom: 10px; letter-spacing: .4px; text-transform: uppercase; }
+    .stack-visual-name { font-size: 19px; font-weight: 800; margin-bottom: 2px; }
+    .stack-visual-loc { font-size: 12.5px; color: rgba(255,255,255,.55); margin-bottom: 18px; }
+    .stack-row { display: flex; justify-content: space-between; font-size: 13px; padding: 7px 0; color: rgba(255,255,255,.7); border-bottom: 1px solid rgba(255,255,255,.1); }
+    .stack-row:last-of-type { border-bottom: none; }
+    .stack-row span:last-child { font-weight: 600; color: #fff; }
+    .stack-row.green span:last-child { color: #4ADE80; }
+    .stack-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.2); }
+    .stack-total-label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.8); }
+    .stack-total-val { font-size: 26px; font-weight: 800; color: #4ADE80; }
+    .stack-save-line { text-align: center; font-size: 13px; font-weight: 700; color: var(--green); margin-top: 14px; }
+    .stack-tip { background: var(--blue-bg); border-left: 3px solid var(--blue); border-radius: 10px; padding: 14px 16px; font-size: 13px; color: #1E3A5F; line-height: 1.6; margin-top: 14px; }
+    .stack-tip b { color: var(--blue); }
+
+    /* ── REPORT EXAMPLE ── */
+    .report-card { background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 32px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+    .report-top { text-align: center; margin-bottom: 24px; }
+    .report-top-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 6px; }
+    .report-top-val { font-size: 40px; font-weight: 800; color: var(--green); letter-spacing: -1px; }
+    .report-bar { height: 12px; border-radius: 6px; overflow: hidden; display: flex; margin-bottom: 10px; }
+    .report-seg { height: 100%; }
+    .report-legend { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); margin-bottom: 28px; }
+    .report-legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+    .report-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    .report-stat { text-align: center; padding: 16px 8px; background: var(--bg); border-radius: 12px; }
+    .report-stat-num { font-size: 22px; font-weight: 800; }
+    .report-stat-num.green { color: var(--green); }
+    .report-stat-num.blue { color: var(--blue); }
+    .report-stat-num.amber { color: var(--amber); }
+    .report-stat-num.purple { color: var(--purple); }
+    .report-stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+    .missed-box { background: var(--amber-bg); border: 1px solid #F0D9A8; border-radius: 12px; padding: 16px 18px; }
+    .missed-head { font-size: 13px; font-weight: 700; color: var(--amber); margin-bottom: 4px; }
+    .missed-text { font-size: 13px; color: #6B4E1E; line-height: 1.6; }
+
+    /* ── ALERTS ── */
+    .alert-parallel { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .alert-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+    .alert-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; margin-bottom: 8px; }
+    .alert-badge.genoti { background: #CCFBEF; color: #065F46; }
+    .alert-badge.card { background: var(--amber-bg); color: var(--amber); }
+    .alert-badge.sub { background: var(--purple-bg); color: var(--purple); }
+    .alert-name { font-size: 14.5px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .alert-meta { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .alert-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+    .alert-text b { color: var(--green); }
+
+    /* ── STAT BANNER ── */
+    .stat-banner { background: var(--bg); border-radius: 16px; padding: 20px 24px; text-align: center; font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .stat-banner b { color: var(--green); font-weight: 800; }
+
+    /* ── CTA ── */
+    .cta-bottom { background: var(--dark-green); border-radius: 20px; padding: 48px 32px; text-align: center; }
+    .cta-title { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -.6px; margin-bottom: 10px; }
+    .cta-sub { font-size: 14px; color: rgba(255,255,255,.65); margin-bottom: 24px; }
+
+    /* ── SPENDING MAP (Browse-by-Category theme) ── */
+    .cats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .cat-tile { background: #111827; border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; border: 1px solid rgba(255,255,255,.05); }
+    .cat-tile-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 21px; flex-shrink: 0; background: rgba(29,158,117,.15); }
+    .cat-tile-name { font-size: 13.5px; font-weight: 700; color: #F9FAFB; margin-bottom: 3px; line-height: 1.2; }
+    .cat-tile-brands { font-size: 10.5px; color: #6B7280; line-height: 1.4; }
+
+    /* ── TIER EXAMPLES ── */
+    .tier-examples { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+    .tier-ex { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; background: var(--bg); border-radius: 10px; }
+    .tier-ex-icon { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+    .tier-ex-name { font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .tier-ex-detail { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+    .tier-ex-detail b { color: var(--text); }
+    .tier-ex-badge { display: inline-block; font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-top: 4px; }
+    .stack-sub { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 18px; }
+    .stack-sub-h { font-size: 13px; font-weight: 700; color: var(--purple); margin-bottom: 10px; }
+
+    /* ── STACK MINI GRID ── */
+    .stack-mini-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-bottom: 18px; }
+    .stack-mini { background: var(--dark-green); border-radius: 16px; padding: 18px; color: #fff; }
+    .stack-mini-h { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+    .stack-mini-row { display: flex; justify-content: space-between; font-size: 11.5px; padding: 4px 0; color: rgba(255,255,255,.7); }
+    .stack-mini-row span:last-child { font-weight: 600; color: #fff; }
+    .stack-mini-row.green span:last-child { color: #4ADE80; }
+    .stack-mini-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 8px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.2); }
+    .stack-mini-total span:first-child { font-size: 12px; color: rgba(255,255,255,.8); }
+    .stack-mini-total span:last-child { font-size: 19px; font-weight: 800; color: #4ADE80; }
+    .stack-online { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 18px; opacity: .9; }
+    .stack-online-h { font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 10px; }
+
+    /* ── BANK GRID ── */
+    .bank-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+    .bank-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+    .bank-dot { width: 20px; height: 13px; border-radius: 4px; display: inline-block; margin-right: 8px; vertical-align: middle; }
+    .bank-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; display: flex; align-items: center; }
+    .bank-offers { font-size: 11.5px; color: var(--muted); line-height: 1.6; }
+    .bank-offers b { color: var(--text); }
+
+    /* ── ALERT GROUPS ── */
+    .alert-group-label { font-size: 12px; font-weight: 700; color: var(--dark-green); margin: 24px 0 12px; }
+    .alert-group-label:first-child { margin-top: 0; }
+    .alert-grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .alert-cols { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; align-items: start; }
+    .alert-col-head { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: var(--dark-green); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 12px; }
+    .alert-col-head svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .alert-col .alert-card { margin-bottom: 12px; }
+    @media (max-width: 900px) { .alert-cols { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .alert-cols { grid-template-columns: 1fr; } }
+    .divider-label { display: flex; align-items: center; gap: 12px; margin: 28px 0 16px; }
+    .divider-label hr { flex: 1; border: none; border-top: 1px dashed var(--border); }
+    .divider-label span { font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+
+    /* ── REPORT EXTRA ── */
+    .report-row-label { font-size: 12.5px; font-weight: 700; color: var(--text); margin: 16px 0 8px; }
+    .report-row-label.muted { color: var(--muted); }
+    .report-line { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; color: var(--muted); border-bottom: 1px solid var(--border); }
+    .report-line:last-child { border-bottom: none; }
+    .report-line span:last-child { font-weight: 700; }
+    .report-line.green span:last-child { color: var(--green); }
+    .report-line.blue span:last-child { color: var(--blue); }
+    .report-line.amber span:last-child { color: var(--amber); }
+    .report-line.purple span:last-child { color: var(--purple); }
+    .watch-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; }
+    .watch-stat { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 18px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+    .watch-stat-num { font-size: 26px; font-weight: 800; }
+    .watch-stat-num.green { color: var(--green); }
+    .watch-stat-num.amber { color: var(--amber); }
+    .watch-stat-num.red { color: #DC2626; }
+    .watch-stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+    @media (max-width: 600px) { .watch-stats { grid-template-columns: 1fr; } }
+    .mini-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-top: 24px; }
+    .mini-stat { text-align: center; padding: 16px 8px; background: var(--bg); border-radius: 12px; }
+    .mini-stat-num { font-size: 22px; font-weight: 800; color: var(--green); }
+    .mini-stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+    @media (max-width: 1000px) { .cats-grid { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 900px) {
+      .stack-mini-grid { grid-template-columns: 1fr; }
+      .bank-grid { grid-template-columns: 1fr 1fr; }
+      .alert-grid3 { grid-template-columns: 1fr; }
+      .mini-stats { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .cats-grid { grid-template-columns: repeat(2,1fr); gap: 8px; }
+      .bank-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── FOOTER ── */
+    footer { background: #111827; color: rgba(255,255,255,.6); padding: 48px 24px 32px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .footer-brand .logo { color: var(--white); font-size: 20px; display: block; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; line-height: 1.6; max-width: 240px; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 16px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 13px; color: rgba(255,255,255,.55); text-decoration: none; transition: color .15s; }
+    .footer-col ul a:hover { color: var(--white); }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; font-size: 12px; }
+    .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
+    .footer-socials { display: flex; gap: 20px; }
+
+    /* ── DEALS DASHBOARD ── */
+    .deals-wrap { background: #0B0E13; border-radius: 24px; padding: 32px; }
+    .deals-intro { color: #9CA3AF; font-size: 14.5px; line-height: 1.6; margin-bottom: 24px; }
+    .deals-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    .deals-stat { background: #12161D; border-radius: 14px; padding: 20px; text-align: center; }
+    .deals-stat-num { font-size: 30px; font-weight: 800; }
+    .deals-stat-num.green { color: #4ADE80; }
+    .deals-stat-num.amber { color: #FBBF24; }
+    .deals-stat-num.red { color: #F87171; }
+    .deals-stat-label { font-size: 12.5px; color: #9CA3AF; margin-top: 4px; line-height: 1.4; }
+    .deals-tabbar { display: flex; background: #000; border-radius: 14px; padding: 5px; margin-bottom: 24px; gap: 4px; }
+    .deals-tab { flex: 1; text-align: center; padding: 13px 8px; border-radius: 10px; cursor: pointer; color: #9CA3AF; font-family: inherit; border: none; background: transparent; transition: background .15s, color .15s; }
+    .deals-tab.active { background: #1F2937; color: #fff; }
+    .deals-tab-title { font-weight: 700; font-size: 14px; }
+    .deals-tab-sub { font-size: 11px; color: #6B7280; margin-top: 2px; }
+    .deals-tab.active .deals-tab-sub { color: #9CA3AF; }
+    .deals-panel { display: none; }
+    .deals-panel.active { display: block; }
+    .deals-group-label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; margin: 22px 0 10px; }
+    .deals-group-label:first-child { margin-top: 0; }
+    .deals-group-label.red { color: #F87171; }
+    .deals-group-label.blue { color: #60A5FA; }
+    .deals-group-label.grey { color: #9CA3AF; }
+    .deals-group-icon { width: 14px; height: 14px; border: 1.5px solid currentColor; border-radius: 3px; flex-shrink: 0; }
+    .deals-card { background: #161B22; border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; border-left: 3px solid transparent; }
+    .deals-card.red { border-left-color: #F87171; }
+    .deals-card.blue { border-left-color: #60A5FA; }
+    .deals-card.grey { border-left-color: #374151; }
+    .deals-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 4px; }
+    .deals-card-title { font-size: 15px; font-weight: 700; color: #fff; }
+    .deals-card-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; }
+    .deals-card-badge.red { background: #450A0A; color: #FCA5A5; }
+    .deals-card-badge.blue { background: #1E3A5F; color: #93C5FD; }
+    .deals-card-badge.grey { background: #1F2937; color: #D1D5DB; }
+    .deals-card-meta { font-size: 12.5px; color: #9CA3AF; margin-bottom: 8px; }
+    .deals-card-desc { font-size: 13px; color: #D1D5DB; line-height: 1.6; margin-bottom: 10px; }
+    .deals-card-foot { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #6B7280; }
+    .deals-card-foot-icon { width: 12px; height: 12px; border: 1.5px solid currentColor; border-radius: 2px; flex-shrink: 0; }
+    .deals-banner { background: #2D0B0B; border-radius: 12px; padding: 16px; text-align: center; color: #FCA5A5; font-size: 13.5px; line-height: 1.6; margin-top: 22px; }
+    .deals-banner b { font-weight: 700; }
+    @media (max-width: 700px) { .deals-tab-sub { display: none; } .deals-stats { grid-template-columns: 1fr; } }
+
+    /* ── CALCULATOR ── */
+    .calc-card { background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+    .calc-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 18px; }
+    .cat-row { display: flex; align-items: center; gap: 10px; margin-bottom: 13px; }
+    .cat-emoji { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--muted); }
+    .cat-emoji svg { width: 18px; height: 18px; }
+    .cat-label { font-size: 12.5px; color: var(--text); min-width: 108px; flex-shrink: 0; }
+    .cat-slider { flex: 1; accent-color: var(--green); height: 4px; cursor: pointer; }
+    .cat-val { font-size: 12.5px; font-weight: 700; color: var(--text); min-width: 60px; text-align: right; font-variant-numeric: tabular-nums; }
+    .cat-pct { font-size: 11px; font-weight: 700; color: var(--green); min-width: 32px; text-align: right; flex-shrink: 0; }
+    .calc-group-label { font-size: 15px; font-weight: 800; color: var(--dark-green); text-transform: uppercase; letter-spacing: .4px; margin: 20px 0 12px; display: inline-flex; align-items: center; gap: 7px; }
+    .calc-group-label svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .calc-group-label-row { display: flex; align-items: center; justify-content: space-between; margin: 20px 0 12px; }
+    .calc-group-label-row:first-of-type { margin-top: 4px; }
+    .calc-group-label-row .calc-group-label { margin: 0; }
+    .calc-group-label:first-of-type { margin-top: 4px; }
+    .calc-group-total { display: grid; grid-template-columns: 1fr auto auto; column-gap: 18px; row-gap: 2px; align-items: center; background: var(--bg); border-radius: 8px; padding: 7px 10px; margin: 8px 0 4px; font-size: 11px; }
+    .calc-group-total .grp-label { font-weight: 700; color: var(--dark-green); font-size: 10px; }
+    .calc-group-total .grp-head { font-weight: 700; color: var(--muted); text-align: right; text-transform: uppercase; font-size: 8.5px; letter-spacing: .4px; }
+    .calc-group-total .grp-val { text-align: right; font-weight: 800; color: var(--text); font-size: 11px; }
+    .calc-group-total .grp-val.save-col { color: var(--green); }
+    .calc-group-total .grp-pct { color: var(--muted); font-weight: 500; margin-left: 2px; font-size: 9.5px; }
+    .calc-add-form { display: none; gap: 8px; margin: 0 0 14px; flex-wrap: wrap; }
+    .calc-add-form.show { display: flex; }
+    .calc-add-input { flex: 1; min-width: 140px; font-size: 12.5px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); font-family: inherit; }
+    .calc-add-price { width: 90px; font-size: 12.5px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); font-family: inherit; }
+    .calc-add-submit { background: var(--green); color: #fff; border: none; border-radius: 8px; font-size: 12.5px; font-weight: 700; padding: 8px 16px; cursor: pointer; font-family: inherit; }
+    .calc-remove-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 2px 4px; flex-shrink: 0; }
+    .calc-remove-btn:hover { color: var(--red, #E24B4A); }
+    .subitem-list { margin: 0 0 4px 42px; }
+    .subitem-list:empty { margin: 0; }
+    .subitem-entry { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 5px 10px; background: var(--bg); border-radius: 6px; margin-bottom: 4px; font-size: 11.5px; }
+    .subitem-entry .subitem-name { color: var(--text); font-weight: 600; }
+    .subitem-entry .subitem-price { color: var(--muted); margin-left: auto; margin-right: 6px; }
+    .cat-add-icon { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--white); color: var(--green); font-size: 13px; font-weight: 700; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; font-family: inherit; }
+    .cat-add-icon:hover { border-color: var(--green); background: rgba(29,158,117,.08); }
+    .subitem-add-form { display: none; gap: 6px; margin: 0 0 13px 42px; flex-wrap: wrap; }
+    .subitem-add-form.show { display: flex; }
+    .report-stat-sub { font-size: 9.5px; color: var(--muted); opacity: .8; margin-top: 3px; line-height: 1.3; }
+
+    /* ── PROFILE CONTROLS ── */
+    .pill-toggle { display: inline-flex; background: var(--bg); border-radius: 12px; padding: 4px; gap: 4px; }
+    .pill-toggle-btn { padding: 9px 18px; border-radius: 9px; border: none; background: transparent; font-size: 13px; font-weight: 700; color: var(--muted); cursor: pointer; font-family: inherit; transition: background .15s, color .15s; }
+    .pill-toggle-btn.active { background: var(--white); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+    .yearly-badge { display: none; align-items: center; gap: 6px; background: var(--green-lt, #E1F5EE); color: var(--dark-green); font-size: 12px; font-weight: 700; padding: 8px 14px; border-radius: 10px; margin-top: 12px; }
+    .yearly-badge.show { display: inline-flex; }
+    .profile-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 16px; }
+    .profile-row:first-of-type { margin-top: 4px; }
+    .profile-row-label { font-size: 12px; font-weight: 700; color: var(--text); min-width: 70px; flex-shrink: 0; margin-bottom: 8px; margin-top: 18px; }
+    .profile-row-label:first-of-type { margin-top: 4px; }
+    .profile-row > .profile-row-label { margin: 0; }
+    .profile-chip-row { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+    .profile-chip { padding: 9px 15px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--white); font-size: 12.5px; font-weight: 600; color: var(--muted); cursor: pointer; font-family: inherit; text-align: left; line-height: 1.4; transition: border-color .15s, background .15s, color .15s; }
+    .profile-chip:hover { border-color: var(--green); }
+    .profile-chip.active { border-color: var(--green); background: rgba(29,158,117,.08); color: var(--dark-green); }
+    .profile-chip small { display: block; font-weight: 400; font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+    .profile-chip.chip-disabled { opacity: .4; cursor: not-allowed; }
+    .profile-chip.chip-disabled:hover { border-color: var(--border); }
+    .member-stepper { display: flex; align-items: center; gap: 14px; }
+    .member-stepper-btn { width: 34px; height: 34px; border-radius: 9px; border: 1.5px solid var(--border); background: var(--white); font-size: 17px; font-weight: 700; color: var(--text); cursor: pointer; font-family: inherit; }
+    .member-stepper-btn:hover { border-color: var(--green); }
+    .member-stepper-num { font-size: 16px; font-weight: 800; color: var(--text); min-width: 20px; text-align: center; }
+    .family-member-card { border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .family-member-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+    .family-member-fields { flex: 1; display: flex; gap: 8px; flex-wrap: wrap; min-width: 200px; }
+    .family-member-select { font-size: 12px; padding: 7px 8px; border-radius: 8px; border: 1px solid var(--border); font-family: inherit; background: var(--white); color: var(--text); }
+    .family-member-select:disabled { background: var(--bg); color: var(--muted); }
+    .family-member-contribution { font-size: 11.5px; font-weight: 700; color: var(--green); white-space: nowrap; text-align: right; min-width: 90px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .tier-grid { grid-template-columns: 1fr; }
+      .stack-wrap { grid-template-columns: 1fr; }
+      .report-grid { grid-template-columns: 1fr 1fr; }
+      .alert-parallel { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-right .btn-login, .nav-right .btn-pill { display: none; }
+      .trust-step, .trust-arrow { display: none; }
+      .trust-bar { justify-content: center; padding: 7px 12px; position: static; }
+      .hero { padding: 36px 16px 72px; }
+      .page-section { padding: 40px 16px; }
+    }
+    @media (max-width: 600px) {
+      .report-grid { grid-template-columns: 1fr 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav>
+  <div class="nav-inner">
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
+      <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover Local Deals · Save more</span>
+    </div>
+    <ul class="nav-links">
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="deals.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Off-Peak</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Save upto 75%</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="last-minute.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> LastMinute</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Grab before they go</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="negotiate.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Negotiate</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">AI deal maker</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="dealbook.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> DealBook</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Personal Savings Tracker</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="dealhub.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> DealHub</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Discover Deals</span>
+      </div></li>
+    </ul>
+    <div class="nav-right">
+      <a href="login.html" class="btn-login">Log in</a>
+      <a href="register.html" class="btn-pill">List your business</a>
+      <div class="menu-dropdown-wrap">
+        <button class="btn-pill-menu" onclick="toggleMenu()" aria-label="Menu">
+          Menu
+          <div class="menu-icon"><span></span><span></span><span></span></div>
+        </button>
+        <div class="menu-dropdown" id="menu-dropdown">
+          <div class="menu-main-item">For customers</div>
+          <a href="login.html" class="menu-sub-item highlight">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Log in or sign up
+          </a>
+          <a href="download-the-app.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Download the app
+          </a>
+          <a href="help.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Help and support
+          </a>
+          <div class="menu-divider"></div>
+          <a href="merchant/merchants.html" class="menu-main-item clickable">
+            <span style="display:flex;align-items:center;gap:10px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              For businesses
+            </span>
+            <span class="menu-main-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">📖 DealBook</div>
+    <h1>Track what you saved. <em>See what you missed.</em></h1>
+    <p class="hero-sub">Every Genoti deal you book, every card offer you use, offline or online, and every subscription you're paying for.<br>DealBook tracks it all automatically across 15+ categories, so you always know exactly how much you saved,<br>and where your money is leaking.</p>
+    <div class="hero-cta">
+      <a href="#" class="hero-btn-primary" onclick="showDealbookTab('calculator');return false;" style="display:inline-flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="8" y1="6" x2="16" y2="6"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/><path d="M16 18h.01"/></svg> Savings Calculator</a>
+      <a href="#" class="hero-btn-secondary" onclick="showDealbookTab('unclaimed');return false;" style="display:inline-flex;align-items:center;gap:7px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg> Tracking via DealBook</a>
+    </div>
+  </div>
+</div>
+
+<div class="dealbook-tab-panel" data-tab="unclaimed" style="display:none">
+
+<!-- ══ SMART ALERTS ══ -->
+<section class="page-section" style="background:#F3F2EE">
+  <div class="section-label">Never miss a stack</div>
+  <h2 class="section-title">DealBook watches your favourites and your cards</h2>
+  <p class="section-sub">DealBook surfaces the deals you didn't know you had, so you don't have to remember which card to use where, or which subscription is quietly draining your wallet. It nudges you before a deal expires, an offer lapses, or a subscription renews at the wrong price.</p>
+
+  <div class="watch-stats">
+    <div class="watch-stat"><div class="watch-stat-num green">15</div><div class="watch-stat-label">Active deals<br>for you</div></div>
+    <div class="watch-stat"><div class="watch-stat-num amber">₹4,200</div><div class="watch-stat-label">Unclaimed<br>this month</div></div>
+    <div class="watch-stat"><div class="watch-stat-num red">5</div><div class="watch-stat-label">Expiring<br>this week</div></div>
+  </div>
+
+  <div class="alert-cols">
+    <div class="alert-col">
+      <div class="alert-col-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Offline</div>
+      <div class="alert-card">
+        <div class="alert-badge genoti">Genoti · ends 3pm today</div>
+        <div class="alert-name">Starbucks BOGO: HSR Layout</div>
+        <div class="alert-meta">1.2km away</div>
+        <div class="alert-text">💳 HDFC 5% stacks: <b>save ₹368 on 2 coffees</b> if you book before 3pm.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-badge" style="background:#FBEAF0;color:#993556">Re-visit reminder</div>
+        <div class="alert-name">Naturals: 25% off haircut</div>
+        <div class="alert-meta">Last visit: 34 days ago</div>
+        <div class="alert-text">Same stylist at 4pm today. <b>SBI 5% cashback</b> stacks on top.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-badge" style="background:var(--amber-bg);color:var(--amber)">Expiring soon</div>
+        <div class="alert-name">Tanishq: making charges waived + EMI</div>
+        <div class="alert-meta">Jayanagar store</div>
+        <div class="alert-text"><b>HDFC 5% EMI discount</b> qualifies. Ends in 5 days.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-badge" style="background:var(--blue-bg);color:var(--blue)">3 card offers active</div>
+        <div class="alert-name">Phoenix Mall: festive mega sale</div>
+        <div class="alert-meta">6 of your favourites participating</div>
+        <div class="alert-text">Nike, Adidas, Soch, Pantaloons, Croma, Starbucks. <b>3 HDFC offers</b> active at this mall.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-badge card">Expires in 2 days</div>
+        <div class="alert-name">HDFC 15% off at Croma</div>
+        <div class="alert-meta">You browsed earphones last week</div>
+        <div class="alert-text">Use your <b>HDFC Regalia</b> at Croma before Jul 12 to catch this before it expires.</div>
+      </div>
+    </div>
+
+    <div class="alert-col">
+      <div class="alert-col-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Online</div>
+      <div class="alert-card">
+        <div class="alert-badge" style="background:var(--amber-bg);color:var(--amber)">Info only</div>
+        <div class="alert-name">Amazon Prime Day: 10% HDFC extra</div>
+        <div class="alert-meta">Jul 15–16 · HDFC cards</div>
+        <div class="alert-text">Extra 10% instant discount on HDFC cards during Prime Day. Max ₹1,500 off.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-badge" style="background:var(--amber-bg);color:var(--amber)">Info only</div>
+        <div class="alert-name">Myntra: 5% SBI cashback this week</div>
+        <div class="alert-meta">SBI SimplySave · ends Sunday</div>
+        <div class="alert-text">Use your SBI card on Myntra for 5% cashback up to ₹500.</div>
+      </div>
+    </div>
+
+    <div class="alert-col">
+      <div class="alert-col-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Utility bills</div>
+      <div class="alert-card">
+        <div class="alert-badge sub">Renews in 6 days</div>
+        <div class="alert-name">Perplexity Pro: check your Airtel bundle first</div>
+        <div class="alert-meta">₹1,700/mo if charged directly</div>
+        <div class="alert-text">Airtel gives Perplexity Pro free for 12 months on select plans. <b>Check eligibility</b> before your card gets charged at renewal.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-badge" style="background:var(--blue-bg);color:var(--blue)">SBI Cashback</div>
+        <div class="alert-name">Electricity bill: 1% cashback</div>
+        <div class="alert-meta">Auto-applied on bill payment</div>
+        <div class="alert-text">Pay through your SBI Cashback card for automatic 1% back, no separate claim needed.</div>
+      </div>
+    </div>
+
+    <div class="alert-col">
+      <div class="alert-col-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>Subscriptions</div>
+      <div class="alert-card">
+        <div class="alert-badge sub">Renews in 3 days</div>
+        <div class="alert-name">Netflix: switch to annual</div>
+        <div class="alert-meta">Currently on monthly, ₹649/mo</div>
+        <div class="alert-text">Switch to the annual plan before renewal and <b>save ₹588/year</b>.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-badge sub">Unused · 18 days</div>
+        <div class="alert-name">ChatGPT Plus: barely used this month</div>
+        <div class="alert-meta">₹1,700/mo · opened 3 times</div>
+        <div class="alert-text">You're paying full price for light usage. Consider the free tier or Team plan split with a friend.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-badge sub">Duplicate</div>
+        <div class="alert-name">Google One + iCloud+: same storage twice</div>
+        <div class="alert-meta">200GB on both accounts</div>
+        <div class="alert-text">Keep the one you actually use, and <b>save ₹130/month</b> by cancelling the other.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-banner" style="margin-top:24px">Genoti members who track all four (deals, offline cards, online cards, and subscriptions) save an average of <b>₹5,300/month</b> across every rupee they spend.</div>
+</section>
+
+<!-- ══ SPENDING MAP ══ -->
+<section class="page-section">
+  <div class="section-label">Your monthly spending map</div>
+  <h2 class="section-title">15+ categories. Hundreds of deals you're missing.</h2>
+  <p class="section-sub">These are the places (and subscriptions) you pay for every month, in person and online. DealBook tracks deals, card benefits, and subscriptions across all of them.</p>
+  <div class="cats-grid">
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(236,72,153,.15)">👗</div><div><div class="cat-tile-name">Fashion</div><div class="cat-tile-brands">Max, Pantaloons, Soch, Zudio, Westside, H&amp;M</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(249,115,22,.15)">🍽️</div><div><div class="cat-tile-name">Dining</div><div class="cat-tile-brands">KFC, McDonald's, Anjappar, Thalassery, Meghana</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(217,119,6,.15)">☕</div><div><div class="cat-tile-name">Cafés</div><div class="cat-tile-brands">Starbucks, Third Wave, Blue Tokai, Tim Hortons</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(236,72,153,.15)">💇</div><div><div class="cat-tile-name">Salons</div><div class="cat-tile-brands">Naturals, Green Trends, YLG, Bodycraft, Looks</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(245,158,11,.15)">💍</div><div><div class="cat-tile-name">Jewellery</div><div class="cat-tile-brands">Tanishq, Kalyan, Malabar Gold, Joyalukkas, GRT</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(59,130,246,.15)">🏬</div><div><div class="cat-tile-name">Malls</div><div class="cat-tile-brands">Forum, Phoenix, Orion, Mantri, Lulu, VR Bengaluru</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(239,68,68,.15)">👟</div><div><div class="cat-tile-name">Footwear</div><div class="cat-tile-brands">Bata, Nike, Reebok, Adidas, Puma, Skechers</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(217,119,6,.15)">🥐</div><div><div class="cat-tile-name">Bakeries</div><div class="cat-tile-brands">Iyengar Bakery, KR Bakery, Theobroma, Aubree</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(239,68,68,.15)">🏋️</div><div><div class="cat-tile-name">Fitness</div><div class="cat-tile-brands">Cult.fit, Gold's Gym, Snap Fitness, Anytime</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(20,184,166,.15)">🧖</div><div><div class="cat-tile-name">Spa &amp; wellness</div><div class="cat-tile-brands">Celebrity Spa, Nihar, Spark, Tonish, O2 Spa</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(29,158,117,.15)">🛒</div><div><div class="cat-tile-name">Grocery</div><div class="cat-tile-brands">DMart, More, Reliance Fresh, Star Bazaar, Spar</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(59,130,246,.15)">📱</div><div><div class="cat-tile-name">Electronics</div><div class="cat-tile-brands">Croma, Reliance Digital, Vijay Sales, iStore</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(20,184,166,.15)">💊</div><div><div class="cat-tile-name">Pharmacy</div><div class="cat-tile-brands">Apollo, MedPlus, NetMeds, local chemist</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(139,92,246,.15)">🎬</div><div><div class="cat-tile-name">Entertainment</div><div class="cat-tile-brands">PVR INOX, BookMyShow, gaming zones</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(217,119,6,.15)">🐾</div><div><div class="cat-tile-name">Pet care</div><div class="cat-tile-brands">Heads Up For Tails, Supertails, local vet</div></div></div>
+    <div class="cat-tile"><div class="cat-tile-icon" style="background:rgba(139,92,246,.15)">📺</div><div><div class="cat-tile-name">Subscriptions</div><div class="cat-tile-brands">Netflix, JioHotstar, ChatGPT, Google One, LinkedIn Premium</div></div></div>
+  </div>
+</section>
+
+<!-- ══ CARD BENEFITS WE TRACK ══ -->
+<section class="page-section">
+  <div class="section-label">Card benefits we track</div>
+  <h2 class="section-title">Your cards have offers you don't know about</h2>
+  <p class="section-sub">We start with the top 8 cards that 80% of Indian consumers hold. Matched to offline merchants, online platforms, and subscription billing. More added every month.</p>
+  <div class="bank-grid">
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#1A237E,#283593)"></span>HDFC Regalia</div><div class="bank-offers"><b>5%</b> dining cashback, <b>2X</b> points on travel, <b>EMI</b> discount at jewellery</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#1565C0,#42A5F5)"></span>SBI SimplySave</div><div class="bank-offers"><b>10%</b> weekend at lifestyle, <b>5%</b> on dining, <b>fuel surcharge</b> waiver</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#E65100,#FF9800)"></span>ICICI Amazon Pay</div><div class="bank-offers"><b>5%</b> Amazon, <b>2%</b> dining/cafe/grocery, <b>1%</b> all other</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#6A1B9A,#9C27B0)"></span>Axis Ace</div><div class="bank-offers"><b>5%</b> Swiggy/Zomato, <b>2%</b> online, <b>partner</b> offers at salons</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#004D40,#009688)"></span>HDFC Millennia</div><div class="bank-offers"><b>5%</b> Amazon/Flipkart, <b>2.5%</b> online, <b>BOGO</b> at partner cafes</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#BF360C,#FF5722)"></span>ICICI Coral</div><div class="bank-offers"><b>2X</b> dining points, <b>BOGO</b> at PVR, <b>lounge</b> access quarterly</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#0D47A1,#1976D2)"></span>SBI Cashback</div><div class="bank-offers"><b>5%</b> cashback online, <b>1%</b> offline, <b>fuel</b> surcharge waiver</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#F57F17,#FFCA28)"></span>Axis Flipkart</div><div class="bank-offers"><b>5%</b> Flipkart, <b>4%</b> preferred partners, <b>1.5%</b> all other</div></div>
+  </div>
+</section>
+
+<!-- ══ OFFLINE BENEFITS WE TRACK ══ -->
+<section class="page-section">
+  <div class="section-label">Offline benefits we track</div>
+  <h2 class="section-title">Offline benefits we track</h2>
+  <p class="section-sub">In-store deals and card offers at the malls, cafes, and stores you actually visit, matched automatically the moment you check in or pay.</p>
+  <div class="bank-grid">
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#00704A,#1E8E5A)"></span>Starbucks</div><div class="bank-offers"><b>BOGO</b> on select days, <b>5%</b> extra with HDFC Regalia dining cashback</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#8E1B3C,#C2185B)"></span>Tanishq</div><div class="bank-offers"><b>Making charges</b> waived on select days, <b>5%</b> EMI discount with HDFC cards</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#1565C0,#42A5F5)"></span>Croma</div><div class="bank-offers"><b>10%</b> off with HDFC Regalia, <b>no-cost EMI</b> on electronics over ₹5,000</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#D32F2F,#EF5350)"></span>Max Fashion</div><div class="bank-offers"><b>10%</b> weekend discount with SBI SimplySave, <b>additional</b> sale-season stacking</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#37474F,#607D8B)"></span>Phoenix Mall</div><div class="bank-offers"><b>6+</b> of your favourite brands running festive offers, <b>3</b> HDFC card offers active</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#6D4C41,#8D6E63)"></span>Naturals Salon</div><div class="bank-offers"><b>25%</b> off haircut for first-time visits, <b>5%</b> SBI cashback stacks on top</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#B71C1C,#E53935)"></span>PVR INOX</div><div class="bank-offers"><b>BOGO</b> tickets with ICICI Coral, <b>quarterly</b> lounge-style combo offers</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#212121,#424242)"></span>Cult.fit</div><div class="bank-offers"><b>Partner</b> discounts with Axis Ace, <b>15%</b> off annual memberships via select cards</div></div>
+  </div>
+</section>
+
+<!-- ══ ONLINE BENEFITS WE TRACK ══ -->
+<section class="page-section">
+  <div class="section-label">Online benefits we track</div>
+  <h2 class="section-title">Online benefits we track</h2>
+  <p class="section-sub">Cashback and instant discounts on the apps and websites you already shop on, auto-applied the moment you pay with the right card.</p>
+  <div class="bank-grid">
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#E65100,#FF9800)"></span>Amazon</div><div class="bank-offers"><b>5%</b> cashback with ICICI Amazon Pay, <b>extra 10%</b> HDFC discount on Prime Day</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#FC8019,#FFA733)"></span>Swiggy</div><div class="bank-offers"><b>5%</b> cashback with Axis Ace, <b>stacks</b> with Swiggy One if you have it</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#FF3F6C,#FF6F91)"></span>Myntra</div><div class="bank-offers"><b>5%</b> SBI cashback this week, <b>capped</b> at ₹500, ends Sunday</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#F57F17,#FFCA28)"></span>Flipkart</div><div class="bank-offers"><b>5%</b> cashback with Axis Flipkart, <b>4%</b> at preferred partner stores</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#E23744,#FF5A5F)"></span>Zomato</div><div class="bank-offers"><b>5%</b> cashback with Axis Ace, <b>partner</b> restaurant offers layered on top</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#6A1B9A,#9C27B0)"></span>BookMyShow</div><div class="bank-offers"><b>BOGO</b> tickets with ICICI Coral, <b>2X</b> reward points on HDFC cards</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#C2185B,#E91E8C)"></span>Nykaa</div><div class="bank-offers"><b>10%</b> off with select bank cards, <b>free</b> shipping on card-linked checkout</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#1A237E,#283593)"></span>Amazon Prime Day</div><div class="bank-offers"><b>Extra 10%</b> instant discount on HDFC cards, <b>max ₹1,500</b> off, Jul 15–16</div></div>
+  </div>
+</section>
+
+<!-- ══ SUBSCRIPTIONS BENEFITS WE TRACK ══ -->
+<section class="page-section">
+  <div class="section-label">Subscriptions benefits we track</div>
+  <h2 class="section-title">Subscriptions benefits we track</h2>
+  <p class="section-sub">Overlaps between what your telecom plan already bundles free and what you're still paying for separately, plus card cashback on the subscriptions you keep.</p>
+  <div class="bank-grid">
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#20808D,#1FB8CD)"></span>Perplexity Pro</div><div class="bank-offers"><b>Free</b> for 12 months on select Airtel plans, <b>save ₹1,700/mo</b> if you switch</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#002F6C,#0057B8)"></span>JioHotstar</div><div class="bank-offers"><b>Included free</b> with your Jio unlimited plan, <b>save ₹149/mo</b> by cancelling standalone</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#FF0000,#CC0000)"></span>YouTube Premium</div><div class="bank-offers"><b>Included free</b> in Jio ₹399 plan, <b>save ₹1,788/year</b> by cancelling the separate sub</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#4285F4,#34A853)"></span>Google One</div><div class="bank-offers"><b>100GB free</b> with Airtel ₹379 plan, <b>save ₹130/mo</b> over the paid subscription</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#E50914,#B20710)"></span>Netflix</div><div class="bank-offers"><b>Switch to annual</b> billing to save ₹948/yr, or get it <b>free</b> with JioFiber ₹999 plan</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#E65100,#FF9800)"></span>ICICI subscription cashback</div><div class="bank-offers"><b>2%</b> back on all recurring charges: Netflix, ChatGPT, Spotify, Prime combined, <b>auto-applied</b></div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#10A37F,#1A7F64)"></span>ChatGPT Plus</div><div class="bank-offers"><b>Barely used</b> this month: opened twice, <b>consider</b> the free tier or a team plan split</div></div>
+    <div class="bank-card"><div class="bank-name"><span class="bank-dot" style="background:linear-gradient(135deg,#0D47A1,#1976D2)"></span>JioFiber</div><div class="bank-offers"><b>₹999 plan</b> bundles Netflix, JioHotstar, and 14 more OTT apps at no extra cost</div></div>
+  </div>
+</section>
+
+</div>
+
+<div class="dealbook-tab-panel" data-tab="calculator">
+
+<!-- ══ SAVINGS CALCULATOR ══ -->
+<section class="page-section" style="background:#F3F2EE" id="calculator">
+  <div class="section-label">Savings Calculator</div>
+  <h2 class="section-title">How much could you be spending and saving in a month ?</h2>
+  <p class="section-sub">Move the sliders to match your monthly spending. DealBook calculates savings from Genoti deals, card benefits, and subscriptions, including the ones your carrier already gives you free.</p>
+
+  <div style="background:var(--dark-green);border-radius:16px;padding:20px 24px;text-align:center;margin-bottom:24px">
+    <div style="font-size:16px;font-weight:800;color:#4ADE80" id="calc-cta-headline">You're leaving ₹52,860/year on the table</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.7);margin-top:4px">Create your DealBook in 2 minutes and start saving automatically.</div>
+  </div>
+
+  <div class="calc-card" style="margin-bottom:20px">
+    <div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:14px">
+      <div class="pill-toggle" id="period-toggle">
+        <button type="button" class="pill-toggle-btn active" data-period="monthly" onclick="setCalcPeriod('monthly')">Monthly</button>
+        <button type="button" class="pill-toggle-btn" data-period="yearly" onclick="setCalcPeriod('yearly')">Yearly</button>
+      </div>
+      <div class="pill-toggle" id="mode-toggle">
+        <button type="button" class="pill-toggle-btn active" data-mode="individual" onclick="setCalcMode('individual')">🧍 Individual</button>
+        <button type="button" class="pill-toggle-btn" data-mode="family" onclick="setCalcMode('family')">👨‍👩‍👧 Family</button>
+      </div>
+    </div>
+    <div class="yearly-badge" id="yearly-badge">💡 Save 15–20% more with annual tracking. Yearly trackers catch more expiring benefits.</div>
+
+    <!-- Individual profile -->
+    <div id="individual-profile">
+      <div class="profile-row">
+        <div class="profile-row-label">Gender</div>
+        <div class="profile-chip-row" id="ind-gender-row">
+          <button type="button" class="profile-chip active" data-val="male" onclick="setIndField('gender','male')">Male</button>
+          <button type="button" class="profile-chip" data-val="female" onclick="setIndField('gender','female')">Female</button>
+          <button type="button" class="profile-chip" data-val="other" onclick="setIndField('gender','other')">Other</button>
+        </div>
+      </div>
+
+      <div class="profile-row">
+        <div class="profile-row-label">Age range</div>
+        <div class="profile-chip-row" id="ind-age-row">
+          <button type="button" class="profile-chip active" data-val="1" onclick="setIndField('age',1)">18–25</button>
+          <button type="button" class="profile-chip" data-val="2" onclick="setIndField('age',2)">26–35</button>
+          <button type="button" class="profile-chip" data-val="3" onclick="setIndField('age',3)">36–45</button>
+          <button type="button" class="profile-chip" data-val="4" onclick="setIndField('age',4)">46–55</button>
+          <button type="button" class="profile-chip" data-val="5" onclick="setIndField('age',5)">56+</button>
+        </div>
+      </div>
+
+      <div class="profile-row">
+        <div class="profile-row-label">City tier</div>
+        <div class="profile-chip-row" id="ind-tier-row">
+          <button type="button" class="profile-chip active" data-val="0" onclick="setIndField('tier',0)">Tier 1<small>Bengaluru, Mumbai, Delhi, Chennai</small></button>
+          <button type="button" class="profile-chip" data-val="1" onclick="setIndField('tier',1)">Tier 2<small>Jaipur, Lucknow, Indore, Coimbatore</small></button>
+          <button type="button" class="profile-chip" data-val="2" onclick="setIndField('tier',2)">Tier 3<small>Smaller towns &amp; districts</small></button>
+        </div>
+      </div>
+
+      <div class="profile-row">
+        <div class="profile-row-label">Your cards</div>
+        <div class="profile-chip-row" id="ind-cards-row">
+          <button type="button" class="profile-chip" data-val="hdfc-regalia" onclick="toggleIndMulti('cards','hdfc-regalia',this)">HDFC Regalia</button>
+          <button type="button" class="profile-chip" data-val="sbi-simplysave" onclick="toggleIndMulti('cards','sbi-simplysave',this)">SBI SimplySave</button>
+          <button type="button" class="profile-chip" data-val="icici-amazonpay" onclick="toggleIndMulti('cards','icici-amazonpay',this)">ICICI Amazon Pay</button>
+          <button type="button" class="profile-chip" data-val="axis-ace" onclick="toggleIndMulti('cards','axis-ace',this)">Axis Ace</button>
+          <button type="button" class="profile-chip" data-val="hdfc-millennia" onclick="toggleIndMulti('cards','hdfc-millennia',this)">HDFC Millennia</button>
+          <button type="button" class="profile-chip" data-val="icici-coral" onclick="toggleIndMulti('cards','icici-coral',this)">ICICI Coral</button>
+          <button type="button" class="profile-chip" data-val="sbi-cashback" onclick="toggleIndMulti('cards','sbi-cashback',this)">SBI Cashback</button>
+          <button type="button" class="profile-chip" data-val="axis-flipkart" onclick="toggleIndMulti('cards','axis-flipkart',this)">Axis Flipkart</button>
+        </div>
+      </div>
+
+      <div class="profile-row">
+        <div class="profile-row-label">Carrier</div>
+        <div class="profile-chip-row" id="ind-carriers-row">
+          <button type="button" class="profile-chip" data-val="jio" onclick="toggleIndMulti('carriers','jio',this)">Jio</button>
+          <button type="button" class="profile-chip" data-val="airtel" onclick="toggleIndMulti('carriers','airtel',this)">Airtel</button>
+          <button type="button" class="profile-chip" data-val="vodafone" onclick="toggleIndMulti('carriers','vodafone',this)">Vodafone (Vi)</button>
+          <button type="button" class="profile-chip" data-val="bsnl" onclick="toggleIndMulti('carriers','bsnl',this)">BSNL</button>
+          <button type="button" class="profile-chip" data-val="other" onclick="toggleIndMulti('carriers','other',this)">Other</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Family profile -->
+    <div id="family-profile" style="display:none">
+      <div class="profile-row-label">Family size</div>
+      <div class="member-stepper">
+        <button type="button" class="member-stepper-btn" onclick="changeFamilySize(-1)">−</button>
+        <div class="member-stepper-num" id="family-size-num">3</div>
+        <button type="button" class="member-stepper-btn" onclick="changeFamilySize(1)">+</button>
+        <span style="font-size:12px;color:var(--muted)">members (2–8)</span>
+      </div>
+
+      <div class="profile-row-label">Household members</div>
+      <div id="family-members"></div>
+
+      <div class="profile-row">
+        <div class="profile-row-label">City tier</div>
+        <div class="profile-chip-row" id="fam-tier-row">
+          <button type="button" class="profile-chip active" data-val="0" onclick="setFamField('tier',0)">Tier 1<small>Bengaluru, Mumbai, Delhi, Chennai</small></button>
+          <button type="button" class="profile-chip" data-val="1" onclick="setFamField('tier',1)">Tier 2<small>Jaipur, Lucknow, Indore, Coimbatore</small></button>
+          <button type="button" class="profile-chip" data-val="2" onclick="setFamField('tier',2)">Tier 3<small>Smaller towns &amp; districts</small></button>
+        </div>
+      </div>
+
+      <div class="profile-row">
+        <div class="profile-row-label">Your cards</div>
+        <div class="profile-chip-row" id="fam-cards-row">
+          <button type="button" class="profile-chip" data-val="hdfc-regalia" onclick="toggleFamMulti('cards','hdfc-regalia',this)">HDFC Regalia</button>
+          <button type="button" class="profile-chip" data-val="sbi-simplysave" onclick="toggleFamMulti('cards','sbi-simplysave',this)">SBI SimplySave</button>
+          <button type="button" class="profile-chip" data-val="icici-amazonpay" onclick="toggleFamMulti('cards','icici-amazonpay',this)">ICICI Amazon Pay</button>
+          <button type="button" class="profile-chip" data-val="axis-ace" onclick="toggleFamMulti('cards','axis-ace',this)">Axis Ace</button>
+          <button type="button" class="profile-chip" data-val="hdfc-millennia" onclick="toggleFamMulti('cards','hdfc-millennia',this)">HDFC Millennia</button>
+          <button type="button" class="profile-chip" data-val="icici-coral" onclick="toggleFamMulti('cards','icici-coral',this)">ICICI Coral</button>
+          <button type="button" class="profile-chip" data-val="sbi-cashback" onclick="toggleFamMulti('cards','sbi-cashback',this)">SBI Cashback</button>
+          <button type="button" class="profile-chip" data-val="axis-flipkart" onclick="toggleFamMulti('cards','axis-flipkart',this)">Axis Flipkart</button>
+        </div>
+      </div>
+
+      <div class="profile-row">
+        <div class="profile-row-label">Carrier</div>
+        <div class="profile-chip-row" id="fam-carriers-row">
+          <button type="button" class="profile-chip" data-val="jio" onclick="toggleFamMulti('carriers','jio',this)">Jio</button>
+          <button type="button" class="profile-chip" data-val="airtel" onclick="toggleFamMulti('carriers','airtel',this)">Airtel</button>
+          <button type="button" class="profile-chip" data-val="vodafone" onclick="toggleFamMulti('carriers','vodafone',this)">Vodafone (Vi)</button>
+          <button type="button" class="profile-chip" data-val="bsnl" onclick="toggleFamMulti('carriers','bsnl',this)">BSNL</button>
+          <button type="button" class="profile-chip" data-val="other" onclick="toggleFamMulti('carriers','other',this)">Other</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stack-wrap" style="align-items:start">
+    <div class="calc-card">
+      <div class="calc-title" id="calc-sliders-title">Your monthly spending</div>
+
+      <div class="calc-group-label-row">
+        <span class="calc-group-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Offline: walk in &amp; spend</span>
+        <button type="button" class="cat-add-icon" onclick="toggleAddForm('offline')" title="Add something not listed">+</button>
+      </div>
+      <div class="calc-add-form" id="add-form-offline">
+        <input type="text" class="calc-add-input" id="add-name-offline" placeholder="e.g. Pet grooming">
+        <input type="number" class="calc-add-price" id="add-price-offline" placeholder="₹/mo" min="0">
+        <button type="button" class="calc-add-submit" onclick="addCustomItem('offline')">Add</button>
+      </div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><div class="cat-label">Groceries</div><input type="range" min="0" max="20000" step="500" value="6000" class="cat-slider" data-cat="grocery" oninput="calcSavings()"><div class="cat-val" id="calc-v-grocery">₹6,000</div><div class="cat-pct">8%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V2"/><path d="M5 12v10"/><path d="M15 2v20"/><path d="M20 2c-1.5 2-1.5 5 0 7"/></svg></div><div class="cat-label">Dining out</div><input type="range" min="0" max="15000" step="500" value="4000" class="cat-slider" data-cat="dining" oninput="calcSavings()"><div class="cat-val" id="calc-v-dining">₹4,000</div><div class="cat-pct">20%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div><div class="cat-label">Cafes</div><input type="range" min="0" max="8000" step="200" value="1500" class="cat-slider" data-cat="cafe" oninput="calcSavings()"><div class="cat-val" id="calc-v-cafe">₹1,500</div><div class="cat-pct">25%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><div class="cat-label">Fashion</div><input type="range" min="0" max="15000" step="500" value="3000" class="cat-slider" data-cat="fashion" oninput="calcSavings()"><div class="cat-val" id="calc-v-fashion">₹3,000</div><div class="cat-pct">22%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.6 3H4a1 1 0 0 0-1 1v5.6a2 2 0 0 0 .83 1.4l9.58 9.59a2 2 0 0 0 2.83 0l4.35-4.35a2 2 0 0 0 0-2.83z"/><circle cx="7.5" cy="7.5" r="1"/></svg></div><div class="cat-label">Footwear</div><input type="range" min="0" max="8000" step="500" value="1000" class="cat-slider" data-cat="footwear" oninput="calcSavings()"><div class="cat-val" id="calc-v-footwear">₹1,000</div><div class="cat-pct">18%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="cat-label">Jewellery</div><input type="range" min="0" max="30000" step="1000" value="2000" class="cat-slider" data-cat="jewellery" oninput="calcSavings()"><div class="cat-val" id="calc-v-jewellery">₹2,000</div><div class="cat-pct">12%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div><div class="cat-label">Salon/spa</div><input type="range" min="0" max="8000" step="200" value="1500" class="cat-slider" data-cat="salon" oninput="calcSavings()"><div class="cat-val" id="calc-v-salon">₹1,500</div><div class="cat-pct">25%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="cat-label">Fitness/gym</div><input type="range" min="0" max="8000" step="500" value="2000" class="cat-slider" data-cat="fitness" oninput="calcSavings()"><div class="cat-val" id="calc-v-fitness">₹2,000</div><div class="cat-pct">15%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><div class="cat-label">Pharmacy</div><input type="range" min="0" max="5000" step="200" value="800" class="cat-slider" data-cat="pharmacy" oninput="calcSavings()"><div class="cat-val" id="calc-v-pharmacy">₹800</div><div class="cat-pct">8%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="15" y2="22"/><line x1="4" y1="9" x2="14" y2="9"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg></div><div class="cat-label">Fuel</div><input type="range" min="0" max="15000" step="500" value="4000" class="cat-slider" data-cat="fuel" oninput="calcSavings()"><div class="cat-val" id="calc-v-fuel">₹4,000</div><div class="cat-pct">3%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg></div><div class="cat-label">Movies/events</div><input type="range" min="0" max="5000" step="200" value="1500" class="cat-slider" data-cat="entertainment" oninput="calcSavings()"><div class="cat-val" id="calc-v-entertainment">₹1,500</div><div class="cat-pct">20%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="cat-label">Medical bills</div><input type="range" min="0" max="10000" step="500" value="1500" class="cat-slider" data-cat="medical" oninput="calcSavings()"><div class="cat-val" id="calc-v-medical">₹1,500</div><div class="cat-pct">10%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div><div class="cat-label">Gifts(friend/family)</div><input type="range" min="0" max="5000" step="200" value="800" class="cat-slider" data-cat="gifts" oninput="calcSavings()"><div class="cat-val" id="calc-v-gifts">₹800</div><div class="cat-pct">15%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div><div class="cat-label">Vehicle maintenance</div><input type="range" min="0" max="8000" step="200" value="1200" class="cat-slider" data-cat="vehicle" oninput="calcSavings()"><div class="cat-val" id="calc-v-vehicle">₹1,200</div><div class="cat-pct">12%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="cat-label">House maintenance</div><input type="range" min="0" max="6000" step="200" value="1000" class="cat-slider" data-cat="housemaint" oninput="calcSavings()"><div class="cat-val" id="calc-v-housemaint">₹1,000</div><div class="cat-pct">8%</div></div>
+      <div id="add-anchor-offline"></div>
+      <div class="calc-group-total">
+        <span class="grp-label">Total</span><span class="grp-head">Spend</span><span class="grp-head">Save</span>
+        <span></span><span class="grp-val"><b id="grp-spend-offline">₹0</b> <span class="grp-pct" id="grp-spend-pct-offline">(0%)</span></span><span class="grp-val save-col"><b id="grp-save-offline">₹0</b> <span class="grp-pct" id="grp-save-pct-offline">(0%)</span></span>
+      </div>
+
+      <div class="calc-group-label-row">
+        <span class="calc-group-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Online: app or website</span>
+        <button type="button" class="cat-add-icon" onclick="toggleAddForm('online')" title="Add something not listed">+</button>
+      </div>
+      <div class="calc-add-form" id="add-form-online">
+        <input type="text" class="calc-add-input" id="add-name-online" placeholder="e.g. Meesho, custom order">
+        <input type="number" class="calc-add-price" id="add-price-online" placeholder="₹/mo" min="0">
+        <button type="button" class="calc-add-submit" onclick="addCustomItem('online')">Add</button>
+      </div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div><div class="cat-label">Food delivery</div><input type="range" min="0" max="10000" step="500" value="3000" class="cat-slider" data-cat="delivery" oninput="calcSavings()"><div class="cat-val" id="calc-v-delivery">₹3,000</div><div class="cat-pct">5%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div class="cat-label">Online shopping</div><input type="range" min="0" max="15000" step="500" value="4000" class="cat-slider" data-cat="online" oninput="calcSavings()"><div class="cat-val" id="calc-v-online">₹4,000</div><div class="cat-pct">5%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></div><div class="cat-label">Electronics</div><input type="range" min="0" max="15000" step="500" value="2000" class="cat-slider" data-cat="electronics" oninput="calcSavings()"><div class="cat-val" id="calc-v-electronics">₹2,000</div><div class="cat-pct">10%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div><div class="cat-label">Vacation</div><input type="range" min="0" max="20000" step="1000" value="3000" class="cat-slider" data-cat="vacation" oninput="calcSavings()"><div class="cat-val" id="calc-v-vacation">₹3,000</div><div class="cat-pct">18%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="cat-label">Short trip</div><input type="range" min="0" max="8000" step="500" value="1500" class="cat-slider" data-cat="shorttrip" oninput="calcSavings()"><div class="cat-val" id="calc-v-shorttrip">₹1,500</div><div class="cat-pct">15%</div></div>
+      <div id="add-anchor-online"></div>
+      <div class="calc-group-total">
+        <span class="grp-label">Total</span><span class="grp-head">Spend</span><span class="grp-head">Save</span>
+        <span></span><span class="grp-val"><b id="grp-spend-online">₹0</b> <span class="grp-pct" id="grp-spend-pct-online">(0%)</span></span><span class="grp-val save-col"><b id="grp-save-online">₹0</b> <span class="grp-pct" id="grp-save-pct-online">(0%)</span></span>
+      </div>
+
+      <div class="calc-group-label-row">
+        <span class="calc-group-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Utility bills</span>
+        <button type="button" class="cat-add-icon" onclick="toggleAddForm('utility')" title="Add something not listed">+</button>
+      </div>
+      <div class="calc-add-form" id="add-form-utility">
+        <input type="text" class="calc-add-input" id="add-name-utility" placeholder="e.g. Society parking fee">
+        <input type="number" class="calc-add-price" id="add-price-utility" placeholder="₹/mo" min="0">
+        <button type="button" class="calc-add-submit" onclick="addCustomItem('utility')">Add</button>
+      </div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div><div class="cat-label">Mobile</div><input type="range" min="0" max="2000" step="50" value="500" class="cat-slider" data-cat="mobile" oninput="calcSavings()"><div class="cat-val" id="calc-v-mobile">₹500</div><div class="cat-pct">20%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></div><div class="cat-label">Broadband</div><input type="range" min="0" max="2000" step="100" value="800" class="cat-slider" data-cat="broadband" oninput="calcSavings()"><div class="cat-val" id="calc-v-broadband">₹800</div><div class="cat-pct">15%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="cat-label">Electricity</div><input type="range" min="0" max="5000" step="100" value="2000" class="cat-slider" data-cat="electricity" oninput="calcSavings()"><div class="cat-val" id="calc-v-electricity">₹2,000</div><div class="cat-pct">5%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="15" y2="22"/><line x1="4" y1="9" x2="14" y2="9"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg></div><div class="cat-label">Gas</div><input type="range" min="0" max="1500" step="50" value="400" class="cat-slider" data-cat="gas" oninput="calcSavings()"><div class="cat-val" id="calc-v-gas">₹400</div><div class="cat-pct">5%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div><div class="cat-label">Water</div><input type="range" min="0" max="1000" step="50" value="200" class="cat-slider" data-cat="water" oninput="calcSavings()"><div class="cat-val" id="calc-v-water">₹200</div><div class="cat-pct">3%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg></div><div class="cat-label">DTH/Cable</div><input type="range" min="0" max="1000" step="50" value="400" class="cat-slider" data-cat="dth" oninput="calcSavings()"><div class="cat-val" id="calc-v-dth">₹400</div><div class="cat-pct">12%</div></div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="cat-label">Insurance</div><input type="range" min="0" max="5000" step="200" value="1200" class="cat-slider" data-cat="insurance" oninput="calcSavings()"><div class="cat-val" id="calc-v-insurance">₹1,200</div><div class="cat-pct">10%</div></div>
+      <div id="add-anchor-utility"></div>
+      <div class="calc-group-total">
+        <span class="grp-label">Total</span><span class="grp-head">Spend</span><span class="grp-head">Save</span>
+        <span></span><span class="grp-val"><b id="grp-spend-utility">₹0</b> <span class="grp-pct" id="grp-spend-pct-utility">(0%)</span></span><span class="grp-val save-col"><b id="grp-save-utility">₹0</b> <span class="grp-pct" id="grp-save-pct-utility">(0%)</span></span>
+      </div>
+
+      <div class="calc-group-label-row">
+        <span class="calc-group-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg> Subscriptions</span>
+        <button type="button" class="cat-add-icon" onclick="toggleAddForm('subscriptions')" title="Add something not listed">+</button>
+      </div>
+      <div class="calc-add-form" id="add-form-subscriptions">
+        <input type="text" class="calc-add-input" id="add-name-subscriptions" placeholder="e.g. a subscription not listed above">
+        <input type="number" class="calc-add-price" id="add-price-subscriptions" placeholder="₹/mo" min="0">
+        <button type="button" class="calc-add-submit" onclick="addCustomItem('subscriptions')">Add</button>
+      </div>
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div><div class="cat-label">OTT/Streaming</div><input type="range" min="0" max="2000" step="50" value="650" class="cat-slider" data-cat="streaming" oninput="calcSavings()"><div class="cat-val" id="calc-v-streaming">₹650</div><div class="cat-pct">24%</div><button type="button" class="cat-add-icon" onclick="toggleSubAddForm('streaming')" title="Add a specific OTT app">+</button></div>
+      <div class="subitem-list" id="subitems-streaming"></div>
+      <div class="subitem-add-form" id="subadd-form-streaming">
+        <input type="text" class="calc-add-input" id="subadd-name-streaming" placeholder="e.g. Netflix, Prime Video, Hotstar">
+        <input type="number" class="calc-add-price" id="subadd-price-streaming" placeholder="₹/mo" min="0">
+        <button type="button" class="calc-add-submit" onclick="addSubItem('streaming')">Add</button>
+      </div>
+
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="cat-label">Fitness app</div><input type="range" min="0" max="3000" step="100" value="800" class="cat-slider" data-cat="fitnessapp" oninput="calcSavings()"><div class="cat-val" id="calc-v-fitnessapp">₹800</div><div class="cat-pct">15%</div><button type="button" class="cat-add-icon" onclick="toggleSubAddForm('fitnessapp')" title="Add a specific fitness app">+</button></div>
+      <div class="subitem-list" id="subitems-fitnessapp"></div>
+      <div class="subitem-add-form" id="subadd-form-fitnessapp">
+        <input type="text" class="calc-add-input" id="subadd-name-fitnessapp" placeholder="e.g. Cult.fit, Fittr">
+        <input type="number" class="calc-add-price" id="subadd-price-fitnessapp" placeholder="₹/mo" min="0">
+        <button type="button" class="calc-add-submit" onclick="addSubItem('fitnessapp')">Add</button>
+      </div>
+
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></div><div class="cat-label">AI tools</div><input type="range" min="0" max="3000" step="100" value="500" class="cat-slider" data-cat="ai" oninput="calcSavings()"><div class="cat-val" id="calc-v-ai">₹500</div><div class="cat-pct">10%</div><button type="button" class="cat-add-icon" onclick="toggleSubAddForm('ai')" title="Add a specific AI tool">+</button></div>
+      <div class="subitem-list" id="subitems-ai"></div>
+      <div class="subitem-add-form" id="subadd-form-ai">
+        <input type="text" class="calc-add-input" id="subadd-name-ai" placeholder="e.g. ChatGPT Plus, Claude, Gemini">
+        <input type="number" class="calc-add-price" id="subadd-price-ai" placeholder="₹/mo" min="0">
+        <button type="button" class="calc-add-submit" onclick="addSubItem('ai')">Add</button>
+      </div>
+
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><div class="cat-label">Productivity</div><input type="range" min="0" max="3000" step="100" value="500" class="cat-slider" data-cat="productivity" oninput="calcSavings()"><div class="cat-val" id="calc-v-productivity">₹500</div><div class="cat-pct">15%</div><button type="button" class="cat-add-icon" onclick="toggleSubAddForm('productivity')" title="Add a specific tool">+</button></div>
+      <div class="subitem-list" id="subitems-productivity"></div>
+      <div class="subitem-add-form" id="subadd-form-productivity">
+        <input type="text" class="calc-add-input" id="subadd-name-productivity" placeholder="e.g. Notion, Microsoft 365, Canva Pro">
+        <input type="number" class="calc-add-price" id="subadd-price-productivity" placeholder="₹/mo" min="0">
+        <button type="button" class="calc-add-submit" onclick="addSubItem('productivity')">Add</button>
+      </div>
+
+      <div class="cat-row"><div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></div><div class="cat-label">Cloud storage</div><input type="range" min="0" max="500" step="25" value="150" class="cat-slider" data-cat="cloud" oninput="calcSavings()"><div class="cat-val" id="calc-v-cloud">₹150</div><div class="cat-pct">30%</div><button type="button" class="cat-add-icon" onclick="toggleSubAddForm('cloud')" title="Add a specific storage plan">+</button></div>
+      <div class="subitem-list" id="subitems-cloud"></div>
+      <div class="subitem-add-form" id="subadd-form-cloud" style="margin-bottom:14px">
+        <input type="text" class="calc-add-input" id="subadd-name-cloud" placeholder="e.g. Google One, iCloud+, Dropbox">
+        <input type="number" class="calc-add-price" id="subadd-price-cloud" placeholder="₹/mo" min="0">
+        <button type="button" class="calc-add-submit" onclick="addSubItem('cloud')">Add</button>
+      </div>
+      <div id="add-anchor-subscriptions"></div>
+      <div class="calc-group-total" style="margin-bottom:0">
+        <span class="grp-label">Total</span><span class="grp-head">Spend</span><span class="grp-head">Save</span>
+        <span></span><span class="grp-val"><b id="grp-spend-subscriptions">₹0</b> <span class="grp-pct" id="grp-spend-pct-subscriptions">(0%)</span></span><span class="grp-val save-col"><b id="grp-save-subscriptions">₹0</b> <span class="grp-pct" id="grp-save-pct-subscriptions">(0%)</span></span>
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-title" id="calc-results-title">Your DealBook savings</div>
+      <div class="report-grid" style="margin-bottom:20px">
+        <div class="report-stat"><div class="report-stat-num" style="color:var(--text)" id="calc-r-total">₹36,400</div><div class="report-stat-label" id="calc-r-total-label">Monthly spending</div><div class="report-stat-sub" id="calc-r-total-yr">₹4,36,800/year</div></div>
+        <div class="report-stat"><div class="report-stat-num green" id="calc-r-save">₹4,405</div><div class="report-stat-label" id="calc-r-save-label">DealBook can save you</div><div class="report-stat-sub" id="calc-r-save-yr">₹52,860/year</div></div>
+        <div class="report-stat"><div class="report-stat-num green" id="calc-r-rate">12%</div><div class="report-stat-label">Your savings rate</div><div class="report-stat-sub">Across all categories</div></div>
+        <div class="report-stat"><div class="report-stat-num amber" id="calc-r-annual">₹52,860</div><div class="report-stat-label" id="calc-r-annual-label">Without DealBook you miss</div><div class="report-stat-sub" id="calc-r-annual-sub">Every year, left on the table</div></div>
+      </div>
+
+      <div class="report-grid" id="family-stats-row" style="display:none;grid-template-columns:1fr 1fr;margin-bottom:20px">
+        <div class="report-stat"><div class="report-stat-num" style="color:var(--purple)" id="calc-r-familytotal">₹4,405</div><div class="report-stat-label">Family total savings</div></div>
+        <div class="report-stat"><div class="report-stat-num" style="color:var(--purple)" id="calc-r-perperson">₹1,468</div><div class="report-stat-label">Per person average</div></div>
+      </div>
+
+      <div class="report-row-label">Savings by source</div>
+      <div class="report-bar" style="margin-bottom:10px">
+        <div class="report-seg" id="calc-b-genoti" style="background:#1D9E75"></div>
+        <div class="report-seg" id="calc-b-card" style="background:#378ADD"></div>
+        <div class="report-seg" id="calc-b-sub" style="background:#8B5CF6"></div>
+      </div>
+      <div class="report-legend" style="justify-content:flex-start;margin-bottom:20px">
+        <span><span class="report-legend-dot" style="background:#1D9E75"></span>Genoti deals <b id="calc-l-genoti">₹2,600</b></span>
+        <span><span class="report-legend-dot" style="background:#378ADD"></span>Card benefits <b id="calc-l-card">₹1,525</b></span>
+        <span><span class="report-legend-dot" style="background:#8B5CF6"></span>Utility &amp; subscriptions <b id="calc-l-sub">₹280</b></span>
+      </div>
+
+      <div class="report-row-label">Savings by category</div>
+      <div id="calc-breakdown"></div>
+    </div>
+  </div>
+
+  <div style="background:var(--purple-bg);border-radius:16px;padding:16px 18px;margin-top:24px">
+    <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:4px">💡 Do you know?</div>
+    <div style="font-size:12.5px;color:#4C1D95;line-height:1.65">Your Airtel or Jio plan already includes subscriptions worth <b>₹3,000–7,000/year</b> that you're probably paying for separately: YouTube Premium, Google One, Apple Music, JioHotstar, Adobe Express, even Perplexity Pro. DealBook surfaces these so you stop paying twice.</div>
+  </div>
+</section>
+
+</div>
+
+<!-- ══ BOTTOM CTA ══ -->
+<section class="page-section" style="padding-top:0">
+  <div class="cta-bottom">
+    <h2 class="cta-title">Your money. Your savings. Your DealBook.</h2>
+    <p class="cta-sub">Genoti deals. Card benefits: offline and online. Subscriptions you're overpaying for. Everything tracked in one passbook. Set up in 2 minutes, free, always.</p>
+    <a href="register.html" class="hero-btn-primary" style="text-decoration:none">📖 Open my DealBook for free</a>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
+        <p>Discover local deals at the real price.</p>
+      </div>
+      <div class="footer-col">
+        <h4>For Users</h4>
+        <ul>
+          <li><a href="index.html">OffPeak Deals</a></li>
+          <li><a href="last-minute.html">LastMinute Deals</a></li>
+          <li><a href="negotiate.html">Negotiate Deals by AI</a></li>
+          <li><a href="notify.html">Notify Me the Deals</a></li>
+          <li><a href="dealhub.html">DealHub: Discover Deals</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>For Merchants</h4>
+        <ul>
+          <li><a href="calculator.html">True Price Calculator</a></li>
+          <li><a href="register.html">List your Business</a></li>
+          <li><a href="#">Merchant Dashboard</a></li>
+          <li><a href="merchant/merchants.html">Merchant OS</a></li>
+          <li><a href="#">Agentic PODs</a></li>
+          <li><a href="merchant/pricing.html">Pricing</a></li>
+          <li><a href="merchant/migrate.html">Switch to Genoti</a></li>
+          <li><a href="merchant/dealdrop.html">DealDrop: free WhatsApp listing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+      <div class="footer-socials">
+        <a href="#">Twitter</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() { document.getElementById('menu-dropdown').classList.toggle('open'); }
+
+  function showDealbookTab(name) {
+    document.querySelectorAll('.dealbook-tab-panel').forEach(function (p) { p.style.display = (p.dataset.tab === name) ? '' : 'none'; });
+    var target = document.querySelector('.dealbook-tab-panel[data-tab="' + name + '"]');
+    if (target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+  }
+
+  function showDealsCat(cat) {
+    document.querySelectorAll('.deals-panel').forEach(function (p) { p.classList.toggle('active', p.dataset.dealpanel === cat); });
+    document.querySelectorAll('.deals-tab').forEach(function (t) { t.classList.toggle('active', t.dataset.dealcat === cat); });
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.menu-dropdown-wrap')) document.getElementById('menu-dropdown').classList.remove('open');
+  });
+
+  var calcCats = {
+    grocery: { save: 8, g: 60, c: 30, sub: 0 }, dining: { save: 20, g: 70, c: 25, sub: 0 },
+    cafe: { save: 25, g: 65, c: 30, sub: 0 }, fashion: { save: 22, g: 55, c: 35, sub: 0 },
+    footwear: { save: 18, g: 40, c: 50, sub: 0 }, jewellery: { save: 12, g: 50, c: 45, sub: 0 },
+    salon: { save: 25, g: 75, c: 20, sub: 0 }, fitness: { save: 15, g: 70, c: 20, sub: 0 },
+    pharmacy: { save: 8, g: 40, c: 40, sub: 0 }, fuel: { save: 3, g: 0, c: 70, sub: 0 },
+    entertainment: { save: 20, g: 50, c: 45, sub: 0 },
+    medical: { save: 10, g: 20, c: 70, sub: 10 }, gifts: { save: 15, g: 40, c: 50, sub: 10 },
+    vehicle: { save: 12, g: 20, c: 70, sub: 10 }, housemaint: { save: 8, g: 10, c: 80, sub: 10 },
+    delivery: { save: 5, g: 0, c: 40, sub: 0 }, online: { save: 5, g: 0, c: 80, sub: 0 },
+    electronics: { save: 10, g: 30, c: 60, sub: 0 },
+    vacation: { save: 18, g: 20, c: 70, sub: 10 }, shorttrip: { save: 15, g: 30, c: 60, sub: 10 },
+    mobile: { save: 20, g: 0, c: 30, sub: 70 }, broadband: { save: 15, g: 0, c: 40, sub: 60 },
+    electricity: { save: 5, g: 0, c: 90, sub: 10 }, gas: { save: 5, g: 0, c: 90, sub: 10 },
+    water: { save: 3, g: 0, c: 90, sub: 10 }, dth: { save: 12, g: 0, c: 40, sub: 60 },
+    insurance: { save: 10, g: 0, c: 70, sub: 30 },
+    streaming: { save: 24, g: 0, c: 10, sub: 90 },
+    fitnessapp: { save: 15, g: 0, c: 20, sub: 80 }, ai: { save: 10, g: 0, c: 10, sub: 90 },
+    productivity: { save: 15, g: 0, c: 10, sub: 90 },
+    cloud: { save: 30, g: 0, c: 10, sub: 90 }
+  };
+  var calcLabels = {
+    grocery: 'Groceries', dining: 'Dining out', cafe: 'Cafes', fashion: 'Fashion', footwear: 'Footwear',
+    jewellery: 'Jewellery', salon: 'Salon/spa', fitness: 'Fitness/gym', pharmacy: 'Pharmacy', fuel: 'Fuel',
+    entertainment: 'Movies/events', medical: 'Medical bills', gifts: 'Gifts(friend/family)', vehicle: 'Vehicle maintenance',
+    housemaint: 'House maintenance', delivery: 'Food delivery', online: 'Online shopping', electronics: 'Electronics',
+    vacation: 'Vacation', shorttrip: 'Short trip',
+    mobile: 'Mobile', broadband: 'Broadband', electricity: 'Electricity', gas: 'Gas', water: 'Water',
+    dth: 'DTH/Cable', insurance: 'Insurance', streaming: 'OTT/Streaming', fitnessapp: 'Fitness app',
+    ai: 'AI tools', productivity: 'Productivity', cloud: 'Cloud storage'
+  };
+  var calcStepInfo = {
+    grocery: { max: 20000, step: 500 }, dining: { max: 15000, step: 500 }, cafe: { max: 8000, step: 200 },
+    fashion: { max: 15000, step: 500 }, footwear: { max: 8000, step: 500 }, jewellery: { max: 30000, step: 1000 },
+    salon: { max: 8000, step: 200 }, fitness: { max: 8000, step: 500 }, pharmacy: { max: 5000, step: 200 },
+    fuel: { max: 15000, step: 500 }, entertainment: { max: 5000, step: 200 },
+    medical: { max: 10000, step: 500 }, gifts: { max: 5000, step: 200 }, vehicle: { max: 8000, step: 200 }, housemaint: { max: 6000, step: 200 },
+    delivery: { max: 10000, step: 500 }, online: { max: 15000, step: 500 }, electronics: { max: 15000, step: 500 },
+    vacation: { max: 20000, step: 1000 }, shorttrip: { max: 8000, step: 500 },
+    mobile: { max: 2000, step: 50 }, broadband: { max: 2000, step: 100 }, electricity: { max: 5000, step: 100 },
+    gas: { max: 1500, step: 50 }, water: { max: 1000, step: 50 }, dth: { max: 1000, step: 50 }, insurance: { max: 5000, step: 200 },
+    streaming: { max: 2000, step: 50 }, fitnessapp: { max: 3000, step: 100 },
+    ai: { max: 3000, step: 100 }, productivity: { max: 3000, step: 100 }, cloud: { max: 500, step: 25 }
+  };
+  var calcBaseDefaults = {
+    grocery: 6000, dining: 4000, cafe: 1500, fashion: 3000, footwear: 1000, jewellery: 2000,
+    salon: 1500, fitness: 2000, pharmacy: 800, fuel: 4000, entertainment: 1500,
+    medical: 1500, gifts: 800, vehicle: 1200, housemaint: 1000,
+    delivery: 3000, online: 4000, electronics: 2000, vacation: 3000, shorttrip: 1500,
+    mobile: 500, broadband: 800, electricity: 2000, gas: 400, water: 200, dth: 400, insurance: 1200,
+    streaming: 650, fitnessapp: 800, ai: 500, productivity: 500, cloud: 150
+  };
+  var calcCityMult = {
+    grocery: [1, .85, .7], dining: [1, .7, .5], cafe: [1, .6, .4], fashion: [1, .75, .55], footwear: [1, .8, .65],
+    jewellery: [1, .9, .85], salon: [1, .65, .45], fitness: [1, .55, .35], pharmacy: [1, .9, .85],
+    fuel: [1, .95, .9], entertainment: [1, .65, .45],
+    medical: [1, .85, .75], gifts: [1, .7, .5], vehicle: [1, .8, .7], housemaint: [1, .8, .65],
+    delivery: [1, .55, .3], online: [1, .85, .65], electronics: [1, .85, .7], vacation: [1, .8, .65], shorttrip: [1, .8, .65],
+    mobile: [1, .95, .9], broadband: [1, .8, .55], electricity: [1, .9, .85], gas: [1, .95, .9], water: [1, .9, .8],
+    dth: [1, .9, .85], insurance: [1, .9, .85],
+    streaming: [1, .85, .82], fitnessapp: [1, .6, .35], ai: [1, .9, .75], productivity: [1, .9, .75], cloud: [1, .95, .9]
+  };
+  var AGE_LABELS = ['<18', '18-25', '26-35', '36-45', '46-55', '56+'];
+  var calcAgeMult = {
+    grocery: [.4, .6, .9, 1.2, 1.1, .9], dining: [.7, 1.1, 1.2, 1.0, .8, .6], cafe: [.5, 1.3, 1.2, .9, .6, .4],
+    fashion: [.9, 1.2, 1.2, 1.0, .8, .6], footwear: [1.0, 1.1, 1.1, 1.0, .9, .8],
+    jewellery: [.1, .5, 1.2, 1.3, 1.1, .9], salon: [.3, 1.1, 1.1, 1.0, .9, .8], fitness: [.6, 1.2, 1.3, 1.0, .7, .4],
+    pharmacy: [.6, .5, .7, 1.0, 1.4, 1.8], fuel: [0, .7, 1.1, 1.3, 1.2, .9], entertainment: [1.1, 1.3, 1.2, .9, .7, .5],
+    medical: [.4, .4, .6, .9, 1.3, 2.0], gifts: [.5, .9, 1.2, 1.1, .9, .7], vehicle: [0, .5, 1.1, 1.3, 1.2, 1.0], housemaint: [.1, .5, 1.0, 1.2, 1.2, 1.1],
+    delivery: [.9, 1.3, 1.2, 1.0, .7, .4], online: [.7, 1.2, 1.2, 1.0, .8, .6], electronics: [.8, 1.1, 1.2, 1.1, .9, .7],
+    vacation: [.3, 1.2, 1.3, 1.0, .9, .8], shorttrip: [.4, 1.3, 1.3, 1.0, .8, .6],
+    mobile: [.3, 1.1, 1.1, 1.0, .9, .8], broadband: [.1, .9, 1.1, 1.2, 1.0, .8], electricity: [.3, .8, 1.1, 1.2, 1.1, .9],
+    gas: [.2, .7, 1.1, 1.2, 1.1, 1.0], water: [.4, .8, 1.0, 1.1, 1.1, 1.0], dth: [.5, .7, 1.0, 1.1, 1.2, 1.3],
+    insurance: [0, .6, 1.2, 1.4, 1.3, 1.1],
+    streaming: [.92, 1.3, 1.18, .88, .65, .45], fitnessapp: [.3, 1.3, 1.2, .9, .6, .4],
+    ai: [.5, 1.3, 1.3, 1.0, .7, .4], productivity: [.2, 1.0, 1.3, 1.2, .9, .5], cloud: [.6, 1.0, 1.1, 1.0, .9, .8]
+  };
+  var calcGenderMult = {
+    male: { fuel: 1.2, electronics: 1.15, fitness: 1.1, entertainment: 1.05, fashion: .85, salon: .6, jewellery: .8, cafe: .95, online: .95, vehicle: 1.15 },
+    female: { fashion: 1.3, footwear: 1.1, salon: 1.5, jewellery: 1.25, cafe: 1.1, grocery: 1.05, electronics: .9, fuel: .85, gifts: 1.15 }
+  };
+  var CAT_KEYS = Object.keys(calcBaseDefaults);
+  var FAMILY_SHARED = ['grocery', 'broadband', 'electricity', 'gas', 'water', 'dth', 'vehicle', 'housemaint', 'vacation', 'shorttrip'];
+  var FAMILY_FLAT = ['streaming', 'ai', 'productivity', 'cloud'];
+  var CALC_GROUPS = {
+    offline: ['grocery', 'dining', 'cafe', 'fashion', 'footwear', 'jewellery', 'salon', 'fitness', 'pharmacy', 'fuel', 'entertainment', 'medical', 'gifts', 'vehicle', 'housemaint'],
+    online: ['delivery', 'online', 'electronics', 'vacation', 'shorttrip'],
+    utility: ['mobile', 'broadband', 'electricity', 'gas', 'water', 'dth', 'insurance'],
+    subscriptions: ['streaming', 'fitnessapp', 'ai', 'productivity', 'cloud']
+  };
+  var GROUP_LABELS = { offline: 'Offline', online: 'Online', utility: 'Utility bills', subscriptions: 'Subscriptions' };
+  var GROUP_ORDER = ['offline', 'online', 'utility', 'subscriptions'];
+  var RELATIONS = [
+    { key: 'self', label: 'Self', avatar: '🧑', gender: null },
+    { key: 'husband', label: 'Husband', avatar: '👨', gender: 'male' },
+    { key: 'wife', label: 'Wife', avatar: '👩', gender: 'female' },
+    { key: 'son', label: 'Son', avatar: '👦', gender: 'male' },
+    { key: 'daughter', label: 'Daughter', avatar: '👧', gender: 'female' },
+    { key: 'father', label: 'Father', avatar: '👴', gender: 'male' },
+    { key: 'mother', label: 'Mother', avatar: '👵', gender: 'female' },
+    { key: 'other', label: 'Other', avatar: '🧑', gender: null }
+  ];
+  function relationInfo(key) { return RELATIONS.filter(function (r) { return r.key === key; })[0] || RELATIONS[0]; }
+
+  var CARD_LIST = [
+    { key: 'hdfc-regalia', label: 'HDFC Regalia' }, { key: 'sbi-simplysave', label: 'SBI SimplySave' },
+    { key: 'icici-amazonpay', label: 'ICICI Amazon Pay' }, { key: 'axis-ace', label: 'Axis Ace' },
+    { key: 'hdfc-millennia', label: 'HDFC Millennia' }, { key: 'icici-coral', label: 'ICICI Coral' },
+    { key: 'sbi-cashback', label: 'SBI Cashback' }, { key: 'axis-flipkart', label: 'Axis Flipkart' }
+  ];
+  var CARRIER_LIST = [
+    { key: 'jio', label: 'Jio' }, { key: 'airtel', label: 'Airtel' }, { key: 'vodafone', label: 'Vodafone (Vi)' },
+    { key: 'bsnl', label: 'BSNL' }, { key: 'other', label: 'Other' }
+  ];
+  var CARD_MAX = 4;
+  var CARRIER_MAX = 2;
+  var CARRIER_BOOST_CATS = { mobile: 1, broadband: 1, dth: 1, streaming: 1, fitnessapp: 1, ai: 1, productivity: 1, cloud: 1 };
+
+  var calcPeriod = 'monthly';
+  var calcMode = 'individual';
+  var indProfile = { gender: 'male', age: 1, tier: 0, cards: [], carriers: [] };
+  var famProfile = {
+    tier: 0,
+    cards: [],
+    carriers: [],
+    members: [
+      { relation: 'self', age: 2, gender: 'male' },
+      { relation: 'wife', age: 2, gender: 'female' },
+      { relation: 'daughter', age: 0, gender: 'female' }
+    ]
+  };
+
+  function calcFmt(n) { return '₹' + Math.round(n).toLocaleString('en-IN'); }
+  function cityFactor(cat, tier) { return calcCityMult[cat][tier]; }
+  function ageFactor(cat, ageIdx) { return calcAgeMult[cat][ageIdx]; }
+  function genderFactor(cat, gender) {
+    if (!gender || gender === 'other') return 1;
+    var t = calcGenderMult[gender];
+    return (t && t[cat] != null) ? t[cat] : 1;
+  }
+  function individualCatValue(cat, profile) {
+    return calcBaseDefaults[cat] * cityFactor(cat, profile.tier) * ageFactor(cat, profile.age) * genderFactor(cat, profile.gender);
+  }
+  var FAMILY_PERSON_SHARE = 0.45;
+  function memberCatValue(cat, member) {
+    return calcBaseDefaults[cat] * FAMILY_PERSON_SHARE * cityFactor(cat, famProfile.tier) * ageFactor(cat, member.age) * genderFactor(cat, member.gender);
+  }
+  function roundToStep(cat, val) {
+    var info = calcStepInfo[cat];
+    var v = Math.round(val / info.step) * info.step;
+    return Math.max(0, Math.min(info.max, v));
+  }
+
+  function applyProfile() {
+    CAT_KEYS.forEach(function (cat) {
+      var val;
+      if (calcMode === 'individual') {
+        val = individualCatValue(cat, indProfile);
+      } else if (FAMILY_SHARED.indexOf(cat) !== -1) {
+        val = calcBaseDefaults[cat] * cityFactor(cat, famProfile.tier) * Math.sqrt(famProfile.members.length);
+      } else if (FAMILY_FLAT.indexOf(cat) !== -1) {
+        val = calcBaseDefaults[cat] * cityFactor(cat, famProfile.tier) * (1 + .15 * (famProfile.members.length - 1));
+      } else {
+        val = 0;
+        famProfile.members.forEach(function (m) { val += memberCatValue(cat, m); });
+      }
+      var slider = document.querySelector('.cat-slider[data-cat="' + cat + '"]');
+      if (slider) slider.value = roundToStep(cat, val);
+    });
+    calcSavings();
+  }
+
+  function setIndField(field, val) {
+    indProfile[field] = val;
+    document.querySelectorAll('#ind-' + field + '-row .profile-chip').forEach(function (c) {
+      c.classList.toggle('active', String(c.dataset.val) === String(val));
+    });
+    applyProfile();
+  }
+  function setFamField(field, val) {
+    famProfile[field] = val;
+    document.querySelectorAll('#fam-' + field + '-row .profile-chip').forEach(function (c) {
+      c.classList.toggle('active', String(c.dataset.val) === String(val));
+    });
+    applyProfile();
+  }
+
+  function multiMax(field) { return field === 'cards' ? CARD_MAX : CARRIER_MAX; }
+  function updateMultiCap(prefix, field, arr) {
+    var atCap = arr.length >= multiMax(field);
+    document.querySelectorAll('#' + prefix + '-' + field + '-row .profile-chip').forEach(function (c) {
+      if (!c.classList.contains('active')) c.classList.toggle('chip-disabled', atCap);
+    });
+  }
+  function toggleIndMulti(field, val, btn) {
+    var arr = indProfile[field], idx = arr.indexOf(val);
+    if (idx === -1) {
+      if (arr.length >= multiMax(field)) return;
+      arr.push(val);
+    } else {
+      arr.splice(idx, 1);
+    }
+    btn.classList.toggle('active');
+    updateMultiCap('ind', field, arr);
+    calcSavings();
+  }
+  function toggleFamMulti(field, val, btn) {
+    var arr = famProfile[field], idx = arr.indexOf(val);
+    if (idx === -1) {
+      if (arr.length >= multiMax(field)) return;
+      arr.push(val);
+    } else {
+      arr.splice(idx, 1);
+    }
+    btn.classList.toggle('active');
+    updateMultiCap('fam', field, arr);
+    calcSavings();
+  }
+
+  function renderFamilyMembers() {
+    var html = '';
+    famProfile.members.forEach(function (m, i) {
+      var rel = relationInfo(m.relation);
+      var locked = rel.gender !== null;
+      if (locked) m.gender = rel.gender;
+      html += '<div class="family-member-card"><div class="family-member-avatar">' + rel.avatar + '</div><div class="family-member-fields">';
+      html += '<select class="family-member-select" onchange="setMemberField(' + i + ",'relation',this.value)\">" + RELATIONS.map(function (r) { return '<option value="' + r.key + '"' + (r.key === m.relation ? ' selected' : '') + '>' + r.label + '</option>'; }).join('') + '</select>';
+      html += '<select class="family-member-select" onchange="setMemberField(' + i + ",'age',parseInt(this.value))\">" + AGE_LABELS.map(function (lab, idx) { return '<option value="' + idx + '"' + (idx === m.age ? ' selected' : '') + '>' + lab + '</option>'; }).join('') + '</select>';
+      html += '<select class="family-member-select"' + (locked ? ' disabled' : '') + ' onchange="setMemberField(' + i + ",'gender',this.value)\"><option value=\"male\"" + (m.gender === 'male' ? ' selected' : '') + '>Male</option><option value="female"' + (m.gender === 'female' ? ' selected' : '') + '>Female</option><option value="other"' + (m.gender === 'other' ? ' selected' : '') + '>Other</option></select>';
+      html += '</div><div class="family-member-contribution" id="member-contrib-' + i + '">₹0/mo</div>';
+      if (famProfile.members.length > 2) {
+        html += '<button type="button" onclick="removeMember(' + i + ')" style="border:none;background:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px">✕</button>';
+      }
+      html += '</div>';
+    });
+    document.getElementById('family-members').innerHTML = html;
+    updateMemberContributions();
+  }
+  function setMemberField(i, field, val) {
+    famProfile.members[i][field] = val;
+    if (field === 'relation') {
+      var rel = relationInfo(val);
+      if (rel.gender) famProfile.members[i].gender = rel.gender;
+      renderFamilyMembers();
+    }
+    applyProfile();
+  }
+  function removeMember(i) {
+    famProfile.members.splice(i, 1);
+    document.getElementById('family-size-num').textContent = famProfile.members.length;
+    renderFamilyMembers();
+    applyProfile();
+  }
+  function changeFamilySize(delta) {
+    var n = famProfile.members.length + delta;
+    if (n < 2 || n > 8) return;
+    if (delta > 0) famProfile.members.push({ relation: 'other', age: 2, gender: 'male' });
+    else famProfile.members.pop();
+    document.getElementById('family-size-num').textContent = famProfile.members.length;
+    renderFamilyMembers();
+    applyProfile();
+  }
+  function updateMemberContributions() {
+    famProfile.members.forEach(function (m, i) {
+      var total = 0;
+      CAT_KEYS.forEach(function (cat) {
+        if (FAMILY_SHARED.indexOf(cat) === -1 && FAMILY_FLAT.indexOf(cat) === -1) total += memberCatValue(cat, m);
+      });
+      var el = document.getElementById('member-contrib-' + i);
+      if (el) el.textContent = '≈ ' + calcFmt(total) + '/mo';
+    });
+  }
+
+  function setCalcMode(m) {
+    calcMode = m;
+    document.querySelectorAll('#mode-toggle .pill-toggle-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.mode === m); });
+    document.getElementById('individual-profile').style.display = m === 'individual' ? '' : 'none';
+    document.getElementById('family-profile').style.display = m === 'family' ? '' : 'none';
+    document.getElementById('family-stats-row').style.display = m === 'family' ? '' : 'none';
+    document.getElementById('calc-results-title').textContent = m === 'family' ? "Your family's DealBook savings" : 'Your DealBook savings';
+    document.getElementById('calc-sliders-title').textContent = m === 'family' ? 'Your household spending' : 'Your monthly spending';
+    applyProfile();
+  }
+  function setCalcPeriod(p) {
+    calcPeriod = p;
+    document.querySelectorAll('#period-toggle .pill-toggle-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.period === p); });
+    document.getElementById('yearly-badge').classList.toggle('show', p === 'yearly');
+    calcSavings();
+  }
+
+  var CAT_TO_GROUP = {};
+  Object.keys(CALC_GROUPS).forEach(function (g) { CALC_GROUPS[g].forEach(function (c) { CAT_TO_GROUP[c] = g; }); });
+
+  var customItemCounter = 0;
+  function toggleAddForm(group) {
+    document.getElementById('add-form-' + group).classList.toggle('show');
+  }
+  function addCustomItem(group) {
+    var nameInput = document.getElementById('add-name-' + group);
+    var priceInput = document.getElementById('add-price-' + group);
+    var name = nameInput.value.trim();
+    var price = parseInt(priceInput.value);
+    if (!name || !price || price <= 0) return;
+
+    customItemCounter++;
+    var id = 'custom' + customItemCounter;
+    var cats = CALC_GROUPS[group];
+    var avgSave = Math.round(cats.reduce(function (s, c) { return s + calcCats[c].save; }, 0) / cats.length);
+    var avgG = Math.round(cats.reduce(function (s, c) { return s + calcCats[c].g; }, 0) / cats.length);
+    var avgC = Math.round(cats.reduce(function (s, c) { return s + calcCats[c].c; }, 0) / cats.length);
+    var avgSub = Math.round(cats.reduce(function (s, c) { return s + calcCats[c].sub; }, 0) / cats.length);
+    calcCats[id] = { save: avgSave, g: avgG, c: avgC, sub: avgSub };
+    calcLabels[id] = name;
+    CALC_GROUPS[group].push(id);
+    CAT_TO_GROUP[id] = group;
+
+    var max = Math.max(price * 3, 500);
+    var step = Math.max(Math.round(price / 20 / 10) * 10, 10);
+
+    var row = document.createElement('div');
+    row.className = 'cat-row';
+    row.id = 'row-' + id;
+    row.innerHTML = '<div class="cat-emoji"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.6 3H4a1 1 0 0 0-1 1v5.6a2 2 0 0 0 .83 1.4l9.58 9.59a2 2 0 0 0 2.83 0l4.35-4.35a2 2 0 0 0 0-2.83z"/><circle cx="7.5" cy="7.5" r="1"/></svg></div><div class="cat-label">' + name + '</div>' +
+      '<input type="range" min="0" max="' + max + '" step="' + step + '" value="' + price + '" class="cat-slider" data-cat="' + id + '" oninput="calcSavings()">' +
+      '<div class="cat-val" id="calc-v-' + id + '">' + calcFmt(price) + '</div><div class="cat-pct">' + avgSave + '%</div>' +
+      '<button type="button" class="calc-remove-btn" onclick="removeCustomItem(\'' + id + '\',\'' + group + '\')" title="Remove">✕</button>';
+
+    var addRow = document.getElementById('add-anchor-' + group);
+    addRow.parentNode.insertBefore(row, addRow);
+
+    nameInput.value = ''; priceInput.value = '';
+    document.getElementById('add-form-' + group).classList.remove('show');
+    calcSavings();
+  }
+  function removeCustomItem(id, group) {
+    var row = document.getElementById('row-' + id);
+    if (row) row.remove();
+    delete calcCats[id]; delete calcLabels[id]; delete CAT_TO_GROUP[id];
+    var idx = CALC_GROUPS[group].indexOf(id);
+    if (idx > -1) CALC_GROUPS[group].splice(idx, 1);
+    calcSavings();
+  }
+
+  var subItems = {};
+  var subItemCounter = 0;
+  function toggleSubAddForm(cat) {
+    document.getElementById('subadd-form-' + cat).classList.toggle('show');
+  }
+  function addSubItem(cat) {
+    var nameInput = document.getElementById('subadd-name-' + cat);
+    var priceInput = document.getElementById('subadd-price-' + cat);
+    var name = nameInput.value.trim();
+    var price = parseInt(priceInput.value);
+    if (!name || !price || price <= 0) return;
+
+    var slider = document.querySelector('.cat-slider[data-cat="' + cat + '"]');
+    slider.value = Math.min(parseInt(slider.value) + price, parseInt(slider.max));
+
+    subItemCounter++;
+    var id = 'subitem' + subItemCounter;
+    subItems[id] = { cat: cat, price: price };
+
+    var row = document.createElement('div');
+    row.className = 'subitem-entry';
+    row.id = 'row-' + id;
+    row.innerHTML = '<span class="subitem-name">' + name + '</span><span class="subitem-price">' + calcFmt(price) + '/mo</span><button type="button" class="calc-remove-btn" onclick="removeSubItem(\'' + id + '\')" title="Remove">✕</button>';
+    document.getElementById('subitems-' + cat).appendChild(row);
+
+    nameInput.value = ''; priceInput.value = '';
+    document.getElementById('subadd-form-' + cat).classList.remove('show');
+    calcSavings();
+  }
+  function removeSubItem(id) {
+    var item = subItems[id];
+    if (!item) return;
+    var slider = document.querySelector('.cat-slider[data-cat="' + item.cat + '"]');
+    slider.value = Math.max(0, parseInt(slider.value) - item.price);
+    var row = document.getElementById('row-' + id);
+    if (row) row.remove();
+    delete subItems[id];
+    calcSavings();
+  }
+
+  function calcSavings() {
+    var total = 0, save = 0, genoti = 0, card = 0, sub = 0, rows = [];
+    var groupTotals = { offline: { spend: 0, save: 0 }, online: { spend: 0, save: 0 }, utility: { spend: 0, save: 0 }, subscriptions: { spend: 0, save: 0 } };
+    var prof = calcMode === 'individual' ? indProfile : famProfile;
+    var cardFactor = 0.35 + 0.65 * (Math.min(prof.cards.length, CARD_MAX) / CARD_MAX);
+    var carrierBoost = (prof.carriers.indexOf('jio') !== -1 || prof.carriers.indexOf('airtel') !== -1) ? 1.25 : 1;
+    document.querySelectorAll('.cat-slider').forEach(function (sl) {
+      var c = sl.dataset.cat, v = parseInt(sl.value), s = calcCats[c];
+      var base = v * s.save / 100;
+      var svG = base * s.g / 100;
+      var svC = base * s.c / 100 * cardFactor;
+      var svS = base * s.sub / 100 * (CARRIER_BOOST_CATS[c] ? carrierBoost : 1);
+      var sv = Math.round(svG + svC + svS);
+      document.getElementById('calc-v-' + c).textContent = calcFmt(v);
+      total += v; save += sv;
+      genoti += Math.round(svG); card += Math.round(svC); sub += Math.round(svS);
+      if (sv > 0) rows.push({ name: calcLabels[c], saved: sv, group: CAT_TO_GROUP[c] });
+      var grp = groupTotals[CAT_TO_GROUP[c]];
+      if (grp) { grp.spend += v; grp.save += sv; }
+    });
+    Object.keys(groupTotals).forEach(function (g) {
+      var spendEl = document.getElementById('grp-spend-' + g), saveEl = document.getElementById('grp-save-' + g);
+      var spendPctEl = document.getElementById('grp-spend-pct-' + g), savePctEl = document.getElementById('grp-save-pct-' + g);
+      if (spendEl) spendEl.textContent = calcFmt(groupTotals[g].spend);
+      if (saveEl) saveEl.textContent = calcFmt(groupTotals[g].save);
+      if (spendPctEl) spendPctEl.textContent = '(' + (total ? Math.round(groupTotals[g].spend / total * 100) : 0) + '%)';
+      if (savePctEl) savePctEl.textContent = '(' + (save ? Math.round(groupTotals[g].save / save * 100) : 0) + '%)';
+    });
+
+    var mult = calcPeriod === 'yearly' ? 12 : 1;
+    var otherMult = calcPeriod === 'yearly' ? 1 : 12;
+    var otherLabel = calcPeriod === 'yearly' ? '/month' : '/year';
+    var unitLabel = calcPeriod === 'yearly' ? 'Yearly' : 'Monthly';
+
+    document.getElementById('calc-r-total').textContent = calcFmt(total * mult);
+    document.getElementById('calc-r-total-label').textContent = unitLabel + ' spending';
+    document.getElementById('calc-r-total-yr').textContent = calcFmt(total * otherMult) + otherLabel;
+    document.getElementById('calc-r-save').textContent = calcFmt(save * mult);
+    document.getElementById('calc-r-save-yr').textContent = calcFmt(save * otherMult) + otherLabel;
+    document.getElementById('calc-r-rate').textContent = total ? Math.round(save / total * 100) + '%' : '0%';
+    document.getElementById('calc-r-annual').textContent = calcFmt(save * mult);
+    document.getElementById('calc-r-annual-sub').textContent = calcPeriod === 'yearly' ? 'Every year, left on the table' : 'Every month, left on the table';
+    document.getElementById('calc-cta-headline').textContent = 'You\'re leaving ' + calcFmt(save * mult) + (calcPeriod === 'yearly' ? '/year' : '/month') + ' on the table';
+
+    if (calcMode === 'family') {
+      var n = famProfile.members.length || 1;
+      document.getElementById('calc-r-familytotal').textContent = calcFmt(save * mult);
+      document.getElementById('calc-r-perperson').textContent = calcFmt(save * mult / n);
+      updateMemberContributions();
+    }
+
+    var st = genoti + card + sub || 1;
+    document.getElementById('calc-b-genoti').style.width = Math.round(genoti / st * 100) + '%';
+    document.getElementById('calc-b-card').style.width = Math.round(card / st * 100) + '%';
+    document.getElementById('calc-b-sub').style.width = Math.round(sub / st * 100) + '%';
+    document.getElementById('calc-l-genoti').textContent = calcFmt(genoti * mult);
+    document.getElementById('calc-l-card').textContent = calcFmt(card * mult);
+    document.getElementById('calc-l-sub').textContent = calcFmt(sub * mult);
+
+    var html = '';
+    GROUP_ORDER.forEach(function (g) {
+      var groupRows = rows.filter(function (r) { return r.group === g; });
+      if (!groupRows.length) return;
+      groupRows.sort(function (a, b) { return b.saved - a.saved; });
+      html += '<div style="font-size:10.5px;font-weight:700;color:var(--dark-green);text-transform:uppercase;letter-spacing:.4px;margin:14px 0 4px">' + GROUP_LABELS[g] + '</div>';
+      groupRows.forEach(function (r) {
+        var pct = save ? Math.round(r.saved / save * 100) : 0;
+        html += '<div class="report-line green"><span>' + r.name + '</span><span>' + calcFmt(r.saved * mult) + (calcPeriod === 'yearly' ? '/yr' : '/mo') + ' <span style="color:var(--muted);font-weight:500">(' + pct + '%)</span></span></div>';
+      });
+    });
+    html += '<div class="report-line" style="border-top:1.5px solid var(--border);margin-top:10px;padding-top:10px"><span style="font-weight:700;color:var(--text)">Total ' + unitLabel.toLowerCase() + ' savings</span><span style="color:var(--green)">' + calcFmt(save * mult) + '</span></div>';
+    html += '<div class="report-line" style="border-bottom:none"><span style="font-weight:700;color:var(--text)">Total ' + (calcPeriod === 'yearly' ? 'monthly' : 'annual') + ' savings</span><span style="color:var(--green)">' + calcFmt(save * otherMult) + '</span></div>';
+    document.getElementById('calc-breakdown').innerHTML = html;
+  }
+
+  renderFamilyMembers();
+  applyProfile();
+</script>
+<script src="geno-chat.js"></script>
+</body>
+</html>

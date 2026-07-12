@@ -65,7 +65,7 @@
     { id:'negotiate', href:'../negotiate.html',  icon:'🤝', label:'Negotiate' },
     { id:'booking',   href:'../booking.html',    icon:'📅', label:'BookNow'   },
     { id:'notify',    href:'../notify.html',     icon:'🔔', label:'NotifyMe'  },
-    { id:'community', href:'../community.html',  icon:'👥', label:'Community' },
+    { id:'community', href:'../dealhub.html',  icon:'👥', label:'Community' },
   ];
 
   /* fix hrefs for root-level pages */

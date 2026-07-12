@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rewards & Loyalty — Genoti AI</title>
+  <title>Rewards & Loyalty | Genoti AI</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -542,7 +542,7 @@
     const custom = parseInt(document.getElementById('topup-custom').value) || 0;
     const amount = custom || selectedTopup;
     if (!amount || amount < 100) { alert('Minimum top-up is ₹100'); return; }
-    alert(`Top-up of ₹${amount} coming soon — payment gateway integration required.`);
+    alert(`Top-up of ₹${amount} coming soon. Payment gateway integration required.`);
     closeModal('topup-modal');
   }
 

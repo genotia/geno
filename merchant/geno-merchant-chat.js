@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   Geno Smart Assistant — Merchant AI Widget
+   Geno Smart Assistant: Merchant AI Widget
    Drop <script src="geno-merchant-chat.js"></script> into any
    merchant page. Self-injects styles + DOM, no dependencies.
 
@@ -281,11 +281,11 @@
   }
 
   function flowNegotiation() {
-    const el = card(`<div class="gsb-card-head">💬 Priya M. — Deep tissue massage</div>
+    const el = card(`<div class="gsb-card-head">💬 Priya M. (Deep tissue massage)</div>
       <div class="gsb-row"><span>Your listed price</span><span>₹699</span></div>
       <div class="gsb-row"><span>Her offer</span><span style="color:#085041">₹580</span></div>
       <div class="gsb-row"><span>Customer profile</span><span>3 past bookings · 5★ reviewer</span></div>
-      <div class="gsb-note">💡 Geno's suggestion: accept at ₹620 — she's a loyal repeat customer worth keeping.</div>
+      <div class="gsb-note">💡 Geno's suggestion: accept at ₹620 because she's a loyal repeat customer worth keeping.</div>
       <div class="gsb-btns">
         <button class="gsb-btn p" id="gsb-neg-accept">Accept ₹580</button>
         <button class="gsb-btn o" id="gsb-neg-counter">Counter ₹620</button>
@@ -306,7 +306,7 @@
       <div class="gsb-row"><span>Saturday 10am–1pm</span><span>340 looking</span></div>
       <div class="gsb-row"><span>Sunday 11am–2pm</span><span>280 looking</span></div>
       <div class="gsb-row"><span>Weekday 3pm–6pm</span><span>190 looking</span></div>`);
-    card('You have empty weekday 3–6pm slots right now — 190 subscribers want deals in that window. Want me to create one?');
+    card('You have empty weekday 3–6pm slots right now. 190 subscribers want deals in that window. Want me to create one?');
     chips([['Create weekday 3–6pm deal', flowCreateDeal], ['Today\'s briefing', flowBriefing]]);
   }
 
@@ -329,7 +329,7 @@
       <div class="gsb-row"><span>Time</span><span>Today 2pm–6pm · 5 slots</span></div>
       <div class="gsb-row"><span>Subscribers notified</span><span style="color:#1D9E75">847 via WhatsApp ✓</span></div>`, 'live');
     setTimeout(() => {
-      card(`<div class="gsb-card-head">📈 Flash sale performance — 2 hrs in</div>
+      card(`<div class="gsb-card-head">📈 Flash sale performance (2 hrs in)</div>
         <div class="gsb-row"><span>Subscribers who saw it</span><span>412 of 847 (49%)</span></div>
         <div class="gsb-row"><span>Bookings</span><span style="color:#1D9E75">3 of 5 slots (60% filled)</span></div>
         <div class="gsb-row"><span>Revenue so far</span><span style="color:#1D9E75">₹1,497</span></div>`, 'success');
@@ -378,7 +378,7 @@
   }
 
   function flowPlanRecommendation() {
-    card(`<div class="gsb-card-head">📋 Business plan — ₹599/month</div>
+    card(`<div class="gsb-card-head">📋 Business plan: ₹599/month</div>
       <div class="gsb-row"><span>Booking management</span><span>Unlimited</span></div>
       <div class="gsb-row"><span>AI agents included</span><span>5 core agents</span></div>
       <div class="gsb-row"><span>Deal & negotiation engine</span><span>Included</span></div>

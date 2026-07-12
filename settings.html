@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Settings — Genoti AI</title>
+  <title>Settings | Genoti AI</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -553,12 +553,12 @@
         <select onchange="savePref('language',this.value)">
           <option value="en-IN" selected>English (India)</option>
           <option value="en-US">English (US)</option>
-          <option value="hi">हिन्दी — Hindi</option>
-          <option value="ta">தமிழ் — Tamil</option>
-          <option value="te">తెలుగు — Telugu</option>
-          <option value="kn">ಕನ್ನಡ — Kannada</option>
-          <option value="ml">മലയാളം — Malayalam</option>
-          <option value="mr">मराठी — Marathi</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="ml">മലയാളം (Malayalam)</option>
+          <option value="mr">मराठी (Marathi)</option>
         </select>
       </div>
       <div class="field">
@@ -575,11 +575,11 @@
       <div class="field">
         <label>Timezone</label>
         <select onchange="savePref('timezone',this.value)">
-          <option value="Asia/Kolkata" selected>IST — India Standard Time (UTC+5:30)</option>
-          <option value="Asia/Dubai">GST — Gulf Standard Time (UTC+4)</option>
-          <option value="America/New_York">EST — Eastern Time (UTC-5)</option>
-          <option value="Europe/London">GMT — London (UTC+0)</option>
-          <option value="Asia/Singapore">SGT — Singapore (UTC+8)</option>
+          <option value="Asia/Kolkata" selected>IST: India Standard Time (UTC+5:30)</option>
+          <option value="Asia/Dubai">GST: Gulf Standard Time (UTC+4)</option>
+          <option value="America/New_York">EST: Eastern Time (UTC-5)</option>
+          <option value="Europe/London">GMT: London (UTC+0)</option>
+          <option value="Asia/Singapore">SGT: Singapore (UTC+8)</option>
         </select>
       </div>
       <button class="btn-primary" onclick="saveLanguagePrefs()">Save preferences</button>

@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>DealHub: Community Deals (Reference Design) · Genoti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #085041; --green: #1D9E75; --blue: #378ADD; --amber: #BA7517; --red: #E24B4A; --purple: #534AB7;
+    --grey: #888780; --text: #1F2320; --muted: #6B6A63;
+    --bg: #FAFAF8; --white: #fff; --border: #E8E6E0;
+    --green-lt: #E6F5EE; --blue-lt: #E8F2FC; --amber-lt: #FBEFDD; --red-lt: #FBE7E6; --purple-lt: #EEECFA; --grey-lt: #F1F0EC;
+    --red-dk: #8B2E2A;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--bg); position: relative; padding-bottom: 90px; }
+
+  /* ── HEADER ── */
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--teal); color: #fff; position: sticky; top: 0; z-index: 40; }
+  .topbar-brand { display: flex; align-items: center; gap: 8px; }
+  .topbar-logo { width: 26px; height: 26px; border-radius: 8px; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; }
+  .topbar-titles { line-height: 1.2; }
+  .topbar-titles .t1 { font-size: 14px; font-weight: 800; }
+  .topbar-titles .t2 { font-size: 10.5px; opacity: .75; }
+  .user-chip { display: flex; align-items: center; gap: 7px; background: rgba(255,255,255,.12); border-radius: 30px; padding: 4px 10px 4px 4px; cursor: pointer; border: none; }
+  .user-chip .ua { width: 24px; height: 24px; border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #fff; }
+  .user-chip .ut { text-align: left; line-height: 1.15; }
+  .user-chip .ut .pts { font-size: 11.5px; font-weight: 800; color: #fff; }
+  .user-chip .ut .tier { font-size: 9px; font-weight: 700; opacity: .85; }
+
+  /* ── TABS ── */
+  .tabbar { display: flex; gap: 4px; padding: 10px 16px 0; background: var(--bg); position: sticky; top: 58px; z-index: 30; }
+  .tabbtn { flex: 1; text-align: center; padding: 10px 4px; font-size: 13px; font-weight: 700; color: var(--muted); background: none; border: none; border-bottom: 2.5px solid transparent; cursor: pointer; font-family: inherit; }
+  .tabbtn.active { color: var(--teal); border-color: var(--green); }
+
+  .view { display: none; padding: 14px 16px 0; }
+  .view.active { display: block; }
+
+  /* ── SORT / LEGEND STRIP ── */
+  .feed-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .feed-count { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .info-link { font-size: 11.5px; color: var(--teal); font-weight: 700; background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; font-family: inherit; }
+
+  /* ── DEAL CARD ── */
+  .deal-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.05); overflow: hidden; transition: opacity .3s; }
+  .deal-card.muted-card { opacity: .72; }
+  .deal-card.grace { border: 2px dashed var(--green); background: linear-gradient(180deg,#F2FAF6,#fff 60%); }
+  .grace-banner { background: linear-gradient(90deg,#E6F5EE,#F3FBF6); color: var(--teal); font-size: 11px; font-weight: 700; padding: 8px 12px; border-bottom: 1px dashed var(--green); }
+
+  .deal-main { display: flex; gap: 12px; padding: 14px 14px 10px; }
+  .deal-temp { width: 44px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 2px; }
+  .deal-temp-num { font-size: 20px; font-weight: 800; transition: color .3s ease; line-height: 1; }
+  .deal-temp-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; color: var(--muted); margin-top: 3px; }
+  .deal-temp-bar { width: 4px; height: 28px; border-radius: 2px; margin-top: 7px; }
+
+  .deal-body { flex: 1; min-width: 0; }
+  .deal-badges { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin-bottom: 6px; }
+  .badge { font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 20px; white-space: nowrap; letter-spacing: .2px; }
+  .badge-community { background: var(--green-lt); color: var(--teal); }
+  .badge-user { background: var(--purple-lt); color: var(--purple); }
+  .badge-merchant { background: var(--blue-lt); color: var(--blue); }
+  .badge-verified, .badge-highconf { background: var(--green-lt); color: var(--green); }
+  .badge-medconf, .badge-unverified { background: var(--amber-lt); color: var(--amber); }
+  .badge-expired, .badge-disputed { background: var(--red-lt); color: var(--red); }
+  .badge-grace { background: var(--grey-lt); color: var(--muted); }
+  .badge-gold { background: linear-gradient(135deg,#F6D365,#D9A441); color: #5A3B00; }
+
+  .deal-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .deal-meta { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+
+  .deal-price-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .deal-orig { font-size: 12px; color: var(--muted); text-decoration: line-through; }
+  .deal-final { font-size: 16px; font-weight: 800; color: var(--text); }
+  .deal-discount { font-size: 11.5px; font-weight: 800; color: var(--red); }
+  .deal-stack { font-size: 11.5px; font-weight: 700; color: var(--green); margin-top: 5px; }
+
+  .source-line { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: var(--muted); margin-top: 9px; }
+  .source-icon { width: 18px; height: 18px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: #fff; flex-shrink: 0; }
+  .redeem-line { font-size: 11.5px; font-weight: 700; color: var(--green); margin-top: 7px; display: flex; align-items: center; gap: 4px; }
+
+  .deal-actions { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+  .vote-btn { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 6px 9px; border-radius: 20px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-family: inherit; transition: transform .1s, background .15s; color: var(--text); }
+  .vote-btn:active { transform: scale(.95); }
+  .vote-btn[disabled] { opacity: .5; cursor: not-allowed; }
+  .vote-btn.hot.voted { background: var(--red-lt); border-color: var(--red); color: var(--red); }
+  .vote-btn.cold.voted { background: var(--blue-lt); border-color: var(--blue); color: var(--blue); }
+  .vote-btn.redeem.voted { background: var(--green-lt); border-color: var(--green); color: var(--green); }
+  .comment-toggle { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--muted); background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 3px; font-family: inherit; }
+  .book-btn { font-size: 11px; font-weight: 800; background: var(--teal); color: #fff; padding: 7px 13px; border-radius: 20px; border: none; cursor: pointer; font-family: inherit; }
+
+  .comment-nudge { display: none; padding: 0 12px 10px; }
+  .comment-nudge.open { display: flex; gap: 6px; }
+  .comment-nudge input { flex: 1; font-size: 12px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 20px; font-family: inherit; }
+  .comment-nudge button { font-size: 11px; font-weight: 800; background: var(--green); color: #fff; border: none; border-radius: 20px; padding: 0 12px; cursor: pointer; }
+  .comment-nudge .skip { background: none; color: var(--muted); font-weight: 600; }
+
+  .comments-section { display: none; border-top: 1px solid var(--border); padding: 12px; background: #FCFCFA; }
+  .comments-section.open { display: block; }
+  .comment { display: flex; gap: 8px; margin-bottom: 12px; }
+  .comment-avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: #fff; flex-shrink: 0; }
+  .comment-body { flex: 1; min-width: 0; }
+  .comment-head { font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  .comment-time { font-weight: 400; color: var(--muted); font-size: 10px; }
+  .comment-text { font-size: 12.5px; color: #3A3D38; line-height: 1.5; margin-top: 2px; }
+  .comment-verify { font-size: 10.5px; font-weight: 800; margin-top: 3px; }
+  .comment-verify.valid { color: var(--green); }
+  .comment-verify.invalid { color: var(--red); }
+  .show-all-link { font-size: 11px; font-weight: 700; color: var(--teal); background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; }
+  .comment-input-row { display: flex; gap: 6px; margin-top: 6px; }
+  .comment-input-row input { flex: 1; font-size: 12px; padding: 9px 12px; border: 1px solid var(--border); border-radius: 20px; font-family: inherit; }
+  .comment-send { background: var(--teal); color: #fff; border: none; border-radius: 50%; width: 32px; height: 32px; flex-shrink: 0; cursor: pointer; font-size: 13px; }
+
+  .tier-badge { font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 20px; letter-spacing: .2px; }
+
+  /* ── LEADERBOARD ── */
+  .lb-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+  .lb-tab { flex: 1; text-align: center; font-size: 12px; font-weight: 700; padding: 8px 4px; border-radius: 20px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-family: inherit; color: var(--muted); }
+  .lb-tab.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+  .lb-row { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 11px 12px; margin-bottom: 8px; }
+  .lb-row.me { background: var(--green-lt); border-color: var(--green); }
+  .lb-rank { width: 22px; text-align: center; font-size: 13px; font-weight: 800; color: var(--muted); flex-shrink: 0; }
+  .lb-rank.gold { color: #B8860B; } .lb-rank.silver { color: #8C8C8C; } .lb-rank.bronze { color: #A0552B; }
+  .lb-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #fff; flex-shrink: 0; }
+  .lb-mid { flex: 1; min-width: 0; }
+  .lb-name-row { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; }
+  .lb-stats { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+  .lb-weight { font-size: 10px; color: var(--teal); font-weight: 700; margin-top: 1px; }
+  .lb-pts { font-size: 15px; font-weight: 800; color: var(--teal); text-align: right; flex-shrink: 0; }
+  .lb-milestone { font-size: 10.5px; color: var(--green); font-weight: 700; text-align: right; margin-top: 2px; }
+
+  .tier-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-top: 18px; margin-bottom: 20px; }
+  .tier-card h3 { font-size: 13px; font-weight: 800; margin: 0 0 12px; }
+  .tier-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .tier-row:last-child { border-bottom: none; }
+  .tier-row-left { display: flex; align-items: center; gap: 8px; }
+  .tier-pts-range { font-size: 10.5px; color: var(--muted); }
+  .tier-weight-val { font-size: 12px; font-weight: 800; color: var(--teal); }
+  .progress-track { height: 6px; background: var(--grey-lt); border-radius: 4px; margin-top: 12px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg,var(--green),var(--teal)); border-radius: 4px; transition: width .5s ease; }
+  .progress-caption { font-size: 10.5px; color: var(--muted); margin-top: 6px; }
+
+  /* ── POINTS INFO MODAL ── */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(10,15,12,.55); z-index: 100; display: none; align-items: flex-end; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal-sheet { background: #fff; width: 100%; max-width: 480px; border-radius: 18px 18px 0 0; max-height: 86vh; overflow-y: auto; padding: 18px 16px 26px; }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .modal-head h3 { font-size: 15px; font-weight: 800; margin: 0; }
+  .modal-close { background: var(--grey-lt); border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 14px; color: var(--muted); }
+  .pt-row { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+  .pt-row:last-child { border-bottom: none; }
+  .pt-label { color: var(--text); }
+  .pt-note { color: var(--muted); font-size: 10.5px; display: block; margin-top: 1px; }
+  .pt-val { font-weight: 800; white-space: nowrap; }
+  .pt-val.pos { color: var(--green); } .pt-val.neg { color: var(--red); }
+
+  /* ── SUBMISSION FLOW ── */
+  .fab { position: fixed; right: calc(50% - 240px + 18px); bottom: 22px; width: 54px; height: 54px; border-radius: 50%; background: var(--green); color: #fff; border: none; font-size: 24px; box-shadow: 0 6px 18px rgba(29,158,117,.45); cursor: pointer; z-index: 50; }
+  @media (max-width: 520px) { .fab { right: 18px; } }
+
+  .step-dots { display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; }
+  .step-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); }
+  .step-dot.active { background: var(--green); width: 18px; border-radius: 4px; }
+
+  .type-card { display: flex; align-items: center; gap: 12px; border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; cursor: pointer; }
+  .type-card.selected { border-color: var(--green); background: var(--green-lt); }
+  .type-emoji { font-size: 22px; }
+  .type-title { font-size: 13.5px; font-weight: 700; }
+  .type-sub { font-size: 11px; color: var(--muted); }
+
+  .input-method { border: 1.5px dashed var(--border); border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 12px; }
+  .input-method input[type=text] { width: 100%; font-size: 13px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; margin-top: 8px; }
+  .input-method-title { font-size: 12.5px; font-weight: 700; margin-bottom: 2px; }
+  .btn-primary { background: var(--green); color: #fff; border: none; border-radius: 10px; padding: 11px; font-size: 13px; font-weight: 800; width: 100%; cursor: pointer; font-family: inherit; margin-top: 10px; }
+  .btn-secondary { background: #fff; color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 11px; font-size: 13px; font-weight: 700; width: 100%; cursor: pointer; font-family: inherit; }
+  .file-row { display: flex; gap: 8px; }
+  .file-row .btn-secondary { font-size: 12px; padding: 10px 6px; }
+
+  .form-field { margin-bottom: 12px; }
+  .form-field label { font-size: 11.5px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 5px; }
+  .form-field input { width: 100%; font-size: 13px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 9px; font-family: inherit; }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .src-pill { font-size: 11px; font-weight: 700; padding: 7px 12px; border-radius: 20px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-family: inherit; }
+  .src-pill.selected { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+  .ai-loading { text-align: center; padding: 26px 10px; }
+  .spinner { width: 30px; height: 30px; border: 3px solid var(--green-lt); border-top-color: var(--green); border-radius: 50%; margin: 0 auto 12px; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .modal-actions .btn-secondary, .modal-actions .btn-primary { margin-top: 0; }
+
+  /* ── TOAST ── */
+  .toast-stack { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 200; display: flex; flex-direction: column-reverse; gap: 8px; width: calc(100% - 32px); max-width: 448px; align-items: center; pointer-events: none; }
+  .toast { background: var(--text); color: #fff; font-size: 12px; font-weight: 700; padding: 10px 16px; border-radius: 30px; box-shadow: 0 4px 14px rgba(0,0,0,.25); animation: toast-in .25s ease, toast-out .3s ease 2.4s forwards; }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes toast-out { to { opacity: 0; transform: translateY(-6px); } }
+
+  .empty-hint { font-size: 11.5px; color: var(--muted); text-align: center; padding: 10px 0 20px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">G</div>
+      <div class="topbar-titles">
+        <div class="t1">DealHub</div>
+        <div class="t2">Discover Deals</div>
+      </div>
+    </div>
+    <button class="user-chip" onclick="openModal('points-modal')">
+      <div class="ua" id="me-avatar">YOU</div>
+      <div class="ut">
+        <div class="pts" id="me-points">340 pts</div>
+        <div class="tier" id="me-tier-label">Hunter tier · 3× vote weight</div>
+      </div>
+    </button>
+  </div>
+
+  <div class="tabbar">
+    <button class="tabbtn active" data-view="feed" onclick="switchView('feed')">🔥 Feed</button>
+    <button class="tabbtn" data-view="leaderboard" onclick="switchView('leaderboard')">🏆 Leaderboard</button>
+  </div>
+
+  <!-- ══ FEED VIEW ══ -->
+  <div class="view active" id="view-feed">
+    <div class="feed-toolbar">
+      <div class="feed-count" id="feed-count">10 deals · sorted by temperature</div>
+      <button class="info-link" onclick="openModal('points-modal')">ⓘ How scoring works</button>
+    </div>
+    <div id="deal-list"></div>
+    <div class="empty-hint">That's every deal in your area right now. Spot one? Tap the + button.</div>
+  </div>
+
+  <!-- ══ LEADERBOARD VIEW ══ -->
+  <div class="view" id="view-leaderboard">
+    <div class="lb-tabs">
+      <button class="lb-tab active" data-lb="community" onclick="switchLb('community')">Community</button>
+      <button class="lb-tab" data-lb="locality" onclick="switchLb('locality')">Locality</button>
+      <button class="lb-tab" data-lb="city" onclick="switchLb('city')">City</button>
+    </div>
+    <div id="lb-list"></div>
+
+    <div class="tier-card">
+      <h3>Hunter tiers &amp; vote weight</h3>
+      <div id="tier-rows"></div>
+      <div class="progress-track"><div class="progress-fill" id="me-progress"></div></div>
+      <div class="progress-caption" id="me-progress-caption"></div>
+    </div>
+  </div>
+
+  <button class="fab" onclick="openSubmitFlow()" title="Submit a deal">+</button>
+</div>
+
+<div class="toast-stack" id="toast-stack"></div>
+
+<!-- ══ POINTS / SCORING INFO MODAL ══ -->
+<div class="modal-overlay" id="points-modal">
+  <div class="modal-sheet">
+    <div class="modal-head"><h3>How scoring works</h3><button class="modal-close" onclick="closeModal('points-modal')">✕</button></div>
+    <p style="font-size:12px;color:var(--muted);margin:0 0 14px">Temperature = every vote, weighted by the voter's hunter tier. Points build your tier. Higher tiers carry more voting power.</p>
+    <h3 style="font-size:12.5px;margin:0 0 6px">Hunter points</h3>
+    <div id="points-table"></div>
+  </div>
+</div>
+
+<!-- ══ SUBMISSION FLOW MODAL ══ -->
+<div class="modal-overlay" id="submit-modal">
+  <div class="modal-sheet">
+    <div class="modal-head"><h3 id="submit-step-title">Spot a deal</h3><button class="modal-close" onclick="closeModal('submit-modal')">✕</button></div>
+    <div class="step-dots" id="submit-dots"></div>
+    <div id="submit-step-body"></div>
+  </div>
+</div>
+
+<script>
+/* ══════════ CONSTANTS ══════════ */
+const TIER_WEIGHT = { New: 1, Hunter: 3, Expert: 5, Legend: 8 };
+const TIER_META = {
+  New:    { bg: '#F1F0EC', fg: '#6B6A63', min: 0 },
+  Hunter: { bg: '#E6F5EE', fg: '#085041', min: 100 },
+  Expert: { bg: '#FBEFDD', fg: '#BA7517', min: 500 },
+  Legend: { bg: '#FBE7E6', fg: '#8B2E2A', min: 1000 },
+};
+const TIER_ORDER = ['New','Hunter','Expert','Legend'];
+function tierForPoints(p){ if(p>=1000) return 'Legend'; if(p>=500) return 'Expert'; if(p>=100) return 'Hunter'; return 'New'; }
+
+const SOURCE_META = {
+  instagram: { icon: 'IG', bg: 'linear-gradient(135deg,#F58529,#DD2A7B,#8134AF)', label: 'Instagram' },
+  whatsapp:  { icon: 'W',  bg: '#25D366', label: 'WhatsApp broadcast' },
+  photo:     { icon: '📷', bg: '#378ADD', label: 'Photo of poster' },
+  flyer:     { icon: '📋', bg: '#BA7517', label: 'flyer' },
+  website:   { icon: '🌐', bg: '#1D9E75', label: 'merchant website' },
+  walkin:    { icon: '👀', bg: '#534AB7', label: 'walking by' },
+  dealdrop:  { icon: '🏪', bg: '#085041', label: 'DealDrop' },
+  newspaper: { icon: '📰', bg: '#8A8A86', label: 'newspaper ad' },
+  zomato:    { icon: 'Z',  bg: '#E23744', label: 'Zomato' },
+  swiggy:    { icon: 'S',  bg: '#FC8019', label: 'Swiggy' },
+};
+
+const AVATAR_COLORS = ['#085041','#1D9E75','#378ADD','#BA7517','#E24B4A','#534AB7'];
+function avatarColor(name){ let h=0; for(const c of name) h=(h*31+c.charCodeAt(0))>>>0; return AVATAR_COLORS[h % AVATAR_COLORS.length]; }
+function initials(name){ return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+function inr(n){ return '₹' + Math.round(n).toLocaleString('en-IN'); }
+
+/* ══════════ CURRENT USER ══════════ */
+const me = { name: 'You', points: 340 };
+function meTier(){ return tierForPoints(me.points); }
+function meWeight(){ return TIER_WEIGHT[meTier()]; }
+
+/* ══════════ MOCK DEAL DATA ══════════ */
+const now = Date.now();
+const deals = [
+  {
+    id: 'd1', name: 'Full-body massage: 60% off', merchant: 'GlowUp Spa', location: 'Koramangala 5th Block', distance: '0.8km',
+    source: 'whatsapp', attribution: 'community', submitter: 'Meera S.', createdAt: now - 3*60*1000,
+    originalPrice: 2000, dealPrice: 800, discountPct: 60,
+    temperature: null, hiddenVotes: [ {type:'hot',tier:'Hunter'}, {type:'hot',tier:'New'} ],
+    redemptions: 0, hotVotes: 2, coldVotes: 0, disputed:false, expired:false, cardBenefit: null,
+    userVote: null, comments: []
+  },
+  {
+    id: 'd2', name: 'Mani-Pedi Combo: 35% off', merchant: 'Serenity Spa & Salon', location: 'HSR Layout', distance: '1.2km',
+    source: 'instagram', attribution: 'community', submitter: 'Priya K.', createdAt: now - 3*60*60*1000,
+    originalPrice: 1250, dealPrice: 499, discountPct: 60,
+    temperature: 247, redemptions: 12, hotVotes: 41, coldVotes: 3, disputed:false, expired:false,
+    cardBenefit: { card: 'HDFC Regalia 5% cashback', payPrice: 474 },
+    userVote: null,
+    comments: [
+      { name:'Ananya M.', tier:'Expert', timeAgo:'2h ago', text:"Went there today. Deal is real. They honour the Instagram price. Ask for Priya. She does the best spa.", verify:{type:'valid', text:'Voted valid (vote weight: 5×)'} },
+      { name:'Vikram K.', tier:'Hunter', timeAgo:'1h ago', text:"Can confirm. Just walked out. Paid ₹499 exactly. They also have a mani-pedi combo at 40% off that's not advertised.", verify:{type:'valid', text:'Voted valid + redeemed'} },
+    ]
+  },
+  {
+    id: 'd3', name: '3-month membership: 25% off', merchant: 'FitZone Gym', location: 'Indiranagar', distance: '2.1km',
+    source: 'website', attribution: 'community', submitter: 'Ananya M.', createdAt: now - 5*60*60*1000,
+    originalPrice: 6000, dealPrice: 4500, discountPct: 25,
+    temperature: 140, redemptions: 4, hotVotes: 18, coldVotes: 2, disputed:false, expired:false, cardBenefit: null,
+    userVote: null,
+    comments: [
+      { name:'Dev J.', tier:'Expert', timeAgo:'3h ago', text:"Signed up this morning. No hidden joining fee like they usually charge. Locker included.", verify:{type:'valid', text:'Voted valid (vote weight: 5×)'} },
+    ]
+  },
+  {
+    id: 'd4', name: 'Weekday buffet: 30% off', merchant: 'Spice Route Restaurant', location: 'Jayanagar', distance: '3.4km',
+    source: 'flyer', attribution: 'community', submitter: 'Neha K.', createdAt: now - 24*60*60*1000,
+    originalPrice: 700, dealPrice: 490, discountPct: 30,
+    temperature: 70, redemptions: 1, hotVotes: 9, coldVotes: 3, disputed:false, expired:false, cardBenefit: null,
+    userVote: null,
+    comments: [
+      { name:'Sunita M.', tier:'Hunter', timeAgo:'6h ago', text:"Deal is real but they've reduced the menu to 4 items during the buffet. Not the full spread.", verify:{type:'invalid', text:'Voted partially invalid'} },
+    ]
+  },
+  {
+    id: 'd5', name: 'Poster at gym entrance: Free PT session', merchant: 'PowerLift Gym', location: 'BTM Layout', distance: '1.6km',
+    source: 'photo', attribution: 'user', submitter: 'Dev J.', createdAt: now - 6*60*60*1000,
+    originalPrice: 800, dealPrice: 0, discountPct: 100,
+    temperature: 55, redemptions: 2, hotVotes: 7, coldVotes: 1, disputed:false, expired:false, cardBenefit: null,
+    userVote: null, comments: []
+  },
+  {
+    id: 'd6', name: 'Free trial week: new members', merchant: 'Urban Gym', location: 'Whitefield', distance: '4.0km',
+    source: 'dealdrop', attribution: 'merchant', submitter: 'Urban Gym (Merchant)', createdAt: now - 5*60*60*1000,
+    originalPrice: 0, dealPrice: 0, discountPct: 100,
+    temperature: 165, redemptions: 6, hotVotes: 22, coldVotes: 1, disputed:false, expired:false, cardBenefit: null,
+    userVote: null, comments: []
+  },
+  {
+    id: 'd7', name: 'Haircut + Beard combo: 20% off', merchant: 'PowerCuts Salon', location: 'Marathahalli', distance: '5.2km',
+    source: 'newspaper', attribution: 'community', submitter: 'Vikram K.', createdAt: now - 2*24*60*60*1000,
+    originalPrice: 500, dealPrice: 400, discountPct: 20,
+    temperature: 28, redemptions: 0, hotVotes: 4, coldVotes: 2, disputed:false, expired:false, cardBenefit: null,
+    userVote: null, comments: []
+  },
+  {
+    id: 'd8', name: 'Free dessert on orders above ₹399', merchant: 'Grill House', location: 'Online · Swiggy', distance: '—',
+    source: 'swiggy', attribution: 'community', submitter: 'Ritu T.', createdAt: now - 9*60*60*1000,
+    originalPrice: 399, dealPrice: 399, discountPct: 0,
+    temperature: 32, redemptions: 3, hotVotes: 6, coldVotes: 1, disputed:false, expired:false,
+    cardBenefit: { card: 'Axis Ace 5% cashback', payPrice: 379 },
+    userVote: null, comments: []
+  },
+  {
+    id: 'd9', name: 'Discovered a hidden café discount', merchant: 'Cafe Mocha', location: 'Koramangala 7th Block', distance: '1.0km',
+    source: 'walkin', attribution: 'user', submitter: 'Sunita M.', createdAt: now - 10*60*60*1000,
+    originalPrice: 300, dealPrice: 240, discountPct: 20,
+    temperature: 15, redemptions: 0, hotVotes: 3, coldVotes: 1, disputed:false, expired:false, cardBenefit: null,
+    userVote: null, comments: []
+  },
+  {
+    id: 'd10', name: 'BOGO coffee: all day', merchant: 'QuickBite Café', location: 'Online · Zomato', distance: '—',
+    source: 'zomato', attribution: 'community', submitter: 'Ritu T.', createdAt: now - 60*60*1000,
+    originalPrice: 300, dealPrice: 150, discountPct: 50,
+    temperature: -8, redemptions: 0, hotVotes: 3, coldVotes: 6, disputed: true, expired:false, cardBenefit: null,
+    userVote: null,
+    comments: [
+      { name:'Ritu T.', tier:'Hunter', timeAgo:'40m ago', text:"Went at 2pm, they said the offer ended at 1pm. The timing on the post is wrong.", verify:{type:'invalid', text:'Voted expired'} },
+    ]
+  },
+];
+
+/* ══════════ HELPERS ══════════ */
+function calcTemp(votes){ return votes.reduce((s,v)=> s + TIER_WEIGHT[v.tier]*(v.type==='hot'?1:v.type==='cold'?-1:2), 0); }
+
+function heatMeta(temp){
+  if (temp >= 200) return { label:'Hot',  color:'#E24B4A', bar:'linear-gradient(180deg,#E24B4A,#BA7517)', muted:false };
+  if (temp >= 100) return { label:'Warm', color:'#BA7517', bar:'linear-gradient(180deg,#D89A3D,#BA7517)', muted:false };
+  if (temp >= 50)  return { label:'Warm', color:'#BA7517', bar:'#E8C48A', muted:false };
+  if (temp >= 1)   return { label:'Cool', color:'#888780', bar:'#D8D6CF', muted:true };
+  return              { label:'Cold', color:'#888780', bar:'#C7C5BD', muted:true };
+}
+
+function confidenceMeta(d){
+  if (d.expired)  return { cls:'badge-expired',  text:'Expired' };
+  if (d.disputed) return { cls:'badge-disputed', text:'Disputed' };
+  if (d.temperature >= 100 && d.redemptions >= 3) return { cls:'badge-verified', text:'Verified' };
+  if (d.temperature >= 100 || d.hotVotes >= 3)    return { cls:'badge-highconf', text:'High confidence' };
+  if (d.temperature >= 50) return { cls:'badge-medconf', text:'Med-High confidence' };
+  return { cls:'badge-unverified', text:'Unverified' };
+}
+
+function attributionMeta(a){
+  if (a === 'merchant') return { cls:'badge-merchant', text:'Merchant' };
+  if (a === 'user') return { cls:'badge-user', text:'User spotted' };
+  return { cls:'badge-community', text:'Community' };
+}
+
+function timeAgoStr(ts){
+  const diffMs = now - ts; const mins = Math.floor(diffMs/60000);
+  if (mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins/60);
+  if (hrs < 24) return hrs + 'h ago';
+  return Math.floor(hrs/24) + 'd ago';
+}
+
+function graceRemaining(d){
+  const elapsed = Date.now() - d.createdAt;
+  const remain = 10*60*1000 - elapsed;
+  return remain;
+}
+function isGrace(d){ return d.temperature === null && graceRemaining(d) > 0; }
+
+function fmtCountdown(ms){
+  const s = Math.max(0, Math.floor(ms/1000));
+  const m = Math.floor(s/60), r = s%60;
+  return m + ':' + String(r).padStart(2,'0');
+}
+
+/* ══════════ TOASTS ══════════ */
+function showToast(msg){
+  const stack = document.getElementById('toast-stack');
+  const el = document.createElement('div');
+  el.className = 'toast'; el.textContent = msg;
+  stack.appendChild(el);
+  setTimeout(()=> el.remove(), 2900);
+}
+
+function awardPoints(n, reason){
+  me.points += n;
+  renderUserChip();
+  showToast((n>0?'+':'') + n + ' pts · ' + reason);
+}
+
+function renderUserChip(){
+  document.getElementById('me-points').textContent = me.points.toLocaleString('en-IN') + ' pts';
+  document.getElementById('me-tier-label').textContent = meTier() + ' tier · ' + meWeight() + '× vote weight';
+  document.getElementById('me-avatar').style.background = avatarColor('You');
+}
+
+/* ══════════ RENDER: DEAL CARD ══════════ */
+function sourceLine(d){
+  const sm = SOURCE_META[d.source];
+  return `<div class="source-line">
+    <span class="source-icon" style="background:${sm.bg}">${sm.icon}</span>
+    Found ${d.source==='dealdrop' ? 'via' : (d.source==='zomato'||d.source==='swiggy') ? 'on' : d.source==='walkin' ? '' : 'on'} ${sm.label} · by ${d.submitter} · ${timeAgoStr(d.createdAt)}
+  </div>`;
+}
+
+function renderCommentHTML(c){
+  const col = avatarColor(c.name);
+  const verifyCls = c.verify.type === 'valid' ? 'valid' : 'invalid';
+  const sign = c.verify.type === 'valid' ? '✓' : '✗';
+  return `<div class="comment">
+    <div class="comment-avatar" style="background:${col}">${initials(c.name)}</div>
+    <div class="comment-body">
+      <div class="comment-head">${c.name} <span class="tier-badge" style="background:${TIER_META[c.tier].bg};color:${TIER_META[c.tier].fg}">${c.tier}</span> <span class="comment-time">${c.timeAgo}</span></div>
+      <div class="comment-text">"${c.text}"</div>
+      <div class="comment-verify ${verifyCls}">${sign} ${c.verify.text}</div>
+    </div>
+  </div>`;
+}
+
+function dealCardHTML(d){
+  const grace = isGrace(d);
+
+  if (grace) {
+    const remain = graceRemaining(d);
+    return `<div class="deal-card grace" id="card-${d.id}">
+      <div class="grace-banner" id="grace-banner-${d.id}">⏱ New deal: voting open. Temperature hidden for ${fmtCountdown(remain)} more minutes for fair scoring.</div>
+      <div class="deal-main">
+        <div class="deal-temp">
+          <div class="deal-temp-num" style="color:var(--green)">New</div>
+          <div class="deal-temp-label" style="color:var(--green)">Voting</div>
+          <div class="deal-temp-bar" style="background:var(--green);opacity:.4"></div>
+        </div>
+        <div class="deal-body">
+          <div class="deal-badges">
+            <span class="badge ${attributionMeta(d.attribution).cls}">${attributionMeta(d.attribution).text}</span>
+            <span class="badge badge-grace">Grace period</span>
+          </div>
+          <div class="deal-title">${d.name}</div>
+          <div class="deal-meta">${d.merchant} · ${d.location} · ${d.distance}</div>
+          <div class="deal-price-row">
+            ${d.originalPrice > d.dealPrice ? `<span class="deal-orig">${inr(d.originalPrice)}</span>` : ''}
+            <span class="deal-final">${d.dealPrice === 0 ? 'Free' : inr(d.dealPrice)}</span>
+            ${d.discountPct ? `<span class="deal-discount">-${d.discountPct}%</span>` : ''}
+          </div>
+          ${sourceLine(d)}
+        </div>
+      </div>
+      <div class="deal-actions">
+        ${voteBtnHTML(d,'hot')} ${voteBtnHTML(d,'cold')}
+        <button class="comment-toggle" onclick="toggleComments('${d.id}')">💬 ${d.comments.length}</button>
+        <button class="book-btn">Book</button>
+      </div>
+      ${commentsSectionHTML(d)}
+    </div>`;
+  }
+
+  const hm = heatMeta(d.temperature);
+  const cm = confidenceMeta(d);
+  const am = attributionMeta(d.attribution);
+  const goldBadge = d.redemptions >= 5 ? `<span class="badge badge-gold">★ Redeemed</span>` : '';
+
+  return `<div class="deal-card ${hm.muted ? 'muted-card':''}" id="card-${d.id}">
+    <div class="deal-main">
+      <div class="deal-temp">
+        <div class="deal-temp-num" id="temp-num-${d.id}" style="color:${hm.color}">${d.temperature}°</div>
+        <div class="deal-temp-label" id="temp-label-${d.id}" style="color:${hm.color}">${hm.label}</div>
+        <div class="deal-temp-bar" id="temp-bar-${d.id}" style="background:${hm.bar}"></div>
+      </div>
+      <div class="deal-body">
+        <div class="deal-badges">
+          <span class="badge ${am.cls}">${am.text}</span>
+          <span class="badge ${cm.cls}">${cm.text}</span>
+          ${goldBadge}
+        </div>
+        <div class="deal-title">${d.name}</div>
+        <div class="deal-meta">${d.merchant} · ${d.location} · ${d.distance}</div>
+        <div class="deal-price-row">
+          ${d.originalPrice > d.dealPrice ? `<span class="deal-orig">${inr(d.originalPrice)}</span>` : ''}
+          <span class="deal-final">${d.dealPrice === 0 ? 'Free' : inr(d.dealPrice)}</span>
+          ${d.discountPct ? `<span class="deal-discount">-${d.discountPct}%</span>` : ''}
+        </div>
+        ${d.cardBenefit ? `<div class="deal-stack">+ ${d.cardBenefit.card} → you pay ${inr(d.cardBenefit.payPrice)}</div>` : ''}
+        ${sourceLine(d)}
+        ${d.redemptions > 0 ? `<div class="redeem-line">✓ ${d.redemptions} people redeemed this deal</div>` : ''}
+      </div>
+    </div>
+    <div class="deal-actions">
+      ${voteBtnHTML(d,'hot')} ${voteBtnHTML(d,'cold')} ${voteBtnHTML(d,'redeem')}
+      <button class="comment-toggle" onclick="toggleComments('${d.id}')">💬 ${d.comments.length}</button>
+      <button class="book-btn">Book</button>
+    </div>
+    <div class="comment-nudge" id="nudge-${d.id}">
+      <input type="text" id="nudge-input-${d.id}" placeholder="Leave a comment to help others (optional)" />
+      <button onclick="submitNudge('${d.id}')">Post</button>
+      <button class="skip" onclick="dismissNudge('${d.id}')">Skip</button>
+    </div>
+    ${commentsSectionHTML(d)}
+  </div>`;
+}
+
+function voteBtnHTML(d, type){
+  const meta = { hot:{icon:'🔥',label:'Hot'}, cold:{icon:'❄️',label:'Cold'}, redeem:{icon:'✓',label:'I redeemed'} }[type];
+  const voted = d.userVote === type;
+  const disabled = d.userVote !== null;
+  return `<button class="vote-btn ${type} ${voted?'voted':''}" ${disabled?'disabled':''} onclick="voteDeal('${d.id}','${type}')">${meta.icon} ${meta.label}</button>`;
+}
+
+function commentsSectionHTML(d){
+  if (!d.comments.length) return `<div class="comments-section" id="comments-${d.id}"><div style="font-size:11.5px;color:var(--muted);margin-bottom:8px">No comments yet. Be the first to verify this deal.</div>${commentInputHTML(d)}</div>`;
+  const shown = d.comments.slice(0,3).map(renderCommentHTML).join('');
+  const rest = d.comments.length > 3 ? `<button class="show-all-link">Show all ${d.comments.length} comments</button>` : '';
+  return `<div class="comments-section" id="comments-${d.id}">${shown}${rest}${commentInputHTML(d)}</div>`;
+}
+function commentInputHTML(d){
+  return `<div class="comment-input-row">
+    <input type="text" id="comment-input-${d.id}" placeholder="Verify this deal: did it work for you?" />
+    <button class="comment-send" onclick="postComment('${d.id}')">➤</button>
+  </div>`;
+}
+
+function toggleComments(id){
+  document.getElementById('comments-'+id).classList.toggle('open');
+}
+
+/* ══════════ VOTING ══════════ */
+function voteDeal(id, type){
+  const d = deals.find(x=>x.id===id);
+  if (!d || d.userVote) return;
+
+  const weight = meWeight();
+  const delta = weight * (type==='hot' ? 1 : type==='cold' ? -1 : 2);
+
+  if (isGrace(d)) {
+    d.hiddenVotes.push({ type, tier: meTier() });
+    d.userVote = type;
+    showToast('Vote recorded, hidden until grace period ends');
+    renderFeed();
+    return;
+  }
+
+  d.temperature += delta;
+  if (type==='hot') d.hotVotes++;
+  if (type==='cold') d.coldVotes++;
+  if (type==='redeem') { d.redemptions++; awardPoints(5, "you redeemed this deal"); }
+  d.userVote = type;
+
+  showToast(`Your vote added ${delta>0?'+':''}${delta}° (${meTier()} tier)`);
+  renderFeed();
+
+  if (type !== 'redeem') {
+    const nudge = document.getElementById('nudge-'+id);
+    if (nudge) nudge.classList.add('open');
+  }
+}
+
+function dismissNudge(id){ document.getElementById('nudge-'+id).classList.remove('open'); }
+function submitNudge(id){
+  const input = document.getElementById('nudge-input-'+id);
+  const text = input.value.trim();
+  if (text.length >= 10) {
+    const d = deals.find(x=>x.id===id);
+    d.comments.unshift({ name:'You', tier: meTier(), timeAgo:'just now', text, verify:{ type: d.userVote==='cold' ? 'invalid':'valid', text: d.userVote==='redeem' ? 'Voted valid + redeemed' : (d.userVote==='cold' ? 'Voted partially invalid' : `Voted valid (vote weight: ${meWeight()}×)`) } });
+    awardPoints(3, 'verification comment');
+    renderFeed();
+  } else {
+    dismissNudge(id);
+  }
+}
+
+function postComment(id){
+  const input = document.getElementById('comment-input-'+id);
+  const text = input.value.trim();
+  if (!text) return;
+  const d = deals.find(x=>x.id===id);
+  d.comments.unshift({ name:'You', tier: meTier(), timeAgo:'just now', text, verify:{ type:'valid', text:`Voted valid (vote weight: ${meWeight()}×)` } });
+  if (text.length >= 10) awardPoints(3, 'verification comment');
+  renderFeed();
+  setTimeout(()=> document.getElementById('comments-'+id)?.classList.add('open'), 0);
+}
+
+/* ══════════ FEED RENDER ══════════ */
+function renderFeed(){
+  const sorted = [...deals].sort((a,b)=>{
+    const av = isGrace(a) ? Infinity : a.temperature;
+    const bv = isGrace(b) ? Infinity : b.temperature;
+    return bv - av;
+  });
+  document.getElementById('deal-list').innerHTML = sorted.map(dealCardHTML).join('');
+  document.getElementById('feed-count').textContent = deals.length + ' deals · sorted by temperature';
+  // restore open comment sections after re-render
+  openComments.forEach(id => document.getElementById('comments-'+id)?.classList.add('open'));
+}
+const openComments = new Set();
+document.addEventListener('click', e=>{
+  const btn = e.target.closest('.comment-toggle');
+  if (btn){
+    const id = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+    if (openComments.has(id)) openComments.delete(id); else openComments.add(id);
+  }
+});
+
+/* grace period live countdown */
+setInterval(()=>{
+  let needsRerender = false;
+  deals.forEach(d=>{
+    if (d.temperature === null){
+      const remain = graceRemaining(d);
+      if (remain <= 0){
+        d.temperature = calcTemp(d.hiddenVotes);
+        d.hotVotes = d.hiddenVotes.filter(v=>v.type==='hot').length;
+        d.coldVotes = d.hiddenVotes.filter(v=>v.type==='cold').length;
+        needsRerender = true;
+      } else {
+        const el = document.getElementById('grace-banner-'+d.id);
+        if (el) el.textContent = `⏱ New deal: voting open. Temperature hidden for ${fmtCountdown(remain)} more minutes for fair scoring.`;
+      }
+    }
+  });
+  if (needsRerender) renderFeed();
+}, 1000);
+
+/* ══════════ TABS ══════════ */
+function switchView(name){
+  document.querySelectorAll('.tabbtn').forEach(b=> b.classList.toggle('active', b.dataset.view===name));
+  document.querySelectorAll('.view').forEach(v=> v.classList.toggle('active', v.id==='view-'+name));
+}
+
+/* ══════════ LEADERBOARD ══════════ */
+const LB_DATA = {
+  community: [
+    { name:'Priya K.', points:2150, deals:34, verified:29, redemptions:88 },
+    { name:'Rahul N.', points:1780, deals:27, verified:22, redemptions:64 },
+    { name:'Ananya M.', points:1120, deals:19, verified:16, redemptions:41 },
+    { name:'Dev J.', points:860, deals:15, verified:12, redemptions:30 },
+    { name:'Vikram K.', points:640, deals:12, verified:9, redemptions:22 },
+    { name:'You', points:0, deals:6, verified:4, redemptions:9 },
+    { name:'Neha K.', points:480, deals:9, verified:7, redemptions:14 },
+    { name:'Sunita M.', points:310, deals:6, verified:4, redemptions:8 },
+    { name:'Ritu T.', points:210, deals:5, verified:3, redemptions:5 },
+    { name:'Meera S.', points:140, deals:3, verified:2, redemptions:2 },
+  ],
+  locality: [
+    { name:'Ananya M.', points:1120, deals:19, verified:16, redemptions:41 },
+    { name:'You', points:0, deals:6, verified:4, redemptions:9 },
+    { name:'Neha K.', points:480, deals:9, verified:7, redemptions:14 },
+    { name:'Sunita M.', points:310, deals:6, verified:4, redemptions:8 },
+    { name:'Meera S.', points:140, deals:3, verified:2, redemptions:2 },
+  ],
+  city: [
+    { name:'Priya K.', points:2150, deals:34, verified:29, redemptions:88 },
+    { name:'Rahul N.', points:1780, deals:27, verified:22, redemptions:64 },
+    { name:'Ananya M.', points:1120, deals:19, verified:16, redemptions:41 },
+    { name:'Dev J.', points:860, deals:15, verified:12, redemptions:30 },
+    { name:'Vikram K.', points:640, deals:12, verified:9, redemptions:22 },
+    { name:'Neha K.', points:480, deals:9, verified:7, redemptions:14 },
+    { name:'You', points:0, deals:6, verified:4, redemptions:9 },
+    { name:'Sunita M.', points:310, deals:6, verified:4, redemptions:8 },
+    { name:'Ritu T.', points:210, deals:5, verified:3, redemptions:5 },
+    { name:'Meera S.', points:140, deals:3, verified:2, redemptions:2 },
+  ],
+};
+let currentLb = 'community';
+
+function switchLb(name){
+  currentLb = name;
+  document.querySelectorAll('.lb-tab').forEach(b=> b.classList.toggle('active', b.dataset.lb===name));
+  renderLeaderboard();
+}
+
+function renderLeaderboard(){
+  const rows = LB_DATA[currentLb].map(r=> r.name==='You' ? {...r, points: me.points} : r);
+  rows.sort((a,b)=> b.points - a.points);
+  const html = rows.map((r,i)=>{
+    const rank = i+1;
+    const tier = tierForPoints(r.points);
+    const weight = TIER_WEIGHT[tier];
+    const isMe = r.name==='You';
+    const rankCls = rank===1?'gold':rank===2?'silver':rank===3?'bronze':'';
+    let milestone = '';
+    if (isMe){
+      const next = rows[i-1];
+      if (next) milestone = `<div class="lb-milestone">+${(next.points - r.points + 1).toLocaleString('en-IN')} pts to rank #${rank-1}</div>`;
+    }
+    return `<div class="lb-row ${isMe?'me':''}">
+      <div class="lb-rank ${rankCls}">${rank}</div>
+      <div class="lb-avatar" style="background:${avatarColor(r.name)}">${initials(r.name)}</div>
+      <div class="lb-mid">
+        <div class="lb-name-row">${isMe?'You':r.name} <span class="tier-badge" style="background:${TIER_META[tier].bg};color:${TIER_META[tier].fg}">${tier}</span></div>
+        <div class="lb-stats">${r.deals} deals · ${r.verified} verified · ${r.redemptions} redemptions</div>
+        <div class="lb-weight">Vote weight: ${weight}×</div>
+      </div>
+      <div>
+        <div class="lb-pts">${r.points.toLocaleString('en-IN')}</div>
+        ${milestone}
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('lb-list').innerHTML = html;
+  renderTierCard();
+}
+
+function renderTierCard(){
+  const rowsHTML = TIER_ORDER.map(t=>{
+    const meta = TIER_META[t];
+    const next = TIER_ORDER[TIER_ORDER.indexOf(t)+1];
+    const rangeText = next ? `${meta.min.toLocaleString('en-IN')}–${(TIER_META[next].min-1).toLocaleString('en-IN')} pts` : `${meta.min.toLocaleString('en-IN')}+ pts`;
+    return `<div class="tier-row">
+      <div class="tier-row-left">
+        <span class="tier-badge" style="background:${meta.bg};color:${meta.fg}">${t}</span>
+        <span class="tier-pts-range">${rangeText}</span>
+      </div>
+      <div class="tier-weight-val">${TIER_WEIGHT[t]}× weight</div>
+    </div>`;
+  }).join('');
+  document.getElementById('tier-rows').innerHTML = rowsHTML;
+
+  const tier = meTier();
+  const idx = TIER_ORDER.indexOf(tier);
+  const next = TIER_ORDER[idx+1];
+  if (next){
+    const lo = TIER_META[tier].min, hi = TIER_META[next].min;
+    const pct = Math.min(100, Math.round(((me.points - lo) / (hi - lo)) * 100));
+    document.getElementById('me-progress').style.width = pct + '%';
+    document.getElementById('me-progress-caption').textContent = `${me.points.toLocaleString('en-IN')} pts, ${(hi-me.points).toLocaleString('en-IN')} pts to ${next} tier (${TIER_WEIGHT[next]}× weight)`;
+  } else {
+    document.getElementById('me-progress').style.width = '100%';
+    document.getElementById('me-progress-caption').textContent = `${me.points.toLocaleString('en-IN')} pts, max tier reached`;
+  }
+}
+
+/* ══════════ POINTS INFO MODAL ══════════ */
+const POINTS_TABLE = [
+  ['Submit a deal', '+10', 'pos', 'Awarded immediately on submission'],
+  ['Your deal gets verified (3+ community votes)', '+25', 'pos', 'One-time bonus'],
+  ['Someone redeems your deal', '+5 each', 'pos', 'Per redemption, no cap'],
+  ['Your vote matches the majority outcome', '+5', 'pos', 'Awarded once deal status is determined'],
+  ['Leave a verification comment with your vote', '+3', 'pos', 'Must be 10+ characters'],
+  ['Mark "I redeemed" on a deal', '+5', 'pos', 'One-time per deal'],
+  ['7-day submission streak', '+75', 'pos', '1+ deal/day, 7 days straight'],
+  ['5-day streak', '+25', 'pos', 'Intermediate streak bonus'],
+  ['Deal flagged as fake by community', '-15', 'neg', '5+ cold votes citing fake/misleading'],
+  ['Deal expired within 1 hour of posting', '-5', 'neg', 'Penalty for stale posts'],
+];
+function renderPointsTable(){
+  document.getElementById('points-table').innerHTML = POINTS_TABLE.map(([label,val,cls,note])=>
+    `<div class="pt-row"><span class="pt-label">${label}<span class="pt-note">${note}</span></span><span class="pt-val ${cls}">${val}</span></div>`
+  ).join('');
+}
+
+/* ══════════ MODALS ══════════ */
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o=> o.addEventListener('click', e=>{ if(e.target===o) o.classList.remove('open'); }));
+
+/* ══════════ SUBMISSION FLOW ══════════ */
+const submitState = { step: 1, type: 'community', method: null, extracted: null, source: null };
+
+function openSubmitFlow(){
+  submitState.step = 1; submitState.type='community'; submitState.method=null; submitState.extracted=null; submitState.source=null;
+  renderSubmitStep();
+  openModal('submit-modal');
+}
+
+function renderDots(){
+  document.getElementById('submit-dots').innerHTML = [1,2,3,4].map(n=>`<div class="step-dot ${n===submitState.step?'active':''}"></div>`).join('');
+}
+
+function renderSubmitStep(){
+  renderDots();
+  const body = document.getElementById('submit-step-body');
+  const title = document.getElementById('submit-step-title');
+
+  if (submitState.step === 1){
+    title.textContent = 'Choose submission type';
+    body.innerHTML = `
+      <div class="type-card ${submitState.type==='community'?'selected':''}" onclick="selectType('community')">
+        <div class="type-emoji">👥</div><div><div class="type-title">Community</div><div class="type-sub">Spotted by you</div></div>
+      </div>
+      <div class="type-card ${submitState.type==='user'?'selected':''}" onclick="selectType('user')">
+        <div class="type-emoji">🙋</div><div><div class="type-title">User</div><div class="type-sub">Personal deal, shared directly with you</div></div>
+      </div>
+      <div class="type-card ${submitState.type==='merchant'?'selected':''}" onclick="selectType('merchant')">
+        <div class="type-emoji">🏪</div><div><div class="type-title">Merchant</div><div class="type-sub">I own this business (redirects to DealDrop)</div></div>
+      </div>
+      <button class="btn-primary" onclick="nextStep()">Continue</button>`;
+    return;
+  }
+
+  if (submitState.step === 2){
+    title.textContent = 'Add the deal';
+    body.innerHTML = `
+      <div class="input-method">
+        <div class="input-method-title">🔗 Paste a link</div>
+        <div style="font-size:11px;color:var(--muted)">Instagram post, merchant website, Zomato listing…</div>
+        <input type="text" id="link-input" placeholder="https://..." />
+        <button class="btn-primary" onclick="aiExtract('link')">AI extract</button>
+      </div>
+      <div class="input-method">
+        <div class="input-method-title">📷 Upload a photo</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Poster, flyer, or screenshot</div>
+        <div class="file-row">
+          <button class="btn-secondary" onclick="aiExtract('upload')">Upload screenshot</button>
+          <button class="btn-secondary" onclick="aiExtract('camera')">Take a photo</button>
+        </div>
+      </div>
+      <button class="btn-secondary" onclick="prevStep()">Back</button>`;
+    return;
+  }
+
+  if (submitState.step === 3){
+    title.textContent = 'Review details';
+    const ex = submitState.extracted;
+    body.innerHTML = `
+      <div class="form-field"><label>Merchant name &amp; location</label><input type="text" id="f-merchant" value="${ex.merchant}"></div>
+      <div class="form-field"><label>Original price</label><input type="number" id="f-orig" value="${ex.originalPrice}"></div>
+      <div class="form-field"><label>Deal price</label><input type="number" id="f-deal" value="${ex.dealPrice}"></div>
+      <div class="form-field"><label>Service / product</label><input type="text" id="f-name" value="${ex.name}"></div>
+      <div class="form-field"><label>Valid until</label><input type="date" id="f-until"></div>
+      <div class="form-field">
+        <label>Where did you find this?</label>
+        <div class="pill-row" id="src-pills">
+          ${Object.keys(SOURCE_META).map(s=>`<button type="button" class="src-pill ${submitState.source===s?'selected':''}" onclick="pickSource('${s}')">${SOURCE_META[s].label.replace(/^./,c=>c.toUpperCase())}</button>`).join('')}
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="prevStep()">Back</button>
+        <button class="btn-primary" onclick="nextStep()">Continue</button>
+      </div>`;
+    return;
+  }
+
+  if (submitState.step === 4){
+    title.textContent = 'Post your deal';
+    body.innerHTML = `
+      <div style="text-align:center;padding:10px 0 18px">
+        <div style="font-size:34px">🎉</div>
+        <div style="font-size:13px;font-weight:700;margin-top:8px">Ready to post</div>
+        <div style="font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.6">Your deal will appear in the feed immediately with a 10-minute grace period for fair voting. You'll earn <b>+10 points</b> right away.</div>
+      </div>
+      <button class="btn-primary" onclick="postDeal()">Post this deal</button>
+      <button class="btn-secondary" style="margin-top:8px" onclick="prevStep()">Back</button>`;
+    return;
+  }
+}
+
+function selectType(t){ submitState.type = t; renderSubmitStep(); }
+function nextStep(){ submitState.step++; renderSubmitStep(); }
+function prevStep(){ submitState.step--; renderSubmitStep(); }
+
+function aiExtract(method){
+  submitState.method = method;
+  const body = document.getElementById('submit-step-body');
+  body.innerHTML = `<div class="ai-loading"><div class="spinner"></div><div style="font-size:12.5px;font-weight:700">Geno is reading the ${method==='link'?'link':'image'}…</div></div>`;
+  const preset = {
+    link:   { merchant:'Bloom Nail Studio, Koramangala', originalPrice:900, dealPrice:549, name:'Gel manicure: 39% off', source:'instagram' },
+    upload: { merchant:'FitCore Gym, Indiranagar', originalPrice:5000, dealPrice:3500, name:'2-month membership: 30% off', source:'photo' },
+    camera: { merchant:'Cafe Aroma, BTM Layout', originalPrice:250, dealPrice:150, name:'Combo meal: 40% off', source:'photo' },
+  }[method];
+  setTimeout(()=>{
+    submitState.extracted = preset;
+    submitState.source = preset.source;
+    submitState.step = 3;
+    renderSubmitStep();
+    showToast('Geno pre-filled the deal details ✨');
+  }, 1200);
+}
+
+function pickSource(s){ submitState.source = s; renderSubmitStep(); }
+
+function postDeal(){
+  const merchantEl = document.getElementById('f-merchant');
+  const newDeal = {
+    id: 'd'+(deals.length+1)+'-'+Date.now(),
+    name: document.getElementById('f-name')?.value || submitState.extracted.name,
+    merchant: (merchantEl?.value || submitState.extracted.merchant).split(',')[0],
+    location: (merchantEl?.value || submitState.extracted.merchant).split(',').slice(1).join(',').trim() || 'Nearby',
+    distance: '0.5km',
+    source: submitState.source || 'other',
+    attribution: submitState.type,
+    submitter: 'You', createdAt: Date.now(),
+    originalPrice: Number(document.getElementById('f-orig')?.value || submitState.extracted.originalPrice),
+    dealPrice: Number(document.getElementById('f-deal')?.value || submitState.extracted.dealPrice),
+    discountPct: 0,
+    temperature: null, hiddenVotes: [],
+    redemptions: 0, hotVotes: 0, coldVotes: 0, disputed:false, expired:false, cardBenefit: null,
+    userVote: null, comments: []
+  };
+  newDeal.discountPct = newDeal.originalPrice ? Math.round((1 - newDeal.dealPrice/newDeal.originalPrice)*100) : 0;
+  if (!SOURCE_META[newDeal.source]) newDeal.source = 'walkin';
+  deals.unshift(newDeal);
+  closeModal('submit-modal');
+  switchView('feed');
+  renderFeed();
+  awardPoints(10, 'deal submitted');
+}
+
+/* ══════════ INIT ══════════ */
+renderUserChip();
+renderFeed();
+renderLeaderboard();
+renderPointsTable();
+</script>
+</body>
+</html>

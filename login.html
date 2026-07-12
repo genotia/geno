@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign up / Log in — Genoti AI</title>
+  <title>Sign up / Log in | Genoti AI</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -562,7 +562,7 @@
     showBanner('banner-otp','','');
     const res = await callEdge('/send-otp', { email: enteredEmail });
     if (res.error) return showBanner('banner-otp', res.error, 'error');
-    showBanner('banner-otp','Code resent — check your inbox.','success');
+    showBanner('banner-otp','Code resent. Check your inbox.','success');
     initOtpInputs();
   }
 
