@@ -35,7 +35,7 @@
     .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
     .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); text-decoration: none; flex-shrink: 0; }
     .logo span { color: var(--green); }
-    .nav-links { display: flex; gap: 14px; list-style: none; }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
     .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted); transition: color .15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--green); font-weight: 700; }
@@ -262,6 +262,12 @@
     .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     .footer-col ul a { font-size: 13px; color: rgba(255,255,255,.55); text-decoration: none; transition: color .15s; }
     .footer-col ul a:hover { color: var(--white); }
+    .footer-col ul a { display: flex; align-items: center; gap: 7px; }
+    .footer-col ul a svg { flex-shrink: 0; opacity: .8; }
+    .footer-col ul li.parent-link a { color: #4ade80; font-weight: 700; }
+    .footer-col ul li.child { padding-left: 12px; }
+    .footer-col ul li.child a { font-size: 12px; color: rgba(255,255,255,.4); }
+    .footer-col ul li.child a svg { width: 12px; height: 12px; }
     .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; font-size: 12px; }
     .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
     .footer-socials { display: flex; gap: 20px; }
@@ -409,26 +415,18 @@
       <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
       <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover Local Deals · Save more</span>
     </div>
-    <ul class="nav-links">
+                <ul class="nav-links">
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
-        <a href="deals.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Off-Peak</a>
-        <span style="font-size:10px;color:#6B7280;margin-top:1px">Save upto 75%</span>
-      </div></li>
-      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
-        <a href="last-minute.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> LastMinute</a>
-        <span style="font-size:10px;color:#6B7280;margin-top:1px">Grab before they go</span>
-      </div></li>
-      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
-        <a href="negotiate.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Negotiate</a>
-        <span style="font-size:10px;color:#6B7280;margin-top:1px">AI deal maker</span>
-      </div></li>
-      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
-        <a href="dealbook.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> DealBook</a>
-        <span style="font-size:10px;color:#6B7280;margin-top:1px">Personal Savings Tracker</span>
+        <a href="dealbox.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> DealBox</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Confirmed deals</span>
       </div></li>
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
         <a href="dealhub.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> DealHub</a>
-        <span style="font-size:10px;color:#6B7280;margin-top:1px">Discover Deals</span>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Community deals</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="dealbook.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> DealBook</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Savings tracker</span>
       </div></li>
     </ul>
     <div class="nav-right">
@@ -1004,12 +1002,13 @@
       <div class="footer-col">
         <h4>For Users</h4>
         <ul>
-          <li><a href="index.html">OffPeak Deals</a></li>
-          <li><a href="last-minute.html">LastMinute Deals</a></li>
-          <li><a href="negotiate.html">Negotiate Deals by AI</a></li>
-          <li><a href="notify.html">Notify Me the Deals</a></li>
-          <li><a href="dealhub.html">DealHub: Discover Deals</a></li>
-          <li><a href="dealbook.html">DealBook: Personal Savings Tracker</a></li>
+          <li class="parent-link"><a href="dealbox.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> DealBox</a></li>
+          <li class="child"><a href="index.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> OffPeak Deals</a></li>
+          <li class="child"><a href="last-minute.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> LastMinute Deals</a></li>
+          <li class="child"><a href="negotiate.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Negotiate by AI</a></li>
+          <li class="child"><a href="notify.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notify Me</a></li>
+          <li><a href="dealhub.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> DealHub: Discover Deals</a></li>
+          <li><a href="dealbook.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> DealBook: Personal Savings Tracker</a></li>
         </ul>
       </div>
       <div class="footer-col">

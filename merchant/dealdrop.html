@@ -283,6 +283,12 @@ footer { background: #111827; color: rgba(255,255,255,.6); padding: 48px 24px 32
 .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .footer-col ul a { font-size: 13px; color: rgba(255,255,255,.55); text-decoration: none; transition: color .15s; }
 .footer-col ul a:hover { color: var(--white); }
+    .footer-col ul a { display: flex; align-items: center; gap: 7px; }
+    .footer-col ul a svg { flex-shrink: 0; opacity: .8; }
+    .footer-col ul li.parent-link a { color: #4ade80; font-weight: 700; }
+    .footer-col ul li.child { padding-left: 12px; }
+    .footer-col ul li.child a { font-size: 12px; color: rgba(255,255,255,.4); }
+    .footer-col ul li.child a svg { width: 12px; height: 12px; }
 .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; font-size: 12px; flex-wrap: wrap; gap: 12px; }
 .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
 .footer-socials { display: flex; gap: 16px; }
@@ -856,12 +862,13 @@ Your next deal will reach even more people. Post weekly for best results!</div>
       <div class="footer-col">
         <h4>For Users</h4>
         <ul>
-          <li><a href="../index.html">OffPeak Deals</a></li>
-          <li><a href="../last-minute.html">LastMinute Deals</a></li>
-          <li><a href="../negotiate.html">Negotiate Deals by AI</a></li>
-          <li><a href="../notify.html">Notify Me the Deals</a></li>
-          <li><a href="../dealhub.html">DealHub: Discover Deals</a></li>
-          <li><a href="../dealbook.html">DealBook: Personal Savings Tracker</a></li>
+          <li class="parent-link"><a href="../dealbox.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> DealBox</a></li>
+          <li class="child"><a href="../index.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> OffPeak Deals</a></li>
+          <li class="child"><a href="../last-minute.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> LastMinute Deals</a></li>
+          <li class="child"><a href="../negotiate.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Negotiate by AI</a></li>
+          <li class="child"><a href="../notify.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notify Me</a></li>
+          <li><a href="../dealhub.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> DealHub: Discover Deals</a></li>
+          <li><a href="../dealbook.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> DealBook: Personal Savings Tracker</a></li>
         </ul>
       </div>
       <div class="footer-col">
