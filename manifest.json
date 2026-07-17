@@ -2,10 +2,10 @@
   "name": "Genoti — Hyperlocal Deals",
   "short_name": "Genoti",
   "description": "Discover hyperlocal off-peak deals. Save up to 75% on restaurants, spas, gyms and more.",
-  "start_url": "/",
+  "start_url": "/Geno.html",
   "display": "standalone",
-  "background_color": "#085041",
-  "theme_color": "#085041",
+  "background_color": "#0B6B5A",
+  "theme_color": "#0B6B5A",
   "orientation": "portrait-primary",
   "icons": [
     {

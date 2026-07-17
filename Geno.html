@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Geno AI · What can I find for you? · Genoti</title>
+  <meta name="theme-color" content="#085041" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Genoti" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #1D9E75; --dark-green: #085041; --text: #111827; --muted: #6B7280;
+      --border: #E5E7EB; --bg: #F9FAFB; --white: #fff; --red: #EF4444;
+      --amber: #B45309; --blue: #1D4ED8; --purple: #6D28D9;
+      --green-lt: #ECFDF5; --green-md: #A7F3D0;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--text); background: var(--bg); line-height: 1.5; }
+
+    /* ── NAV (shared site header) ── */
+    nav { position: sticky; top: 0; z-index: 200; background: var(--white); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .logo { font-size: 22px; font-weight: 800; letter-spacing: -.5px; color: var(--text); text-decoration: none; flex-shrink: 0; }
+    .nav-links { display: flex; gap: 40px; list-style: none; min-width: 0; overflow: hidden; }
+    .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted); transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--green); font-weight: 700; }
+    .nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .btn-login { font-size: 14px; font-weight: 500; color: var(--text); background: none; border: none; cursor: pointer; padding: 8px 12px; text-decoration: none; transition: color .15s; font-family: inherit; }
+    .btn-login:hover { color: var(--green); }
+    .btn-pill { display: inline-flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid var(--text); border-radius: 40px; padding: 9px 22px; cursor: pointer; white-space: nowrap; transition: background .15s, color .15s; text-decoration: none; font-family: inherit; }
+    .btn-pill:hover { background: var(--text); color: var(--white); }
+    .btn-pill-menu { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid #D1D5DB; border-radius: 40px; padding: 9px 18px; cursor: pointer; transition: border-color .15s, background .15s; font-family: inherit; }
+    .btn-pill-menu:hover { border-color: var(--text); background: var(--bg); }
+    .menu-icon { display: flex; flex-direction: column; gap: 4px; }
+    .menu-icon span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; }
+    .menu-dropdown-wrap { position: relative; display: flex; align-items: center; gap: 8px; }
+    .menu-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 280px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 16px 48px rgba(0,0,0,.12); z-index: 500; overflow: hidden; padding: 8px 0; }
+    .menu-dropdown.open { display: block; }
+    .menu-main-item { font-size: 13px; font-weight: 800; color: var(--text); padding: 14px 20px 8px; display: flex; align-items: center; justify-content: space-between; }
+    .menu-main-item.clickable { cursor: pointer; transition: background .12s; text-decoration: none; }
+    .menu-main-item.clickable:hover { background: var(--bg); }
+    .menu-main-arrow { color: var(--muted); }
+    .menu-sub-item { display: flex; align-items: center; gap: 10px; padding: 11px 20px; font-size: 14px; font-weight: 500; color: var(--text); text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s; }
+    .menu-sub-item:hover { background: var(--bg); }
+    .menu-sub-item.highlight { color: var(--green); font-weight: 600; }
+    .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+    /* ── GENO HERO ── */
+    .geno-hero { max-width: 960px; margin: 0 auto; padding: 22px 20px 4px; text-align: center; }
+    .geno-hero .eyebrow { display: inline-flex; align-items: center; gap: 6px; background: var(--green-lt); color: var(--dark-green); font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; margin-bottom: 12px; }
+    .geno-hero h1 { font-size: clamp(24px, 3.4vw, 36px); font-weight: 800; letter-spacing: -.8px; color: var(--text); line-height: 1.1; }
+    .geno-hero h1 span { color: var(--green); }
+    .geno-hero p { font-size: 15px; color: var(--muted); margin-top: 8px; }
+
+    /* ── GENO CHAT PANEL (scoped colour system) ── */
+    .geno-chat {
+      max-width: 960px; margin: 0 auto; padding: 12px 20px 44px;
+      --teal: #0B6B5A; --green: #0FA37F; --mint: #7EDDB8; --light-green: #E8F5EC;
+      --blue: #1565C0; --light-blue: #E3F0FC; --amber: #C17C1A; --light-amber: #FFF3E0;
+      --purple: #6A1B9A; --light-purple: #F3E5F5; --orange: #D35400; --red: #C62828;
+      --white: #FFFFFF; --text: #2C2C2A; --text-light: #5A5A56; --text-muted: #8A8A85;
+      --border: #E0DFDB; --bg: #F5F5F2;
+    }
+    .gc-panel { display: flex; flex-direction: column; height: clamp(680px, 88vh, 1120px); background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,.06); }
+    .gc-topbar { display: flex; justify-content: flex-end; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .gc-loc { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text); }
+    .gc-loc > svg { color: var(--text); flex-shrink: 0; }
+    .gc-loc-sep { color: var(--text-muted); }
+    .gc-loc-change { background: none; border: none; padding: 0; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--blue); cursor: pointer; }
+    .gc-loc-change:hover { text-decoration: underline; }
+
+    /* Chat area */
+    .chat { flex: 1; overflow-y: auto; padding: 16px 14px; scroll-behavior: smooth; }
+    .chat::-webkit-scrollbar { width: 3px; }
+    .chat::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* Messages */
+    .msg { margin-bottom: 14px; animation: fadeUp 0.3s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .msg-user { display: flex; justify-content: flex-end; }
+    .msg-user .bubble { max-width: 82%; padding: 10px 14px; background: var(--teal); color: var(--white); border-radius: 18px 18px 4px 18px; font-size: 14px; line-height: 1.45; }
+    .msg-bot { display: flex; align-items: flex-start; gap: 8px; }
+    .msg-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--light-green); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--teal); flex-shrink: 0; margin-top: 2px; }
+    .msg-bot .bubble { max-width: 85%; padding: 10px 14px; background: var(--white); border-radius: 18px 18px 18px 4px; font-size: 14px; line-height: 1.5; color: var(--text); border: 1px solid var(--border); }
+    .msg-cards { margin-left: 36px; margin-top: 8px; }
+
+    /* Typing indicator */
+    .typing { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .typing .dots { padding: 10px 16px; background: var(--white); border-radius: 18px; border: 1px solid var(--border); }
+    .typing .dots span { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); margin: 0 2px; animation: blink 1.4s infinite; }
+    .typing .dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing .dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+    /* Deal cards grid (3 across) */
+    .deal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 4px; }
+    .deal-grid .deal-card { margin-bottom: 0; }
+    @media (max-width: 860px) { .deal-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .deal-grid { grid-template-columns: 1fr; } }
+
+    /* Deal card */
+    .deal-card { background: var(--white); border-radius: 14px; border: 1px solid var(--border); padding: 14px; margin-bottom: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: box-shadow .15s, transform .15s; }
+    .deal-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.09); transform: translateY(-2px); }
+    .deal-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+    .deal-name { font-size: 15px; font-weight: 700; color: var(--text); }
+    .deal-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .deal-tag { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+    .deal-offer { font-size: 14px; font-weight: 600; color: var(--teal); margin-bottom: 6px; }
+    .deal-price { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .deal-real { font-size: 18px; font-weight: 800; color: var(--green); }
+    .deal-mrp { font-size: 12px; color: var(--text-muted); text-decoration: line-through; }
+    .deal-time { font-size: 11px; color: var(--text-muted); }
+    .deal-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .deal-book { flex: 1 1 100%; padding: 9px 0; background: var(--teal); color: var(--white); border: none; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .deal-vote { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 10px; background: var(--white); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .deal-vote.voted { background: var(--light-green); border-color: var(--green); }
+    .deal-card-tip { margin-top: 6px; padding: 6px 10px; background: var(--light-blue); border-radius: 8px; font-size: 11px; color: var(--blue); }
+
+    /* Savings card */
+    .savings-card { background: var(--light-green); border-radius: 14px; border: 1px solid rgba(15,163,127,0.25); padding: 14px; margin-bottom: 8px; }
+    .savings-title { font-size: 14px; font-weight: 700; color: var(--teal); margin-bottom: 10px; }
+    .savings-nums { display: flex; gap: 10px; margin-bottom: 10px; }
+    .savings-num { flex: 1; background: var(--white); border-radius: 10px; padding: 10px; text-align: center; }
+    .savings-num strong { display: block; font-size: 20px; font-weight: 800; }
+    .savings-num span { font-size: 10px; color: var(--text-muted); }
+    .savings-tip { background: var(--white); border-radius: 8px; padding: 10px; margin-bottom: 6px; }
+    .savings-tip-label { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+    .savings-tip-text { font-size: 12px; color: var(--text); line-height: 1.4; }
+
+    /* Negotiate card */
+    .negotiate-card { background: var(--light-blue); border-radius: 14px; border: 1px solid rgba(21,101,192,0.25); padding: 14px; margin-bottom: 8px; }
+    .negotiate-title { font-size: 14px; font-weight: 700; color: var(--blue); margin-bottom: 8px; }
+    .negotiate-prices { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+    .negotiate-old { font-size: 14px; color: var(--text-muted); text-decoration: line-through; }
+    .negotiate-new { font-size: 24px; font-weight: 800; color: var(--green); }
+    .negotiate-pct { background: rgba(15,163,127,0.15); color: var(--green); font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+    .negotiate-accept { width: 100%; padding: 10px; background: var(--green); color: var(--white); border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+
+    /* Confirm card */
+    .confirm-card { background: var(--light-green); border-radius: 14px; border: 2px solid var(--green); padding: 16px; text-align: center; margin-bottom: 8px; }
+    .confirm-icon { font-size: 28px; }
+    .confirm-title { font-size: 16px; font-weight: 700; color: var(--teal); margin-top: 4px; }
+    .confirm-details { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .confirm-pay { display: inline-block; margin-top: 8px; padding: 6px 16px; background: var(--teal); color: var(--white); border-radius: 8px; font-size: 12px; font-weight: 600; }
+
+    /* Category chips */
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0; }
+    .chip { padding: 6px 12px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; font-size: 12px; font-weight: 500; cursor: pointer; color: var(--text); transition: all 0.2s; }
+    .chip:hover, .chip.active { background: var(--teal); color: var(--white); border-color: var(--teal); }
+
+    /* Quick actions */
+    .quick-actions { padding: 10px 12px; display: flex; gap: 6px; overflow-x: auto; flex-shrink: 0; border-top: 1px solid var(--border); -webkit-overflow-scrolling: touch; }
+    .quick-actions::-webkit-scrollbar { display: none; }
+    .qa-btn { padding: 8px 14px; background: var(--white); border: 1px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 500; color: var(--text); cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: all 0.2s; }
+    .qa-btn:hover { background: var(--light-green); border-color: var(--green); }
+
+    /* Input bar */
+    .input-bar { padding: 10px 12px 12px; background: var(--white); border-top: 1px solid var(--border); display: flex; gap: 8px; flex-shrink: 0; }
+    .input-bar input { flex: 1; padding: 10px 16px; border-radius: 22px; border: 1px solid var(--border); font-size: 14px; outline: none; background: var(--bg); color: var(--text); font-family: inherit; }
+    .input-bar input:focus { border-color: var(--green); }
+    .send-btn { width: 42px; height: 42px; border-radius: 50%; background: var(--teal); border: none; color: var(--white); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; flex-shrink: 0; }
+    .send-btn:hover { background: var(--green); }
+
+    /* Trending bar */
+    .trending { padding: 10px 12px; background: linear-gradient(135deg, var(--light-amber), var(--light-green)); border-radius: 12px; border: 1px solid var(--border); }
+    .trending-title { font-size: 12px; font-weight: 700; color: var(--amber); margin-bottom: 4px; }
+    .trending-items { font-size: 12px; color: var(--text); line-height: 1.5; }
+
+    /* Share button */
+    .share-btn { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: var(--light-green); border: 1px solid var(--green); border-radius: 14px; font-size: 10px; font-weight: 600; color: var(--green); cursor: pointer; margin-top: 4px; }
+
+    /* Milestone */
+    .milestone { margin-top: 8px; padding: 12px; background: linear-gradient(135deg, var(--teal), var(--green)); border-radius: 14px; text-align: center; color: var(--white); }
+    .milestone-icon { font-size: 24px; }
+    .milestone-text { font-size: 13px; font-weight: 700; margin-top: 4px; }
+    .milestone-sub { font-size: 11px; color: var(--mint); margin-top: 2px; }
+
+    /* Auth modal */
+    .modal-wrap { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; background: rgba(0,0,0,0.35); }
+    .modal-wrap.open { opacity: 1; pointer-events: auto; }
+    .modal { background: var(--white); border-radius: 18px; padding: 22px 20px; width: 100%; max-width: 340px; transform: scale(0.94); transition: transform 0.22s cubic-bezier(.4,0,.2,1); box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+    .modal-wrap.open .modal { transform: scale(1); }
+    .modal-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--light-green); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; }
+    .modal-title { font-size: 18px; font-weight: 700; color: var(--text); }
+    .modal-text { font-size: 13px; color: var(--text-light); line-height: 1.5; margin-top: 6px; }
+    .modal-field { width: 100%; padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; margin-top: 12px; outline: none; font-family: inherit; background: var(--bg); }
+    .modal-field:focus { border-color: var(--green); }
+    .modal-btn { width: 100%; padding: 11px; background: var(--teal); color: var(--white); border: none; border-radius: 10px; font-size: 13.5px; font-weight: 700; cursor: pointer; margin-top: 12px; font-family: inherit; }
+    .modal-alt { width: 100%; padding: 10px; background: var(--white); color: var(--text); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 7px; }
+    .modal-cancel { width: 100%; padding: 8px; margin-top: 10px; background: none; border: none; font-size: 12px; color: var(--text-muted); cursor: pointer; font-family: inherit; }
+    .modal-note { font-size: 10.5px; color: var(--text-muted); text-align: center; margin-top: 12px; line-height: 1.4; }
+
+    /* ── FOOTER (shared) ── */
+    footer { background: #111827; color: rgba(255,255,255,.6); padding: 44px 24px 28px; margin-top: 40px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px; margin-bottom: 36px; }
+    .f-logo { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -.5px; display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .f-tagline { font-size: 13px; line-height: 1.6; max-width: 260px; }
+    .footer-col h4 { font-size: 13px; font-weight: 700; color: white; margin-bottom: 12px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col ul a { text-decoration: none; font-size: 13px; color: rgba(255,255,255,.55); transition: color .15s; display: flex; align-items: center; gap: 7px; }
+    .footer-col ul a:hover { color: white; }
+    .footer-col ul a svg { flex-shrink: 0; opacity: .8; }
+    .footer-col ul li.parent-link a { color: #4ade80; font-weight: 700; }
+    .footer-col ul li.child { padding-left: 12px; }
+    .footer-col ul li.child a { font-size: 12px; color: rgba(255,255,255,.4); }
+    .footer-col ul li.child a svg { width: 12px; height: 12px; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,.1); padding-top: 20px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; max-width: 1200px; margin: 0 auto; }
+    .footer-bottom a { color: rgba(255,255,255,.5); text-decoration: none; }
+
+    /* ── MOBILE TAB BAR ── */
+    .mtb { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 300; background: #fff; border-top: 1.5px solid #E5E7EB; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -2px 12px rgba(0,0,0,.08); }
+    .mtb-row { display: flex; justify-content: space-around; align-items: center; height: 56px; }
+    .mtb-a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; flex: 1; text-decoration: none; padding: 6px 4px; color: #6B7280; -webkit-tap-highlight-color: transparent; }
+    .mtb-i { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; }
+    .mtb-i svg { width: 22px; height: 22px; }
+    .mtb-t { font-size: 10px; font-weight: 600; }
+    .mtb-a.on { color: #1D9E75; }
+    .mtb-a.on .mtb-i svg { transform: scale(1.1); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) { #nav-list-biz { display: none; } }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-right .btn-login, .nav-right .btn-pill { display: none; }
+      .nav-inner { padding: 0 16px; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .geno-hero { padding: 22px 16px 4px; }
+      .geno-chat { padding: 12px 12px 30px; }
+      .mtb { display: block; }
+      body { padding-bottom: calc(56px + env(safe-area-inset-bottom)); }
+    }
+    @media (max-width: 480px) { .footer-inner { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-inner">
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
+      <a href="index.html" class="logo"><img src="genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover Local Deals · Save more</span>
+    </div>
+    <ul class="nav-links">
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="Geno.html" class="active" style="font-size:14px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Geno AI</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">What can I find for you?</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="dealbox.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> DealBox</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Confirmed deals</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="dealhub.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> DealHub</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Community deals</span>
+      </div></li>
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="dealbook.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> DealBook</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">Savings tracker</span>
+      </div></li>
+    </ul>
+    <div class="nav-right">
+      <a href="login.html" class="btn-login">Log in</a>
+      <a href="register.html" class="btn-pill" id="nav-list-biz">List your business</a>
+      <div class="menu-dropdown-wrap">
+        <button class="btn-pill-menu" onclick="toggleMenu()" aria-label="Menu" id="menu-toggle-btn">
+          Menu
+          <div class="menu-icon"><span></span><span></span><span></span></div>
+        </button>
+        <div class="menu-dropdown" id="menu-dropdown">
+          <div class="menu-main-item">For customers</div>
+          <a href="login.html" class="menu-sub-item highlight">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Log in or sign up
+          </a>
+          <a href="download-the-app.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Download the app
+          </a>
+          <a href="calculator.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            TruePrice Calculator
+          </a>
+          <a href="help.html" class="menu-sub-item">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2.5" stroke-linecap="round"/></svg>
+            Help and support
+          </a>
+          <div class="menu-divider"></div>
+          <a href="merchant/merchants.html" class="menu-main-item clickable">
+            <span style="display:flex;align-items:center;gap:10px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              For businesses
+            </span>
+            <span class="menu-main-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="geno-hero">
+  <div class="eyebrow">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Geno AI
+  </div>
+  <h1>What can I <span>find for you?</span></h1>
+  <p>Ask Geno to find deals nearby, negotiate a price, or track your savings.</p>
+</section>
+
+<!-- ══ CHAT ══ -->
+<div class="geno-chat">
+  <div class="gc-panel">
+    <div class="gc-topbar">
+      <div class="gc-loc">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span id="gc-loc-name">Koramangala, Bengaluru</span>
+        <span class="gc-loc-sep">·</span>
+        <button class="gc-loc-change" onclick="changeLocation()">Change Location</button>
+      </div>
+    </div>
+    <div class="chat" id="chat"></div>
+
+    <div class="quick-actions" id="quickActions">
+      <button class="qa-btn" onclick="send('Show deals near me')">📍 Deals near me</button>
+      <button class="qa-btn" onclick="send('Negotiate a price at Green Leaf Spa')">🤝 Negotiate</button>
+      <button class="qa-btn" onclick="send('Show my savings')">💰 My savings</button>
+      <button class="qa-btn" onclick="send('Spot a deal')">📸 Spot a deal</button>
+      <button class="qa-btn" onclick="send('Show my bookings')">📅 My bookings</button>
+      <button class="qa-btn" onclick="send('Budget lunch under 300')">💸 Budget deals</button>
+    </div>
+
+    <div class="input-bar">
+      <input id="userInput" placeholder="Ask Geno anything..." onkeydown="if(event.key==='Enter')sendFromInput()">
+      <button class="send-btn" onclick="sendFromInput()">➤</button>
+    </div>
+  </div>
+
+  <!-- Auth modal -->
+  <div class="modal-wrap" id="authModal">
+    <div class="modal">
+      <div class="modal-icon" id="authIcon">🔐</div>
+      <div class="modal-title" id="authTitle">Sign in to continue</div>
+      <div class="modal-text" id="authText">Deals near you are personalised. Sign in to see real prices, book, and track your savings.</div>
+      <input class="modal-field" id="authPhone" placeholder="Phone number" inputmode="tel">
+      <button class="modal-btn" onclick="doSignIn()">Continue</button>
+      <button class="modal-alt" onclick="doSignIn()">🔵 Continue with Google</button>
+      <button class="modal-cancel" onclick="closeAuth()">Not now</button>
+      <div class="modal-note">No card needed. You pay merchants directly at the store.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="f-logo"><img src="genoti_logo.svg" alt="" style="width:30px;height:30px;vertical-align:middle;margin-right:4px">Genoti</div>
+      <div class="f-tagline">Discover local deals at the real price.</div>
+    </div>
+    <div class="footer-col">
+      <h4>For Users</h4>
+      <ul>
+        <li class="parent-link"><a href="dealbox.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> DealBox</a></li>
+        <li class="child"><a href="index.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> OffPeak Deals</a></li>
+        <li class="child"><a href="last-minute.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> LastMinute Deals</a></li>
+        <li class="child"><a href="negotiate.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Negotiate by AI</a></li>
+        <li class="child"><a href="notify.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notify Me</a></li>
+        <li><a href="dealhub.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> DealHub · Community Deals</a></li>
+        <li><a href="dealbook.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> DealBook · Savings Tracker</a></li>
+        <li><a href="Geno.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Geno AI · Ask anything</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>For Merchants</h4>
+      <ul>
+        <li><a href="calculator.html">True Price Calculator</a></li>
+        <li><a href="register.html">List your Business</a></li>
+        <li><a href="#">Merchant Dashboard</a></li>
+        <li><a href="merchant/merchants.html">Merchant OS</a></li>
+        <li><a href="merchant/pricing.html">Pricing</a></li>
+        <li><a href="merchant/migrate.html">Switch to Genoti</a></li>
+        <li><a href="merchant/dealdrop.html">DealDrop · free WhatsApp listing</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
+    <div style="display:flex;gap:16px"><a href="#">Twitter</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+  </div>
+</footer>
+
+<!-- ══ MOBILE TAB BAR ══ -->
+<div class="mtb">
+  <div class="mtb-row">
+    <a href="dealbox.html" class="mtb-a">
+      <span class="mtb-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+      <span class="mtb-t">DealBox</span>
+    </a>
+    <a href="dealhub.html" class="mtb-a">
+      <span class="mtb-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+      <span class="mtb-t">DealHub</span>
+    </a>
+    <a href="Geno.html" class="mtb-a on">
+      <span class="mtb-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+      <span class="mtb-t">Geno AI</span>
+    </a>
+    <a href="dealbook.html" class="mtb-a">
+      <span class="mtb-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+      <span class="mtb-t">DealBook</span>
+    </a>
+    <a href="login.html" class="mtb-a">
+      <span class="mtb-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      <span class="mtb-t">Account</span>
+    </a>
+  </div>
+</div>
+
+<script>
+/* ── Header menu dropdown ── */
+function toggleMenu() { document.getElementById('menu-dropdown').classList.toggle('open'); }
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.menu-dropdown-wrap')) document.getElementById('menu-dropdown').classList.remove('open');
+});
+
+/* ── Location ── */
+function changeLocation() {
+  const el = document.getElementById('gc-loc-name');
+  const next = prompt('Enter your location:', el.textContent.trim());
+  if (next && next.trim()) el.textContent = next.trim();
+}
+
+/* ── Geno AI chat ── */
+const chat = document.getElementById('chat');
+let isTyping = false;
+let merchantMode = false;
+
+const deals = [
+  { name:"Green Leaf Spa", type:"Salon & Spa", deal:"35% off all services", time:"Today 11am-3pm", dist:"1.2 km", real:"₹650", mrp:"₹1,000", tag:"Off-Peak", tagClr:"var(--green)", tagBg:"var(--light-green)", cardTip:"💳 Use HDFC Regalia for 5x points. Save ₹65 extra." },
+  { name:"Café Monsoon", type:"Restaurant", deal:"Buy 1 Get 1 lunch combos", time:"Today 12pm-4pm", dist:"0.8 km", real:"₹299", mrp:"₹599", tag:"Last Minute", tagClr:"var(--orange)", tagBg:"var(--light-amber)", cardTip:"💳 Use Axis Ace for 5% cashback on dining." },
+  { name:"FitZone Gym", type:"Fitness", deal:"₹99 trial session", time:"Tomorrow 6am-10am", dist:"2.1 km", real:"₹99", mrp:"₹500", tag:"Community 🔥12", tagClr:"var(--blue)", tagBg:"var(--light-blue)", cardTip:null },
+  { name:"Brew & Bite Café", type:"Café", deal:"₹149 all-day breakfast", time:"Today all day", dist:"0.5 km", real:"₹149", mrp:"₹349", tag:"Flash Sale", tagClr:"var(--purple)", tagBg:"var(--light-purple)", cardTip:"💳 Use Amazon Pay ICICI for 2% back." },
+  { name:"Aura Wellness", type:"Wellness", deal:"60min massage ₹799", time:"Today 2pm-6pm", dist:"1.8 km", real:"₹799", mrp:"₹1,500", tag:"New Launch", tagClr:"var(--amber)", tagBg:"var(--light-amber)", cardTip:null },
+];
+
+function getTimeGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return { greet: "Good morning", suggest: "breakfast and coffee", emoji: "☕" };
+  if (h < 17) return { greet: "Good afternoon", suggest: "lunch and afternoon", emoji: "🌤️" };
+  return { greet: "Good evening", suggest: "dinner and entertainment", emoji: "🌆" };
+}
+
+function addBot(text, extra) {
+  const div = document.createElement('div');
+  div.className = 'msg msg-bot';
+  div.innerHTML = `<div class="msg-avatar">G</div><div class="bubble">${text}</div>`;
+  chat.appendChild(div);
+  if (extra) {
+    const cards = document.createElement('div');
+    cards.className = 'msg-cards';
+    cards.innerHTML = extra;
+    chat.appendChild(cards);
+  }
+  scrollChat();
+}
+
+function addUser(text) {
+  const div = document.createElement('div');
+  div.className = 'msg msg-user';
+  div.innerHTML = `<div class="bubble">${text}</div>`;
+  chat.appendChild(div);
+  scrollChat();
+}
+
+function showTyping() {
+  isTyping = true;
+  const div = document.createElement('div');
+  div.className = 'typing';
+  div.id = 'typingIndicator';
+  div.innerHTML = `<div class="msg-avatar">G</div><div class="dots"><span></span><span></span><span></span></div>`;
+  chat.appendChild(div);
+  scrollChat();
+}
+
+function hideTyping() {
+  isTyping = false;
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+function scrollChat() {
+  setTimeout(() => { chat.scrollTop = chat.scrollHeight; }, 50);
+}
+
+function renderDeals(filteredDeals, category) {
+  let html = '';
+  if (category) {
+    html += `<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Showing <strong>${category}</strong> deals near you</div>`;
+  }
+  html += `<div class="deal-grid">`;
+  filteredDeals.forEach((d, i) => {
+    html += `<div class="deal-card">
+      <div class="deal-top">
+        <div><div class="deal-name">${d.name}</div><div class="deal-meta">${d.type} · ${d.dist}</div></div>
+        <span class="deal-tag" style="background:${d.tagBg};color:${d.tagClr};border:1px solid ${d.tagClr}30">${d.tag}</span>
+      </div>
+      <div class="deal-offer">${d.deal}</div>
+      <div class="deal-price">
+        <span class="deal-real">${d.real}</span>
+        <span class="deal-mrp">${d.mrp}</span>
+        <span class="deal-time">· ${d.time}</span>
+      </div>
+      <div class="deal-actions">
+        <button class="deal-book" onclick="bookDeal(${i})">Book now · Pay at store</button>
+        <button class="deal-vote" id="vote${i}" onclick="voteDeal(${i})">🔥</button>
+        <button class="share-btn" onclick="shareDeal(${i})">📤 Share</button>
+      </div>
+      ${d.cardTip ? `<div class="deal-card-tip">${d.cardTip}</div>` : ''}
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function renderSavings() {
+  return `<div class="savings-card">
+    <div class="savings-title">💰 Your Savings Summary</div>
+    <div class="savings-nums">
+      <div class="savings-num"><strong style="color:var(--green)">₹2,340</strong><span>this month</span></div>
+      <div class="savings-num"><strong style="color:var(--teal)">₹18,400</strong><span>this year</span></div>
+    </div>
+    <div class="savings-tip">
+      <div class="savings-tip-label" style="color:var(--blue)">💳 Card tip</div>
+      <div class="savings-tip-text">Use HDFC Regalia at restaurants for 5x reward points. You missed ₹320 last month by using your debit card.</div>
+    </div>
+    <div class="savings-tip">
+      <div class="savings-tip-label" style="color:var(--amber)">📱 Carrier perk (Jio)</div>
+      <div class="savings-tip-text">Free Swiggy One membership worth ₹1,499/year. Activate in MyJio app → Offers section.</div>
+    </div>
+    <div class="savings-tip">
+      <div class="savings-tip-label" style="color:var(--red)">⚠️ Subscription overlap</div>
+      <div class="savings-tip-text">You pay for both Netflix (₹649) and Prime Video (₹299). 73% content overlap. Consider keeping one. Save ₹3,588/year.</div>
+    </div>
+  </div>`;
+}
+
+function renderNegotiate() {
+  return `<div class="negotiate-card">
+    <div class="negotiate-title">🤝 Geno AI Negotiated</div>
+    <div style="font-size:13px;color:var(--text)">I contacted <strong>Green Leaf Spa</strong> and negotiated a custom price for you:</div>
+    <div class="negotiate-prices">
+      <span class="negotiate-old">₹1,000</span>
+      <span class="negotiate-new">→ ₹600</span>
+      <span class="negotiate-pct">40% off</span>
+    </div>
+    <div style="font-size:11px;color:var(--text-muted)">Valid till today 5pm. Pay at store. No prepayment.</div>
+    <div class="deal-card-tip">💳 Pay with HDFC Regalia for 5x points. Save additional ₹60.</div>
+    <button class="negotiate-accept" onclick="acceptNegotiate()">Accept and book · Pay ₹600 at store</button>
+  </div>`;
+}
+
+function renderConfirm(name, deal, price) {
+  return `<div class="confirm-card">
+    <div class="confirm-icon">✅</div>
+    <div class="confirm-title">Booked!</div>
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-top:6px">${name}</div>
+    <div class="confirm-details">${deal}</div>
+    <div class="confirm-pay">Pay ${price} at store</div>
+    <button class="share-btn" style="margin-top:8px" onclick="alert('Share link copied!')">📤 Share with friends</button>
+  </div>`;
+}
+
+function renderBookings() {
+  return `<div style="background:var(--white);border-radius:14px;border:1px solid var(--border);padding:14px;margin-bottom:8px;">
+    <div style="font-size:14px;font-weight:700;color:var(--teal);margin-bottom:10px;">📅 Your Bookings</div>
+    <div style="padding:10px;background:var(--light-green);border-radius:10px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:13px;font-weight:700">Green Leaf Spa</div>
+          <div style="font-size:11px;color:var(--text-muted)">35% off · Today 2:30pm</div>
+        </div>
+        <span style="font-size:10px;font-weight:700;color:var(--green);background:rgba(15,163,127,0.15);padding:2px 8px;border-radius:8px;">Confirmed</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        <button style="flex:1;padding:6px;border:1px solid var(--border);border-radius:8px;background:var(--white);font-size:11px;cursor:pointer;">Reschedule</button>
+        <button style="flex:1;padding:6px;border:1px solid var(--red);border-radius:8px;background:var(--white);font-size:11px;color:var(--red);cursor:pointer;">Cancel</button>
+      </div>
+    </div>
+    <div style="padding:10px;background:var(--bg);border-radius:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:13px;font-weight:700">Café Monsoon</div>
+          <div style="font-size:11px;color:var(--text-muted)">BOGO lunch · Yesterday</div>
+        </div>
+        <span style="font-size:10px;font-weight:700;color:var(--text-muted);background:var(--border);padding:2px 8px;border-radius:8px;">Completed</span>
+      </div>
+      <button style="margin-top:6px;padding:5px 10px;border:1px solid var(--amber);border-radius:8px;background:var(--light-amber);font-size:11px;color:var(--amber);font-weight:600;cursor:pointer;" onclick="send('Rate Café Monsoon')">⭐ Rate your visit</button>
+    </div>
+  </div>`;
+}
+
+function renderTrending() {
+  const tg = getTimeGreeting();
+  return `<div class="trending">
+    <div class="trending-title">🔥 Trending near Koramangala</div>
+    <div class="trending-items">
+      12 new deals today · Top voted: Café Monsoon BOGO 🔥14<br>
+      3 off-peak deals ending soon · 2 new launch offers<br>
+      <span style="font-size:11px;color:var(--text-muted)">${tg.suggest} deals are trending right now</span>
+    </div>
+    <div class="chips" style="margin-top:8px">
+      <span class="chip" onclick="send('Show salon deals')">💇 Salons</span>
+      <span class="chip" onclick="send('Show restaurant deals')">🍽️ Restaurants</span>
+      <span class="chip" onclick="send('Show fitness deals')">💪 Fitness</span>
+      <span class="chip" onclick="send('Show cafe deals')">☕ Cafés</span>
+      <span class="chip" onclick="send('Show wellness deals')">🧘 Wellness</span>
+    </div>
+  </div>`;
+}
+
+function renderMilestone() {
+  return `<div class="milestone">
+    <div class="milestone-icon">🏆</div>
+    <div class="milestone-text">You've saved ₹18,400 this year!</div>
+    <div class="milestone-sub">That's more than 92% of users in Koramangala</div>
+  </div>`;
+}
+
+// Actions
+function bookDeal(idx) {
+  const d = deals[idx];
+  addUser(`Book ${d.name}`);
+  showTyping();
+  setTimeout(() => {
+    hideTyping();
+    addBot("Done! Your booking is confirmed:", renderConfirm(d.name, d.deal, d.real));
+  }, 800);
+}
+
+function voteDeal(idx) {
+  const btn = document.getElementById('vote' + idx);
+  btn.classList.toggle('voted');
+  btn.textContent = btn.classList.contains('voted') ? '🔥✓' : '🔥';
+}
+
+function shareDeal(idx) {
+  const d = deals[idx];
+  const text = `Check out this deal! ${d.name}: ${d.deal} for ${d.real} (was ${d.mrp}). Found on Genoti! genoti.ai/deal/${idx}`;
+  if (navigator.share) {
+    navigator.share({ title: d.name, text: text });
+  } else {
+    navigator.clipboard.writeText(text);
+    alert('Deal link copied! Share with your friends.');
+  }
+}
+
+function acceptNegotiate() {
+  addUser("Accept the deal");
+  showTyping();
+  setTimeout(() => {
+    hideTyping();
+    addBot("Booked! Here's your confirmation:", renderConfirm("Green Leaf Spa", "40% off negotiated by Geno AI", "₹600"));
+  }, 800);
+}
+
+/* ---------- Auth state ---------- */
+let auth = { signedIn: false, name: null, type: null };
+let pendingAction = null;
+
+const USER_ACTIONS = `
+  <button class="qa-btn" onclick="send('Show deals near me')">📍 Deals near me</button>
+  <button class="qa-btn" onclick="send('Negotiate a price at Green Leaf Spa')">🤝 Negotiate</button>
+  <button class="qa-btn" onclick="send('Show my savings')">💰 My savings</button>
+  <button class="qa-btn" onclick="send('Spot a deal')">📸 Spot a deal</button>
+  <button class="qa-btn" onclick="send('Show my bookings')">📅 My bookings</button>
+  <button class="qa-btn" onclick="send('Budget lunch under 300')">💸 Budget deals</button>`;
+
+const MERCHANT_ACTIONS = `
+  <button class="qa-btn" onclick="send('Create a deal')">➕ Create deal</button>
+  <button class="qa-btn" onclick="send('Today bookings')">📅 Bookings</button>
+  <button class="qa-btn" onclick="send('Reply to reviews')">⭐ Reviews</button>
+  <button class="qa-btn" onclick="send('Analytics this week')">📊 Analytics</button>`;
+
+/* ---------- Auth gate ---------- */
+function requireAuth(type, thenAction) {
+  if (auth.signedIn) { if (thenAction) send(thenAction); return true; }
+  pendingAction = { type: type || 'user', action: thenAction };
+  const isMerchant = pendingAction.type === 'merchant';
+  document.getElementById('authIcon').textContent = isMerchant ? '🏪' : '🔐';
+  document.getElementById('authTitle').textContent = isMerchant ? 'Merchant sign in' : 'Sign in to see deals';
+  document.getElementById('authText').textContent = isMerchant
+    ? 'Manage your deals, bookings, and AI agents. Start free with DealDrop, no card needed.'
+    : 'Deals near you are personalised and time-sensitive. Sign in to see real prices, book, and track savings.';
+  document.getElementById('authPhone').placeholder = isMerchant ? 'Business phone number' : 'Phone number';
+  document.getElementById('authModal').classList.add('open');
+  setTimeout(() => document.getElementById('authPhone').focus(), 250);
+  return false;
+}
+function closeAuth() {
+  document.getElementById('authModal').classList.remove('open');
+  pendingAction = null;
+}
+function doSignIn() {
+  const type = pendingAction ? pendingAction.type : 'user';
+  const action = pendingAction ? pendingAction.action : null;
+  auth = { signedIn: true, name: type === 'merchant' ? 'Green Leaf Spa' : 'Balaji', type };
+  document.getElementById('authModal').classList.remove('open');
+  document.getElementById('authPhone').value = '';
+  pendingAction = null;
+
+  if (type === 'merchant') {
+    setMode(true);
+  } else {
+    addBot(`Welcome, <strong>${auth.name}</strong>! You're signed in. I can now show you real prices and track your savings.`);
+    if (action) setTimeout(() => send(action), 700);
+  }
+}
+
+/* ---------- Mode ---------- */
+function setMode(isMerchant, quiet) {
+  merchantMode = isMerchant;
+  document.getElementById('quickActions').innerHTML = isMerchant ? MERCHANT_ACTIONS : USER_ACTIONS;
+  if (quiet) return;
+  if (isMerchant) {
+    addBot("You're in <strong>Merchant mode</strong>, signed in as <strong>Green Leaf Spa</strong>. I can create deals, check bookings, reply to reviews, and show analytics. What do you need?");
+  }
+}
+
+function processInput(text) {
+  const lower = text.toLowerCase();
+
+  // Merchant mode responses
+  if (merchantMode) {
+    if (lower.includes('create') || lower.includes('deal')) {
+      return { text: "Sure! Let's create a deal. What service do you want to offer a discount on? For example: <em>'30% off haircut today 2pm-5pm'</em>", cards: null };
+    }
+    if (lower.includes('booking') || lower.includes('today')) {
+      return { text: "📅 <strong>Today's bookings: 8</strong><br>5 confirmed · 2 completed · 1 cancelled<br>Revenue: ₹4,200<br><br>Your off-peak deal (11am-3pm) brought in 3 new customers. Want me to extend it tomorrow?", cards: null };
+    }
+    if (lower.includes('review')) {
+      return { text: "You have <strong>2 new reviews</strong> to respond to.<br><br>⭐⭐⭐⭐⭐ <em>\"Amazing service and great price!\"</em> · 2 hours ago<br><br>I drafted a reply: <em>\"Thank you so much! We're glad you enjoyed your visit. See you again soon!\"</em><br><br>Should I post this response?", cards: null };
+    }
+    if (lower.includes('analytics') || lower.includes('stats')) {
+      return { text: "📊 <strong>This week's performance:</strong><br><br>Bookings: 42 (+18% vs last week)<br>Revenue: ₹28,400<br>New customers: 15<br>Repeat customers: 27<br>Best deal: Off-Peak 35% (18 bookings)<br>Average rating: 4.6⭐<br><br>Your off-peak deals are driving 43% of all bookings. Consider adding a Last Minute deal for evening slots.", cards: null };
+    }
+    return { text: "I can help you with creating deals, checking bookings, responding to reviews, or viewing analytics. What would you like?", cards: null };
+  }
+
+  // User mode
+  if (lower.includes('deal') && (lower.includes('near') || lower.includes('show') || lower.includes('find'))) {
+    return { text: `Found <strong>5 deals</strong> near Koramangala. Real prices, no inflated MRP:`, cards: renderDeals(deals) };
+  }
+  if (lower.includes('salon')) {
+    const filtered = deals.filter(d => d.type.includes('Salon'));
+    return { text: `Found <strong>${filtered.length} salon deal${filtered.length > 1 ? 's' : ''}</strong> near you:`, cards: renderDeals(filtered, 'Salon') };
+  }
+  if (lower.includes('restaurant') || lower.includes('lunch') || lower.includes('dinner')) {
+    const filtered = deals.filter(d => d.type === 'Restaurant');
+    return { text: `Found <strong>${filtered.length} restaurant deal${filtered.length > 1 ? 's' : ''}</strong> near you:`, cards: renderDeals(filtered, 'Restaurant') };
+  }
+  if (lower.includes('cafe') || lower.includes('coffee') || lower.includes('breakfast')) {
+    const filtered = deals.filter(d => d.type === 'Café');
+    return { text: `Found <strong>${filtered.length} café deal${filtered.length > 1 ? 's' : ''}</strong> near you:`, cards: renderDeals(filtered, 'Café') };
+  }
+  if (lower.includes('fitness') || lower.includes('gym')) {
+    const filtered = deals.filter(d => d.type === 'Fitness');
+    return { text: `Found <strong>${filtered.length} fitness deal${filtered.length > 1 ? 's' : ''}</strong> near you:`, cards: renderDeals(filtered, 'Fitness') };
+  }
+  if (lower.includes('wellness') || lower.includes('massage') || lower.includes('spa')) {
+    const filtered = deals.filter(d => d.type.includes('Wellness') || d.type.includes('Spa'));
+    return { text: `Found <strong>${filtered.length} wellness deal${filtered.length > 1 ? 's' : ''}</strong> near you:`, cards: renderDeals(filtered, 'Wellness') };
+  }
+  if (lower.includes('budget') || lower.includes('under')) {
+    const match = lower.match(/(\d+)/);
+    const budget = match ? parseInt(match[1]) : 300;
+    const filtered = deals.filter(d => parseInt(d.real.replace(/[₹,]/g,'')) <= budget);
+    return { text: `Found <strong>${filtered.length} deals under ₹${budget}</strong> near you:`, cards: renderDeals(filtered, `Under ₹${budget}`) };
+  }
+  if (lower.includes('saving') || lower.includes('card') || lower.includes('cashback')) {
+    return { text: "Here's your savings summary and card tips:", cards: renderSavings() + renderMilestone() };
+  }
+  if (lower.includes('negotiate') || lower.includes('better price')) {
+    return { text: null, cards: null, flow: 'negotiate' };
+  }
+  if (lower.includes('booking') || lower.includes('my booking')) {
+    return { text: "Here are your bookings:", cards: renderBookings() };
+  }
+  if (lower.includes('spot') || lower.includes('found a deal')) {
+    return { text: "Great! Tell me the details:<br><br>🏪 <strong>Which business?</strong> (name and location)<br>💰 <strong>What's the deal?</strong> (discount, offer)<br>⏰ <strong>Valid till when?</strong><br><br>I'll post it for the community to verify and vote on!", cards: null };
+  }
+  if (lower.includes('rate') || lower.includes('review')) {
+    return { text: "How was your visit? Rate 1-5 stars and share your experience. Your review helps the community find great deals! ⭐⭐⭐⭐⭐", cards: null };
+  }
+  if (lower.includes('good price') || lower.includes('is this')) {
+    return { text: "Based on <strong>47 data points</strong> in Koramangala:<br><br>Average salon service: ₹850-1,200<br>This deal at ₹650 is <strong>35% below average</strong><br>Price trend: 📉 Prices drop 20-40% during off-peak (11am-3pm)<br><br>✅ This is a genuinely good deal. Not inflated MRP.", cards: null };
+  }
+
+  return { text: "I can help you find deals nearby, negotiate prices, check your savings, spot deals for the community, or manage your bookings. What would you like?", cards: null };
+}
+
+// Intents that need a signed-in user
+const GATED = /deal|salon|restaurant|lunch|dinner|cafe|coffee|breakfast|fitness|gym|wellness|massage|spa|budget|under|saving|card|cashback|negotiate|better price|booking/i;
+
+function send(text) {
+  if (isTyping) return;
+
+  if (!auth.signedIn && !merchantMode && GATED.test(text)) {
+    addUser(text);
+    setTimeout(() => {
+      addBot("These deals are live and personalised to your location. Sign in and I'll show you real prices right away.");
+      setTimeout(() => requireAuth('user', text), 500);
+    }, 400);
+    return;
+  }
+
+  addUser(text);
+  showTyping();
+
+  const result = processInput(text);
+
+  if (result.flow === 'negotiate') {
+    setTimeout(() => { hideTyping(); addBot("I'll contact Green Leaf Spa and negotiate a better price for you... 🤝"); }, 600);
+    setTimeout(() => { showTyping(); }, 1000);
+    setTimeout(() => { hideTyping(); addBot("Negotiating with the merchant..."); }, 2000);
+    setTimeout(() => { showTyping(); }, 2500);
+    setTimeout(() => { hideTyping(); addBot("Got a great deal! Here's what I negotiated:", renderNegotiate()); }, 4000);
+    return;
+  }
+
+  setTimeout(() => {
+    hideTyping();
+    addBot(result.text, result.cards);
+  }, 800 + Math.random() * 400);
+}
+
+function sendFromInput() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text || isTyping) return;
+  input.value = '';
+  send(text);
+}
+
+// Init: location-aware greeting
+function init() {
+  const tg = getTimeGreeting();
+  addBot(
+    `${tg.greet}!`,
+    renderTrending()
+  );
+}
+
+init();
+
+/* ---------- PWA: install support ---------- */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>

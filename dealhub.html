@@ -138,11 +138,19 @@
     .see-all { font-size: 13px; font-weight: 600; color: var(--green); text-decoration: none; }
     .see-all:hover { text-decoration: underline; }
 
-    /* ── DEAL GRID ── */
-    .deal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
-    .deal-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+    /* ── DEAL LIST (list-order layout: one deal per row, scrollable) ── */
+    .deal-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+    .deal-card { display: grid; grid-template-columns: 130px 1fr; background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
     .deal-card:hover { border-color: var(--green-md); box-shadow: 0 4px 20px rgba(0,0,0,.07); }
-    .deal-thumb { height: 90px; display: flex; align-items: center; justify-content: center; font-size: 34px; position: relative; }
+    .deal-thumb { display: flex; align-items: center; justify-content: center; font-size: 34px; position: relative; }
+    .deal-info { flex: 1; min-width: 0; }
+    /* ── Pagination (25 deals per page) ── */
+    .deal-pagination { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 4px 0 28px; flex-wrap: wrap; }
+    .dp-btn { padding: 7px 13px; font-size: 12.5px; font-weight: 600; color: var(--muted); background: var(--white); border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; font-family: inherit; transition: all .15s; }
+    .dp-btn:hover:not(:disabled) { border-color: var(--text); color: var(--text); }
+    .dp-btn:disabled { opacity: .4; cursor: not-allowed; }
+    .dp-btn.dp-num.active { background: var(--green-lt); color: var(--dark-green); border-color: var(--green-md); font-weight: 700; }
+    @media (max-width: 600px) { .deal-card { grid-template-columns: 90px 1fr; } .deal-thumb { font-size: 26px; } }
     .deal-thumb-green { background: var(--green-lt); }
     .deal-thumb-amber { background: var(--amber-bg); }
     .deal-thumb-purple { background: var(--purple-bg); }
@@ -150,7 +158,7 @@
     .deal-thumb-pink { background: #FDF2F8; }
     .deal-thumb-sage { background: #F0FDF4; }
     .disc-badge { position: absolute; top: 8px; right: 8px; background: #D85A30; color: #fff; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 5px; }
-    .verify-badge { position: absolute; top: 8px; left: 8px; font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 4px; display: flex; align-items: center; gap: 3px; }
+    .verify-badge { position: absolute; bottom: 8px; left: 8px; font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 4px; display: flex; align-items: center; gap: 3px; max-width: calc(100% - 16px); }
     .vb-community { background: var(--green-lt); color: var(--dark-green); }
     .vb-user { background: var(--amber-bg); color: var(--amber); }
     .vb-merchant { background: var(--purple-bg); color: var(--purple); }
@@ -194,7 +202,7 @@
     .stack-line { font-size: 10.5px; font-weight: 700; color: var(--dark-green); margin-top: 4px; }
     .gold-badge { background: linear-gradient(135deg,#F6D365,#D9A441); color: #5A3B00; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 10px; display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; width: fit-content; }
     .grace-card { border: 2px dashed var(--green) !important; background: linear-gradient(180deg,#F2FAF6,#fff 55%); }
-    .grace-banner { font-size: 9.5px; font-weight: 700; color: var(--dark-green); background: var(--green-lt); padding: 5px 10px; border-bottom: 1px dashed var(--green); }
+    .grace-banner { grid-column: 1 / -1; font-size: 9.5px; font-weight: 700; color: var(--dark-green); background: var(--green-lt); padding: 5px 10px; border-bottom: 1px dashed var(--green); }
     .grace-badge-note { font-size: 8px; opacity: .85; }
     .vote-weight { font-size: 9.5px; color: var(--dark-green); font-weight: 700; margin-top: 1px; }
     .comment-toggle-link { font-size: 10.5px; font-weight: 700; color: var(--muted); background: none; border: none; cursor: pointer; margin-top: 8px; padding: 0; font-family: inherit; display: flex; align-items: center; gap: 4px; }
@@ -558,7 +566,6 @@
     @media (max-width: 768px) {
       .how-steps-row { grid-template-columns: 1fr 1fr; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
-      .deal-grid { grid-template-columns: 1fr 1fr; }
       .below-grid { grid-template-columns: 1fr; }
       .footer-inner { grid-template-columns: 1fr 1fr; }
       .trust-bar { display: none; }
@@ -569,25 +576,67 @@
       .section, .page-section { padding: 28px 16px; }
     }
     @media (max-width: 480px) {
-      .deal-grid { grid-template-columns: 1fr; }
       .vote-btns { grid-template-columns: 1fr; }
       .footer-inner { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
     }
     /* ── Browse by Category ── */
-    .cats-section{padding:20px 0 16px;background:var(--bg);}
+    .cats-section{padding:14px 0 12px;background:var(--bg);}
     .cats-wrap{max-width:1200px;margin:0 auto;padding:0 24px;}
-    .cats-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1D9E75;margin-bottom:10px;}
-    .cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
-    .cat-tile{background:#111827;border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .18s,transform .18s;border:1px solid rgba(255,255,255,.05);}
-    .cat-tile:hover{background:#1f2937;transform:translateY(-2px);}
+    .cats-section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1D9E75;margin-bottom:8px;}
+    .cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
+    .cat-tile{background:#111827;border-radius:12px;padding:9px 11px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:background .15s,transform .15s;border:1px solid rgba(255,255,255,.05);}
+    .cat-tile:hover{background:#1f2937;transform:translateY(-1px);}
     .cat-tile.active{background:#1f2937;box-shadow:0 0 0 2px #1D9E75;}
-    .cat-tile-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .cat-tile-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
     .cat-tile-info{flex:1;min-width:0;}
-    .cat-tile-name{font-size:14px;font-weight:700;color:#F9FAFB;margin-bottom:4px;line-height:1.2;}
-    .cat-tile-count{font-size:12px;color:#6B7280;}
-    @media(max-width:900px){.cat-grid{grid-template-columns:repeat(3,1fr);}}
+    .cat-tile-name{font-size:11.5px;font-weight:700;color:#F9FAFB;margin-bottom:2px;line-height:1.2;}
+    .cat-tile-count{font-size:10px;color:#6B7280;}
+    @media(max-width:900px){.cat-grid{grid-template-columns:repeat(4,1fr);}}
     @media(max-width:600px){.cat-grid{grid-template-columns:repeat(2,1fr);gap:8px;}}
+    /* ── DealHub top tabs: Community / Card Deals / Carrier Perks ── */
+    .dh-top-tabs{display:flex;gap:4px;background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:4px;margin-bottom:24px;max-width:640px;}
+    .dh-tt{flex:1;padding:10px 14px;font-size:13px;font-weight:600;color:var(--muted);background:none;border:none;border-radius:10px;cursor:pointer;font-family:inherit;transition:all .15s;text-align:center;}
+    .dh-tt:hover{color:var(--text);}
+    .dh-tt.active{background:var(--green-lt);color:var(--dark-green);}
+    .dh-tab-panel{display:none;}
+    .dh-tab-panel.active{display:block;}
+    .dh-feed-tabs{display:flex;align-items:center;gap:4px;border-bottom:1.5px solid var(--border);margin-bottom:18px;flex-wrap:wrap;}
+    .dh-ft{padding:8px 14px;font-size:12.5px;font-weight:600;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit;margin-bottom:-1.5px;display:flex;align-items:center;gap:4px;transition:color .15s,border-color .15s;}
+    .dh-ft:hover{color:var(--text);}
+    .dh-ft.active{color:var(--green);border-bottom-color:var(--green);}
+    .dh-ft-badge{background:var(--green);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;line-height:1.4;}
+    .dh-inline-promo{grid-column:1/-1;display:flex;align-items:center;gap:12px;background:var(--green-lt);border:1px solid var(--green-md);border-radius:14px;padding:14px 16px;margin-bottom:2px;}
+    .dh-ip-icon{font-size:24px;flex-shrink:0;}
+    .dh-ip-body{flex:1;min-width:0;}
+    .dh-ip-title{font-size:12.5px;font-weight:700;color:var(--dark-green);margin-bottom:2px;}
+    .dh-ip-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+    .dh-ip-btn{flex-shrink:0;padding:8px 16px;border-radius:8px;background:var(--dark-green);color:#fff;font-size:11.5px;font-weight:600;border:none;cursor:pointer;font-family:inherit;}
+    /* Card Deals tab */
+    .dh-cards-intro, .dh-carrier-intro{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:18px;max-width:640px;}
+    .cdf-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;max-width:640px;transition:border-color .15s;}
+    .cdf-card:hover{border-color:var(--green-md);}
+    .cdf-dot{width:14px;height:10px;border-radius:3px;flex-shrink:0;margin-top:4px;}
+    .cdf-body{flex:1;min-width:0;}
+    .cdf-bank{font-size:11px;font-weight:700;color:var(--blue);margin-bottom:3px;}
+    .cdf-title{font-size:14px;font-weight:700;margin-bottom:3px;}
+    .cdf-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:5px;}
+    .cdf-meta{font-size:11.5px;color:var(--green);font-weight:600;}
+    /* Carrier Perks tab */
+    .cf-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;max-width:640px;margin-bottom:14px;}
+    .cf-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--amber-bg);border-bottom:1px solid var(--amber-border);}
+    .cf-plan{font-size:13px;font-weight:700;color:var(--amber);}
+    .cf-unclaimed{font-size:12px;font-weight:700;color:#991B1B;}
+    .cf-perk-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);}
+    .cf-perk-row:last-child{border-bottom:none;}
+    .cf-perk-icon{font-size:20px;flex-shrink:0;}
+    .cf-perk-body{flex:1;min-width:0;}
+    .cf-perk-title{font-size:13px;font-weight:700;margin-bottom:2px;}
+    .cf-perk-value{font-size:11.5px;color:var(--muted);}
+    .cf-perk-status{font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;flex-shrink:0;background:#FEF2F2;color:#991B1B;}
+    .cf-total-box{max-width:640px;text-align:center;padding:16px;background:#FEF2F2;border-radius:14px;margin-top:4px;}
+    .cf-total-val{font-size:18px;font-weight:800;color:#991B1B;}
+    .cf-total-label{font-size:12px;color:#991B1B;margin-top:3px;}
     /* ── EXPLORE LOCAL DEALS ── */
     .explore-section{background:#0f172a;padding:44px 0 52px;}
     .explore-title{font-size:clamp(20px,2.5vw,28px);font-weight:800;color:#F9FAFB;margin-bottom:18px;letter-spacing:-.5px;}
@@ -617,6 +666,10 @@
       <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">Discover Local Deals · Save more</span>
     </div>
                 <ul class="nav-links">
+      <li><div style="display:flex;flex-direction:column;align-items:flex-start">
+        <a href="Geno.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Geno AI</a>
+        <span style="font-size:10px;color:#6B7280;margin-top:1px">What can I find for you?</span>
+      </div></li>
       <li><div style="display:flex;flex-direction:column;align-items:flex-start">
         <a href="dealbox.html" style="font-size:14px;font-weight:600;text-decoration:none;color:#6B7280;display:flex;align-items:center;gap:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> DealBox</a>
         <span style="font-size:10px;color:#6B7280;margin-top:1px">Confirmed deals</span>
@@ -759,7 +812,7 @@
     <div class="cat-grid">
       <div class="cat-tile active" onclick="filterByTile(this,'all')">
         <div class="cat-tile-icon" style="background:rgba(29,158,117,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
         </div>
         <div class="cat-tile-info">
           <div class="cat-tile-name">All Categories</div>
@@ -768,7 +821,7 @@
       </div>
       <div class="cat-tile" onclick="filterByTile(this,'restaurants')">
         <div class="cat-tile-icon" style="background:rgba(249,115,22,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="21" y1="15" x2="21" y2="22"/><path d="M21 2a5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="21" y1="15" x2="21" y2="22"/><path d="M21 2a5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg>
         </div>
         <div class="cat-tile-info">
           <div class="cat-tile-name">Restaurants &amp; Dining</div>
@@ -777,7 +830,7 @@
       </div>
       <div class="cat-tile" onclick="filterByTile(this,'salons')">
         <div class="cat-tile-icon" style="background:rgba(236,72,153,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
         </div>
         <div class="cat-tile-info">
           <div class="cat-tile-name">Salons &amp; Beauty</div>
@@ -786,7 +839,7 @@
       </div>
       <div class="cat-tile" onclick="filterByTile(this,'spas')">
         <div class="cat-tile-icon" style="background:rgba(20,184,166,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
         </div>
         <div class="cat-tile-info">
           <div class="cat-tile-name">Spas &amp; Wellness</div>
@@ -795,7 +848,7 @@
       </div>
       <div class="cat-tile" onclick="filterByTile(this,'gyms')">
         <div class="cat-tile-icon" style="background:rgba(239,68,68,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
         <div class="cat-tile-info">
           <div class="cat-tile-name">Gyms &amp; Fitness</div>
@@ -804,7 +857,7 @@
       </div>
       <div class="cat-tile" onclick="filterByTile(this,'yoga')">
         <div class="cat-tile-icon" style="background:rgba(139,92,246,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
         </div>
         <div class="cat-tile-info">
           <div class="cat-tile-name">Yoga &amp; Meditation</div>
@@ -813,7 +866,7 @@
       </div>
       <div class="cat-tile" onclick="filterByTile(this,'cafes')">
         <div class="cat-tile-icon" style="background:rgba(217,119,6,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
         </div>
         <div class="cat-tile-info">
           <div class="cat-tile-name">Cafés &amp; Bakeries</div>
@@ -822,7 +875,7 @@
       </div>
       <div class="cat-tile" onclick="filterByTile(this,'coworking')">
         <div class="cat-tile-icon" style="background:rgba(59,130,246,.15)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
         </div>
         <div class="cat-tile-info">
           <div class="cat-tile-name">Co-working Spaces</div>
@@ -838,8 +891,24 @@
 
   <!-- VIEW: FEED -->
   <div class="view active" id="view-feed">
+
+    <!-- ══ DealHub top tabs: Community / Card Deals / Carrier Perks ══ -->
+    <div class="dh-top-tabs">
+      <button class="dh-tt active" onclick="switchDhTab('community',this)">👥 Community Deals</button>
+      <button class="dh-tt" onclick="switchDhTab('cards',this)">💳 Card Deals</button>
+      <button class="dh-tt" onclick="switchDhTab('carrier',this)">📱 Carrier Perks</button>
+    </div>
+
+    <div class="dh-tab-panel active" id="dh-tab-community">
     <div class="feed-layout">
       <div>
+        <!-- Feed tabs -->
+        <div class="dh-feed-tabs">
+          <button class="dh-ft active" onclick="switchDhFeed(this)">For you</button>
+          <button class="dh-ft" onclick="switchDhFeed(this)">Hottest</button>
+          <button class="dh-ft" onclick="switchDhFeed(this)">Trending <span class="dh-ft-badge">4</span></button>
+          <button class="dh-ft" onclick="switchDhFeed(this)">Everything <span class="dh-ft-badge">23</span></button>
+        </div>
         <!-- Hot now -->
         <div class="section-hdr">
           <h2 class="section-title">🔥 Hot right now</h2>
@@ -978,6 +1047,15 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <div class="dh-inline-promo">
+            <div class="dh-ip-icon">📬</div>
+            <div class="dh-ip-body">
+              <div class="dh-ip-title">Get the hottest deals in your inbox</div>
+              <div class="dh-ip-desc">Daily digest of top-voted deals near you. Never miss a 300°+ deal again.</div>
+            </div>
+            <button class="dh-ip-btn">Subscribe</button>
           </div>
 
           <div class="deal-card" data-cat="Beauty & Wellness" data-ts-min="92">
@@ -1139,6 +1217,7 @@
           </div>
 
         </div><!-- /deal-grid -->
+        <div class="deal-pagination" id="deal-pagination"></div>
       </div><!-- /main col -->
 
 
@@ -1571,6 +1650,120 @@
         </div>
       </div>
     </div><!-- /feed-layout -->
+    </div><!-- /dh-tab-community -->
+
+    <!-- ══ TAB: CARD DEALS ══ -->
+    <div class="dh-tab-panel" id="dh-tab-cards">
+      <div class="section-hdr">
+        <h2 class="section-title">💳 Your card deals this month</h2>
+      </div>
+      <div class="dh-cards-intro">Based on the cards you've added. Each deal shows the best cashback or reward you get automatically, matched against live deals near you.</div>
+
+      <div class="cdf-card">
+        <div class="cdf-dot" style="background:linear-gradient(135deg,#1A237E,#283593)"></div>
+        <div class="cdf-body">
+          <div class="cdf-bank">HDFC Regalia</div>
+          <div class="cdf-title">5% cashback on dining</div>
+          <div class="cdf-desc">Valid at all restaurants. Max ₹1,000/month. Auto-applied on swipe.</div>
+          <div class="cdf-meta">8 dining deals near you · Saves ~₹400/mo</div>
+        </div>
+      </div>
+      <div class="cdf-card">
+        <div class="cdf-dot" style="background:linear-gradient(135deg,#1565C0,#42A5F5)"></div>
+        <div class="cdf-body">
+          <div class="cdf-bank">SBI SimplySave</div>
+          <div class="cdf-title">10% off fashion weekends</div>
+          <div class="cdf-desc">Sat-Sun only. Max, Pantaloons, Shoppers Stop. Max ₹2,000/txn.</div>
+          <div class="cdf-meta">5 fashion deals near you · Saves ~₹600/mo</div>
+        </div>
+      </div>
+      <div class="cdf-card">
+        <div class="cdf-dot" style="background:linear-gradient(135deg,#E65100,#FF9800)"></div>
+        <div class="cdf-body">
+          <div class="cdf-bank">ICICI Amazon Pay</div>
+          <div class="cdf-title">5% back on Amazon</div>
+          <div class="cdf-desc">All Amazon purchases. No cap. Reward points credited next cycle.</div>
+          <div class="cdf-meta">3 online deals matched · Saves ~₹350/mo</div>
+        </div>
+      </div>
+      <div class="cdf-card">
+        <div class="cdf-dot" style="background:linear-gradient(135deg,#BF360C,#FF5722)"></div>
+        <div class="cdf-body">
+          <div class="cdf-bank">ICICI Coral</div>
+          <div class="cdf-title">BOGO on movie tickets</div>
+          <div class="cdf-desc">BookMyShow, PVR INOX. 1 free ticket/month. Book via BMS app.</div>
+          <div class="cdf-meta">Next movie night saves ₹250+</div>
+        </div>
+      </div>
+      <div class="cdf-card">
+        <div class="cdf-dot" style="background:linear-gradient(135deg,#6A1B9A,#9C27B0)"></div>
+        <div class="cdf-body">
+          <div class="cdf-bank">Axis Ace</div>
+          <div class="cdf-title">5% cashback on Swiggy/Zomato</div>
+          <div class="cdf-desc">Auto-applied on all delivery orders. No minimum. Max ₹500/month.</div>
+          <div class="cdf-meta">Use for food delivery · Saves ~₹300/mo</div>
+        </div>
+      </div>
+      <div style="max-width:640px;text-align:center;padding:14px;font-size:12px;color:var(--muted)">Add more cards in <a href="dealbook.html" style="color:var(--green);font-weight:600;text-decoration:none">DealBook</a> to see more matched deals</div>
+    </div><!-- /dh-tab-cards -->
+
+    <!-- ══ TAB: CARRIER PERKS ══ -->
+    <div class="dh-tab-panel" id="dh-tab-carrier">
+      <div class="section-hdr">
+        <h2 class="section-title">📱 Your carrier perks</h2>
+      </div>
+      <div class="dh-carrier-intro">Your phone plan includes subscriptions you're probably not using. Activate them to save thousands per year.</div>
+
+      <div class="cf-card">
+        <div class="cf-head">
+          <div class="cf-plan">Airtel ₹399 plan</div>
+          <div class="cf-unclaimed">₹6,744/yr unclaimed</div>
+        </div>
+        <div class="cf-perk-row">
+          <div class="cf-perk-icon">☁️</div>
+          <div class="cf-perk-body"><div class="cf-perk-title">Google One 100GB</div><div class="cf-perk-value">Worth ₹130/mo · ₹1,560/yr</div></div>
+          <div class="cf-perk-status">Not activated</div>
+        </div>
+        <div class="cf-perk-row">
+          <div class="cf-perk-icon">🎵</div>
+          <div class="cf-perk-body"><div class="cf-perk-title">Apple Music</div><div class="cf-perk-value">Worth ₹99/mo · ₹1,188/yr</div></div>
+          <div class="cf-perk-status">Not activated</div>
+        </div>
+        <div class="cf-perk-row">
+          <div class="cf-perk-icon">🎨</div>
+          <div class="cf-perk-body"><div class="cf-perk-title">Adobe Express Premium</div><div class="cf-perk-value">Worth ₹333/mo · ₹3,996/yr</div></div>
+          <div class="cf-perk-status">Not activated</div>
+        </div>
+      </div>
+
+      <div class="cf-card">
+        <div class="cf-head">
+          <div class="cf-plan">JioFiber ₹999 plan</div>
+          <div class="cf-unclaimed">₹7,164/yr unclaimed</div>
+        </div>
+        <div class="cf-perk-row">
+          <div class="cf-perk-icon">🎬</div>
+          <div class="cf-perk-body"><div class="cf-perk-title">Netflix Basic</div><div class="cf-perk-value">Worth ₹199/mo · ₹2,388/yr</div></div>
+          <div class="cf-perk-status">Not activated</div>
+        </div>
+        <div class="cf-perk-row">
+          <div class="cf-perk-icon">📺</div>
+          <div class="cf-perk-body"><div class="cf-perk-title">JioHotstar</div><div class="cf-perk-value">Worth ₹299/mo · ₹3,588/yr</div></div>
+          <div class="cf-perk-status">Not activated</div>
+        </div>
+        <div class="cf-perk-row">
+          <div class="cf-perk-icon">🧠</div>
+          <div class="cf-perk-body"><div class="cf-perk-title">Perplexity Pro</div><div class="cf-perk-value">Worth ₹99/mo · ₹1,188/yr</div></div>
+          <div class="cf-perk-status">Not activated</div>
+        </div>
+      </div>
+
+      <div class="cf-total-box">
+        <div class="cf-total-val">₹13,908/year</div>
+        <div class="cf-total-label">in perks you're paying for but not using</div>
+      </div>
+    </div><!-- /dh-tab-carrier -->
+
   </div><!-- /view-feed -->
 
   <!-- SINGLE PAGE: SUBMIT A DEAL -->
@@ -2046,12 +2239,77 @@
     }
   }
 
+  /* ── DealHub top tabs: Community / Card Deals / Carrier Perks ── */
+  function switchDhTab(tab, el) {
+    document.querySelectorAll('.dh-tt').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.dh-tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('dh-tab-' + tab).classList.add('active');
+  }
+  function switchDhFeed(el) {
+    document.querySelectorAll('.dh-ft').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  /* ── Deal list pagination (25 per page) + category/search filters ── */
+  const DEALS_PER_PAGE = 25;
+  let dealPage = 1;
+
+  function allDealCards() {
+    return Array.from(document.querySelectorAll('#deal-grid .deal-card'));
+  }
+  function visibleDealCards() {
+    return allDealCards().filter(c => c.dataset.catOut !== '1' && c.dataset.searchOut !== '1');
+  }
+  function assignDealPages() {
+    const cands = visibleDealCards();
+    allDealCards().forEach(c => { c.dataset.page = ''; });
+    cands.forEach((card, i) => { card.dataset.page = String(Math.floor(i / DEALS_PER_PAGE) + 1); });
+  }
+  function totalDealPages() {
+    return Math.max(1, Math.ceil(visibleDealCards().length / DEALS_PER_PAGE));
+  }
+  function applyDealVisibility() {
+    allDealCards().forEach(card => {
+      const filteredOut = card.dataset.catOut === '1' || card.dataset.searchOut === '1';
+      const onPage = card.dataset.page === String(dealPage);
+      card.style.display = (!filteredOut && onPage) ? '' : 'none';
+    });
+  }
+  function renderDealPagination() {
+    const wrap = document.getElementById('deal-pagination');
+    if (!wrap) return;
+    const total = totalDealPages();
+    if (total <= 1) { wrap.innerHTML = ''; return; }
+    let html = `<button class="dp-btn" ${dealPage === 1 ? 'disabled' : ''} onclick="goToDealPage(${dealPage - 1})">← Prev</button>`;
+    for (let p = 1; p <= total; p++) {
+      html += `<button class="dp-btn dp-num ${p === dealPage ? 'active' : ''}" onclick="goToDealPage(${p})">${p}</button>`;
+    }
+    html += `<button class="dp-btn" ${dealPage === total ? 'disabled' : ''} onclick="goToDealPage(${dealPage + 1})">Next →</button>`;
+    wrap.innerHTML = html;
+  }
+  function goToDealPage(p) {
+    const total = totalDealPages();
+    if (p < 1 || p > total) return;
+    dealPage = p;
+    applyDealVisibility();
+    renderDealPagination();
+    document.getElementById('deal-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function refreshDealListing() {
+    dealPage = 1;
+    assignDealPages();
+    applyDealVisibility();
+    renderDealPagination();
+  }
+
   /* ── Category filter ── */
   function setFilter(cat) {
     document.querySelectorAll('#deal-grid .deal-card').forEach(card => {
       const cardCat = card.dataset.cat || '';
-      card.style.display = (cat === 'All' || cardCat === cat) ? '' : 'none';
+      card.dataset.catOut = (cat === 'All' || cardCat === cat) ? '0' : '1';
     });
+    refreshDealListing();
   }
 
   function filterByTile(el, tileCat) {
@@ -2064,11 +2322,12 @@
 
   function filterDeals() {
     const q = (document.getElementById('hero-search-input').value || '').trim().toLowerCase();
-    if (!q) return;
     document.querySelectorAll('#deal-grid .deal-card').forEach(card => {
       const text = card.textContent.toLowerCase();
-      card.style.display = text.includes(q) ? '' : 'none';
+      card.dataset.searchOut = (q && !text.includes(q)) ? '1' : '0';
     });
+    refreshDealListing();
+    document.getElementById('deal-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   /* ── Hunter tiers & weighted voting ── */
@@ -2496,6 +2755,7 @@
 
   initTimestamps();
   setInterval(refreshTimestamps, 30000);
+  refreshDealListing();
 
   /* ── Capture timestamp on deal submission ── */
   function confirmAndSubmit() {
@@ -2571,6 +2831,7 @@
         </div>
       </div>`;
     grid.prepend(card);
+    refreshDealListing();
     startGraceCountdown(card, ts);
     goView('view-feed');
     awardPoints(10, 'deal submitted');
