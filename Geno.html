@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Geno · AI Deal Finder · Genoti</title>
   <meta name="theme-color" content="#085041" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <!-- default (not black-translucent): keeps the header below the iOS status bar when launched from the home screen -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Genoti" />
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
   <link rel="manifest" href="manifest.json" />
@@ -53,6 +54,7 @@
     .menu-sub-item:hover { background: var(--bg); }
     .menu-sub-item.highlight { color: var(--green); font-weight: 600; }
     .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
+    .menu-explore { display: none; }   /* product nav lives in the top bar on desktop; shown in the menu on mobile */
 
     /* ── GENO HERO (accent: --purple) ── */
     .geno-hero { max-width: 720px; margin: 0 auto; padding: 22px 20px 4px; text-align: center; }
@@ -176,6 +178,43 @@
     .confirm-title { font-size: 15px; font-weight: 800; color: var(--dark-green); margin-top: 3px; }
     .confirm-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
     .confirm-pay { display: inline-block; margin-top: 8px; padding: 6px 15px; background: var(--dark-green); color: #fff; border-radius: 8px; font-size: 12px; font-weight: 700; }
+    .confirm-code { font-size: 19px; font-weight: 800; letter-spacing: 1.5px; color: var(--purple); margin-top: 6px; }
+
+    /* ── AI NEGOTIATE (live transcript) ── */
+    .neg-panel { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 8px; background: var(--white); }
+    .neg-head { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--purple-bg); border-bottom: 1px solid var(--purple-border); font-size: 12.5px; font-weight: 700; color: var(--purple); }
+    .neg-live { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; color: var(--green); }
+    .neg-live .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 1.2s infinite; }
+    .neg-head.done .neg-live { color: var(--muted); }
+    .neg-head.done .neg-live .dot { background: var(--muted); animation: none; }
+    .neg-head-name { margin-left: auto; color: var(--muted); font-weight: 600; font-size: 11px; }
+    .neg-log { padding: 12px 14px; display: flex; flex-direction: column; gap: 9px; }
+    .neg-sys { align-self: center; text-align: center; font-size: 10.5px; font-weight: 600; color: var(--muted); background: var(--bg); border: 1px solid var(--border); padding: 3px 11px; border-radius: 20px; }
+    .neg-row { display: flex; gap: 7px; max-width: 90%; }
+    .neg-row.bot { align-self: flex-end; flex-direction: row-reverse; }
+    .neg-row.mer { align-self: flex-start; }
+    .neg-av { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+    .neg-av.bot { background: var(--purple-bg); }
+    .neg-av.mer { background: var(--bg); border: 1px solid var(--border); }
+    .neg-lbl { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 2px; }
+    .neg-row.bot .neg-lbl { text-align: right; }
+    .neg-bubble { font-size: 12.5px; line-height: 1.45; padding: 8px 11px; border-radius: 12px; }
+    .neg-row.bot .neg-bubble { background: var(--purple); color: #fff; border-bottom-right-radius: 4px; }
+    .neg-row.mer .neg-bubble { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+    .neg-typing { display: inline-flex; gap: 3px; padding: 10px 11px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; }
+    .neg-typing span { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: blink 1.4s infinite; }
+    .neg-typing span:nth-child(2) { animation-delay: .2s; }
+    .neg-typing span:nth-child(3) { animation-delay: .4s; }
+    .neg-result { border: 1.5px solid var(--purple); border-radius: 14px; padding: 14px; background: var(--purple-bg); margin-bottom: 8px; }
+    .neg-result-title { font-size: 12.5px; font-weight: 700; color: var(--purple); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .neg-prices { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+    .neg-new { font-size: 23px; font-weight: 800; color: var(--green); }
+    .neg-was { font-size: 13px; color: var(--muted); text-decoration: line-through; }
+    .neg-pct { background: rgba(29,158,117,.14); color: var(--green); font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+    .neg-expiry { font-size: 11.5px; color: var(--coral); font-weight: 700; margin-bottom: 11px; }
+    .neg-accept { width: 100%; padding: 11px; background: var(--purple); color: #fff; border: none; border-radius: 10px; font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: inherit; transition: opacity .15s; }
+    .neg-accept:hover { opacity: .92; }
+    .neg-target { display: flex; gap: 7px; flex-wrap: wrap; }
 
     /* ── QUICK SELECT ── */
     .qs-row { display: flex; gap: 7px; overflow-x: auto; padding: 10px 12px; border-top: 1px solid var(--border); flex-shrink: 0; -webkit-overflow-scrolling: touch; }
@@ -184,11 +223,20 @@
     .qs-btn:hover { border-color: var(--purple); color: var(--purple); }
 
     /* ── INPUT ── */
-    .input-bar { padding: 10px 12px 12px; background: var(--white); border-top: 1px solid var(--border); display: flex; gap: 8px; flex-shrink: 0; }
-    .input-bar input { flex: 1; padding: 11px 16px; border-radius: 22px; border: 1px solid var(--border); font-size: 14px; outline: none; background: var(--bg); color: var(--text); font-family: inherit; }
-    .input-bar input:focus { border-color: var(--purple); }
-    .send-btn { width: 42px; height: 42px; border-radius: 50%; background: var(--purple); border: none; color: #fff; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: opacity .15s; }
-    .send-btn:hover { opacity: .9; }
+    .input-bar { padding: 12px; background: var(--white); border-top: 1px solid var(--border); display: flex; gap: 9px; flex-shrink: 0; align-items: center; }
+    .input-bar input { flex: 1; padding: 13px 16px; border-radius: 24px; border: 1.5px solid var(--border); font-size: 14px; outline: none; background: var(--bg); color: var(--text); font-family: inherit; transition: border-color .15s; }
+    .input-bar input:focus { border-color: var(--purple); background: var(--white); }
+    .send-btn { display: inline-flex; align-items: center; gap: 7px; height: 46px; padding: 0 20px; border-radius: 40px; background: var(--purple); border: none; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; flex-shrink: 0; font-family: inherit; box-shadow: 0 4px 14px rgba(109,40,217,.32); transition: opacity .15s, transform .1s; }
+    .send-btn:hover { opacity: .93; }
+    .send-btn:active { transform: scale(.97); }
+    .send-btn svg { flex-shrink: 0; }
+
+    /* Floating reminder: this is an AI chatbot — jump to the composer */
+    .geno-fab { position: fixed; right: 20px; bottom: 22px; z-index: 250; display: none; align-items: center; gap: 8px; padding: 12px 18px; border-radius: 40px; background: var(--purple); color: #fff; border: none; cursor: pointer; font-family: inherit; font-size: 13.5px; font-weight: 700; box-shadow: 0 10px 26px rgba(109,40,217,.42); animation: fabBob 2.2s ease-in-out infinite; }
+    .geno-fab.show { display: inline-flex; }
+    .geno-fab .fab-ico { font-size: 15px; }
+    @keyframes fabBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    @media (max-width: 768px) { .geno-fab { right: 14px; bottom: calc(66px + env(safe-area-inset-bottom)); } }
 
     /* ── FOOTER (shared) ── */
     footer { background: #111827; color: rgba(255,255,255,.6); padding: 44px 24px 28px; margin-top: 60px; }
@@ -223,6 +271,8 @@
       .nav-links { display: none; }
       .nav-right .btn-login, .nav-right .btn-pill { display: none; }
       .nav-inner { padding: 0 16px; }
+      .menu-explore { display: block; }                                    /* surface product nav in the mobile menu */
+      .menu-dropdown { max-height: 78vh; overflow-y: auto; }               /* keep a long menu scrollable, not clipped */
       .footer-inner { grid-template-columns: 1fr 1fr; }
       .geno-hero { padding: 18px 16px 4px; }
       .geno-wrap { padding: 10px 12px 30px; }
@@ -268,6 +318,26 @@
           <div class="menu-icon"><span></span><span></span><span></span></div>
         </button>
         <div class="menu-dropdown" id="menu-dropdown">
+          <div class="menu-explore">
+            <div class="menu-main-item">Explore</div>
+            <a href="Geno.html" class="menu-sub-item highlight">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Geno AI
+            </a>
+            <a href="dealbox.html" class="menu-sub-item">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              DealBox
+            </a>
+            <a href="dealhub.html" class="menu-sub-item">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              DealHub
+            </a>
+            <a href="dealbook.html" class="menu-sub-item">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              DealBook
+            </a>
+            <div class="menu-divider"></div>
+          </div>
           <div class="menu-main-item">For customers</div>
           <a href="login.html" class="menu-sub-item highlight">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -328,15 +398,26 @@
       <button class="qs-btn" onclick="handleQuick('Hot deals right now')">🔥 Hot deals</button>
       <button class="qs-btn" onclick="handleQuick('Off-peak deals')">⏰ Off-peak</button>
       <button class="qs-btn" onclick="handleQuick('Last minute deals')">⚡ Last minute</button>
+      <button class="qs-btn" onclick="handleQuick('Flash sale offers')">💥 Flash Sale</button>
+      <button class="qs-btn" onclick="handleQuick('Launch offers')">🚀 Launch Offers</button>
       <button class="qs-btn" onclick="handleQuick('Negotiate a better price')">🤝 AI Negotiate</button>
     </div>
 
     <div class="input-bar">
       <input id="userInput" placeholder="Ask Geno anything… e.g. buffet nearby with buy 1 get 1" onkeydown="if(event.key==='Enter')sendFromInput()">
-      <button class="send-btn" onclick="sendFromInput()" aria-label="Send">➤</button>
+      <button class="send-btn" onclick="sendFromInput()" aria-label="Ask Geno">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Ask
+      </button>
     </div>
   </div>
 </div>
+
+<!-- Floating reminder: Geno is an AI chatbot; tap to jump to the composer and search -->
+<button class="geno-fab" id="genoFab" onclick="focusComposer()" aria-label="Ask Geno">
+  <span class="fab-ico">💬</span> Ask Geno
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+</button>
 
 <!-- ══ FOOTER ══ -->
 <footer>
@@ -702,7 +783,7 @@ function parseIntent(text){
   else if (t.includes('last minute') || t.includes('last-minute')) slots.type = 'last-minute';
   else if (t.includes('community')) slots.type = 'community';
   else if (t.includes('flash')) slots.type = 'flash';
-  else if (t.includes('new launch') || t.includes('new-launch')) slots.type = 'new-launch';
+  else if (t.includes('launch')) slots.type = 'new-launch';
   const m = t.match(/(?:under|below|less than|upto|up to|within)\s*₹?\s*(\d{2,5})/) || t.match(/₹\s*(\d{2,5})/);
   if (m) slots.budget = parseInt(m[1]);
   if (t.includes('near') || t.includes('nearby') || t.includes('close') || t.includes('around me')) slots.maxKm = 2;
@@ -760,6 +841,13 @@ function send(text, opts){
   if (ord){ addUser(text); logEvent('ordinal', { text: text, id: ord.id }); return bookDeal(ord.id); }
 
   if (session.lastResults.length && applyRefinement(text)) return;
+
+  // AI Negotiate intent → hand off to the negotiation flow
+  if (/\bnegotiat|better price|two.?for.?one|bargain\b/i.test(text)){
+    addUser(text);
+    logEvent('query', { text: text, intent: 'negotiate', source: opts.source || 'typed' });
+    return negotiateEntry(null, null, text);
+  }
 
   addUser(text);
   const slots = parseIntent(text);
@@ -902,26 +990,121 @@ function widenNow(){
   runQuery('Wider search', Object.assign({}, w.filters, { area: session.area }), { refine: true });
 }
 
-/* ============================================================ NEGOTIATE (provisional until merchant confirms) ============================================================ */
-function startNegotiate(id, ask){
-  const d = _DB.find(x => x.id === id) || _DB[0];
-  addUser(`Ask ${d.merchant} to ${ask}`);
-  logEvent('negotiate', { stage: 'offered', id: id, ask: ask });
+/* ============================================================ AI NEGOTIATE
+   Flow adapted from demo/negotiate.html: pick a target, watch a live
+   DealBot <-> merchant transcript. Language stays provisional; a firm
+   price + expiry only appears AFTER the merchant agrees. ============================================================ */
+
+// Entry from empty-state ("Ask them to ...") — keep the old signature working.
+function startNegotiate(id, ask){ negotiateEntry(id, ask); }
+
+function negotiateEntry(dealId, ask, rawText){
+  let deal = dealId ? _DB.find(d => d.id === dealId) : null;
+  if (!deal){                                  // no specific deal → pick the best nearby one
+    const near = rank(fetchDeals({ area: session.area, maxKm: 2 }));
+    deal = near[0] || _DB[0];
+  }
+  logEvent('negotiate', { stage: 'entry', id: deal.id, ask: ask || null });
   showTyping();
-  setTimeout(() => { hideTyping(); addBot(`On it, reaching out to <strong>${esc(d.merchant)}</strong>. I'll keep the ask provisional until they confirm. 🤝`); logEvent('negotiate',{stage:'merchant-contacted', id:id}); showTyping(); }, 700);
-  setTimeout(() => { hideTyping(); addBot(`<em>${esc(d.merchant)} is checking their ${esc(d.window.toLowerCase())} availability…</em>`); logEvent('negotiate',{stage:'merchant-responded', id:id}); showTyping(); }, 2100);
   setTimeout(() => {
     hideTyping();
-    logEvent('negotiate', { stage: 'price-agreed', id: id });
-    const newPrice = Math.round(d.real * 0.8);
-    addBot(`Good news, <strong>${esc(d.merchant)}</strong> agreed. This price is now firm and held for you:`,
-      `<div class="info-card">
-        <div class="info-title">🤝 Negotiated · confirmed by merchant</div>
-        <div class="info-prices"><span class="info-old">₹${d.real.toLocaleString('en-IN')}</span><span class="info-new">₹${newPrice.toLocaleString('en-IN')}</span><span class="info-pct">${Math.round((1-newPrice/d.real)*100)}% off</span></div>
-        <div class="info-note">Held till end of day · pay at store · no prepayment.</div>
-        <button class="info-btn" onclick="bookNegotiated('${d.id}', ${newPrice})">Accept & book · Pay ₹${newPrice.toLocaleString('en-IN')} at store</button>
-      </div>`);
-  }, 3900);
+    const price = deal.real ? `₹${deal.real.toLocaleString('en-IN')}` : 'their listed rate';
+    addBot(`I can negotiate at <strong>${esc(deal.merchant)}</strong> (${esc(deal.offer)}, currently ${price}). How hard should I push? I'll keep it provisional until they agree.`);
+    addCards(`<div class="neg-target">
+      <button class="chip" onclick="chooseTarget('${deal.id}',0.9,'Push gently — aim ~10% off')">Gentle · ~10% off</button>
+      <button class="chip" onclick="chooseTarget('${deal.id}',0.8,'Push for a good deal — aim ~20% off')">Balanced · ~20% off</button>
+      <button class="chip" onclick="chooseTarget('${deal.id}',0.7,'Push hard — aim ~30% off')">Aggressive · ~30% off</button>
+    </div>`);
+  }, 500);
+}
+
+function chooseTarget(id, mult, label){
+  const deal = _DB.find(x => x.id === id); if (!deal) return;
+  addUser(label);
+  runNegotiation(deal, mult);
+}
+
+function runNegotiation(deal, mult){
+  const base = deal.real || 1000;
+  const target = Math.max(1, Math.round(base * mult));
+  const saved = base - target;
+  const mer = deal.merchant, svc = deal.offer;
+  logEvent('negotiate', { stage: 'offered', id: deal.id, target: target, mult: mult });
+
+  const panel = document.createElement('div'); panel.className = 'msg'; panel.style.marginLeft = '36px';
+  panel.innerHTML = `<div class="neg-panel">
+    <div class="neg-head"><span class="neg-live"><span class="dot"></span> Live</span> AI Negotiate <span class="neg-head-name">${esc(mer)}</span></div>
+    <div class="neg-log"></div>
+  </div>`;
+  chat.appendChild(panel);
+  const logEl = panel.querySelector('.neg-log'), headEl = panel.querySelector('.neg-head');
+  interacted = true; isBusy = true; scrollChat();
+
+  // provisional throughout; merchant only agrees at the second-to-last beat
+  const script = [
+    { d: 400,   from: 'sys', text: `Geno reached ${mer} on WhatsApp` },
+    { d: 1500,  from: 'bot', text: `Hi! Geno here 👋 A verified customer wants "${svc}" and is ready to book right now. Any chance of a better rate?` },
+    { d: 3200,  from: 'mer', text: `Hello! Our current price is ₹${base.toLocaleString('en-IN')}.` },
+    { d: 4700,  from: 'bot', text: `Thanks! They're flexible on timing and will confirm immediately. Could you do ₹${target.toLocaleString('en-IN')}?` },
+    { d: 6400,  from: 'mer', text: `Let me check with the manager for a moment…` },
+    { d: 8600,  from: 'mer', text: `Okay — we can do ₹${target.toLocaleString('en-IN')} if the slot is confirmed within 2 hours. 🙏` },
+    { d: 9900,  from: 'bot', text: `Perfect, locking it in for the customer now. Thank you!` },
+    { d: 11000, from: 'sys', text: `Deal agreed · ₹${saved.toLocaleString('en-IN')} off` },
+  ];
+  const stages = { 0: 'merchant-contacted', 2: 'merchant-responded', 5: 'price-agreed' };
+
+  script.forEach((m, idx) => {
+    const typeAt = m.d - 850;
+    if (m.from !== 'sys' && idx > 0 && typeAt > 0){
+      setTimeout(() => {
+        const t = document.createElement('div'); t.className = 'neg-row ' + m.from; t.dataset.typ = idx;
+        t.innerHTML = `<div class="neg-av ${m.from}">${m.from === 'bot' ? '🤖' : '🏪'}</div><div class="neg-typing"><span></span><span></span><span></span></div>`;
+        logEl.appendChild(t); scrollChat();
+      }, typeAt);
+    }
+    setTimeout(() => {
+      const typ = logEl.querySelector('[data-typ="' + idx + '"]'); if (typ) typ.remove();
+      const el = document.createElement('div');
+      if (m.from === 'sys'){ el.className = 'neg-sys'; el.textContent = m.text; }
+      else {
+        el.className = 'neg-row ' + m.from;
+        const lbl = m.from === 'bot' ? 'Geno' : mer;
+        el.innerHTML = `<div class="neg-av ${m.from}">${m.from === 'bot' ? '🤖' : '🏪'}</div><div><div class="neg-lbl">${esc(lbl)}</div><div class="neg-bubble">${esc(m.text)}</div></div>`;
+      }
+      logEl.appendChild(el); scrollChat();
+      if (stages[idx]) logEvent('negotiate', { stage: stages[idx], id: deal.id });
+
+      if (idx === script.length - 1){
+        headEl.classList.add('done');
+        headEl.querySelector('.neg-live').innerHTML = '<span class="dot"></span> Agreed';
+        const pct = Math.round((saved / base) * 100);
+        const res = document.createElement('div'); res.className = 'msg'; res.style.marginLeft = '36px';
+        res.innerHTML = `<div class="neg-result">
+          <div class="neg-result-title">🤝 Confirmed by ${esc(mer)} — firm price</div>
+          <div class="neg-prices"><span class="neg-new">₹${target.toLocaleString('en-IN')}</span><span class="neg-was">₹${base.toLocaleString('en-IN')}</span><span class="neg-pct">${pct}% off</span></div>
+          <div class="neg-expiry" data-exp="${Date.now() + 2*3600*1000}">Held for 2:00:00 · pay at store · no prepayment</div>
+          <button class="neg-accept" onclick="bookNegotiated('${deal.id}', ${target})">Accept &amp; book · Pay ₹${target.toLocaleString('en-IN')} at store</button>
+        </div>`;
+        chat.appendChild(res); scrollChat();
+        startNegCountdown();
+        isBusy = false;
+      }
+    }, m.d);
+  });
+}
+
+let _negTimer = null;
+function startNegCountdown(){
+  if (_negTimer) return;
+  _negTimer = setInterval(() => {
+    const els = document.querySelectorAll('.neg-expiry[data-exp]');
+    if (!els.length){ clearInterval(_negTimer); _negTimer = null; return; }
+    els.forEach(el => {
+      let left = Math.max(0, Math.floor((+el.dataset.exp - Date.now())/1000));
+      const h = Math.floor(left/3600), m = Math.floor((left%3600)/60), s = left%60;
+      el.textContent = `Held for ${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} · pay at store · no prepayment`;
+    });
+  }, 1000);
 }
 
 /* ============================================================ NOTIFY ============================================================ */
@@ -950,13 +1133,16 @@ function bookDeal(id){
 }
 function bookNegotiated(id, price){
   const d = _DB.find(x => x.id === id); if (!d) return;
-  logEvent('negotiate', { stage: 'booked', id: id, price: price });
+  const code = 'GN' + Math.random().toString(36).substring(2, 8).toUpperCase();
+  logEvent('negotiate', { stage: 'booked', id: id, price: price, code: code });
+  saveReturning({ name: 'Balaji', merchant: d.merchant, savedYear: 18400 });
   showTyping();
-  setTimeout(() => { hideTyping(); addBot('Booked at the negotiated price:',
+  setTimeout(() => { hideTyping(); addBot('Booked at the negotiated price 🎉',
     `<div class="confirm-card"><div class="confirm-icon">✅</div><div class="confirm-title">Booked</div>
      <div style="font-size:13px;font-weight:700;margin-top:5px">${esc(d.merchant)}</div>
      <div class="confirm-sub">${esc(d.offer)} · negotiated</div>
-     <div class="confirm-pay">Pay ₹${price.toLocaleString('en-IN')} at store</div></div>`); }, 700);
+     <div class="confirm-code">${code}</div>
+     <div class="confirm-pay">Show code · Pay ₹${price.toLocaleString('en-IN')} at store</div></div>`); }, 700);
 }
 
 function voteDeal(btn, id){ btn.classList.toggle('voted'); btn.textContent = btn.classList.contains('voted') ? '🔥✓' : '🔥'; logEvent('vote', { id: id, on: btn.classList.contains('voted') }); }
@@ -994,6 +1180,21 @@ function startCountdowns(){
 /* ============================================================ INPUT WIRING ============================================================ */
 function handleQuick(text){ send(text, { source: 'chip' }); }
 function sendFromInput(){ const i = document.getElementById('userInput'); const v = i.value.trim(); if (!v) return; i.value=''; send(v, { source: 'typed' }); }
+
+/* ---------- Floating "Ask Geno" reminder: this is an AI chatbot; jump to the composer ---------- */
+function focusComposer(){
+  const el = document.getElementById('userInput');
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => el.focus({ preventScroll: true }), 350);
+}
+(function watchComposer(){
+  const fab = document.getElementById('genoFab');
+  const bar = document.querySelector('.input-bar');
+  if (!fab || !bar || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function(entries){
+    fab.classList.toggle('show', !entries[0].isIntersecting);
+  }, { threshold: 0.35 }).observe(bar);
+})();
 
 /* ---------- boot ---------- */
 initEntry();

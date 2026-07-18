@@ -1,4 +1,4 @@
-const CACHE = 'genoti-shell-v3';
+const CACHE = 'genoti-shell-v4';
 const SHELL = ['/Geno.html', '/manifest.json', '/apple-touch-icon.png', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', (e) => {
