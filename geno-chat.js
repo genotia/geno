@@ -10,6 +10,7 @@
   /* ── 0. ICONS (inline SVG, no icon-font dependency) ─────── */
   const ICON = {
     sparkles:  '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3z"/>',
+    chat:      '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
     search:    '<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
     mic:       '<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>',
     x:         '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
@@ -142,11 +143,11 @@
 
   /* ── 2. DOM ───────────────────────────────────────────── */
   const tpl = `
-  <button id="gs-fab" aria-label="Ask Geno">${svg('sparkles', 24, true)}</button>
+  <button id="gs-fab" aria-label="Ask Geno">${svg('chat', 24)}</button>
   <div class="gs-bubble" id="gs-bubble" style="display:none">
     <div class="gs-bubble-close" id="gs-bubble-close">${svg('x', 14)}</div>
     <div class="gs-bubble-head">
-      <div class="gs-bubble-av">${svg('sparkles', 13, true)}</div>
+      <div class="gs-bubble-av">${svg('chat', 13)}</div>
       <div class="gs-bubble-name">Geno</div>
     </div>
     <div class="gs-bubble-text">Hey! I can find deals, negotiate prices, and set alerts for you. <b>Tap me or just ask.</b></div>
@@ -157,7 +158,7 @@
       <div class="gs-head">
         <button class="gs-head-back" id="gs-head-back" style="display:none">${svg('chevron', 16)}</button>
         <button class="gs-head-close" id="gs-head-close">${svg('x', 15)}</button>
-        <div class="gs-head-av">${svg('sparkles', 20, true)}</div>
+        <div class="gs-head-av">${svg('chat', 20)}</div>
         <div class="gs-head-title" id="gs-head-title">What can I find for you?</div>
         <div class="gs-head-sub" id="gs-head-sub">Type, speak, or tap a shortcut</div>
       </div>
