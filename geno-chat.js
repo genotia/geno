@@ -269,7 +269,11 @@
 
   /* ── 7. OPEN / CLOSE ──────────────────────────────────── */
   const overlay = document.getElementById('gs-overlay');
-  fab.addEventListener('click', openPanel);
+  // Tapping the assistant (FAB or welcome bubble) opens the full Geno AI page,
+  // where the conversational chatbot lives.
+  function goToGeno() { window.location.href = 'Geno.html'; }
+  fab.addEventListener('click', goToGeno);
+  bubble.addEventListener('click', goToGeno);
   document.getElementById('gs-scrim').addEventListener('click', closePanel);
   document.getElementById('gs-head-close').addEventListener('click', closePanel);
   backBtn.addEventListener('click', showHome);
