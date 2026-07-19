@@ -756,6 +756,10 @@
       <div class="type-tile-icon" style="background:rgba(139,92,246,.15)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
       <div class="type-tile-info"><div class="type-tile-name">AI Negotiate</div><div class="type-tile-sub">AI gets you a price</div></div>
     </div>
+    <div class="type-tile branddeals" data-type="brand" onclick="filterByType('brand',this)">
+      <div class="type-tile-icon" style="background:rgba(109,40,217,.15)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 8.4l-8-6.4a1 1 0 0 0-1.2 0l-8 6.4A1 1 0 0 0 3 9.2V20a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9.2a1 1 0 0 0-.4-.8z"/><path d="M9 21v-7h6v7"/></svg></div>
+      <div class="type-tile-info"><div class="type-tile-name">Brand Deals</div><div class="type-tile-sub">Nike, Reebok and more</div></div>
+    </div>
     <div class="type-tile notify" data-type="notify" onclick="filterByType('notify',this)">
       <div class="type-tile-icon" style="background:rgba(59,130,246,.15)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
       <div class="type-tile-info"><div class="type-tile-name">Notify Me</div><div class="type-tile-sub">Deals you're watching</div></div>
@@ -846,7 +850,7 @@
 
 
 <!-- ══ DEALS SECTION ══ -->
-<div class="section">
+<div class="section" id="deals-section">
   <div class="section-header" id="deals-section-header">
     <h2 id="deals-section-title">Hot deals near you</h2>
     <span id="deals-count-label" style="font-size:13px;color:var(--muted);font-weight:500"></span>
@@ -1377,6 +1381,19 @@
     </div>`;
   }
 
+  /* Brand deals as a category. DealBox is the confirmed-deals surface, so
+     only store-confirmed brand deals are bookable here. */
+  function renderBrandDeals() {
+    const cards = window.BrandDeals ? BrandDeals.cardsHTML({ states: ['confirmed'] }) : '';
+    const count = window.BrandDeals ? BrandDeals.getDeals({ state: 'confirmed' }).length : 0;
+    const title = document.getElementById('deals-section-title');
+    const lbl   = document.getElementById('deals-count-label');
+    if (title) title.textContent = 'Brand deals near you';
+    if (lbl)   lbl.textContent = count + (count === 1 ? ' deal' : ' deals') + ' near you';
+    document.getElementById('deals-grid').innerHTML = cards ||
+      '<div style="grid-column:1/-1;text-align:center;padding:48px 0"><div style="font-size:15px;font-weight:700;margin-bottom:6px">No brand deals near you right now</div><div style="font-size:13px;color:var(--muted)">We will show them here as soon as a store confirms one.</div></div>';
+  }
+
   function renderNotifyWatchlist() {
     const lbl = document.getElementById('deals-count-label');
     if (lbl) lbl.textContent = _notifyBM.length + (_notifyBM.length === 1 ? ' deal watched' : ' deals watched');
@@ -1402,6 +1419,9 @@
 
   function renderDeals(cat = 'All') {
     if (_activeType === 'notify') { renderNotifyWatchlist(); return; }
+    if (_activeType === 'brand')  { renderBrandDeals(); return; }
+    const t = document.getElementById('deals-section-title');
+    if (t && t.textContent !== 'Search results') t.textContent = 'Hot deals near you';  // reset after the brand category
     let filtered = cat === 'All' ? allDeals : allDeals.filter(d => d.category === cat);
     if (_activeType !== 'all') filtered = filtered.filter(d => d.type === _activeType);
     const lbl = document.getElementById('deals-count-label');
@@ -1997,6 +2017,7 @@
   </div>
 </div>
 
+<script src="brand-deals.js"></script>
 <script src="geno-chat.js"></script>
 </body>
 </html>

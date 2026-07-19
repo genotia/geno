@@ -411,6 +411,8 @@
       <button class="qs-btn" onclick="handleQuick('Hot deals right now')">🔥 Hot deals</button>
       <button class="qs-btn" onclick="handleQuick('Off-peak deals')">⏰ Off-peak</button>
       <button class="qs-btn" onclick="handleQuick('Last minute deals')">⚡ Last minute</button>
+      <button class="qs-btn" onclick="handleQuick('Nearby malls')">🏬 Nearby malls</button>
+      <button class="qs-btn" onclick="handleQuick('Brand deals near me')">🏷️ Brand deals</button>
       <button class="qs-btn" onclick="handleQuick('Flash sale offers')">💥 Flash Sale</button>
       <button class="qs-btn" onclick="handleQuick('Launch offers')">🚀 Launch Offers</button>
       <button class="qs-btn" onclick="handleQuick('Negotiate a better price')">🤝 AI Negotiate</button>
@@ -498,6 +500,7 @@
   </div>
 </div>
 
+<script src="brand-deals.js"></script>
 <script>
 /* ============================================================
    Geno AI — conversational deal surface (vanilla, single file).
@@ -523,21 +526,30 @@ const TYPE_META = {
 
 // Every deal is real inventory. Trust marker required on each.
 // ref may be null → the card shows the real price alone (no fabricated strike-through).
+/* Malls near the user. A mall holds both brand stores and local outlets,
+   so a mall view pulls from both the local deal set and the brand feed. */
+const MALLS = [
+  { id:'forum',   name:'Forum Mall',         area:'Koramangala',  km:1.4 },
+  { id:'garuda',  name:'Garuda Mall',        area:'Magrath Road', km:4.1 },
+  { id:'mantri',  name:'Mantri Square',      area:'Malleswaram',  km:8.7 },
+  { id:'phoenix', name:'Phoenix Marketcity', area:'Whitefield',   km:11.2 },
+];
+
 const _DB = [
   { id:'d01', merchant:'Green Leaf Spa',  cat:'Salon',      area:'Koramangala', km:1.2, offer:'35% off all services',        real:650,  ref:1000, type:'off-peak',    window:'Today 11am-3pm', expMin:null, bogo:false, buffet:false, createdMin:12, trust:{kind:'merchant'},                          tip:'HDFC Regalia -> 5x points, save ₹65 more' },
-  { id:'d02', merchant:'Cafe Monsoon',    cat:'Restaurant', area:'Koramangala', km:0.8, offer:'Buy 1 Get 1 lunch combos',     real:299,  ref:599,  type:'community',   window:'Today 12-4pm',   expMin:95,   bogo:true,  buffet:false, createdMin:22, trust:{kind:'community', votes:14},               tip:'Axis Ace -> 5% cashback on dining' },
+  { id:'d02', merchant:'Cafe Monsoon', mall:'forum',    cat:'Restaurant', area:'Koramangala', km:0.8, offer:'Buy 1 Get 1 lunch combos',     real:299,  ref:599,  type:'community',   window:'Today 12-4pm',   expMin:95,   bogo:true,  buffet:false, createdMin:22, trust:{kind:'community', votes:14},               tip:'Axis Ace -> 5% cashback on dining' },
   { id:'d03', merchant:'Spice Route',     cat:'Restaurant', area:'Koramangala', km:1.4, offer:'Lunch buffet for two',        real:599,  ref:999,  type:'off-peak',    window:'Today 12-4pm',   expMin:null, bogo:false, buffet:true,  createdMin:40, trust:{kind:'checked', cmp:'40% below area avg'}, tip:null },
   { id:'d04', merchant:'FitZone Gym',     cat:'Fitness',    area:'Koramangala', km:2.1, offer:'₹99 trial session',           real:99,   ref:500,  type:'community',   window:'Tomorrow 6-10am',expMin:null, bogo:false, buffet:false, createdMin:30, trust:{kind:'community', votes:12},               tip:null },
   { id:'d05', merchant:'Brew & Bite',     cat:'Cafe',       area:'Koramangala', km:0.5, offer:'₹149 all-day breakfast',      real:149,  ref:349,  type:'flash',       window:'Today all day',  expMin:40,   bogo:false, buffet:false, createdMin:8,  trust:{kind:'merchant'},                          tip:'Amazon Pay ICICI -> 2% back' },
   { id:'d06', merchant:'Aura Wellness',   cat:'Wellness',   area:'Koramangala', km:1.8, offer:'60-min massage ₹799',         real:799,  ref:1500, type:'new-launch',  window:'Today 2-6pm',    expMin:null, bogo:false, buffet:false, createdMin:55, trust:{kind:'merchant'},                          tip:null },
-  { id:'d07', merchant:'Glam Studio',     cat:'Salon',      area:'Koramangala', km:0.8, offer:'Full hair spa + cut',         real:499,  ref:1250, type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:10, trust:{kind:'community', votes:247},              tip:null },
-  { id:'d08', merchant:'Third Wave',      cat:'Cafe',       area:'Koramangala', km:1.1, offer:'15% off cold brews',          real:213,  ref:250,  type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:58, trust:{kind:'community', votes:3},                tip:null },
+  { id:'d07', merchant:'Glam Studio', mall:'forum',     cat:'Salon',      area:'Koramangala', km:0.8, offer:'Full hair spa + cut',         real:499,  ref:1250, type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:10, trust:{kind:'community', votes:247},              tip:null },
+  { id:'d08', merchant:'Third Wave', mall:'garuda',      cat:'Cafe',       area:'Koramangala', km:1.1, offer:'15% off cold brews',          real:213,  ref:250,  type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:58, trust:{kind:'community', votes:3},                tip:null },
   { id:'d09', merchant:'Cult.fit',        cat:'Fitness',    area:'Koramangala', km:1.5, offer:'Free trial week',             real:0,    ref:499,  type:'new-launch',  window:'This week',      expMin:null, bogo:false, buffet:false, createdMin:65, trust:{kind:'merchant'},                          tip:null },
   { id:'d10', merchant:'Kairali Spa',     cat:'Wellness',   area:'Koramangala', km:2.0, offer:'30% off Ayurveda massage',    real:1400, ref:2000, type:'off-peak',    window:'Weekdays',       expMin:null, bogo:false, buffet:false, createdMin:50, trust:{kind:'checked', cmp:'28% below area avg'}, tip:null },
   { id:'d11', merchant:'Meghana Foods',   cat:'Restaurant', area:'Koramangala', km:1.0, offer:'Buy 1 Get 1 chicken biryani', real:300,  ref:600,  type:'flash',       window:'Today till 10pm',expMin:70,   bogo:true,  buffet:false, createdMin:35, trust:{kind:'community', votes:9},                tip:null },
-  { id:'d12', merchant:'Truffles',        cat:'Restaurant', area:'Koramangala', km:1.8, offer:'Weekend buffet',              real:449,  ref:799,  type:'last-minute', window:'Sat-Sun',        expMin:null, bogo:false, buffet:true,  createdMin:45, trust:{kind:'merchant'},                          tip:null },
+  { id:'d12', merchant:'Truffles', mall:'forum',        cat:'Restaurant', area:'Koramangala', km:1.8, offer:'Weekend buffet',              real:449,  ref:799,  type:'last-minute', window:'Sat-Sun',        expMin:null, bogo:false, buffet:true,  createdMin:45, trust:{kind:'merchant'},                          tip:null },
   { id:'d13', merchant:'Empire',          cat:'Restaurant', area:'Koramangala', km:1.9, offer:'Veg thali buffet',            real:225,  ref:null, type:'off-peak',    window:'Lunch',          expMin:null, bogo:false, buffet:true,  createdMin:70, trust:{kind:'checked', cmp:'in line with area avg'}, tip:null },
-  { id:'d14', merchant:'Nails & Co',      cat:'Salon',      area:'Koramangala', km:1.6, offer:'Nail art + pedicure',         real:649,  ref:999,  type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:18, trust:{kind:'community', votes:21},               tip:null },
+  { id:'d14', merchant:'Nails & Co', mall:'phoenix',      cat:'Salon',      area:'Koramangala', km:1.6, offer:'Nail art + pedicure',         real:649,  ref:999,  type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:18, trust:{kind:'community', votes:21},               tip:null },
 ];
 
 // Extra live inventory so a broad query spans multiple 25-per-page pages.
@@ -565,7 +577,8 @@ const _DB = [
 function fetchDeals(f) {
   f = f || {};
   return _DB.filter(d => {
-    if (f.area && d.area !== f.area) return false;
+    if (f.mall && d.mall !== f.mall) return false;
+    if (f.area && !f.mall && d.area !== f.area) return false;
     if (f.category && d.cat.toLowerCase() !== f.category.toLowerCase()) return false;
     if (f.type && d.type !== f.type) return false;
     if (f.bogo && !d.bogo) return false;
@@ -771,6 +784,59 @@ function renderDigest(){
   </div>`);
 }
 
+/* ============================================================ NEARBY MALLS ============================================================ */
+function mallDealCount(id){
+  const local = fetchDeals({ mall: id }).length;
+  const brand = window.BrandDeals ? BrandDeals.getDeals({ mall: id }).length : 0;
+  return { local: local, brand: brand, total: local + brand };
+}
+
+function showMalls(){
+  const list = MALLS.slice().sort((a, b) => a.km - b.km).filter(m => mallDealCount(m.id).total > 0);
+  if (!list.length){
+    addBot(`No malls near ${esc(session.area || 'you')} have live deals right now. I can watch for them.`);
+    return;
+  }
+  addBot(`${list.length} mall${list.length === 1 ? '' : 's'} near you with deals live right now. Tap one to see every store inside.`);
+  const rows = list.map(m => {
+    const c = mallDealCount(m.id);
+    const bits = [];
+    if (c.local) bits.push(`${c.local} local`);
+    if (c.brand) bits.push(`${c.brand} brand`);
+    return `<div class="digest-line" onclick="openMall('${m.id}')">
+      <div class="dl-dot" style="background:var(--purple)"></div>
+      <div class="dl-body">
+        <div class="dl-title">${esc(m.name)} <span class="dl-count">${m.km} km</span></div>
+        <div class="dl-eg">${c.total} deal${c.total === 1 ? '' : 's'} live · ${bits.join(' · ')} · ${esc(m.area)}</div>
+      </div>
+      <div class="dl-arrow">→</div>
+    </div>`;
+  }).join('');
+  addCards(`<div class="digest"><div class="digest-head">Malls near you</div><div class="digest-sub">Sorted by distance</div>${rows}</div>`);
+}
+
+function openMall(id){
+  const m = MALLS.find(x => x.id === id); if (!m) return;
+  addUser(`Deals inside ${m.name}`);
+  logEvent('mall-open', { mall: id });
+  showTyping();
+  setTimeout(() => {
+    hideTyping();
+    const local = rank(fetchDeals({ mall: id }));
+    const brandCards = window.BrandDeals ? BrandDeals.cardsHTML({ mall: id, states: ['confirmed','spotted'] }) : '';
+    const brandCount = window.BrandDeals ? BrandDeals.getDeals({ mall: id }).length : 0;
+    if (!local.length && !brandCount){
+      addBot(`Nothing live inside <strong>${esc(m.name)}</strong> right now.`);
+      return;
+    }
+    session.lastResults = local;
+    addBot(`Inside <strong>${esc(m.name)}</strong>, ${esc(m.km + ' km away')}. ${local.length + brandCount} deal${(local.length + brandCount) === 1 ? '' : 's'} live across the stores.`);
+    if (brandCount) addCards(`<div class="chips-label">Brand stores</div><div class="brd-grid">${brandCards}</div>`);
+    if (local.length) addCards(`<div class="chips-label">Other stores inside</div>${dealGrid(local)}`);
+    startCountdowns();
+  }, 560);
+}
+
 /* ============================================================ INTENT PARSING ============================================================ */
 const CATS = { salon:'Salon', spa:'Wellness', wellness:'Wellness', massage:'Wellness', restaurant:'Restaurant', dining:'Restaurant', lunch:'Restaurant', dinner:'Restaurant', food:'Restaurant', cafe:'Cafe', coffee:'Cafe', breakfast:'Cafe', fitness:'Fitness', gym:'Fitness', workout:'Fitness' };
 
@@ -842,6 +908,34 @@ function send(text, opts){
   if (ord){ addUser(text); logEvent('ordinal', { text: text, id: ord.id }); return bookDeal(ord.id); }
 
   if (session.lastResults.length && applyRefinement(text)) return;
+
+  // Nearby malls → list malls, then browse every store inside one
+  if (/\bmalls?\b/i.test(text)){
+    addUser(text);
+    logEvent('query', { text: text, intent: 'malls', source: opts.source || 'typed' });
+    showTyping();
+    setTimeout(() => { hideTyping(); showMalls(); }, 480);
+    return;
+  }
+
+  // Brand deals category → show brand deals as cards
+  if (/\bbrand deals?\b/i.test(text)){
+    addUser(text);
+    logEvent('query', { text: text, intent: 'brand-deals', source: opts.source || 'typed' });
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      const list = window.BrandDeals ? BrandDeals.getDeals() : [];
+      if (!list.length){
+        addBot(`No brand deals live near ${esc(session.area || 'you')} right now. I can watch for them and tell you the moment one lands.`);
+        return;
+      }
+      const confirmed = list.filter(d => d.state === 'confirmed').length;
+      addBot(`${list.length} brand deal${list.length === 1 ? '' : 's'} near <strong>${esc(session.area || 'you')}</strong>. ${confirmed} confirmed by the store and bookable, the rest are reported but not confirmed yet.`);
+      addCards(`<div class="brd-grid">${BrandDeals.cardsHTML({ states: ['confirmed','spotted'] })}</div>`);
+    }, 520);
+    return;
+  }
 
   // AI Negotiate intent → hand off to the negotiation flow
   if (/\bnegotiat|better price|two.?for.?one|bargain\b/i.test(text)){
