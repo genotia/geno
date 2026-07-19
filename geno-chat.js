@@ -31,13 +31,13 @@
   /* ── 1. STYLES ────────────────────────────────────────── */
   const css = `
   #gs-fab,#gs-fab *,#gs-overlay,#gs-overlay *,.gs-bubble,.gs-bubble *{box-sizing:border-box}
-  #gs-fab{position:fixed;bottom:28px;right:28px;z-index:9000;height:52px;padding:0 20px 0 16px;border-radius:40px;background:linear-gradient(135deg,#085041 0%,#0d7a5e 100%);display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:none;box-shadow:0 6px 28px rgba(8,80,65,.5),0 2px 8px rgba(0,0,0,.15);transition:transform .2s,box-shadow .2s}
+  #gs-fab{position:fixed;bottom:28px;right:28px;z-index:9000;padding:9px 14px;border-radius:16px;background:linear-gradient(135deg,#085041 0%,#0d7a5e 100%);display:inline-flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;box-shadow:0 6px 28px rgba(8,80,65,.5),0 2px 8px rgba(0,0,0,.15);transition:transform .2s,box-shadow .2s}
   #gs-fab:hover{transform:scale(1.06)}
   #gs-fab:active{transform:scale(.94)}
   #gs-fab.gs-hidden{display:none}
   #gs-fab svg{color:#7EDDB8;flex-shrink:0}
-  #gs-fab .gs-fab-label{font-size:14px;font-weight:700;color:#fff;white-space:nowrap;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
-  .gs-fab-pulse{position:absolute;inset:-6px;border-radius:40px;border:2px solid #1D9E75;animation:gsPulse 2s ease-out 3;pointer-events:none}
+  #gs-fab .gs-fab-label{font-size:11px;font-weight:700;color:#fff;white-space:nowrap;line-height:1;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+  .gs-fab-pulse{position:absolute;inset:-6px;border-radius:16px;border:2px solid #1D9E75;animation:gsPulse 2s ease-out 3;pointer-events:none}
   @keyframes gsPulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.3);opacity:0}}
 
   .gs-bubble{position:fixed;bottom:98px;right:24px;z-index:9001;background:#fff;border:1px solid #E8E6E0;border-radius:16px 16px 4px 16px;padding:13px 15px;width:230px;box-shadow:0 20px 50px rgba(0,0,0,.16);animation:gsBubbleIn .3s ease-out}
@@ -144,7 +144,7 @@
 
   /* ── 2. DOM ───────────────────────────────────────────── */
   const tpl = `
-  <button id="gs-fab" aria-label="Ask Geno AI">${svg('chat', 22)}<span class="gs-fab-label">Ask Geno AI</span></button>
+  <button id="gs-fab" aria-label="Ask Geno AI">${svg('chat', 24)}<span class="gs-fab-label">Ask Geno AI</span></button>
   <div class="gs-bubble" id="gs-bubble" style="display:none">
     <div class="gs-bubble-close" id="gs-bubble-close">${svg('x', 14)}</div>
     <div class="gs-bubble-head">
