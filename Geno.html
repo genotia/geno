@@ -57,14 +57,14 @@
     .menu-explore { display: none; }   /* product nav lives in the top bar on desktop; shown in the menu on mobile */
 
     /* ── GENO HERO (accent: --purple) ── */
-    .geno-hero { max-width: 720px; margin: 0 auto; padding: 22px 20px 4px; text-align: center; }
+    .geno-hero { max-width: 1280px; margin: 0 auto; padding: 22px 20px 4px; text-align: center; }
     .geno-hero .eyebrow { display: inline-flex; align-items: center; gap: 6px; background: var(--purple-bg); color: var(--purple); font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; margin-bottom: 12px; }
     .geno-hero h1 { font-size: clamp(22px, 3.2vw, 32px); font-weight: 800; letter-spacing: -.6px; color: var(--text); line-height: 1.12; }
     .geno-hero h1 span { color: var(--purple); }
     .geno-hero p { font-size: 14px; color: var(--muted); margin-top: 8px; }
 
     /* ── CHAT SHELL ── */
-    .geno-wrap { max-width: 720px; margin: 0 auto; padding: 12px 16px 40px; }
+    .geno-wrap { max-width: 1280px; margin: 0 auto; padding: 12px 16px 40px; }
     /* Elastic: grows with content and shrinks back; the page scrolls, not an inner box. */
     .gc-panel { display: flex; flex-direction: column; min-height: clamp(460px, 60vh, 640px); background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,.06); }
     .gc-topbar { display: flex; justify-content: flex-end; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
@@ -80,10 +80,10 @@
     .msg { margin-bottom: 14px; animation: fadeUp .3s ease; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: translateY(0);} }
     .msg-user { display: flex; justify-content: flex-end; }
-    .msg-user .bubble { max-width: 82%; padding: 10px 14px; background: var(--purple); color: #fff; border-radius: 16px 16px 4px 16px; font-size: 14px; line-height: 1.45; }
+    .msg-user .bubble { max-width: min(82%, 660px); padding: 10px 14px; background: var(--purple); color: #fff; border-radius: 16px 16px 4px 16px; font-size: 14px; line-height: 1.45; }
     .msg-bot { display: flex; align-items: flex-start; gap: 8px; }
     .msg-av { width: 28px; height: 28px; border-radius: 50%; background: var(--purple-bg); color: var(--purple); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 2px; }
-    .msg-bot .bubble { max-width: 86%; padding: 10px 14px; background: var(--white); border: 1px solid var(--border); border-radius: 16px 16px 16px 4px; font-size: 14px; line-height: 1.5; color: var(--text); }
+    .msg-bot .bubble { max-width: min(86%, 660px); padding: 10px 14px; background: var(--white); border: 1px solid var(--border); border-radius: 16px 16px 16px 4px; font-size: 14px; line-height: 1.5; color: var(--text); }
     .msg-cards { margin-left: 36px; margin-top: 8px; }
 
     .typing { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
@@ -98,6 +98,36 @@
     .digest-head { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
     .digest-head b { color: var(--purple); }
     .digest-sub { font-size: 11.5px; color: var(--muted); margin-bottom: 12px; }
+    /* Digest breakdown as visual cards, one per deal type, tinted with the type accent */
+    .dg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .dg-card { text-align: left; font-family: inherit; cursor: pointer; background: var(--dg-bg); border: 1.5px solid transparent; border-radius: 12px; padding: 11px 12px; display: flex; flex-direction: column; gap: 7px; transition: transform .15s, box-shadow .15s, border-color .15s; }
+    .dg-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.09); border-color: var(--dg-fg); }
+    .dg-top { display: flex; align-items: baseline; gap: 6px; }
+    .dg-n { font-size: 23px; font-weight: 800; color: var(--dg-fg); line-height: 1; }
+    .dg-type { font-size: 11.5px; font-weight: 700; color: var(--dg-fg); }
+    .dg-best { border-top: 1px solid rgba(0,0,0,.07); padding-top: 7px; }
+    .dg-merchant { font-size: 12.5px; font-weight: 700; color: var(--text); }
+    .dg-offer { font-size: 11px; color: var(--muted); line-height: 1.35; margin-top: 1px; }
+    .dg-foot { font-size: 10.5px; font-weight: 700; color: var(--dg-fg); opacity: .85; }
+    @media (max-width: 480px) { .dg-grid { grid-template-columns: 1fr 1fr; } }
+
+    /* Nearby malls as cards */
+    .ml-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+    .ml-card { text-align: left; font-family: inherit; cursor: pointer; background: var(--white); border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 9px; transition: transform .15s, box-shadow .15s, border-color .15s; }
+    .ml-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.09); border-color: var(--purple); }
+    .ml-top { display: flex; align-items: center; gap: 9px; }
+    .ml-ico { width: 32px; height: 32px; border-radius: 9px; background: var(--purple-bg); color: var(--purple); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ml-id { flex: 1; min-width: 0; }
+    .ml-name { font-size: 13px; font-weight: 800; color: var(--text); line-height: 1.2; overflow-wrap: anywhere; }
+    .ml-area { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+    .ml-km { font-size: 11px; font-weight: 700; color: var(--purple); background: var(--purple-bg); padding: 3px 9px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+    .ml-statrow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .ml-stats { border-top: 1px solid var(--border); padding-top: 8px; }
+    .ml-n { font-size: 19px; font-weight: 800; color: var(--purple); }
+    .ml-lbl { font-size: 11px; font-weight: 600; color: var(--muted); }
+    .ml-split { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+    @media (max-width: 480px) { .ml-grid { grid-template-columns: 1fr; } }
+
     .digest-line { display: flex; gap: 10px; padding: 9px 0; border-top: 1px solid var(--border); cursor: pointer; }
     .digest-line:hover .dl-name { color: var(--purple); }
     .dl-dot { width: 8px; height: 8px; border-radius: 3px; flex-shrink: 0; margin-top: 5px; }
@@ -120,9 +150,11 @@
     .area-sub { font-size: 11.5px; color: var(--muted); margin-bottom: 10px; }
 
     /* ── DEAL CARDS ── */
-    .deal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 4px; }
-    @media (max-width: 860px) { .deal-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 560px) { .deal-grid { grid-template-columns: 1fr; } }
+    .deal-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 4px; }
+    @media (max-width: 1240px) { .deal-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 1000px) { .deal-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 760px)  { .deal-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px)  { .deal-grid { grid-template-columns: 1fr; } }
     .deal-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 13px; box-shadow: 0 2px 10px rgba(0,0,0,.05); transition: box-shadow .15s, transform .15s; display: flex; flex-direction: column; }
     .deal-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.09); transform: translateY(-2px); }
     .dc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 5px; }
@@ -758,21 +790,24 @@ function renderDigest(){
     if (!items.length) return;
     const best = items.slice().sort((a,b) => discount(b) - discount(a))[0];
     const tm = TYPE_META[type];
-    lines += `<div class="digest-line" onclick="handleQuick('${tm.label} deals')">
-      <div class="dl-dot" style="background:${tm.dot}"></div>
-      <div class="dl-body">
-        <div class="dl-title">${items.length} ${tm.label.toLowerCase()} <span class="dl-count">deal${items.length>1?'s':''}</span></div>
-        <div class="dl-eg">best: <span class="dl-name">${esc(best.merchant)}</span> · ${esc(best.offer)} · ${best.km}km</div>
+    lines += `<button class="dg-card" onclick="handleQuick('${tm.label} deals')" style="--dg-bg:${tm.tag[0]};--dg-fg:${tm.tag[1]}">
+      <div class="dg-top">
+        <span class="dg-n">${items.length}</span>
+        <span class="dg-type">${esc(tm.label.toLowerCase())}</span>
       </div>
-      <div class="dl-arrow">→</div>
-    </div>`;
+      <div class="dg-best">
+        <div class="dg-merchant">${esc(best.merchant)}</div>
+        <div class="dg-offer">${esc(best.offer)}</div>
+      </div>
+      <div class="dg-foot">best · ${best.km} km</div>
+    </button>`;
   });
 
   addBot(`${timeGreeting()}! Here's what's live near <strong>${esc(area)}</strong>.`);
   addCards(`<div class="digest">
     <div class="digest-head"><b>${freshCount}</b> deal${freshCount===1?'':'s'} went live in the last hour</div>
     <div class="digest-sub">${all.length} live in total · tap a type to see it</div>
-    ${lines}
+    <div class="dg-grid">${lines}</div>
   </div>
   <div class="chips-label">Browse by category</div>
   <div class="chips">
@@ -798,21 +833,30 @@ function showMalls(){
     return;
   }
   addBot(`${list.length} mall${list.length === 1 ? '' : 's'} near you with deals live right now. Tap one to see every store inside.`);
-  const rows = list.map(m => {
+  const MALL_ICON = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9z"/><path d="M3 9l2.5-6h13L21 9"/><path d="M9 21v-6h6v6"/></svg>';
+  const cards = list.map(m => {
     const c = mallDealCount(m.id);
     const bits = [];
     if (c.local) bits.push(`${c.local} local`);
     if (c.brand) bits.push(`${c.brand} brand`);
-    return `<div class="digest-line" onclick="openMall('${m.id}')">
-      <div class="dl-dot" style="background:var(--purple)"></div>
-      <div class="dl-body">
-        <div class="dl-title">${esc(m.name)} <span class="dl-count">${m.km} km</span></div>
-        <div class="dl-eg">${c.total} deal${c.total === 1 ? '' : 's'} live · ${bits.join(' · ')} · ${esc(m.area)}</div>
+    return `<button class="ml-card" onclick="openMall('${m.id}')">
+      <div class="ml-top">
+        <span class="ml-ico">${MALL_ICON}</span>
+        <span class="ml-id">
+          <span class="ml-name">${esc(m.name)}</span>
+          <div class="ml-area">${esc(m.area)}</div>
+        </span>
       </div>
-      <div class="dl-arrow">→</div>
-    </div>`;
+      <div class="ml-stats">
+        <div class="ml-statrow">
+          <span><span class="ml-n">${c.total}</span> <span class="ml-lbl">deal${c.total === 1 ? '' : 's'} live</span></span>
+          <span class="ml-km">${m.km} km</span>
+        </div>
+        <div class="ml-split">${bits.join(' · ')}</div>
+      </div>
+    </button>`;
   }).join('');
-  addCards(`<div class="digest"><div class="digest-head">Malls near you</div><div class="digest-sub">Sorted by distance</div>${rows}</div>`);
+  addCards(`<div class="digest"><div class="digest-head">Malls near you</div><div class="digest-sub">Sorted by distance</div><div class="ml-grid">${cards}</div></div>`);
 }
 
 function openMall(id){
