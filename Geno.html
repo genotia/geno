@@ -1404,11 +1404,11 @@ initEntry();
    resumes automatically once they are in. */
 if (window.GenotiAuth) {
   const G = window.GenotiAuth;
-  bookDeal        = G.gate(bookDeal,        { icon: '📅', title: 'Log in to book',       msg: 'Log in so we can hold this deal for you and send your confirmation.' });
-  bookNegotiated  = G.gate(bookNegotiated,  { icon: '📅', title: 'Log in to book',       msg: 'Log in so we can hold your negotiated price and send your confirmation.' });
-  startNegotiate  = G.gate(startNegotiate,  { icon: '🤝', title: 'Log in to negotiate',  msg: 'Negotiating sends a real request to the business, so we need to know who is asking.' });
-  startNotify     = G.gate(startNotify,     { icon: '🔔', title: 'Log in to get alerts', msg: 'Log in so we know where to message you when a matching deal goes live.' });
-  voteDeal        = G.gate(voteDeal,        { icon: '👍', title: 'Log in to vote',       msg: 'Votes decide what other people see, so each one has to come from an account.' });
+  bookDeal        = G.gate(bookDeal,        { icon: 'book', title: 'Log in to book',       msg: 'Log in so we can hold this deal for you and send your confirmation.' });
+  bookNegotiated  = G.gate(bookNegotiated,  { icon: 'book', title: 'Log in to book',       msg: 'Log in so we can hold your negotiated price and send your confirmation.' });
+  startNegotiate  = G.gate(startNegotiate,  { icon: 'negotiate', title: 'Log in to negotiate',  msg: 'Negotiating sends a real request to the business, so we need to know who is asking.' });
+  startNotify     = G.gate(startNotify,     { icon: 'alert', title: 'Log in to get alerts', msg: 'Log in so we know where to message you when a matching deal goes live.' });
+  voteDeal        = G.gate(voteDeal,        { icon: 'vote', title: 'Log in to vote',       msg: 'Votes decide what other people see, so each one has to come from an account.' });
 
   // Reflect the session in the header.
   G.onChange(user => {

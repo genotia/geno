@@ -378,8 +378,8 @@
     },
     getDeals, renderAll, cardsHTML,
     closeClaim, submitClaim, viewInStore, expand,
-    openClaim: gated(openClaim, { icon: '🏪', title: 'Log in to confirm this deal', msg: 'Confirming a deal publishes it to other shoppers, so it has to come from an account.' }),
-    vote:      gated(vote,      { icon: '👍', title: 'Log in to vote',              msg: 'Votes decide what other people see, so each one has to come from an account.' }),
+    openClaim: gated(openClaim, { icon: 'store', title: 'Log in to confirm this deal', msg: 'Confirming a deal publishes it to other shoppers, so it has to come from an account.' }),
+    vote:      gated(vote,      { icon: 'vote', title: 'Log in to vote',              msg: 'Votes decide what other people see, so each one has to come from an account.' }),
     _all: () => DEALS,
   };
 

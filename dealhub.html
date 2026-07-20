@@ -2875,13 +2875,13 @@
   const G = window.GenotiAuth; if (!G) return;
   const _goView = goView;
   goView = function (id) {
-    if (id === 'view-detail') return G.require({ icon: '🔍', title: 'Log in to open this deal', msg: 'Deal details, codes and redemption are for logged-in members.' }, () => _goView(id));
-    if (id === 'view-submit') return G.require({ icon: '📝', title: 'Log in to submit a deal', msg: 'Submitted deals are shown to other shoppers, so they have to come from an account.' }, () => _goView(id));
+    if (id === 'view-detail') return G.require({ icon: 'detail', title: 'Log in to open this deal', msg: 'Deal details, codes and redemption are for logged-in members.' }, () => _goView(id));
+    if (id === 'view-submit') return G.require({ icon: 'submit', title: 'Log in to submit a deal', msg: 'Submitted deals are shown to other shoppers, so they have to come from an account.' }, () => _goView(id));
     return _goView(id);
   };
-  castVote        = G.gate(castVote,        { icon: '👍', title: 'Log in to vote',    msg: 'Votes decide what other people see, so each one has to come from an account.' });
-  postComment     = G.gate(postComment,     { icon: '💬', title: 'Log in to comment', msg: 'Comments are public, so they have to come from an account.' });
-  confirmAndSubmit = G.gate(confirmAndSubmit, { icon: '📝', title: 'Log in to submit a deal', msg: 'Submitted deals are shown to other shoppers, so they have to come from an account.' });
+  castVote        = G.gate(castVote,        { icon: 'vote', title: 'Log in to vote',    msg: 'Votes decide what other people see, so each one has to come from an account.' });
+  postComment     = G.gate(postComment,     { icon: 'comment', title: 'Log in to comment', msg: 'Comments are public, so they have to come from an account.' });
+  confirmAndSubmit = G.gate(confirmAndSubmit, { icon: 'submit', title: 'Log in to submit a deal', msg: 'Submitted deals are shown to other shoppers, so they have to come from an account.' });
 })();
 </script>
 <script src="geno-chat.js"></script>

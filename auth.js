@@ -96,7 +96,9 @@
   .ga-x { position: absolute; top: 14px; right: 14px; width: 30px; height: 30px; border: none; background: #F3F4F6;
     border-radius: 50%; color: #6B7280; font-size: 17px; line-height: 1; cursor: pointer; }
   .ga-x:hover { background: #E5E7EB; color: #111827; }
-  .ga-ico { font-size: 34px; margin-bottom: 10px; }
+  .ga-ico { width: 52px; height: 52px; border-radius: 15px; background: #ECFDF5; color: #1D9E75;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+  .ga-ico svg { width: 26px; height: 26px; }
   .ga-title { font-size: 19px; font-weight: 800; color: #111827; letter-spacing: -.4px; margin-bottom: 6px; }
   .ga-msg { font-size: 13.5px; color: #6B7280; line-height: 1.6; margin-bottom: 18px; }
   .ga-label { display: block; font-size: 12px; font-weight: 700; color: #374151; margin-bottom: 6px; }
@@ -134,7 +136,7 @@
     <button class="ga-x" type="button" data-ga="close" aria-label="Close">&times;</button>
 
     <div class="ga-screen on" id="ga-s-email">
-      <div class="ga-ico" id="ga-icon">🔐</div>
+      <div class="ga-ico" id="ga-icon"></div>
       <div class="ga-title" id="ga-title">Log in to continue</div>
       <div class="ga-msg" id="ga-msg">Browsing deals is free. Log in to book, negotiate and save deals.</div>
       <div class="ga-banner" id="ga-b-email"></div>
@@ -146,7 +148,7 @@
     </div>
 
     <div class="ga-screen" id="ga-s-otp">
-      <div class="ga-ico">✉️</div>
+      <div class="ga-ico" data-icon="mail"></div>
       <div class="ga-title">Enter your code</div>
       <div class="ga-msg" id="ga-otp-sub">We sent a 6-digit code to your email.</div>
       <div class="ga-banner" id="ga-b-otp"></div>
@@ -159,7 +161,7 @@
     </div>
 
     <div class="ga-screen" id="ga-s-pw">
-      <div class="ga-ico">🔑</div>
+      <div class="ga-ico" data-icon="key"></div>
       <div class="ga-title">Welcome back</div>
       <div class="ga-msg" id="ga-pw-sub">Enter your password to continue.</div>
       <div class="ga-banner" id="ga-b-pw"></div>
@@ -171,7 +173,7 @@
     </div>
 
     <div class="ga-screen" id="ga-s-setpw">
-      <div class="ga-ico">🎉</div>
+      <div class="ga-ico" data-icon="check"></div>
       <div class="ga-title">You're logged in</div>
       <div class="ga-msg">Set a password so next time you can log in without waiting for an email. You can skip this.</div>
       <div class="ga-banner" id="ga-b-setpw"></div>
@@ -181,6 +183,26 @@
       <button class="ga-link" type="button" data-ga="skip">Skip for now</button>
     </div>
   </div>`;
+
+  /* Named line icons so each gate looks like the site, not like emoji. */
+  var svg = function (d) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" ' +
+           'stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>';
+  };
+  var ICONS = {
+    book:     svg('<rect x="3" y="4" width="18" height="17" rx="3"/><line x1="3" y1="9.5" x2="21" y2="9.5"/><line x1="8" y1="2.5" x2="8" y2="5.5"/><line x1="16" y1="2.5" x2="16" y2="5.5"/><polyline points="8.8 14.6 11 16.8 15.4 12.4"/>'),
+    negotiate: svg('<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.5 9.5 0 0 1-2.8-.4L3 21l1.6-4.8A8.2 8.2 0 0 1 3.6 12 8.4 8.4 0 0 1 12 3.6a8.4 8.4 0 0 1 9 7.9z"/><line x1="8.5" y1="10.5" x2="15.5" y2="10.5"/><line x1="8.5" y1="14" x2="13" y2="14"/>'),
+    alert:    svg('<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>'),
+    vote:     svg('<path d="M7 22V11"/><path d="M2.5 13.2A2 2 0 0 1 4.5 11H7l4.3-8a2.6 2.6 0 0 1 3.5 2.4V9h4.4a2 2 0 0 1 2 2.4l-1.6 8A2 2 0 0 1 17.6 21H7"/>'),
+    comment:  svg('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'),
+    submit:   svg('<path d="M11 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-6"/><path d="M18.4 2.6a2 2 0 0 1 2.8 2.8L12 14.6l-3.8.9.9-3.8z"/>'),
+    store:    svg('<path d="M3 9.5 4.6 4.4A2 2 0 0 1 6.5 3h11a2 2 0 0 1 1.9 1.4L21 9.5"/><path d="M4 9.5h16V19a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M3 9.5a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/>'),
+    detail:   svg('<circle cx="11" cy="11" r="7"/><line x1="20.5" y1="20.5" x2="16" y2="16"/>'),
+    mail:     svg('<rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><polyline points="3 6 12 13 21 6"/>'),
+    key:      svg('<circle cx="7.5" cy="15.5" r="4"/><path d="M10.5 12.5 20 3"/><path d="M17 6l2.5 2.5"/>'),
+    check:    svg('<circle cx="12" cy="12" r="9"/><polyline points="8.2 12.3 11 15.1 16 10"/>'),
+    lock:     svg('<rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>'),
+  };
 
   var back, email = '', digits = [];
 
@@ -220,6 +242,10 @@
     });
     document.getElementById('ga-newpw').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') savePw();
+    });
+
+    back.querySelectorAll('[data-icon]').forEach(function (el) {
+      el.innerHTML = ICONS[el.getAttribute('data-icon')] || '';
     });
 
     digits = [].slice.call(back.querySelectorAll('.ga-otp input'));
@@ -360,7 +386,9 @@
 
   function open(opts) {
     opts = opts || {};
-    document.getElementById('ga-icon').textContent = opts.icon || '🔐';
+    var ic = document.getElementById('ga-icon');
+    var art = ICONS[opts.icon || 'lock'];
+    if (art) ic.innerHTML = art; else ic.textContent = opts.icon;
     document.getElementById('ga-title').textContent = opts.title || 'Log in to continue';
     document.getElementById('ga-msg').textContent = opts.msg ||
       'Browsing deals is free. Log in to book, negotiate and save deals.';

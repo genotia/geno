@@ -1279,7 +1279,7 @@
   function _persistBM() { localStorage.setItem('genoti_bm', JSON.stringify(_notifyBM)); }
 
   /* Kept for the old markup; both now open the shared login modal. */
-  function openLoginGate() { window.GenotiAuth.open({ icon: '🔔', title: 'Log in to save alerts', msg: 'Log in to follow this business and get told the moment a matching deal goes live.' }); }
+  function openLoginGate() { window.GenotiAuth.open({ icon: 'alert', title: 'Log in to save alerts', msg: 'Log in to follow this business and get told the moment a matching deal goes live.' }); }
   function closeLoginGate() { window.GenotiAuth.close(); }
 
   function toggleNotify(dealId) {
@@ -2019,9 +2019,9 @@
    negotiating and saving alerts need an account. */
 (function () {
   const G = window.GenotiAuth; if (!G) return;
-  toggleNotify     = G.gate(toggleNotify,     { icon: '🔔', title: 'Log in to save alerts', msg: 'Log in to follow this business and get told the moment a matching deal goes live.' });
-  startNegotiation = G.gate(startNegotiation, { icon: '🤝', title: 'Log in to negotiate',   msg: 'Negotiating sends a real request to the business, so we need to know who is asking.' });
-  confirmBook      = G.gate(confirmBook,      { icon: '📅', title: 'Log in to book',        msg: 'Log in so we can hold this slot for you and send your confirmation.' });
+  toggleNotify     = G.gate(toggleNotify,     { icon: 'alert', title: 'Log in to save alerts', msg: 'Log in to follow this business and get told the moment a matching deal goes live.' });
+  startNegotiation = G.gate(startNegotiation, { icon: 'negotiate', title: 'Log in to negotiate',   msg: 'Negotiating sends a real request to the business, so we need to know who is asking.' });
+  confirmBook      = G.gate(confirmBook,      { icon: 'book', title: 'Log in to book',        msg: 'Log in so we can hold this slot for you and send your confirmation.' });
 })();
 </script>
 <script src="brand-deals.js"></script>
