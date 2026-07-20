@@ -278,8 +278,8 @@
     <div class="logo-sub">Discover Local Deals · Pay Less</div>
   </div>
 
-  <h1 class="card-title">Let's create your account</h1>
-  <p class="card-sub">Sign up with Genoti and manage your business</p>
+  <h1 class="card-title">Request access for your business</h1>
+  <p class="card-sub">We review every business before activating it. Send your details and we will email you once approved.</p>
 
   <div class="banner" id="banner"></div>
 
@@ -317,18 +317,6 @@
         </div>
       </div>
 
-      <!-- Password -->
-      <div class="form-group">
-        <div class="pw-wrap">
-          <input type="password" id="f-password" placeholder="Password" autocomplete="new-password" required />
-          <button type="button" class="pw-toggle" onclick="togglePw()" aria-label="Show/hide password">
-            <svg id="pw-eye" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
       <!-- No. of Branches -->
       <div class="form-group">
         <input type="number" id="f-branches" placeholder="No. of branches" min="1" />
@@ -358,7 +346,7 @@
 
     <button type="submit" class="btn-submit" id="submit-btn">
       <div class="spinner" id="spinner"></div>
-      <span id="submit-label">Sign Up for Free</span>
+      <span id="submit-label">Request access</span>
     </button>
   </form>
 
@@ -387,11 +375,6 @@
     }
   }
 
-  function togglePw() {
-    const inp = document.getElementById('f-password');
-    inp.type = inp.type === 'password' ? 'text' : 'password';
-  }
-
   function showBanner(msg, type) {
     const b = document.getElementById('banner');
     b.textContent = msg;
@@ -400,7 +383,7 @@
 
   function setLoading(on) {
     document.getElementById('spinner').style.display = on ? 'block' : 'none';
-    document.getElementById('submit-label').textContent = on ? 'Creating account…' : 'Sign Up for Free';
+    document.getElementById('submit-label').textContent = on ? 'Sending request…' : 'Request access';
     document.getElementById('submit-btn').disabled = on;
   }
 
@@ -412,46 +395,45 @@
     const address  = document.getElementById('f-address').value.trim();
     const email    = document.getElementById('f-email').value.trim();
     const phone    = document.getElementById('f-phone').value.trim();
-    const password = document.getElementById('f-password').value;
     const branches = document.getElementById('f-branches').value || 1;
     const staff    = document.getElementById('f-staff').value || 1;
 
     if (!name)     return showBanner('Please enter your full name.', 'error');
     if (!biz)      return showBanner('Please enter your business name.', 'error');
     if (!email)    return showBanner('Please enter your email.', 'error');
-    if (!password || password.length < 8) return showBanner('Password must be at least 8 characters.', 'error');
     if (!captchaChecked) return showBanner('Please confirm you\'re not a robot.', 'error');
 
     setLoading(true);
 
-    const { data, error } = await sb.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name:       name,
-          business_name:   biz,
-          address:         address,
-          phone:           phone ? '+91' + phone.replace(/\s/g, '') : '',
-          num_branches:    parseInt(branches),
-          num_staff:       parseInt(staff),
-        }
+    /* No account is created here. The request is recorded as pending and
+       emailed to the owner, who approves before any access is granted. */
+    const { data, error } = await sb.functions.invoke('request-merchant-approval', {
+      body: {
+        full_name:     name,
+        business_name: biz,
+        address:       address,
+        email:         email,
+        phone:         phone ? '+91' + phone.replace(/\s/g, '') : '',
+        num_branches:  parseInt(branches),
+        num_staff:     parseInt(staff),
+        plan:          new URLSearchParams(location.search).get('plan') || '',
       }
     });
 
-    if (error) {
+    if (error || (data && data.error)) {
       setLoading(false);
-      return showBanner(error.message, 'error');
+      return showBanner(
+        (data && data.error) || 'We could not send your request just now. Please try again, or email balaji@genoti.ai directly.',
+        'error'
+      );
     }
 
-    showBanner('Account created! Check your email to confirm, then log in.', 'success');
     setLoading(false);
     document.getElementById('signup-form').reset();
     captchaChecked = false;
     document.getElementById('captcha-check').classList.remove('checked');
     document.getElementById('captcha-check').innerHTML = '';
-
-    setTimeout(() => { window.location.href = 'merchant/index.html'; }, 2500);
+    showBanner('Request sent. We review every business before activating access, and we will email ' + email + ' once it is approved.', 'success');
   });
 </script>
 </body>
