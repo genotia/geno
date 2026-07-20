@@ -555,6 +555,8 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="auth.js"></script>
 <script src="brand-deals.js"></script>
 <script>
 /* ============================================================
@@ -1395,6 +1397,28 @@ function focusComposer(){
 
 /* ---------- boot ---------- */
 initEntry();
+
+/* ---------- Auth gate ----------
+   Browsing and searching deals stays open to everyone. Everything that
+   commits the user to something goes through the login modal first, and
+   resumes automatically once they are in. */
+if (window.GenotiAuth) {
+  const G = window.GenotiAuth;
+  bookDeal        = G.gate(bookDeal,        { icon: '📅', title: 'Log in to book',       msg: 'Log in so we can hold this deal for you and send your confirmation.' });
+  bookNegotiated  = G.gate(bookNegotiated,  { icon: '📅', title: 'Log in to book',       msg: 'Log in so we can hold your negotiated price and send your confirmation.' });
+  startNegotiate  = G.gate(startNegotiate,  { icon: '🤝', title: 'Log in to negotiate',  msg: 'Negotiating sends a real request to the business, so we need to know who is asking.' });
+  startNotify     = G.gate(startNotify,     { icon: '🔔', title: 'Log in to get alerts', msg: 'Log in so we know where to message you when a matching deal goes live.' });
+  voteDeal        = G.gate(voteDeal,        { icon: '👍', title: 'Log in to vote',       msg: 'Votes decide what other people see, so each one has to come from an account.' });
+
+  // Reflect the session in the header.
+  G.onChange(user => {
+    document.querySelectorAll('a[href="login.html"]').forEach(a => {
+      if (!user) { a.style.display = ''; return; }
+      if (a.classList.contains('btn-login')) { a.textContent = 'Log out'; a.href = '#'; a.onclick = e => { e.preventDefault(); G.signOut(); location.reload(); }; }
+      else { a.style.display = 'none'; }
+    });
+  });
+}
 
 /* ---------- PWA ---------- */
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));

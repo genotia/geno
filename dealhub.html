@@ -2133,6 +2133,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
 <script>
   /* ── Explore regions ── */
   function showRegion(el, region) {
@@ -2163,10 +2164,7 @@
   }
 
   /* ── Auth ── */
-  const _sb = supabase.createClient(
-    'https://ijsxmgkzwvamwctbkgjo.supabase.co',
-    'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ'
-  );
+  const _sb = window.GenotiAuth.sb;   // one shared session across the site
   let _currentUser = null;
 
   function setNavLoggedIn(user) {
@@ -2869,6 +2867,23 @@
     </a>
   </div>
 </div>
+<script>
+/* ---------- Auth gate ----------
+   Browsing the feed, filtering and paging stay open. Opening a deal,
+   voting, commenting and submitting a deal need an account. */
+(function () {
+  const G = window.GenotiAuth; if (!G) return;
+  const _goView = goView;
+  goView = function (id) {
+    if (id === 'view-detail') return G.require({ icon: '🔍', title: 'Log in to open this deal', msg: 'Deal details, codes and redemption are for logged-in members.' }, () => _goView(id));
+    if (id === 'view-submit') return G.require({ icon: '📝', title: 'Log in to submit a deal', msg: 'Submitted deals are shown to other shoppers, so they have to come from an account.' }, () => _goView(id));
+    return _goView(id);
+  };
+  castVote        = G.gate(castVote,        { icon: '👍', title: 'Log in to vote',    msg: 'Votes decide what other people see, so each one has to come from an account.' });
+  postComment     = G.gate(postComment,     { icon: '💬', title: 'Log in to comment', msg: 'Comments are public, so they have to come from an account.' });
+  confirmAndSubmit = G.gate(confirmAndSubmit, { icon: '📝', title: 'Log in to submit a deal', msg: 'Submitted deals are shown to other shoppers, so they have to come from an account.' });
+})();
+</script>
 <script src="geno-chat.js"></script>
 </body>
 </html>

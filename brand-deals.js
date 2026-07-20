@@ -361,6 +361,14 @@
     renderAll();
   }
 
+  /* Voting and claiming need an account. Viewing the card, opening the map
+     and reading the terms stay open to everyone. */
+  const gated = (fn, opts) => function () {
+    if (!window.GenotiAuth) return fn.apply(this, arguments);
+    const self = this, args = arguments;
+    return window.GenotiAuth.require(opts, () => fn.apply(self, args));
+  };
+
   window.BrandDeals = {
     SPOTTED_SHOW_TERMS, SPOTTED_CLAIMABLE, BRAND_DEALS_ORDER,
     mount(id, opts) {
@@ -369,7 +377,9 @@
       else boot();
     },
     getDeals, renderAll, cardsHTML,
-    openClaim, closeClaim, submitClaim, vote, viewInStore, expand,
+    closeClaim, submitClaim, viewInStore, expand,
+    openClaim: gated(openClaim, { icon: '🏪', title: 'Log in to confirm this deal', msg: 'Confirming a deal publishes it to other shoppers, so it has to come from an account.' }),
+    vote:      gated(vote,      { icon: '👍', title: 'Log in to vote',              msg: 'Votes decide what other people see, so each one has to come from an account.' }),
     _all: () => DEALS,
   };
 

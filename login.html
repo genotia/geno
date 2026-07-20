@@ -438,6 +438,14 @@
   let currentScreen = 'choose';
   let enteredEmail  = '';
 
+  /* Where to land after logging in. Set by auth.js when a members-only page
+     bounced the visitor here, so they resume where they were. */
+  function nextPage() {
+    const n = new URLSearchParams(location.search).get('next');
+    // Same-site relative paths only; never bounce to an external URL.
+    return (n && !/^(https?:)?\/\//.test(n) && !n.startsWith('/')) ? n : 'Geno.html';
+  }
+
   const SCREENS = ['choose','customer','otp','signup'];
 
   function showScreen(name) {
@@ -553,7 +561,7 @@
       showScreen('signup');
     } else {
       showBanner('banner-otp','Welcome back! Redirecting…','success');
-      setTimeout(() => { location.href = 'index.html'; }, 1000);
+      setTimeout(() => { location.href = nextPage(); }, 1000);
     }
   }
 
@@ -596,8 +604,17 @@
 
     if (error) return showBanner('banner-signup', error.message, 'error');
 
+    if (pass) {
+      try {
+        const list = JSON.parse(localStorage.getItem('genoti_pw_emails') || '[]');
+        if (!list.includes(enteredEmail)) list.push(enteredEmail);
+        localStorage.setItem('genoti_pw_emails', JSON.stringify(list));
+      } catch (e) {}
+    }
+    try { localStorage.setItem('genoti_last_email', enteredEmail); } catch (e) {}
+
     showBanner('banner-signup','Account created! Redirecting…','success');
-    setTimeout(() => { location.href = 'index.html'; }, 1200);
+    setTimeout(() => { location.href = nextPage(); }, 1200);
   }
 
   /* ─ SOCIAL ─ */

@@ -567,6 +567,7 @@
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/md5@2.3.0/dist/md5.min.js"></script>
+  <script src="auth.js"></script>
 </head>
 <body>
 
@@ -1173,10 +1174,7 @@
   }
 
   /* ── Supabase auth ── */
-  const _sb = supabase.createClient(
-    'https://ijsxmgkzwvamwctbkgjo.supabase.co',
-    'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ'
-  );
+  const _sb = window.GenotiAuth.sb;   // one shared session across the site
 
   function probeImage(url) {
     return new Promise(resolve => {
@@ -1280,11 +1278,9 @@
 
   function _persistBM() { localStorage.setItem('genoti_bm', JSON.stringify(_notifyBM)); }
 
-  function openLoginGate() { document.getElementById('login-gate-backdrop').classList.add('open'); }
-  function closeLoginGate(e) {
-    if (e && e.target !== document.getElementById('login-gate-backdrop')) return;
-    document.getElementById('login-gate-backdrop').classList.remove('open');
-  }
+  /* Kept for the old markup; both now open the shared login modal. */
+  function openLoginGate() { window.GenotiAuth.open({ icon: '🔔', title: 'Log in to save alerts', msg: 'Log in to follow this business and get told the moment a matching deal goes live.' }); }
+  function closeLoginGate() { window.GenotiAuth.close(); }
 
   function toggleNotify(dealId) {
     if (!_currentUser) { openLoginGate(); return; }
@@ -2017,6 +2013,17 @@
   </div>
 </div>
 
+<script>
+/* ---------- Auth gate ----------
+   Category tiles, region tabs and the deal list stay open. Booking,
+   negotiating and saving alerts need an account. */
+(function () {
+  const G = window.GenotiAuth; if (!G) return;
+  toggleNotify     = G.gate(toggleNotify,     { icon: '🔔', title: 'Log in to save alerts', msg: 'Log in to follow this business and get told the moment a matching deal goes live.' });
+  startNegotiation = G.gate(startNegotiation, { icon: '🤝', title: 'Log in to negotiate',   msg: 'Negotiating sends a real request to the business, so we need to know who is asking.' });
+  confirmBook      = G.gate(confirmBook,      { icon: '📅', title: 'Log in to book',        msg: 'Log in so we can hold this slot for you and send your confirmation.' });
+})();
+</script>
 <script src="brand-deals.js"></script>
 <script src="geno-chat.js"></script>
 </body>
