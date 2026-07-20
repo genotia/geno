@@ -576,6 +576,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js"></script>
+<script src="analytics.js"></script>
 <script src="bookings.js"></script>
 <script src="brand-deals.js"></script>
 <script>
@@ -673,6 +674,8 @@ function logEvent(type, payload) {
   const evt = Object.assign({ type: type, at: new Date().toISOString() }, payload || {});
   window.GENO_EVENTS.push(evt);
   if (window.console && console.debug) console.debug('[geno]', type, payload || '');
+  // Same events, now durable, so the admin panel can count them.
+  if (window.GenotiTrack) window.GenotiTrack.event(type, payload || {});
 }
 
 /* ============================================================ SESSION MEMORY ============================================================ */

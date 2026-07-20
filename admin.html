@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · Genoti</title>
+<style>
+  :root {
+    --green: #1D9E75; --dark-green: #085041; --text: #111827; --muted: #6B7280;
+    --border: #E5E7EB; --bg: #F9FAFB; --white: #fff; --red: #EF4444;
+    --purple: #6D28D9; --purple-bg: #F5F3FF; --amber: #B45309; --amber-bg: #FFFBEB;
+    --blue: #1D4ED8; --blue-bg: #EFF6FF; --green-lt: #ECFDF5; --green-md: #A7F3D0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+
+  header { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .brand { font-size: 18px; font-weight: 800; letter-spacing: -.5px; display: flex; align-items: center; gap: 10px; }
+  .brand span { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px;
+    background: var(--purple-bg); color: var(--purple); padding: 3px 8px; border-radius: 20px; }
+  .who { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 12px; }
+  .who button { background: none; border: 1px solid var(--border); border-radius: 20px; padding: 6px 13px;
+    font-family: inherit; font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; }
+  .who button:hover { border-color: var(--red); color: var(--red); }
+
+  main { max-width: 1180px; margin: 0 auto; padding: 24px 20px 60px; }
+  .state { background: var(--white); border: 1px solid var(--border); border-radius: 16px;
+    padding: 40px 28px; text-align: center; max-width: 460px; margin: 60px auto; }
+  .state h2 { margin: 0 0 8px; font-size: 18px; letter-spacing: -.4px; }
+  .state p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.6; }
+  .state a { color: var(--green); font-weight: 700; }
+
+  h2.sec { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .7px;
+    color: var(--muted); margin: 30px 0 12px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 16px 17px; }
+  .k { font-size: 11.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .v { font-size: 27px; font-weight: 800; letter-spacing: -1px; margin-top: 6px; }
+  .sub { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .card.live .v { color: var(--green); }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+    margin-right: 5px; vertical-align: 1px; animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .3; } }
+
+  table { width: 100%; border-collapse: collapse; background: var(--white);
+    border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .tw { overflow-x: auto; }
+  th { text-align: left; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px;
+    color: var(--muted); padding: 11px 15px; background: var(--bg); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 11px 15px; font-size: 13.5px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+  .bar { height: 6px; border-radius: 4px; background: var(--green); min-width: 3px; }
+  .pill { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px;
+    padding: 3px 8px; border-radius: 20px; }
+  .pill.pending  { background: var(--amber-bg); color: var(--amber); }
+  .pill.approved { background: var(--green-lt); color: var(--green); }
+  .pill.rejected { background: #FEF2F2; color: var(--red); }
+  .empty { padding: 22px 16px; text-align: center; font-size: 13px; color: var(--muted); }
+  .note { background: var(--amber-bg); border: 1px solid #FDE68A; color: var(--amber);
+    border-radius: 12px; padding: 12px 15px; font-size: 12.5px; line-height: 1.6; margin-bottom: 18px; }
+  .note code { background: rgba(0,0,0,.05); padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Genoti <span>Admin</span></div>
+  <div class="who" id="who"></div>
+</header>
+
+<main>
+  <div id="gate" class="state">
+    <h2>Checking access…</h2>
+    <p>One moment.</p>
+  </div>
+  <div id="panel" style="display:none"></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="auth.js"></script>
+<script>
+const G = window.GenotiAuth;
+const sb = G.sb;
+
+const fmt = n => Number(n || 0).toLocaleString('en-IN');
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function state(title, body) {
+  document.getElementById('panel').style.display = 'none';
+  const g = document.getElementById('gate');
+  g.style.display = '';
+  g.innerHTML = `<h2>${title}</h2><p>${body}</p>`;
+}
+
+/* ── Access: logged in AND on the admins table. The table is the real
+      gate — RLS refuses the reads regardless of what this page thinks. ── */
+async function boot() {
+  const user = await G.ready;
+
+  if (!user) {
+    state('Admin access', 'You need to log in with an admin account. ' +
+      '<br><br><a href="#" onclick="G.open({icon:\'lock\',title:\'Admin login\',msg:\'Log in with your admin account to open the dashboard.\'});return false">Log in</a>');
+    G.onChange(u => { if (u) location.reload(); });
+    return;
+  }
+
+  document.getElementById('who').innerHTML =
+    `${esc(user.email)} <button onclick="G.signOut().then(()=>location.reload())">Log out</button>`;
+
+  const { data, error } = await sb.from('admins').select('email').limit(1);
+  if (error || !data || !data.length) {
+    state('Not an admin', `<b>${esc(user.email)}</b> is not on the admin list, so this dashboard is not available. ` +
+      'If that is wrong, add the address to the <code>admins</code> table.');
+    return;
+  }
+  render();
+}
+
+/* ── Data ─────────────────────────────────────────────────────────────── */
+const since = d => new Date(Date.now() - d * 864e5).toISOString();
+
+async function countOf(table, build) {
+  let q = sb.from(table).select('*', { count: 'exact', head: true });
+  if (build) q = build(q);
+  const { count, error } = await q;
+  return error ? null : (count || 0);
+}
+
+async function render() {
+  document.getElementById('gate').style.display = 'none';
+  const p = document.getElementById('panel');
+  p.style.display = '';
+  p.innerHTML = '<div class="empty">Loading…</div>';
+
+  const [
+    viewsAll, views1, views7,
+    events30m, eventRows,
+    deals, merchants, bookings, apps,
+  ] = await Promise.all([
+    countOf('events', q => q.eq('name', 'page_view')),
+    countOf('events', q => q.eq('name', 'page_view').gte('created_at', since(1))),
+    countOf('events', q => q.eq('name', 'page_view').gte('created_at', since(7))),
+    sb.from('events').select('session_id').gte('created_at', new Date(Date.now() - 30 * 60000).toISOString()),
+    sb.from('events').select('name, visitor_id, user_id, path, created_at').gte('created_at', since(30)).limit(5000),
+    sb.from('deals').select('category, active, merchant_name'),
+    sb.from('merchants').select('id, name, category, listed, created_at'),
+    sb.from('bookings').select('id, merchant, price, kind, user_id, created_at'),
+    sb.from('merchant_applications').select('status, created_at'),
+  ]);
+
+  const evs   = eventRows.data || [];
+  const dl    = deals.data || [];
+  const mch   = merchants.data || [];
+  const bk    = bookings.data || [];
+  const ap    = apps.data || [];
+
+  const uniq = (arr, k) => new Set(arr.map(r => r[k]).filter(Boolean)).size;
+  const visitors30 = uniq(evs, 'visitor_id');
+  const signedIn30 = uniq(evs, 'user_id');
+  const liveNow    = uniq(events30m.data || [], 'session_id');
+  const bkToday    = bk.filter(b => new Date(b.created_at) >= new Date(since(1))).length;
+  const bookers    = uniq(bk, 'user_id');
+  const revenue    = bk.reduce((s, b) => s + Number(b.price || 0), 0);
+
+  const missing = [deals, merchants, bookings, apps, eventRows]
+    .filter(r => r.error).map(r => r.error.message);
+
+  const notTracked = viewsAll === null;
+
+  /* group helper */
+  const group = (rows, key) => {
+    const m = {};
+    rows.forEach(r => { const k = r[key] || 'Uncategorised'; m[k] = (m[k] || 0) + 1; });
+    return Object.entries(m).sort((a, b) => b[1] - a[1]);
+  };
+
+  const dealsByCat = group(dl.filter(d => d.active !== false), 'category');
+  const mchByCat   = group(mch, 'category');
+  const appsByStat = group(ap, 'status');
+  const bkByMerch  = (() => {
+    const m = {};
+    bk.forEach(b => {
+      const k = b.merchant || 'Unknown';
+      m[k] = m[k] || { n: 0, value: 0 };
+      m[k].n += 1; m[k].value += Number(b.price || 0);
+    });
+    return Object.entries(m).sort((a, b) => b[1].n - a[1].n);
+  })();
+  const pagesByViews = group(evs.filter(e => e.name === 'page_view'), 'path');
+
+  const barTable = (rows, label, valLabel) => {
+    if (!rows.length) return `<div class="empty">Nothing yet.</div>`;
+    const max = Math.max(...rows.map(r => r[1]));
+    return `<div class="tw"><table><thead><tr><th>${label}</th><th class="num">${valLabel}</th><th style="width:34%"></th></tr></thead><tbody>
+      ${rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td class="num">${fmt(v)}</td>
+        <td><div class="bar" style="width:${Math.round(v / max * 100)}%"></div></td></tr>`).join('')}
+    </tbody></table></div>`;
+  };
+
+  const card = (k, v, sub, cls) =>
+    `<div class="card ${cls || ''}"><div class="k">${k}</div><div class="v">${v}</div>${sub ? `<div class="sub">${sub}</div>` : ''}</div>`;
+
+  p.innerHTML = `
+    ${notTracked ? `<div class="note"><b>The events table is not there yet.</b>
+      Traffic numbers stay at zero until you apply <code>supabase/migrations/20260722000000_analytics.sql</code>.
+      Everything below it reads live data.</div>` : ''}
+    ${missing.length ? `<div class="note"><b>Some reads were refused:</b> ${esc(missing.join(' · '))}</div>` : ''}
+
+    <h2 class="sec">Audience</h2>
+    <div class="grid">
+      ${card('Viewing now', `<span class="dot"></span>${fmt(liveNow)}`, 'active sessions, last 30 min', 'live')}
+      ${card('Page views', fmt(viewsAll), 'all time')}
+      ${card('Views today', fmt(views1), 'last 24 hours')}
+      ${card('Views this week', fmt(views7), 'last 7 days')}
+      ${card('Unique visitors', fmt(visitors30), 'last 30 days')}
+      ${card('Signed-in users', fmt(signedIn30), 'active, last 30 days')}
+    </div>
+
+    <h2 class="sec">Deals</h2>
+    <div class="grid">
+      ${card('Live deals', fmt(dl.filter(d => d.active !== false).length), `${fmt(dl.length)} total incl. inactive`)}
+      ${card('Categories', fmt(dealsByCat.length), 'with at least one live deal')}
+    </div>
+    <div style="margin-top:12px">${barTable(dealsByCat, 'Deals by category', 'Deals')}</div>
+
+    <h2 class="sec">Bookings</h2>
+    <div class="grid">
+      ${card('Total bookings', fmt(bk.length), 'all time')}
+      ${card('Booked today', fmt(bkToday), 'last 24 hours')}
+      ${card('Customers booking', fmt(bookers), 'unique accounts')}
+      ${card('Booking value', '₹' + fmt(revenue), 'payable at store')}
+      ${card('View → booking', viewsAll ? (bk.length / viewsAll * 100).toFixed(1) + '%' : '—', 'bookings per page view')}
+    </div>
+    <div style="margin-top:12px">${barTable(bkByMerch.map(([k, o]) => [k, o.n]), 'Bookings by merchant', 'Bookings')}</div>
+
+    <h2 class="sec">Merchants</h2>
+    <div class="grid">
+      ${card('Onboarded', fmt(mch.length), 'in the merchants table')}
+      ${card('Listed live', fmt(mch.filter(m => m.listed).length), 'visible to customers')}
+      ${card('Applications', fmt(ap.length), 'requests to join')}
+      ${card('Awaiting approval', fmt(ap.filter(a => a.status === 'pending').length), 'need your decision')}
+      ${card('Merchants with bookings', fmt(bkByMerch.length), 'have taken at least one')}
+    </div>
+    <div style="margin-top:12px">${barTable(mchByCat, 'Merchants by category', 'Merchants')}</div>
+    <div style="margin-top:12px">
+      ${appsByStat.length ? `<div class="tw"><table><thead><tr><th>Application status</th><th class="num">Count</th></tr></thead><tbody>
+        ${appsByStat.map(([k, v]) => `<tr><td><span class="pill ${esc(k)}">${esc(k)}</span></td><td class="num">${fmt(v)}</td></tr>`).join('')}
+      </tbody></table></div>` : '<div class="empty">No applications yet.</div>'}
+    </div>
+
+    <h2 class="sec">Traffic by page</h2>
+    ${barTable(pagesByViews, 'Page', 'Views (30d)')}
+  `;
+}
+
+boot();
+</script>
+</body>
+</html>
