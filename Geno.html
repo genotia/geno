@@ -128,6 +128,13 @@
     .ml-split { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
     @media (max-width: 480px) { .ml-grid { grid-template-columns: 1fr; } }
 
+    /* Previous turns are tucked away so a new result set starts at the top */
+    .gc-past { display: none !important; }
+    .gc-earlier { display: none; margin: 0 auto 12px; background: var(--bg); border: 1px solid var(--border);
+                  color: var(--muted); font-family: inherit; font-size: 11.5px; font-weight: 700;
+                  padding: 5px 13px; border-radius: 20px; cursor: pointer; transition: all .15s; }
+    .gc-earlier:hover { border-color: var(--purple); color: var(--purple); }
+
     .digest-line { display: flex; gap: 10px; padding: 9px 0; border-top: 1px solid var(--border); cursor: pointer; }
     .digest-line:hover .dl-name { color: var(--purple); }
     .dl-dot { width: 8px; height: 8px; border-radius: 3px; flex-shrink: 0; margin-top: 5px; }
@@ -643,8 +650,38 @@ function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt
 // The panel is elastic, so we scroll the page (not an inner box) to keep the newest content in view.
 function scrollChat(){ if (!interacted) return; setTimeout(() => { const k = chat.lastElementChild; if (k) k.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 40); }
 
+/* One result set at a time. Starting a new turn hides everything before it, so
+   the fresh deals sit at the top of the panel instead of below the last search.
+   Nothing is lost: "Show earlier" brings the history back. */
+let hiddenTurns = 0;
+function startNewTurn(){
+  const prev = [...chat.children].filter(n => n.id !== 'gc-earlier' && !n.classList.contains('gc-past'));
+  if (!prev.length) return;
+  prev.forEach(n => n.classList.add('gc-past'));
+  hiddenTurns++;
+  let bar = document.getElementById('gc-earlier');
+  if (!bar){
+    bar = document.createElement('button');
+    bar.id = 'gc-earlier';
+    bar.className = 'gc-earlier';
+    bar.onclick = showEarlier;
+    chat.prepend(bar);
+  }
+  bar.textContent = `Show earlier (${hiddenTurns})`;
+  bar.style.display = 'block';
+  const panel = document.querySelector('.gc-panel');
+  if (panel) setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30);
+}
+function showEarlier(){
+  chat.querySelectorAll('.gc-past').forEach(n => n.classList.remove('gc-past'));
+  hiddenTurns = 0;
+  const b = document.getElementById('gc-earlier');
+  if (b) b.style.display = 'none';
+}
+
 function addUser(text){
   interacted = true;
+  startNewTurn();
   const d = document.createElement('div'); d.className = 'msg msg-user';
   d.innerHTML = `<div class="bubble">${esc(text)}</div>`;
   chat.appendChild(d); scrollChat();
@@ -910,7 +947,12 @@ const ORDINALS = { first:0, '1st':0, second:1, '2nd':1, third:2, '3rd':2, fourth
 function resolveOrdinal(text){
   const t = text.toLowerCase();
   if (!session.lastResults.length) return null;
+  /* Browse intents are not item references. "Last minute deals" is a category,
+     not "book the last one", and must never resolve to a booking. */
+  if (/\b(last minute|off.?peak|flash sale|launch offer|new launch|brand deals?|community deals?|malls?|deals near|nearby)\b/.test(t)) return null;
   if (!/\b(book|the|that|number|#|first|second|third|fourth|fifth|last|1st|2nd|3rd|4th|5th)\b/.test(t)) return null;
+  /* "last" only means the final result when it reads as a reference. */
+  if (/\blast\b/.test(t) && !/\blast\s+(one|deal|result)\b/.test(t) && !/\bbook\b/.test(t)) return null;
   for (const w in ORDINALS){
     if (new RegExp('\\b'+w.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&')+'\\b').test(t)){
       let i = ORDINALS[w]; if (i === -1) i = session.lastResults.length - 1;
