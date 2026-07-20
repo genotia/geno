@@ -63,6 +63,26 @@
   .note { background: var(--amber-bg); border: 1px solid #FDE68A; color: var(--amber);
     border-radius: 12px; padding: 12px 15px; font-size: 12.5px; line-height: 1.6; margin-bottom: 18px; }
   .note code { background: rgba(0,0,0,.05); padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+  .acts { display: flex; gap: 6px; }
+  .act { font-family: inherit; font-size: 11.5px; font-weight: 700; padding: 6px 11px; border-radius: 20px;
+    border: 1.5px solid var(--border); background: var(--white); color: var(--muted); cursor: pointer; white-space: nowrap; }
+  .act.ok:hover  { border-color: var(--green); color: var(--green); background: var(--green-lt); }
+  .act.no:hover  { border-color: var(--red); color: var(--red); background: #FEF2F2; }
+  .act.solid.ok  { background: var(--green); border-color: var(--green); color: #fff; }
+  .act.solid.no  { background: var(--red); border-color: var(--red); color: #fff; }
+  .act.solid:hover { opacity: .9; }
+  .act.ghost:hover { border-color: var(--muted); color: var(--text); }
+  #confirm { position: fixed; inset: 0; background: rgba(17,24,39,.55); display: none;
+    align-items: center; justify-content: center; padding: 20px; z-index: 900; }
+  #confirm.open { display: flex; }
+  .cbox { background: var(--white); border-radius: 18px; max-width: 420px; width: 100%; padding: 24px; }
+  .ctitle { font-size: 17px; font-weight: 800; letter-spacing: -.4px; margin-bottom: 10px; }
+  .cbody { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+  .cwarn { margin-top: 12px; background: var(--amber-bg); border: 1px solid #FDE68A; color: var(--amber);
+    border-radius: 10px; padding: 9px 12px; font-size: 12px; font-weight: 700; }
+  .cacts { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+  #refresh-hint { display: none; background: var(--blue-bg); border: 1px solid #BFDBFE; color: var(--blue);
+    border-radius: 12px; padding: 11px 15px; font-size: 12.5px; margin-bottom: 16px; }
 </style>
 </head>
 <body>
@@ -77,8 +97,10 @@
     <h2>Checking access…</h2>
     <p>One moment.</p>
   </div>
+  <div id="refresh-hint">Review opened in a new tab. Come back here and the list refreshes automatically.</div>
   <div id="panel" style="display:none"></div>
 </main>
+<div id="confirm" onclick="if(event.target===this)closeConfirm()"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js"></script>
@@ -120,6 +142,56 @@ async function boot() {
   render();
 }
 
+/* ── Reviewing an application ─────────────────────────────────────────── */
+const FN_URL = 'https://ijsxmgkzwvamwctbkgjo.supabase.co/functions/v1/review-merchant-application';
+let APPS = [];
+
+function reviewUrl(a, action) {
+  return `${FN_URL}?id=${encodeURIComponent(a.id)}&token=${encodeURIComponent(a.approval_token || '')}&action=${action}`;
+}
+
+/* Approving creates a real account and emails a set-password link, so both
+   actions are confirmed first and neither can be undone from here. */
+function askReview(id, action) {
+  const a = APPS.find(x => String(x.id) === String(id));
+  if (!a) return;
+  const approve = action === 'approve';
+  document.getElementById('confirm').innerHTML = `
+    <div class="cbox">
+      <div class="ctitle">${approve ? 'Approve' : 'Reject'} ${esc(a.business_name)}?</div>
+      <div class="cbody">
+        ${approve
+          ? `This creates an account for <b>${esc(a.email)}</b> and emails them a link to set a password. They get access to the merchant dashboard straight away.`
+          : `This marks the request rejected and no account is created. <b>${esc(a.email)}</b> is not emailed, so follow up yourself if you want to.`}
+        <div class="cwarn">This cannot be undone from this panel.</div>
+      </div>
+      <div class="cacts">
+        <button class="act ghost" onclick="closeConfirm()">Cancel</button>
+        <button class="act ${approve ? 'ok' : 'no'} solid" onclick="doReview('${esc(a.id)}','${action}')">
+          ${approve ? 'Approve and create account' : 'Reject request'}
+        </button>
+      </div>
+    </div>`;
+  document.getElementById('confirm').classList.add('open');
+}
+
+function closeConfirm() { document.getElementById('confirm').classList.remove('open'); }
+
+function doReview(id, action) {
+  const a = APPS.find(x => String(x.id) === String(id));
+  closeConfirm();
+  if (!a) return;
+  // The function replies with its own HTML result page, so open it directly.
+  window.open(reviewUrl(a, action), '_blank', 'noopener');
+  document.getElementById('refresh-hint').style.display = '';
+}
+
+/* Coming back from that tab, pull fresh statuses. */
+window.addEventListener('focus', () => {
+  const hint = document.getElementById('refresh-hint');
+  if (hint && hint.style.display !== 'none') { hint.style.display = 'none'; render(); }
+});
+
 /* ── Data ─────────────────────────────────────────────────────────────── */
 const since = d => new Date(Date.now() - d * 864e5).toISOString();
 
@@ -149,7 +221,7 @@ async function render() {
     sb.from('deals').select('category, active, merchant_name'),
     sb.from('merchants').select('id, name, category, listed, created_at'),
     sb.from('bookings').select('id, merchant_name, status, customer_email, created_at'),
-    sb.from('merchant_applications').select('id, full_name, business_name, email, phone, address, num_branches, num_staff, plan, status, created_at, reviewed_at'),
+    sb.from('merchant_applications').select('id, full_name, business_name, email, phone, address, num_branches, num_staff, plan, status, approval_token, created_at, reviewed_at'),
   ]);
 
   const evs   = eventRows.data || [];
@@ -157,6 +229,7 @@ async function render() {
   const mch   = merchants.data || [];
   const bk    = bookings.data || [];
   const ap    = apps.data || [];
+  APPS = ap;
 
   const uniq = (arr, k) => new Set(arr.map(r => r[k]).filter(Boolean)).size;
   const visitors30 = uniq(evs, 'visitor_id');
@@ -202,7 +275,7 @@ async function render() {
     const when = d => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
     return `<div class="tw"><table><thead><tr>
         <th>Status</th><th>Business</th><th>Contact</th><th>Email</th><th>Phone</th>
-        <th class="num">Branches</th><th class="num">Staff</th><th>Plan</th><th>Requested</th>
+        <th class="num">Branches</th><th class="num">Staff</th><th>Plan</th><th>Requested</th><th>Review</th>
       </tr></thead><tbody>
       ${sorted.map(a => `<tr>
         <td><span class="pill ${esc(a.status)}">${esc(a.status)}</span></td>
@@ -214,6 +287,12 @@ async function render() {
         <td class="num">${esc(a.num_staff ?? '—')}</td>
         <td>${esc(a.plan || '—')}</td>
         <td>${esc(when(a.created_at))}</td>
+        <td>${a.status === 'pending'
+          ? `<div class="acts">
+               <button class="act ok" onclick="askReview('${esc(a.id)}','approve')">Approve</button>
+               <button class="act no" onclick="askReview('${esc(a.id)}','reject')">Reject</button>
+             </div>`
+          : `<span class="sub">${esc(when(a.reviewed_at))}</span>`}</td>
       </tr>`).join('')}
     </tbody></table></div>`;
   };
