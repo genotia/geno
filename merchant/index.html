@@ -81,7 +81,7 @@
     </form>
 
     <hr class="divider" />
-    <p class="footer-note">Need access? Contact <a href="mailto:admin@genoti.ai">admin@genoti.ai</a></p>
+    <p class="footer-note">Need access? <a href="../register.html">Request access for your business</a></p>
   </div>
 
   <script>
@@ -90,9 +90,23 @@
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Redirect if already authenticated
-    db.auth.getSession().then(({ data }) => {
-      if (data.session) location.href = 'dashboard.html';
+    /* Access is granted by approval only. app_metadata is writable solely by the
+       service role, so a merchant cannot flag themselves approved. */
+    function isApproved(user) {
+      return !!(user && user.app_metadata && user.app_metadata.merchant_approved === true);
+    }
+
+    const PENDING_MSG = 'This account is not approved yet. We review every business before '
+      + 'activating access, and we will email you once it is approved.';
+
+    // Resume a session only if that account is approved
+    db.auth.getSession().then(async ({ data }) => {
+      if (!data.session) return;
+      if (isApproved(data.session.user)) { location.href = 'dashboard.html'; return; }
+      await db.auth.signOut();
+      const errEl = document.getElementById('error-box');
+      errEl.textContent = PENDING_MSG;
+      errEl.classList.add('show');
     });
 
     async function login(e) {
@@ -104,10 +118,20 @@
       btn.textContent = 'Signing in…';
       errEl.classList.remove('show');
 
-      const { error } = await db.auth.signInWithPassword({
+      const { data: signIn, error } = await db.auth.signInWithPassword({
         email: document.getElementById('email').value.trim(),
         password: document.getElementById('password').value,
       });
+
+      // Correct credentials are not enough: the business must be approved.
+      if (!error && !isApproved(signIn && signIn.user)) {
+        await db.auth.signOut();
+        errEl.textContent = PENDING_MSG;
+        errEl.classList.add('show');
+        btn.disabled = false;
+        btn.textContent = 'Sign in →';
+        return;
+      }
 
       if (error) {
         errEl.textContent = error.message === 'Invalid login credentials'

@@ -4146,6 +4146,16 @@
     try {
     const { data: { session } } = await db.auth.getSession();
     if (!session) { location.href = 'index.html'; return; }
+
+    /* A session alone is not access. app_metadata.merchant_approved is set only
+       by the approval function (service role), so it cannot be self-granted.
+       Checked here too, so navigating straight to the dashboard is blocked. */
+    if (session.user?.app_metadata?.merchant_approved !== true) {
+      await db.auth.signOut();
+      location.href = 'index.html';
+      return;
+    }
+
     currentUser = session.user;
 
     // Get role + merchant

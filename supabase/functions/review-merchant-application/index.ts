@@ -112,9 +112,12 @@ serve(async (req) => {
     }
 
     /* ── Approve: this is the only path that creates an account ── */
+    const approvedAt = new Date().toISOString();
     const { data: created, error: createErr } = await supabase.auth.admin.createUser({
       email: app.email,
       email_confirm: true,
+      // Only the service role can write app_metadata, so this is the access flag.
+      app_metadata: { merchant_approved: true, approved_at: approvedAt, role: "merchant" },
       user_metadata: {
         full_name:     app.full_name,
         business_name: app.business_name,
@@ -123,7 +126,7 @@ serve(async (req) => {
         num_branches:  app.num_branches,
         num_staff:     app.num_staff,
         plan:          app.plan,
-        approved_at:   new Date().toISOString(),
+        approved_at:   approvedAt,
       },
     });
 
@@ -143,6 +146,16 @@ serve(async (req) => {
     if (linkErr) return page("Could not create the set-password link", esc(linkErr.message), "bad");
 
     const actionLink = link?.properties?.action_link ?? `${SITE_URL}/merchant/index.html`;
+
+    // If the account predates this flow, stamp the approval flag on it now,
+    // otherwise it would still be blocked at login.
+    const existingId = created?.user?.id ?? link?.user?.id;
+    if (alreadyExisted && existingId) {
+      const { error: metaErr } = await supabase.auth.admin.updateUserById(existingId, {
+        app_metadata: { merchant_approved: true, approved_at: approvedAt, role: "merchant" },
+      });
+      if (metaErr) return page("Could not mark the account approved", esc(metaErr.message), "bad");
+    }
 
     await mailgun(
       app.email,
