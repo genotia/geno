@@ -149,7 +149,7 @@ async function render() {
     sb.from('deals').select('category, active, merchant_name'),
     sb.from('merchants').select('id, name, category, listed, created_at'),
     sb.from('bookings').select('id, merchant_name, status, customer_email, created_at'),
-    sb.from('merchant_applications').select('status, created_at'),
+    sb.from('merchant_applications').select('id, full_name, business_name, email, phone, address, num_branches, num_staff, plan, status, created_at, reviewed_at'),
   ]);
 
   const evs   = eventRows.data || [];
@@ -180,7 +180,6 @@ async function render() {
 
   const dealsByCat = group(dl.filter(d => d.active !== false), 'category');
   const mchByCat   = group(mch, 'category');
-  const appsByStat = group(ap, 'status');
   const bkByMerch  = group(bk, 'merchant_name');
   const pagesByViews = group(evs.filter(e => e.name === 'page_view'), 'path');
 
@@ -190,6 +189,32 @@ async function render() {
     return `<div class="tw"><table><thead><tr><th>${label}</th><th class="num">${valLabel}</th><th style="width:34%"></th></tr></thead><tbody>
       ${rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td class="num">${fmt(v)}</td>
         <td><div class="bar" style="width:${Math.round(v / max * 100)}%"></div></td></tr>`).join('')}
+    </tbody></table></div>`;
+  };
+
+  /* Who is actually waiting. Pending first, then most recent. */
+  const applicantsTable = rows => {
+    if (!rows.length) return '<div class="empty">No applications yet.</div>';
+    const rank = { pending: 0, approved: 1, rejected: 2 };
+    const sorted = rows.slice().sort((a, b) =>
+      (rank[a.status] ?? 9) - (rank[b.status] ?? 9) ||
+      new Date(b.created_at) - new Date(a.created_at));
+    const when = d => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+    return `<div class="tw"><table><thead><tr>
+        <th>Status</th><th>Business</th><th>Contact</th><th>Email</th><th>Phone</th>
+        <th class="num">Branches</th><th class="num">Staff</th><th>Plan</th><th>Requested</th>
+      </tr></thead><tbody>
+      ${sorted.map(a => `<tr>
+        <td><span class="pill ${esc(a.status)}">${esc(a.status)}</span></td>
+        <td><b>${esc(a.business_name || '—')}</b>${a.address ? `<div class="sub">${esc(a.address)}</div>` : ''}</td>
+        <td>${esc(a.full_name || '—')}</td>
+        <td><a href="mailto:${esc(a.email)}">${esc(a.email || '—')}</a></td>
+        <td>${esc(a.phone || '—')}</td>
+        <td class="num">${esc(a.num_branches ?? '—')}</td>
+        <td class="num">${esc(a.num_staff ?? '—')}</td>
+        <td>${esc(a.plan || '—')}</td>
+        <td>${esc(when(a.created_at))}</td>
+      </tr>`).join('')}
     </tbody></table></div>`;
   };
 
@@ -238,11 +263,7 @@ async function render() {
       ${card('Merchants with bookings', fmt(bkByMerch.length), 'have taken at least one')}
     </div>
     <div style="margin-top:12px">${barTable(mchByCat, 'Merchants by category', 'Merchants')}</div>
-    <div style="margin-top:12px">
-      ${appsByStat.length ? `<div class="tw"><table><thead><tr><th>Application status</th><th class="num">Count</th></tr></thead><tbody>
-        ${appsByStat.map(([k, v]) => `<tr><td><span class="pill ${esc(k)}">${esc(k)}</span></td><td class="num">${fmt(v)}</td></tr>`).join('')}
-      </tbody></table></div>` : '<div class="empty">No applications yet.</div>'}
-    </div>
+    <div style="margin-top:12px">${applicantsTable(ap)}</div>
 
     <h2 class="sec">Traffic by page</h2>
     ${barTable(pagesByViews, 'Page', 'Views (30d)')}
