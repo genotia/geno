@@ -1,10 +1,10 @@
 /* ===========================================================================
    Genoti bookings store.
 
-   A booking is a real commitment, so it is written to Supabase against the
-   logged-in user and read back on any device. A local mirror is kept as an
-   offline cache, and it is also what keeps the feature working before the
-   bookings migration has been applied to the project.
+   A booking is a real commitment, so it is written to the shared public
+   .bookings table — the same one the merchant dashboard reads — and matched
+   back to the customer by email. A local mirror is kept as an offline cache
+   and holds the two details that table has no column for (price and kind).
 
    Requires auth.js (for the shared session).
      GenotiBookings.add({ dealId, merchant, offer, window, price, code, kind })
@@ -39,15 +39,34 @@
   function normalise(r) {
     return {
       id:       r.id,
-      dealId:   r.deal_id  !== undefined ? r.deal_id  : r.dealId,
-      merchant: r.merchant || '',
-      offer:    r.offer    || '',
-      window:   r.window   !== undefined ? r.window   : r.slot,
+      dealId:   r.deal_id !== undefined ? r.deal_id : r.dealId,
+      merchant: r.merchant || r.merchant_name || '',
+      offer:    r.offer    || r.deal_title    || '',
+      window:   r.window   !== undefined ? r.window : (r.time_slot || ''),
       price:    typeof r.price === 'number' ? r.price : Number(r.price || 0),
-      code:     r.code     || '',
-      kind:     r.kind     || 'booked',
-      status:   r.status   || 'confirmed',
+      code:     r.code || r.booking_ref || '',
+      kind:     r.kind   || 'booked',
+      status:   r.status || 'confirmed',
       at:       r.created_at || r.at || new Date().toISOString(),
+    };
+  }
+
+  /* The bookings table predates this module and is shared with the merchant
+     dashboard, so we write its columns rather than our own names. It has no
+     user_id, so a customer is identified by the email on the booking.
+     price/kind have no column there and stay in the local mirror only. */
+  function toRow(r, user) {
+    var isUuid = typeof r.dealId === 'string' && /^[0-9a-f-]{36}$/i.test(r.dealId);
+    return {
+      booking_ref:    r.code || r.id,
+      deal_id:        isUuid ? r.dealId : null,
+      deal_title:     r.offer || '',
+      merchant_name:  r.merchant || '',
+      time_slot:      r.window || '',
+      customer_name:  (user && user.user_metadata && user.user_metadata.full_name) || '',
+      customer_email: (user && user.email) || '',
+      booking_date:   new Date().toISOString().slice(0, 10),
+      status:         'pending',
     };
   }
 
@@ -61,15 +80,11 @@
     list.unshift(row);
     writeLocal(list);
 
-    var u = uid();
-    if (!u || !remoteOk || !sb()) return row;
+    var user = auth() && auth().user();
+    if (!user || !remoteOk || !sb()) return row;
 
     try {
-      var res = await sb().from(TABLE).insert({
-        id: row.id, user_id: u, deal_id: row.dealId, merchant: row.merchant,
-        offer: row.offer, window: row.window, price: row.price,
-        code: row.code, kind: row.kind, status: row.status,
-      });
+      var res = await sb().from(TABLE).insert(toRow(row, user));
       if (res.error) markRemoteDown(res.error);
     } catch (e) { markRemoteDown(e); }
     return row;
@@ -78,10 +93,9 @@
   function markRemoteDown(err) {
     var msg = (err && (err.message || err.code)) || '';
     // 42P01 = table missing: the migration has not been applied yet.
-    if (/42P01|does not exist|schema cache|relation/i.test(String(msg))) {
+    if (/42P01|42703|does not exist|schema cache|relation/i.test(String(msg))) {
       remoteOk = false;
-      console.warn('[GenotiBookings] bookings table not found — using the local mirror only. ' +
-                   'Apply supabase/migrations/*_bookings.sql to sync across devices.');
+      console.warn('[GenotiBookings] bookings table/column mismatch — using the local mirror only: ' + msg);
     } else {
       console.warn('[GenotiBookings]', msg);
     }
@@ -90,28 +104,32 @@
   /* ── Read ─────────────────────────────────────────────────────────────── */
   async function list() {
     var local = readLocal();
-    var u = uid();
-    if (!u || !remoteOk || !sb()) return local;
+    var user = auth() && auth().user();
+    if (!user || !remoteOk || !sb()) return local;
 
     try {
       var res = await sb().from(TABLE).select('*')
-        .eq('user_id', u).order('created_at', { ascending: false });
+        .eq('customer_email', user.email)
+        .order('created_at', { ascending: false });
       if (res.error) { markRemoteDown(res.error); return local; }
 
       var remote = (res.data || []).map(normalise);
 
-      // Push up anything that was booked while logged out or offline.
-      var have = {};
-      remote.forEach(function (r) { have[r.id] = true; });
-      var missing = local.filter(function (r) { return !have[r.id]; });
+      /* Merge on booking_ref: the mirror holds the price and code, which the
+         shared table has nowhere to store, so the local copy wins on detail. */
+      var byRef = {};
+      local.forEach(function (r) { byRef[r.code || r.id] = r; });
+      remote = remote.map(function (r) {
+        var m = byRef[r.code || r.id];
+        return m ? Object.assign({}, r, { price: m.price, kind: m.kind, id: m.id }) : r;
+      });
+
+      var seen = {};
+      remote.forEach(function (r) { seen[r.code || r.id] = true; });
+      var missing = local.filter(function (r) { return !seen[r.code || r.id]; });
       if (missing.length) {
-        try {
-          await sb().from(TABLE).insert(missing.map(function (r) {
-            return { id: r.id, user_id: u, deal_id: r.dealId, merchant: r.merchant,
-                     offer: r.offer, window: r.window, price: r.price,
-                     code: r.code, kind: r.kind, status: r.status };
-          }));
-        } catch (e) {}
+        try { await sb().from(TABLE).insert(missing.map(function (r) { return toRow(r, user); })); }
+        catch (e) {}
         remote = missing.concat(remote);
       }
       writeLocal(remote);
@@ -120,11 +138,15 @@
   }
 
   async function cancel(id) {
+    var row = readLocal().filter(function (r) { return r.id === id; })[0];
     writeLocal(readLocal().filter(function (r) { return r.id !== id; }));
-    var u = uid();
-    if (!u || !remoteOk || !sb()) return;
+    var user = auth() && auth().user();
+    if (!user || !remoteOk || !sb() || !row) return;
     try {
-      var res = await sb().from(TABLE).delete().eq('id', id).eq('user_id', u);
+      // The merchant needs to see the cancellation, so mark it rather than delete.
+      var res = await sb().from(TABLE).update({ status: 'cancelled' })
+        .eq('booking_ref', row.code || row.id)
+        .eq('customer_email', user.email);
       if (res.error) markRemoteDown(res.error);
     } catch (e) { markRemoteDown(e); }
   }

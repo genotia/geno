@@ -148,7 +148,7 @@ async function render() {
     sb.from('events').select('name, visitor_id, user_id, path, created_at').gte('created_at', since(30)).limit(5000),
     sb.from('deals').select('category, active, merchant_name'),
     sb.from('merchants').select('id, name, category, listed, created_at'),
-    sb.from('bookings').select('id, merchant, price, kind, user_id, created_at'),
+    sb.from('bookings').select('id, merchant_name, status, customer_email, created_at'),
     sb.from('merchant_applications').select('status, created_at'),
   ]);
 
@@ -163,8 +163,8 @@ async function render() {
   const signedIn30 = uniq(evs, 'user_id');
   const liveNow    = uniq(events30m.data || [], 'session_id');
   const bkToday    = bk.filter(b => new Date(b.created_at) >= new Date(since(1))).length;
-  const bookers    = uniq(bk, 'user_id');
-  const revenue    = bk.reduce((s, b) => s + Number(b.price || 0), 0);
+  const bookers    = uniq(bk, 'customer_email');
+  const bkPending  = bk.filter(b => b.status === 'pending').length;
 
   const missing = [deals, merchants, bookings, apps, eventRows]
     .filter(r => r.error).map(r => r.error.message);
@@ -181,15 +181,7 @@ async function render() {
   const dealsByCat = group(dl.filter(d => d.active !== false), 'category');
   const mchByCat   = group(mch, 'category');
   const appsByStat = group(ap, 'status');
-  const bkByMerch  = (() => {
-    const m = {};
-    bk.forEach(b => {
-      const k = b.merchant || 'Unknown';
-      m[k] = m[k] || { n: 0, value: 0 };
-      m[k].n += 1; m[k].value += Number(b.price || 0);
-    });
-    return Object.entries(m).sort((a, b) => b[1].n - a[1].n);
-  })();
+  const bkByMerch  = group(bk, 'merchant_name');
   const pagesByViews = group(evs.filter(e => e.name === 'page_view'), 'path');
 
   const barTable = (rows, label, valLabel) => {
@@ -232,10 +224,10 @@ async function render() {
       ${card('Total bookings', fmt(bk.length), 'all time')}
       ${card('Booked today', fmt(bkToday), 'last 24 hours')}
       ${card('Customers booking', fmt(bookers), 'unique accounts')}
-      ${card('Booking value', '₹' + fmt(revenue), 'payable at store')}
+      ${card('Awaiting confirmation', fmt(bkPending), 'status: pending')}
       ${card('View → booking', viewsAll ? (bk.length / viewsAll * 100).toFixed(1) + '%' : '—', 'bookings per page view')}
     </div>
-    <div style="margin-top:12px">${barTable(bkByMerch.map(([k, o]) => [k, o.n]), 'Bookings by merchant', 'Bookings')}</div>
+    <div style="margin-top:12px">${barTable(bkByMerch, 'Bookings by merchant', 'Bookings')}</div>
 
     <h2 class="sec">Merchants</h2>
     <div class="grid">
