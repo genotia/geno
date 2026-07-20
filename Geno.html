@@ -262,12 +262,17 @@
     .qs-btn:hover { border-color: var(--purple); color: var(--purple); }
 
     /* ── INPUT ── */
-    .input-bar { padding: 12px; background: var(--white); border-top: 1px solid var(--border); display: flex; gap: 9px; flex-shrink: 0; align-items: center; }
-    .input-bar input { flex: 1; padding: 13px 16px; border-radius: 24px; border: 1.5px solid var(--border); font-size: 14px; outline: none; background: var(--bg); color: var(--text); font-family: inherit; transition: border-color .15s; }
-    .input-bar input:focus { border-color: var(--purple); background: var(--white); }
-    .send-btn { display: inline-flex; align-items: center; gap: 7px; height: 46px; padding: 0 20px; border-radius: 40px; background: var(--purple); border: none; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; flex-shrink: 0; font-family: inherit; box-shadow: 0 4px 14px rgba(109,40,217,.32); transition: opacity .15s, transform .1s; }
+    /* The composer is a floating pill, deliberately unlike the cards and panels
+       around it, and capped so it does not stretch across the whole width. */
+    .input-bar { padding: 14px 16px 18px; background: var(--white); border-top: 1px solid var(--border); flex-shrink: 0; display: flex; justify-content: center; }
+    .composer { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 620px; background: var(--white); border: 1.5px solid var(--border); border-radius: 999px; padding: 5px 5px 5px 17px; box-shadow: 0 6px 22px rgba(17,24,39,.10); transition: border-color .15s, box-shadow .15s; }
+    .composer:focus-within { border-color: var(--purple); box-shadow: 0 8px 28px rgba(109,40,217,.20); }
+    .composer-ico { color: var(--purple); display: flex; flex-shrink: 0; }
+    .composer input { flex: 1; min-width: 0; border: none; background: transparent; outline: none; font-size: 14.5px; font-family: inherit; color: var(--text); padding: 11px 0; }
+    .composer input::placeholder { color: var(--muted); }
+    .send-btn { width: 42px; height: 42px; border-radius: 50%; background: var(--purple); border: none; color: #fff; cursor: pointer; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(109,40,217,.34); transition: transform .12s, opacity .15s; }
     .send-btn:hover { opacity: .93; }
-    .send-btn:active { transform: scale(.97); }
+    .send-btn:active { transform: scale(.94); }
     .send-btn svg { flex-shrink: 0; }
 
     /* Floating reminder: this is an AI chatbot — jump to the composer */
@@ -458,11 +463,15 @@
     </div>
 
     <div class="input-bar">
-      <input id="userInput" placeholder="Ask Geno anything… e.g. buffet nearby with buy 1 get 1" onkeydown="if(event.key==='Enter')sendFromInput()">
-      <button class="send-btn" onclick="sendFromInput()" aria-label="Ask Geno">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Ask
-      </button>
+      <div class="composer">
+        <span class="composer-ico">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </span>
+        <input id="userInput" placeholder="Ask Geno anything…" onkeydown="if(event.key==='Enter')sendFromInput()">
+        <button class="send-btn" onclick="sendFromInput()" aria-label="Ask Geno" title="Ask Geno">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
     </div>
   </div>
 </div>
