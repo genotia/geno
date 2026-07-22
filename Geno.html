@@ -287,6 +287,8 @@
     .qg-comm:hover { background: var(--blue); border-color: var(--blue); color: #fff; }
     .qg-you { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple); }
     .qg-you:hover, .qg-you.open { background: var(--purple); border-color: var(--purple); color: #fff; }
+    .qg-offpeak { background: var(--green-lt); border-color: var(--green-md); color: var(--dark-green); }
+    .qg-offpeak:hover { background: var(--green); border-color: var(--green); color: #fff; }
     .qg-caret { font-size: 9px; opacity: .75; transition: transform .15s; }
     .qg-btn.open .qg-caret { transform: rotate(180deg); }
     /* Popover opens UPWARD as an overlay, so the bar stays one line tall. */
@@ -488,8 +490,8 @@
     <div class="chat" id="chat"></div>
 
     <div class="qs-row" id="quickSelect">
+      <button class="qg-btn qg-offpeak" onclick="handleQuick('Off-peak deals')">⏰ Off-peak</button>
       <button class="qs-btn" onclick="handleQuick('Deals near me')">📍 Nearby</button>
-      <button class="qs-btn" onclick="handleQuick('Off-peak deals')">⏰ Off-peak</button>
       <button class="qs-btn" onclick="handleQuick('Last minute deals')">⚡ Last minute</button>
       <button class="qs-btn" onclick="handleQuick('Flash sale offers')">💥 Flash Sale</button>
       <button class="qs-btn" onclick="handleQuick('Launch offers')">🚀 Launch Offers</button>

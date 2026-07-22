@@ -304,14 +304,21 @@ function renderDigest(){
     <div class="digest-sub">${all.length} live in total · tap a type to see it</div>
     <div class="dg-grid">${lines}</div>
   </div>
-  <div class="chips-label">Browse by category</div>
+  ${catChipsHTML()}`);
+}
+
+/* Business categories — food first (restaurants, cafes), then beauty
+   (salons, spa), then fitness. Shown on the landing digest AND with every
+   deal result so users can narrow by business type anywhere. */
+function catChipsHTML(){
+  return `<div class="chips-label">Browse by category</div>
   <div class="chips">
-    <button class="chip" onclick="handleQuick('salon deals')">💇 Salons</button>
     <button class="chip" onclick="handleQuick('restaurant deals')">🍽️ Restaurants</button>
     <button class="chip" onclick="handleQuick('cafe deals')">☕ Cafes</button>
+    <button class="chip" onclick="handleQuick('salon deals')">💇 Salons</button>
+    <button class="chip" onclick="handleQuick('wellness deals')">🧖 Spa &amp; Wellness</button>
     <button class="chip" onclick="handleQuick('fitness deals')">💪 Fitness</button>
-    <button class="chip" onclick="handleQuick('wellness deals')">🧘 Wellness</button>
-  </div>`);
+  </div>`;
 }
 
 /* ============================================================ NEARBY MALLS ============================================================ */
@@ -541,6 +548,7 @@ function runQuery(text, filters, opts){
     window._geno_all = results;
     addCards(`<button class="chip" onclick="showAllPaged()">Show all ${results.length} deals →</button>`);
   }
+  addCards(catChipsHTML());   // narrow these results by business category
   startCountdowns();
 }
 
