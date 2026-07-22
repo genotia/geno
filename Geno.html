@@ -350,47 +350,9 @@
       body { padding-bottom: calc(56px + env(safe-area-inset-bottom)); }
     }
     @media (max-width: 480px) { .footer-inner { grid-template-columns: 1fr; } }
-
-    /* ── LEFT SIDEBAR (added; desktop only — mobile keeps the top nav + tab bar) ── */
-    .pc-layout { position: relative; }
-    /* Fixed full-height rail; the main column (footer included) is offset to its right,
-       so the footer never sits under the sidebar. */
-    .pc-side { position: fixed; top: 0; left: 0; width: 248px; height: 100vh; background: #111827; color: #fff;
-               border-right: 1px solid rgba(255,255,255,.06); overflow-y: auto; z-index: 210;
-               display: flex; flex-direction: column; padding: 16px 0 12px; }
-    .pc-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
-    .pc-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #6f6e7e; padding: 14px 8px 6px; font-weight: 700; }
-    .pc-item { display: flex; align-items: center; gap: 11px; width: 100%; background: none; border: none; color: #c9c8d4;
-               padding: 9px 10px; border-radius: 9px; font-size: 14px; text-align: left; font-family: inherit; cursor: pointer;
-               transition: background .12s, color .12s; }
-    .pc-item svg { width: 18px; height: 18px; flex-shrink: 0; }
-    .pc-item:hover { background: rgba(255,255,255,.07); color: #fff; }
-    .pc-item.active { background: var(--purple); color: #fff; font-weight: 600; }
-    .pc-main { margin-left: 248px; min-width: 0; }
-    @media (max-width: 900px) { .pc-side { display: none; } .pc-main { margin-left: 0; } }
   </style>
 </head>
 <body>
-<div class="pc-layout">
-  <aside class="pc-side">
-    <nav class="pc-nav">
-      <button class="pc-item active" data-q="__geno" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z"/></svg> Geno AI</button>
-      <div class="pc-label">Deals</div>
-      <button class="pc-item" data-q="Deals near me" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Nearby</button>
-      <button class="pc-item" data-q="Hot deals right now" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s5 4 5 9a5 5 0 0 1-10 0c0-1.5.6-2.8 1.3-3.8C9 9 9 11 11 11c0-2 1-3.5 1-5s0-2 0-4z"/></svg> Hot deals</button>
-      <button class="pc-item" data-q="Off-peak deals" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Off-Peak</button>
-      <button class="pc-item" data-q="Last minute deals" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg> Last Minute</button>
-      <button class="pc-item" data-q="Flash sale offers" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 5.4L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.6-.6z"/></svg> Flash Sale</button>
-      <button class="pc-item" data-q="Launch offers" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15c-1 1-1 4-1 4s3 0 4-1M15 9l-6 6M14 4c3 0 6 3 6 6l-8 8-4-4z"/><circle cx="15" cy="9" r="1.5"/></svg> Launch Offers</button>
-      <button class="pc-item" data-q="Brand deals near me" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12l-8 8-8-8V4h8z"/><circle cx="9" cy="9" r="1.5"/></svg> Brand Drops</button>
-      <button class="pc-item" data-q="Nearby malls" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg> Nearby Malls</button>
-      <div class="pc-label">You</div>
-      <button class="pc-item" data-q="Negotiate a better price" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> AI Negotiate</button>
-      <button class="pc-item" data-q="My bookings" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M12 6v12"/></svg> My bookings</button>
-    </nav>
-  </aside>
-  <div class="pc-main">
-
 
 <!-- ══ NAV ══ -->
 <nav>
@@ -612,34 +574,11 @@
   </div>
 </div>
 
-</div><!-- /pc-main -->
-</div><!-- /pc-layout -->
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js"></script>
 <script src="analytics.js"></script>
 <script src="bookings.js"></script>
 <script src="brand-deals.js"></script>
 <script src="geno-engine.js"></script>
-<script>
-/* Left sidebar: reuse Geno's engine. Lanes run handleQuick and scroll the
-   chat into view; Geno AI jumps to the composer. */
-(function () {
-  window.pcNav = function (el) {
-    document.querySelectorAll('.pc-item').forEach(function (n) { n.classList.remove('active'); });
-    el.classList.add('active');
-    var q = el.getAttribute('data-q');
-    var panel = document.querySelector('.gc-panel');
-    if (q === '__geno') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      var i = document.getElementById('userInput');
-      if (i) setTimeout(function () { i.focus({ preventScroll: true }); }, 250);
-      return;
-    }
-    if (window.handleQuick) window.handleQuick(q);
-    if (panel) setTimeout(function () { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 40);
-  };
-})();
-</script>
 </body>
 </html>
