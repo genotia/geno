@@ -354,9 +354,6 @@
     /* ── POC sidebar shell (pc- prefixed so nothing collides with Geno) ── */
     .pc-app { display: flex; min-height: 100vh; }
     .pc-sidebar { width: 250px; flex-shrink: 0; background: #111827; color: #fff; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
-    .pc-brand { display: flex; align-items: center; gap: 9px; padding: 20px 20px 16px; }
-    .pc-brand-logo { width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0; }
-    .pc-brand-name { font-weight: 800; font-size: 17px; letter-spacing: -.3px; }
     .pc-loc { display: flex; align-items: center; gap: 6px; margin: 0 16px 12px; padding: 8px 10px; width: calc(100% - 32px); background: rgba(255,255,255,.06); border: none; border-radius: 9px; font-size: 12.5px; color: #c9c8d4; font-family: inherit; cursor: pointer; text-align: left; }
     .pc-loc svg { flex-shrink: 0; }
     .pc-loc:hover { background: rgba(255,255,255,.1); color: #fff; }
@@ -400,7 +397,6 @@
       .pc-app { flex-direction: column; }
       .pc-sidebar { width: 100%; height: auto; position: sticky; top: 0; z-index: 200; flex-direction: row; align-items: center; overflow-x: auto; }
       .pc-loc, .pc-label, .pc-foot { display: none; }
-      .pc-brand { padding: 12px 14px; }
       .pc-nav { display: flex; padding: 8px; gap: 4px; }
       .pc-item { white-space: nowrap; width: auto; padding: 8px 12px; }
       .pc-main { height: auto; overflow: visible; }
@@ -421,7 +417,6 @@
 
 <div class="pc-app">
   <aside class="pc-sidebar">
-    <div class="pc-brand"><img src="genoti_logo.svg" alt="" class="pc-brand-logo"><div class="pc-brand-name">Genoti</div></div>
     <nav class="pc-nav">
       <button class="pc-item active" data-q="__geno" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z"/></svg> Geno AI</button>
       <div class="pc-label">Deals</div>
