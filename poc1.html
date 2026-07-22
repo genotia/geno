@@ -366,9 +366,6 @@
     .pc-item svg { width: 18px; height: 18px; flex-shrink: 0; }
     .pc-item:hover { background: rgba(255,255,255,.07); color: #fff; }
     .pc-item.active { background: var(--purple); color: #fff; font-weight: 600; }
-    .pc-foot { padding: 14px 18px; border-top: 1px solid rgba(255,255,255,.08); }
-    .pc-login { display: inline-block; color: #c9c8d4; font-size: 13px; font-weight: 600; }
-    .pc-login:hover { color: #fff; }
     .pc-main { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 100vh; }
     /* Header */
     .pc-header { flex-shrink: 0; position: sticky; top: 0; z-index: 150; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 30px; border-bottom: 1px solid var(--border); background: var(--white); }
@@ -385,19 +382,10 @@
     .pc-main .gc-panel { min-height: clamp(460px, 62vh, 680px); width: 100%; }
     .pc-main .gc-topbar { display: none; }   /* location lives in the header now */
     .pc-main .qs-row { display: none; }       /* the sidebar replaces the in-panel quick chips */
-    /* Account button (sidebar foot) */
-    .pc-account { display: flex; align-items: center; gap: 10px; width: 100%; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 11px; padding: 8px 10px; color: #fff; font-family: inherit; cursor: pointer; text-align: left; transition: background .12s; }
-    .pc-account:hover { background: rgba(255,255,255,.09); }
-    .pc-av { width: 32px; height: 32px; border-radius: 50%; background: var(--purple); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-    .pc-account-txt { min-width: 0; flex: 1; }
-    .pc-account-txt b { display: block; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .pc-account-txt small { display: block; font-size: 11px; color: #8a8998; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .pc-logout { flex-shrink: 0; display: flex; align-items: center; color: #8a8998; padding: 3px; border-radius: 6px; }
-    .pc-logout:hover { color: #fff; background: rgba(255,255,255,.08); }
     @media (max-width: 900px) {
       .pc-app { flex-direction: column; }
       .pc-sidebar { width: 100%; height: auto; position: sticky; top: 0; z-index: 200; flex-direction: row; align-items: center; overflow-x: auto; }
-      .pc-loc, .pc-label, .pc-foot { display: none; }
+      .pc-loc, .pc-label { display: none; }
       .pc-brand { padding: 12px 14px; }
       .pc-nav { display: flex; padding: 8px; gap: 4px; }
       .pc-item { white-space: nowrap; width: auto; padding: 8px 12px; }
@@ -431,15 +419,6 @@
       <button class="pc-item" data-q="Negotiate a better price" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> AI Negotiate</button>
       <button class="pc-item" data-q="My bookings" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M12 6v12"/></svg> My bookings</button>
     </nav>
-    <div class="pc-foot">
-      <button class="pc-account" id="pcAccount" onclick="pcAccountClick(event)">
-        <span class="pc-av" id="pcAv">👤</span>
-        <span class="pc-account-txt"><b id="pcAccountName">Log in</b><small id="pcAccountSub">Save your deals & bookings</small></span>
-        <span class="pc-logout" id="pcLogout" style="display:none" onclick="pcLogout(event)" title="Log out">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        </span>
-      </button>
-    </div>
   </aside>
   <main class="pc-main">
     <header class="pc-header">
@@ -642,33 +621,6 @@
     if (panel && window.innerWidth <= 900) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  /* Account button (sidebar foot), driven by the shared auth session. */
-  window.pcAccountClick = function (e) {
-    if (!window.GenotiAuth) return;
-    if (window.GenotiAuth.isLoggedIn()) { if (window.handleQuick) window.handleQuick('My bookings'); }
-    else window.GenotiAuth.open({ title: 'Log in to Genoti', msg: 'Save your deals, bookings and alerts.' });
-  };
-  window.pcLogout = function (e) {
-    if (e) e.stopPropagation();
-    if (window.GenotiAuth) window.GenotiAuth.signOut();
-  };
-  if (window.GenotiAuth) {
-    window.GenotiAuth.onChange(function (user) {
-      var nm = document.getElementById('pcAccountName'), sub = document.getElementById('pcAccountSub'),
-          av = document.getElementById('pcAv'), lo = document.getElementById('pcLogout');
-      if (!nm) return;
-      if (user) {
-        var m = user.user_metadata || {};
-        var full = (m.full_name || ((m.first_name || '') + ' ' + (m.last_name || '')).trim() || user.email.split('@')[0]);
-        nm.textContent = full; sub.textContent = user.email;
-        av.textContent = (full[0] || '?').toUpperCase();
-        lo.style.display = '';
-      } else {
-        nm.textContent = 'Log in'; sub.textContent = 'Save your deals & bookings';
-        av.textContent = '👤'; lo.style.display = 'none';
-      }
-    });
-  }
 
   /* Mirror Geno's resolved location into the sidebar label. */
   var src = document.getElementById('gc-loc-name');
