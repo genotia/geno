@@ -277,10 +277,17 @@
     /* Three tidy groups; overflow visible + wrap so the upward popover is never clipped. */
     .qs-row { justify-content: center; flex-wrap: wrap; overflow: visible; }
     .qg-wrap { position: relative; flex-shrink: 0; }
-    .qg-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 15px; background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; font-size: 12.5px; font-weight: 700; color: var(--text); cursor: pointer; white-space: nowrap; font-family: inherit; transition: all .15s; }
-    .qg-btn:hover { border-color: var(--purple); color: var(--purple); }
-    .qg-btn.open { border-color: var(--purple); color: var(--purple); background: var(--purple-bg); }
-    .qg-caret { font-size: 9px; transition: transform .15s; }
+    .qg-btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 18px; border: 1.5px solid; border-radius: 22px; font-size: 13px; font-weight: 700; letter-spacing: -.1px; cursor: pointer; white-space: nowrap; font-family: inherit; box-shadow: 0 1px 2px rgba(17,24,39,.05); transition: transform .12s, box-shadow .15s, background .15s, color .15s, border-color .15s; }
+    .qg-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(17,24,39,.12); }
+    .qg-btn:active { transform: translateY(0); box-shadow: 0 2px 6px rgba(17,24,39,.10); }
+    /* Category colours: Deals = guaranteed (green) · Community = blue · You = purple */
+    .qg-deals { background: var(--green-lt); border-color: var(--green-md); color: var(--dark-green); }
+    .qg-deals:hover, .qg-deals.open { background: var(--green); border-color: var(--green); color: #fff; }
+    .qg-comm { background: var(--blue-bg); border-color: var(--blue-border); color: var(--blue); }
+    .qg-comm:hover { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .qg-you { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple); }
+    .qg-you:hover, .qg-you.open { background: var(--purple); border-color: var(--purple); color: #fff; }
+    .qg-caret { font-size: 9px; opacity: .75; transition: transform .15s; }
     .qg-btn.open .qg-caret { transform: rotate(180deg); }
     /* Popover opens UPWARD as an overlay, so the bar stays one line tall. */
     .qg-pop { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); z-index: 60; width: max-content; max-width: min(340px, 84vw); background: var(--white); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 14px 40px rgba(17,24,39,.18); padding: 9px; }
@@ -482,7 +489,7 @@
 
     <div class="qs-row" id="quickSelect">
       <div class="qg-wrap">
-        <button class="qg-btn" onclick="toggleQG(this)">🛡️ Deals <span class="qg-caret">▾</span></button>
+        <button class="qg-btn qg-deals" onclick="toggleQG(this)">🛡️ Deals <span class="qg-caret">▾</span></button>
         <div class="qg-pop">
           <button class="qs-btn" onclick="qgPick('Deals near me')">📍 Nearby</button>
           <button class="qs-btn" onclick="qgPick('Hot deals right now')">🔥 Hot deals</button>
@@ -494,9 +501,9 @@
           <button class="qs-btn" onclick="qgPick('Nearby malls')">🏬 Nearby malls</button>
         </div>
       </div>
-      <button class="qg-btn qg-solo" onclick="handleQuick('Community deals')">👥 Community</button>
+      <button class="qg-btn qg-comm" onclick="handleQuick('Community deals')">👥 Community</button>
       <div class="qg-wrap">
-        <button class="qg-btn" onclick="toggleQG(this)">✨ You <span class="qg-caret">▾</span></button>
+        <button class="qg-btn qg-you" onclick="toggleQG(this)">✨ You <span class="qg-caret">▾</span></button>
         <div class="qg-pop">
           <button class="qs-btn" onclick="qgPick('Negotiate a better price')">🤝 AI Negotiate</button>
           <button class="qs-btn" onclick="qgPick('My bookings')">🎟️ My bookings</button>
