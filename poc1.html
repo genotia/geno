@@ -415,6 +415,34 @@
 
 <!-- ══ NAV ══ -->
 
+<div class="pc-app">
+  <aside class="pc-sidebar">
+    <nav class="pc-nav">
+      <button class="pc-item active" data-q="__geno" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z"/></svg> Geno AI</button>
+      <div class="pc-label">Deals</div>
+      <button class="pc-item" data-q="Deals near me" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Nearby</button>
+      <button class="pc-item" data-q="Hot deals right now" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s5 4 5 9a5 5 0 0 1-10 0c0-1.5.6-2.8 1.3-3.8C9 9 9 11 11 11c0-2 1-3.5 1-5s0-2 0-4z"/></svg> Hot deals</button>
+      <button class="pc-item" data-q="Off-peak deals" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Off-Peak</button>
+      <button class="pc-item" data-q="Last minute deals" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg> Last Minute</button>
+      <button class="pc-item" data-q="Flash sale offers" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 5.4L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.6-.6z"/></svg> Flash Sale</button>
+      <button class="pc-item" data-q="Launch offers" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15c-1 1-1 4-1 4s3 0 4-1M15 9l-6 6M14 4c3 0 6 3 6 6l-8 8-4-4z"/><circle cx="15" cy="9" r="1.5"/></svg> Launch Offers</button>
+      <button class="pc-item" data-q="Brand deals near me" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12l-8 8-8-8V4h8z"/><circle cx="9" cy="9" r="1.5"/></svg> Brand Drops</button>
+      <button class="pc-item" data-q="Nearby malls" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg> Nearby Malls</button>
+      <div class="pc-label">You</div>
+      <button class="pc-item" data-q="Negotiate a better price" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> AI Negotiate</button>
+      <button class="pc-item" data-q="My bookings" onclick="pcNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M12 6v12"/></svg> My bookings</button>
+    </nav>
+    <div class="pc-foot">
+      <button class="pc-account" id="pcAccount" onclick="pcAccountClick(event)">
+        <span class="pc-av" id="pcAv">👤</span>
+        <span class="pc-account-txt"><b id="pcAccountName">Log in</b><small id="pcAccountSub">Save your deals & bookings</small></span>
+        <span class="pc-logout" id="pcLogout" style="display:none" onclick="pcLogout(event)" title="Log out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </span>
+      </button>
+    </div>
+  </aside>
+  <main class="pc-main">
   <!-- ══ NAV ══ -->
   <nav>
   <div class="nav-inner">
@@ -511,6 +539,7 @@
     </div>
   </div>
 </nav>
+    <div class="pc-body">
 <!-- ══ CHAT ══ -->
 <div class="geno-wrap">
   <div class="gc-panel">
@@ -555,6 +584,7 @@
 
 <!-- ══ FOOTER ══ -->
 
+    </div><!-- /pc-body -->
     <footer class="pc-footer">
       <span>© 2026 Genoti · Local deals, negotiated</span>
       <span class="pc-foot-links">
@@ -563,6 +593,8 @@
         <a href="merchant/index.html">For businesses</a>
       </span>
     </footer>
+  </main>
+</div><!-- /pc-app -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js"></script>
@@ -571,22 +603,78 @@
 <script src="brand-deals.js"></script>
 <script src="geno-engine.js"></script>
 <script>
-/* Nearby → ask the radius first, then run a distance-filtered search. */
+/* POC sidebar wiring: reuse Geno's real engine (handleQuick / openAreaPicker). */
 (function () {
-  var RADII = [['100 m', 0.1], ['500 m', 0.5], ['1 km', 1], ['2 km', 2], ['4 km', 4], ['8 km', 8]];
-  var _hq = window.handleQuick;
-  window.handleQuick = function (text) {
-    if (/^\s*deals near me\s*$/i.test(text || '')) {
-      if (window.addUser) window.addUser('Deals near me');
-      var chips = '<div class="chips-label">How far around you?</div><div class="chips">' +
-        RADII.map(function (r) {
-          return '<button class="chip" onclick="handleQuick(\'Deals within ' + r[1] + ' km\')">' + r[0] + '</button>';
-        }).join('') + '</div>';
-      if (window.addBot) window.addBot('Pick a distance and I will pull live deals inside it.', chips);
+  window.pcNav = function (el) {
+    document.querySelectorAll('.pc-item').forEach(function (n) { n.classList.remove('active'); });
+    el.classList.add('active');
+    var q = el.getAttribute('data-q');
+    var panel = document.querySelector('.gc-panel');
+    var titleEl = document.getElementById('pc-h-name');
+    if (q === '__geno') {
+      if (titleEl) titleEl.textContent = 'What can I find for you?';
+      var i = document.getElementById('userInput');
+      if (i) setTimeout(function () { i.focus({ preventScroll: true }); }, 200);
       return;
     }
-    return _hq.apply(this, arguments);
+    if (titleEl) titleEl.textContent = el.textContent.trim();
+    if (q === 'Deals near me') { window.pcNearby(); }
+    else if (window.handleQuick) window.handleQuick(q);
+    if (panel && window.innerWidth <= 900) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+
+  /* Nearby → ask the radius first, then run a distance-filtered search. */
+  var PC_RADII = [['100 m', 0.1], ['500 m', 0.5], ['1 km', 1], ['2 km', 2], ['4 km', 4], ['8 km', 8]];
+  window.pcNearby = function () {
+    if (window.addUser) window.addUser('Deals near me');
+    var chips = '<div class="chips-label">How far around you?</div><div class="chips">' +
+      PC_RADII.map(function (r) {
+        return '<button class="chip" onclick="pcRadius(' + r[1] + ')">' + r[0] + '</button>';
+      }).join('') + '</div>';
+    if (window.addBot) window.addBot('Pick a distance and I\'ll pull live deals inside it.', chips);
+  };
+  window.pcRadius = function (km) {
+    var label = (km < 1) ? (km * 1000) + ' m' : km + ' km';
+    if (window.handleQuick) window.handleQuick('Deals within ' + km + ' km');
+  };
+
+
+  /* Account button (sidebar foot), driven by the shared auth session. */
+  window.pcAccountClick = function (e) {
+    if (!window.GenotiAuth) return;
+    if (window.GenotiAuth.isLoggedIn()) { if (window.handleQuick) window.handleQuick('My bookings'); }
+    else window.GenotiAuth.open({ title: 'Log in to Genoti', msg: 'Save your deals, bookings and alerts.' });
+  };
+  window.pcLogout = function (e) {
+    if (e) e.stopPropagation();
+    if (window.GenotiAuth) window.GenotiAuth.signOut();
+  };
+  if (window.GenotiAuth) {
+    window.GenotiAuth.onChange(function (user) {
+      var nm = document.getElementById('pcAccountName'), sub = document.getElementById('pcAccountSub'),
+          av = document.getElementById('pcAv'), lo = document.getElementById('pcLogout');
+      if (!nm) return;
+      if (user) {
+        var m = user.user_metadata || {};
+        var full = (m.full_name || ((m.first_name || '') + ' ' + (m.last_name || '')).trim() || user.email.split('@')[0]);
+        nm.textContent = full; sub.textContent = user.email;
+        av.textContent = (full[0] || '?').toUpperCase();
+        lo.style.display = '';
+      } else {
+        nm.textContent = 'Log in'; sub.textContent = 'Save your deals & bookings';
+        av.textContent = '👤'; lo.style.display = 'none';
+      }
+    });
+  }
+
+  /* Mirror Geno's resolved location into the sidebar label. */
+  var src = document.getElementById('gc-loc-name');
+  var dst = document.getElementById('pc-loc-name');
+  if (src && dst) {
+    var sync = function () { dst.textContent = src.textContent; };
+    sync();
+    new MutationObserver(sync).observe(src, { childList: true, subtree: true, characterData: true });
+  }
 })();
 </script>
 </body>
