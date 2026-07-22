@@ -488,19 +488,13 @@
     <div class="chat" id="chat"></div>
 
     <div class="qs-row" id="quickSelect">
-      <div class="qg-wrap">
-        <button class="qg-btn qg-deals" onclick="toggleQG(this)">🛡️ Deals <span class="qg-caret">▾</span></button>
-        <div class="qg-pop">
-          <button class="qs-btn" onclick="qgPick('Deals near me')">📍 Nearby</button>
-          <button class="qs-btn" onclick="qgPick('Hot deals right now')">🔥 Hot deals</button>
-          <button class="qs-btn" onclick="qgPick('Off-peak deals')">⏰ Off-peak</button>
-          <button class="qs-btn" onclick="qgPick('Last minute deals')">⚡ Last minute</button>
-          <button class="qs-btn" onclick="qgPick('Flash sale offers')">💥 Flash Sale</button>
-          <button class="qs-btn" onclick="qgPick('Launch offers')">🚀 Launch Offers</button>
-          <button class="qs-btn" onclick="qgPick('Brand deals near me')">🏷️ Brand deals</button>
-          <button class="qs-btn" onclick="qgPick('Nearby malls')">🏬 Nearby malls</button>
-        </div>
-      </div>
+      <button class="qs-btn" onclick="handleQuick('Deals near me')">📍 Nearby</button>
+      <button class="qs-btn" onclick="handleQuick('Off-peak deals')">⏰ Off-peak</button>
+      <button class="qs-btn" onclick="handleQuick('Last minute deals')">⚡ Last minute</button>
+      <button class="qs-btn" onclick="handleQuick('Flash sale offers')">💥 Flash Sale</button>
+      <button class="qs-btn" onclick="handleQuick('Launch offers')">🚀 Launch Offers</button>
+      <button class="qs-btn" onclick="handleQuick('Brand deals near me')">🏷️ Brand deals</button>
+      <button class="qs-btn" onclick="handleQuick('Nearby malls')">🏬 Nearby malls</button>
       <button class="qg-btn qg-comm" onclick="handleQuick('Community deals')">👥 Community</button>
       <div class="qg-wrap">
         <button class="qg-btn qg-you" onclick="toggleQG(this)">✨ You <span class="qg-caret">▾</span></button>
