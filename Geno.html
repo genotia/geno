@@ -352,9 +352,11 @@
     @media (max-width: 480px) { .footer-inner { grid-template-columns: 1fr; } }
 
     /* ── LEFT SIDEBAR (added; desktop only — mobile keeps the top nav + tab bar) ── */
-    .pc-layout { display: flex; align-items: flex-start; }
-    .pc-side { width: 248px; flex-shrink: 0; align-self: stretch; background: #111827; color: #fff;
-               position: sticky; top: 0; height: 100vh; overflow-y: auto; z-index: 210;
+    .pc-layout { position: relative; }
+    /* Fixed full-height rail; the main column (footer included) is offset to its right,
+       so the footer never sits under the sidebar. */
+    .pc-side { position: fixed; top: 0; left: 0; width: 248px; height: 100vh; background: #111827; color: #fff;
+               border-right: 1px solid rgba(255,255,255,.06); overflow-y: auto; z-index: 210;
                display: flex; flex-direction: column; padding: 16px 0 12px; }
     .pc-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
     .pc-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #6f6e7e; padding: 14px 8px 6px; font-weight: 700; }
@@ -364,8 +366,8 @@
     .pc-item svg { width: 18px; height: 18px; flex-shrink: 0; }
     .pc-item:hover { background: rgba(255,255,255,.07); color: #fff; }
     .pc-item.active { background: var(--purple); color: #fff; font-weight: 600; }
-    .pc-main { flex: 1; min-width: 0; }
-    @media (max-width: 900px) { .pc-side { display: none; } }
+    .pc-main { margin-left: 248px; min-width: 0; }
+    @media (max-width: 900px) { .pc-side { display: none; } .pc-main { margin-left: 0; } }
   </style>
 </head>
 <body>
