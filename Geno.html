@@ -274,6 +274,18 @@
     .qs-row::-webkit-scrollbar { display: none; }
     .qs-btn { padding: 8px 13px; background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--text); cursor: pointer; white-space: nowrap; flex-shrink: 0; font-family: inherit; transition: all .15s; }
     .qs-btn:hover { border-color: var(--purple); color: var(--purple); }
+    .qs-row { justify-content: center; }   /* three tidy groups, centred */
+    .qg-wrap { position: relative; flex-shrink: 0; }
+    .qg-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 15px; background: var(--white); border: 1.5px solid var(--border); border-radius: 20px; font-size: 12.5px; font-weight: 700; color: var(--text); cursor: pointer; white-space: nowrap; font-family: inherit; transition: all .15s; }
+    .qg-btn:hover { border-color: var(--purple); color: var(--purple); }
+    .qg-btn.open { border-color: var(--purple); color: var(--purple); background: var(--purple-bg); }
+    .qg-caret { font-size: 9px; transition: transform .15s; }
+    .qg-btn.open .qg-caret { transform: rotate(180deg); }
+    /* Popover opens UPWARD as an overlay, so the bar stays one line tall. */
+    .qg-pop { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); z-index: 60; width: max-content; max-width: min(340px, 84vw); background: var(--white); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 14px 40px rgba(17,24,39,.18); padding: 9px; }
+    .qg-pop.open { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .qg-pop .qs-btn { flex: 0 0 auto; }
+    .qg-link { text-decoration: none; display: inline-flex; align-items: center; }
 
     /* ── INPUT ── */
     /* The composer is a floating pill, deliberately unlike the cards and panels
@@ -468,17 +480,28 @@
     <div class="chat" id="chat"></div>
 
     <div class="qs-row" id="quickSelect">
-      <button class="qs-btn" onclick="handleQuick('Deals near me')">📍 Nearby</button>
-      <button class="qs-btn" onclick="handleQuick('Hot deals right now')">🔥 Hot deals</button>
-      <button class="qs-btn" onclick="handleQuick('Off-peak deals')">⏰ Off-peak</button>
-      <button class="qs-btn" onclick="handleQuick('Last minute deals')">⚡ Last minute</button>
-      <button class="qs-btn" onclick="handleQuick('Community deals')">👥 Community</button>
-      <button class="qs-btn" onclick="handleQuick('Nearby malls')">🏬 Nearby malls</button>
-      <button class="qs-btn" onclick="handleQuick('Brand deals near me')">🏷️ Brand deals</button>
-      <button class="qs-btn" onclick="handleQuick('Flash sale offers')">💥 Flash Sale</button>
-      <button class="qs-btn" onclick="handleQuick('Launch offers')">🚀 Launch Offers</button>
-      <button class="qs-btn" onclick="handleQuick('Negotiate a better price')">🤝 AI Negotiate</button>
-      <button class="qs-btn" onclick="handleQuick('My bookings')">🎟️ My bookings</button>
+      <div class="qg-wrap">
+        <button class="qg-btn" onclick="toggleQG(this)">🛡️ Deals <span class="qg-caret">▾</span></button>
+        <div class="qg-pop">
+          <button class="qs-btn" onclick="qgPick('Deals near me')">📍 Nearby</button>
+          <button class="qs-btn" onclick="qgPick('Hot deals right now')">🔥 Hot deals</button>
+          <button class="qs-btn" onclick="qgPick('Off-peak deals')">⏰ Off-peak</button>
+          <button class="qs-btn" onclick="qgPick('Last minute deals')">⚡ Last minute</button>
+          <button class="qs-btn" onclick="qgPick('Flash sale offers')">💥 Flash Sale</button>
+          <button class="qs-btn" onclick="qgPick('Launch offers')">🚀 Launch Offers</button>
+          <button class="qs-btn" onclick="qgPick('Brand deals near me')">🏷️ Brand deals</button>
+          <button class="qs-btn" onclick="qgPick('Nearby malls')">🏬 Nearby malls</button>
+        </div>
+      </div>
+      <button class="qg-btn qg-solo" onclick="handleQuick('Community deals')">👥 Community</button>
+      <div class="qg-wrap">
+        <button class="qg-btn" onclick="toggleQG(this)">✨ You <span class="qg-caret">▾</span></button>
+        <div class="qg-pop">
+          <button class="qs-btn" onclick="qgPick('Negotiate a better price')">🤝 AI Negotiate</button>
+          <button class="qs-btn" onclick="qgPick('My bookings')">🎟️ My bookings</button>
+          <a class="qs-btn qg-link" href="dealbook.html">📊 Savings tracker</a>
+        </div>
+      </div>
     </div>
 
     <div class="input-bar">
@@ -573,5 +596,22 @@
 <script src="bookings.js"></script>
 <script src="brand-deals.js"></script>
 <script src="geno-engine.js"></script>
+<script>
+/* Grouped quick-actions: tap a group to reveal its options (overlay). */
+function _qgCloseAll(){
+  document.querySelectorAll('.qg-btn.open').forEach(function(b){
+    b.classList.remove('open');
+    var p = b.parentNode.querySelector('.qg-pop'); if (p) p.classList.remove('open');
+  });
+}
+function toggleQG(btn){
+  var pop = btn.parentNode.querySelector('.qg-pop');
+  var willOpen = !btn.classList.contains('open');
+  _qgCloseAll();
+  if (willOpen){ btn.classList.add('open'); pop.classList.add('open'); }
+}
+function qgPick(text){ _qgCloseAll(); if (window.handleQuick) window.handleQuick(text); }
+document.addEventListener('click', function(e){ if (!e.target.closest('.qg-wrap')) _qgCloseAll(); });
+</script>
 </body>
 </html>
