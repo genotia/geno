@@ -366,9 +366,9 @@
     .pc-item svg { width: 18px; height: 18px; flex-shrink: 0; }
     .pc-item:hover { background: rgba(255,255,255,.07); color: #fff; }
     .pc-item.active { background: var(--purple); color: #fff; font-weight: 600; }
-    .pc-main { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 100vh; }
+    .pc-main { flex: 1; min-width: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
     /* Header */
-    .pc-header { flex-shrink: 0; position: sticky; top: 0; z-index: 150; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 30px; border-bottom: 1px solid var(--border); background: var(--white); }
+    .pc-header { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 30px; border-bottom: 1px solid var(--border); background: var(--white); }
     .pc-h-actions { display: flex; align-items: center; gap: 10px; }
     .pc-header .menu-explore { display: block; }   /* Menu is the cross-site nav here, so show product links on desktop too */
     .pc-h-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; color: var(--purple); }
@@ -377,11 +377,16 @@
     .pc-h-loc:hover { border-color: var(--purple); color: var(--purple); }
     .pc-h-loc svg { color: var(--purple); flex-shrink: 0; }
     /* Body fills the window; the chat panel fills the body (app feel, not a small card) */
-    .pc-body { flex: 1; }
-    .pc-body .geno-wrap { max-width: 1180px; width: 100%; margin: 0 auto; padding: 18px 30px; }
-    .pc-main .gc-panel { min-height: clamp(460px, 62vh, 680px); width: 100%; }
+    .pc-body { flex: 1; min-height: 0; display: flex; overflow: hidden; }
+    .pc-body .geno-wrap { max-width: 1180px; width: 100%; margin: 0 auto; padding: 18px 30px; display: flex; }
+    .pc-main .gc-panel { flex: 1; min-height: 0; width: 100%; }
     .pc-main .gc-topbar { display: none; }   /* location lives in the header now */
     .pc-main .qs-row { display: none; }       /* the sidebar replaces the in-panel quick chips */
+    /* Footer (slim, pinned at the bottom of the app-shell column) */
+    .pc-footer { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 11px 30px; border-top: 1px solid var(--border); background: var(--white); font-size: 12px; color: var(--muted); }
+    .pc-footer a { color: var(--muted); font-weight: 600; }
+    .pc-footer a:hover { color: var(--purple); }
+    .pc-foot-links { display: flex; gap: 16px; flex-wrap: wrap; }
     @media (max-width: 900px) {
       .pc-app { flex-direction: column; }
       .pc-sidebar { width: 100%; height: auto; position: sticky; top: 0; z-index: 200; flex-direction: row; align-items: center; overflow-x: auto; }
@@ -389,11 +394,14 @@
       .pc-brand { padding: 12px 14px; }
       .pc-nav { display: flex; padding: 8px; gap: 4px; }
       .pc-item { white-space: nowrap; width: auto; padding: 8px 12px; }
-      .pc-header { position: static; padding: 12px 16px; }
+      .pc-main { height: auto; overflow: visible; }
+      .pc-header { padding: 12px 16px; }
       .pc-h-name { font-size: 16px; }
       .pc-h-actions .btn-login, .pc-h-actions .btn-pill { display: none; }  /* keep Menu + location on mobile */
-      .pc-body .geno-wrap { padding: 14px 16px; }
+      .pc-body { display: block; overflow: visible; }
+      .pc-body .geno-wrap { display: block; padding: 14px 16px; }
       .pc-main .gc-panel { min-height: clamp(460px, 70vh, 640px); }
+      .pc-footer { padding: 12px 16px; flex-direction: column; align-items: flex-start; gap: 6px; }
     }
   </style>
 </head>
@@ -546,52 +554,14 @@
 <!-- ══ FOOTER ══ -->
 
     </div><!-- /pc-body -->
-<footer>
-  <div class="footer-inner">
-    <div>
-      <div class="f-logo"><img src="genoti_logo.svg" alt="" style="width:30px;height:30px;vertical-align:middle;margin-right:4px">Genoti</div>
-      <div class="f-tagline">Discover local deals at the real price.</div>
-    </div>
-    <div class="footer-col">
-      <h4>For Users</h4>
-      <ul>
-        <li class="parent-link"><a href="dealbox.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> DealBox</a></li>
-        <li class="child"><a href="index.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> OffPeak Deals</a></li>
-        <li class="child"><a href="last-minute.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> LastMinute Deals</a></li>
-        <li class="child"><a href="negotiate.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Negotiate by AI</a></li>
-        <li class="child"><a href="notify.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notify Me</a></li>
-        <li><a href="dealhub.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> DealHub · Community Deals</a></li>
-        <li><a href="dealbook.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> DealBook · Savings Tracker</a></li>
-        <li><a href="Geno.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Geno: AI Deal Finder</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>For Merchants</h4>
-      <ul>
-        <li><a href="calculator.html">True Price Calculator</a></li>
-        <li><a href="register.html">List your Business</a></li>
-        <li><a href="#">Merchant Dashboard</a></li>
-        <li><a href="merchant/merchants.html">Merchant OS</a></li>
-        <li><a href="merchant/pricing.html">Pricing</a></li>
-        <li><a href="merchant/migrate.html">Switch to Genoti</a></li>
-        <li><a href="merchant/dealdrop.html">DealDrop · free WhatsApp listing</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Company</h4>
-      <ul>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Blog</a></li>
-        <li><a href="#">Careers</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
-    <div style="display:flex;gap:16px"><a href="#">Twitter</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
-  </div>
-</footer>
+    <footer class="pc-footer">
+      <span>© 2026 Genoti · Local deals, negotiated</span>
+      <span class="pc-foot-links">
+        <a href="help.html">Help</a>
+        <a href="download-the-app.html">Get the app</a>
+        <a href="merchant/index.html">For businesses</a>
+      </span>
+    </footer>
   </main>
 </div><!-- /pc-app -->
 
