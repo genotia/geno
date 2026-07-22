@@ -18,7 +18,7 @@ document.addEventListener('click', e => { if (!e.target.closest('.menu-dropdown-
 
 /* ============================================================ DATA LAYER (stub) ============================================================ */
 const NOW = Date.now();
-const AREAS = ['Koramangala','Indiranagar','HSR Layout','JP Nagar','Jayanagar','BTM Layout','Whitefield','Marathahalli'];
+const AREAS = ['Electronic City','Indiranagar','HSR Layout','JP Nagar','Jayanagar','BTM Layout','Whitefield','Marathahalli'];
 
 const TYPE_META = {
   'off-peak':    { label: 'Off-Peak',    dot: 'var(--green)',  tag: ['var(--green-lt)','var(--dark-green)'] },
@@ -33,27 +33,27 @@ const TYPE_META = {
 /* Malls near the user. A mall holds both brand stores and local outlets,
    so a mall view pulls from both the local deal set and the brand feed. */
 const MALLS = [
-  { id:'forum',   name:'Forum Mall',         area:'Koramangala',  km:1.4 },
+  { id:'forum',   name:'Forum Mall',         area:'Electronic City',  km:1.4 },
   { id:'garuda',  name:'Garuda Mall',        area:'Magrath Road', km:4.1 },
   { id:'mantri',  name:'Mantri Square',      area:'Malleswaram',  km:8.7 },
   { id:'phoenix', name:'Phoenix Marketcity', area:'Whitefield',   km:11.2 },
 ];
 
 const _DB = [
-  { id:'d01', merchant:'Green Leaf Spa',  cat:'Salon',      area:'Koramangala', km:1.2, offer:'35% off all services',        real:650,  ref:1000, type:'off-peak',    window:'Today 11am-3pm', expMin:null, bogo:false, buffet:false, createdMin:12, trust:{kind:'merchant'},                          tip:'HDFC Regalia -> 5x points, save ₹65 more' },
-  { id:'d02', merchant:'Cafe Monsoon', mall:'forum',    cat:'Restaurant', area:'Koramangala', km:0.8, offer:'Buy 1 Get 1 lunch combos',     real:299,  ref:599,  type:'community',   window:'Today 12-4pm',   expMin:95,   bogo:true,  buffet:false, createdMin:22, trust:{kind:'community', votes:14},               tip:'Axis Ace -> 5% cashback on dining' },
-  { id:'d03', merchant:'Spice Route',     cat:'Restaurant', area:'Koramangala', km:1.4, offer:'Lunch buffet for two',        real:599,  ref:999,  type:'off-peak',    window:'Today 12-4pm',   expMin:null, bogo:false, buffet:true,  createdMin:40, trust:{kind:'checked', cmp:'40% below area avg'}, tip:null },
-  { id:'d04', merchant:'FitZone Gym',     cat:'Fitness',    area:'Koramangala', km:2.1, offer:'₹99 trial session',           real:99,   ref:500,  type:'community',   window:'Tomorrow 6-10am',expMin:null, bogo:false, buffet:false, createdMin:30, trust:{kind:'community', votes:12},               tip:null },
-  { id:'d05', merchant:'Brew & Bite',     cat:'Cafe',       area:'Koramangala', km:0.5, offer:'₹149 all-day breakfast',      real:149,  ref:349,  type:'flash',       window:'Today all day',  expMin:40,   bogo:false, buffet:false, createdMin:8,  trust:{kind:'merchant'},                          tip:'Amazon Pay ICICI -> 2% back' },
-  { id:'d06', merchant:'Aura Wellness',   cat:'Wellness',   area:'Koramangala', km:1.8, offer:'60-min massage ₹799',         real:799,  ref:1500, type:'new-launch',  window:'Today 2-6pm',    expMin:null, bogo:false, buffet:false, createdMin:55, trust:{kind:'merchant'},                          tip:null },
-  { id:'d07', merchant:'Glam Studio', mall:'forum',     cat:'Salon',      area:'Koramangala', km:0.8, offer:'Full hair spa + cut',         real:499,  ref:1250, type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:10, trust:{kind:'community', votes:247},              tip:null },
-  { id:'d08', merchant:'Third Wave', mall:'garuda',      cat:'Cafe',       area:'Koramangala', km:1.1, offer:'15% off cold brews',          real:213,  ref:250,  type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:58, trust:{kind:'community', votes:3},                tip:null },
-  { id:'d09', merchant:'Cult.fit',        cat:'Fitness',    area:'Koramangala', km:1.5, offer:'Free trial week',             real:0,    ref:499,  type:'new-launch',  window:'This week',      expMin:null, bogo:false, buffet:false, createdMin:65, trust:{kind:'merchant'},                          tip:null },
-  { id:'d10', merchant:'Kairali Spa',     cat:'Wellness',   area:'Koramangala', km:2.0, offer:'30% off Ayurveda massage',    real:1400, ref:2000, type:'off-peak',    window:'Weekdays',       expMin:null, bogo:false, buffet:false, createdMin:50, trust:{kind:'checked', cmp:'28% below area avg'}, tip:null },
-  { id:'d11', merchant:'Meghana Foods',   cat:'Restaurant', area:'Koramangala', km:1.0, offer:'Buy 1 Get 1 chicken biryani', real:300,  ref:600,  type:'flash',       window:'Today till 10pm',expMin:70,   bogo:true,  buffet:false, createdMin:35, trust:{kind:'community', votes:9},                tip:null },
-  { id:'d12', merchant:'Truffles', mall:'forum',        cat:'Restaurant', area:'Koramangala', km:1.8, offer:'Weekend buffet',              real:449,  ref:799,  type:'last-minute', window:'Sat-Sun',        expMin:null, bogo:false, buffet:true,  createdMin:45, trust:{kind:'merchant'},                          tip:null },
-  { id:'d13', merchant:'Empire',          cat:'Restaurant', area:'Koramangala', km:1.9, offer:'Veg thali buffet',            real:225,  ref:null, type:'off-peak',    window:'Lunch',          expMin:null, bogo:false, buffet:true,  createdMin:70, trust:{kind:'checked', cmp:'in line with area avg'}, tip:null },
-  { id:'d14', merchant:'Nails & Co', mall:'phoenix',      cat:'Salon',      area:'Koramangala', km:1.6, offer:'Nail art + pedicure',         real:649,  ref:999,  type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:18, trust:{kind:'community', votes:21},               tip:null },
+  { id:'d01', merchant:'Green Leaf Spa',  cat:'Salon',      area:'Electronic City', km:1.2, offer:'35% off all services',        real:650,  ref:1000, type:'off-peak',    window:'Today 11am-3pm', expMin:null, bogo:false, buffet:false, createdMin:12, trust:{kind:'merchant'},                          tip:'HDFC Regalia -> 5x points, save ₹65 more' },
+  { id:'d02', merchant:'Cafe Monsoon', mall:'forum',    cat:'Restaurant', area:'Electronic City', km:0.8, offer:'Buy 1 Get 1 lunch combos',     real:299,  ref:599,  type:'community',   window:'Today 12-4pm',   expMin:95,   bogo:true,  buffet:false, createdMin:22, trust:{kind:'community', votes:14},               tip:'Axis Ace -> 5% cashback on dining' },
+  { id:'d03', merchant:'Spice Route',     cat:'Restaurant', area:'Electronic City', km:1.4, offer:'Lunch buffet for two',        real:599,  ref:999,  type:'off-peak',    window:'Today 12-4pm',   expMin:null, bogo:false, buffet:true,  createdMin:40, trust:{kind:'checked', cmp:'40% below area avg'}, tip:null },
+  { id:'d04', merchant:'FitZone Gym',     cat:'Fitness',    area:'Electronic City', km:2.1, offer:'₹99 trial session',           real:99,   ref:500,  type:'community',   window:'Tomorrow 6-10am',expMin:null, bogo:false, buffet:false, createdMin:30, trust:{kind:'community', votes:12},               tip:null },
+  { id:'d05', merchant:'Brew & Bite',     cat:'Cafe',       area:'Electronic City', km:0.5, offer:'₹149 all-day breakfast',      real:149,  ref:349,  type:'flash',       window:'Today all day',  expMin:40,   bogo:false, buffet:false, createdMin:8,  trust:{kind:'merchant'},                          tip:'Amazon Pay ICICI -> 2% back' },
+  { id:'d06', merchant:'Aura Wellness',   cat:'Wellness',   area:'Electronic City', km:1.8, offer:'60-min massage ₹799',         real:799,  ref:1500, type:'new-launch',  window:'Today 2-6pm',    expMin:null, bogo:false, buffet:false, createdMin:55, trust:{kind:'merchant'},                          tip:null },
+  { id:'d07', merchant:'Glam Studio', mall:'forum',     cat:'Salon',      area:'Electronic City', km:0.8, offer:'Full hair spa + cut',         real:499,  ref:1250, type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:10, trust:{kind:'community', votes:247},              tip:null },
+  { id:'d08', merchant:'Third Wave', mall:'garuda',      cat:'Cafe',       area:'Electronic City', km:1.1, offer:'15% off cold brews',          real:213,  ref:250,  type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:58, trust:{kind:'community', votes:3},                tip:null },
+  { id:'d09', merchant:'Cult.fit',        cat:'Fitness',    area:'Electronic City', km:1.5, offer:'Free trial week',             real:0,    ref:499,  type:'new-launch',  window:'This week',      expMin:null, bogo:false, buffet:false, createdMin:65, trust:{kind:'merchant'},                          tip:null },
+  { id:'d10', merchant:'Kairali Spa',     cat:'Wellness',   area:'Electronic City', km:2.0, offer:'30% off Ayurveda massage',    real:1400, ref:2000, type:'off-peak',    window:'Weekdays',       expMin:null, bogo:false, buffet:false, createdMin:50, trust:{kind:'checked', cmp:'28% below area avg'}, tip:null },
+  { id:'d11', merchant:'Meghana Foods',   cat:'Restaurant', area:'Electronic City', km:1.0, offer:'Buy 1 Get 1 chicken biryani', real:300,  ref:600,  type:'flash',       window:'Today till 10pm',expMin:70,   bogo:true,  buffet:false, createdMin:35, trust:{kind:'community', votes:9},                tip:null },
+  { id:'d12', merchant:'Truffles', mall:'forum',        cat:'Restaurant', area:'Electronic City', km:1.8, offer:'Weekend buffet',              real:449,  ref:799,  type:'last-minute', window:'Sat-Sun',        expMin:null, bogo:false, buffet:true,  createdMin:45, trust:{kind:'merchant'},                          tip:null },
+  { id:'d13', merchant:'Empire',          cat:'Restaurant', area:'Electronic City', km:1.9, offer:'Veg thali buffet',            real:225,  ref:null, type:'off-peak',    window:'Lunch',          expMin:null, bogo:false, buffet:true,  createdMin:70, trust:{kind:'checked', cmp:'in line with area avg'}, tip:null },
+  { id:'d14', merchant:'Nails & Co', mall:'phoenix',      cat:'Salon',      area:'Electronic City', km:1.6, offer:'Nail art + pedicure',         real:649,  ref:999,  type:'community',   window:'Today',          expMin:null, bogo:false, buffet:false, createdMin:18, trust:{kind:'community', votes:21},               tip:null },
 ];
 
 // Extra live inventory so a broad query spans multiple 25-per-page pages.
@@ -68,7 +68,7 @@ const _DB = [
     const hasRef = (i % 3 !== 0);
     const ref = hasRef ? Math.round(real / (1 - (0.15 + (i % 4) * 0.05))) : null;
     _DB.push({
-      id: 'g' + (i + 1), merchant: cat + ' House ' + (i + 1), cat: cat, area: 'Koramangala',
+      id: 'g' + (i + 1), merchant: cat + ' House ' + (i + 1), cat: cat, area: 'Electronic City',
       km: +(0.5 + (i % 16) * 0.1).toFixed(1),
       offer: hasRef ? (Math.round((1 - real / ref) * 100) + '% off') : 'Special price',
       real: real, ref: ref, type: type, window: 'Today', expMin: (i % 4 === 0) ? (25 + i) : null,
@@ -208,26 +208,17 @@ function setArea(area){
 function initEntry(){
   // Deep link: ?deal=<id> means intent already expressed → open on that deal.
   const dealId = new URLSearchParams(location.search).get('deal');
-  if (dealId && _DB.some(d => d.id === dealId)) { setArea('Koramangala'); return openDeepLink(dealId); }
+  if (dealId && _DB.some(d => d.id === dealId)) { setArea('Electronic City'); return openDeepLink(dealId); }
 
   const ret = loadReturning();
 
-  if (!('geolocation' in navigator)) { setArea(null); return askLocation("Your browser can't share location.", ret); }
-
-  let settled = false;
-  const finish = fn => { if (settled) return; settled = true; fn(); };
-  const t = setTimeout(() => finish(() => askLocation('Location is taking a while.', ret)), 3500);
-
-  navigator.geolocation.getCurrentPosition(
-    () => finish(() => { clearTimeout(t); grantedFlow(ret); }),
-    () => finish(() => { clearTimeout(t); askLocation("No problem, location wasn't shared.", ret); }),
-    { timeout: 3000, maximumAge: 600000 }
-  );
+  // Default to Electronic City on load; users can still Change Location.
+  grantedFlow(ret);
 }
 
 // Stub: a real build reverse-geocodes the coords. We resolve to a detected area.
 function grantedFlow(ret){
-  setArea('Koramangala');
+  setArea('Electronic City');
   logEvent('entry', { mode: 'location-granted', area: session.area });
   if (ret) return renderReturning(ret);
   renderDigest();
