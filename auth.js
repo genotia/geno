@@ -63,8 +63,20 @@
 
   function emit() { listeners.forEach(function (cb) { try { cb(currentUser); } catch (e) {} }); }
 
-  sb.auth.getSession().then(function (r) {
-    currentUser = (r.data && r.data.session && r.data.session.user) || null;
+  sb.auth.getSession().then(async function (r) {
+    var session = r.data && r.data.session;
+    /* getSession() only reads storage — it does not verify the token. A
+       session minted before the project moved to ES256 signing keys has no
+       matching `kid`, so any real call fails with "unrecognized JWT kid".
+       Verify once; if the token is unverifiable, clear it so the user can
+       log in fresh instead of getting stuck. */
+    if (session) {
+      try {
+        var chk = await sb.auth.getUser();
+        if (chk.error) { await sb.auth.signOut(); session = null; }
+      } catch (e) { try { await sb.auth.signOut(); } catch (e2) {} session = null; }
+    }
+    currentUser = (session && session.user) || null;
     readyDone = true; resolveReady(currentUser); emit();
   });
   sb.auth.onAuthStateChange(function (_e, session) {

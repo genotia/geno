@@ -151,6 +151,13 @@
     db.auth.getSession().then(async ({ data }) => {
       if (recovering) { showResetForm(); return; }
       if (!data.session) return;
+      // Stale token from before the ES256 signing-keys switch can't be verified
+      // ("unrecognized JWT kid"). Confirm it, and clear it if it's bad so the
+      // merchant just logs in fresh instead of being stuck on an error.
+      try {
+        const chk = await db.auth.getUser();
+        if (chk.error) { await db.auth.signOut(); return; }
+      } catch (e) { try { await db.auth.signOut(); } catch (e2) {} return; }
       if (isApproved(data.session.user)) { location.href = 'dashboard.html'; return; }
       await db.auth.signOut();
       showErr(PENDING_MSG);
