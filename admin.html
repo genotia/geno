@@ -177,6 +177,33 @@ function askReview(id, action) {
 
 function closeConfirm() { document.getElementById('confirm').classList.remove('open'); }
 
+/* One-click merchant approval via the approve-merchant edge function (which
+   verifies this caller is an admin, then sets the approval flag). */
+async function approveMerchant() {
+  const email = (document.getElementById('ap-email').value || '').trim();
+  const btn = document.getElementById('ap-btn');
+  const msg = document.getElementById('ap-msg');
+  const show = (text, ok) => { msg.textContent = text; msg.style.display = 'block';
+    msg.style.background = ok ? 'var(--green-lt)' : '#FEF2F2';
+    msg.style.color = ok ? '#065F46' : '#B91C1C'; };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return show('Enter a valid merchant email.', false);
+
+  btn.disabled = true; btn.textContent = 'Approving…';
+  const { data, error } = await sb.functions.invoke('approve-merchant', { body: { email } });
+  btn.disabled = false; btn.textContent = 'Approve';
+
+  if (error || (data && data.error)) {
+    let m = (data && data.error) || error.message || 'Could not approve.';
+    // supabase-js wraps non-2xx as a generic error; surface the function body when present.
+    if (error && error.context && typeof error.context.json === 'function') {
+      try { const b = await error.context.json(); if (b && b.error) m = b.error; } catch (e) {}
+    }
+    return show(m, false);
+  }
+  show(`Approved ${email}. Ask them to log out and back in.`, true);
+  document.getElementById('ap-email').value = '';
+}
+
 /* Let the admin set (or change) a password so they can sign in without an
    email code next time. Uses the current session — no re-auth needed. */
 function openSetPw() {
@@ -383,6 +410,16 @@ async function render() {
     <div style="margin-top:12px">${barTable(bkByMerch, 'Bookings by merchant', 'Bookings')}</div>
 
     <h2 class="sec">Merchants</h2>
+    <div class="card" style="margin-bottom:12px">
+      <div class="k">Approve a merchant account</div>
+      <div class="sub" style="margin:4px 0 10px">Grants dashboard access to an existing merchant email (sets the approval flag). They log in again to pick it up.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input id="ap-email" type="email" placeholder="merchant@example.com" autocomplete="off"
+          style="flex:1;min-width:200px;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13.5px;font-family:inherit;outline:none;">
+        <button class="act ok solid" id="ap-btn" onclick="approveMerchant()">Approve</button>
+      </div>
+      <div id="ap-msg" style="display:none;font-size:12.5px;margin-top:10px;padding:9px 12px;border-radius:10px;"></div>
+    </div>
     <div class="grid">
       ${card('Onboarded', fmt(mch.length), 'in the merchants table')}
       ${card('Listed live', fmt(mch.filter(m => m.listed).length), 'visible to customers')}
