@@ -131,7 +131,7 @@ async function boot() {
   }
 
   document.getElementById('who').innerHTML =
-    `${esc(user.email)} <button onclick="G.signOut().then(()=>location.reload())">Log out</button>`;
+    `${esc(user.email)} <button onclick="openSetPw()">Set password</button> <button onclick="G.signOut().then(()=>location.reload())">Log out</button>`;
 
   const { data, error } = await sb.from('admins').select('email').limit(1);
   if (error || !data || !data.length) {
@@ -176,6 +176,55 @@ function askReview(id, action) {
 }
 
 function closeConfirm() { document.getElementById('confirm').classList.remove('open'); }
+
+/* Let the admin set (or change) a password so they can sign in without an
+   email code next time. Uses the current session — no re-auth needed. */
+function openSetPw() {
+  document.getElementById('confirm').innerHTML = `
+    <div class="cbox">
+      <div class="ctitle">Set a password</div>
+      <div class="cbody">Choose a password so you can sign in with email + password next time, instead of a one-time code.</div>
+      <div id="pw-msg" style="display:none;font-size:12.5px;margin-top:12px;padding:9px 12px;border-radius:10px;"></div>
+      <input id="admin-pw"  type="password" placeholder="New password (min 8)" autocomplete="new-password"
+        style="width:100%;margin-top:14px;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;">
+      <input id="admin-pw2" type="password" placeholder="Confirm password" autocomplete="new-password"
+        style="width:100%;margin-top:10px;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;">
+      <div class="cacts">
+        <button class="act ghost" onclick="closeConfirm()">Cancel</button>
+        <button class="act ok solid" id="admin-pw-save" onclick="saveAdminPw()">Save password</button>
+      </div>
+    </div>`;
+  document.getElementById('confirm').classList.add('open');
+  setTimeout(() => document.getElementById('admin-pw').focus(), 60);
+}
+
+async function saveAdminPw() {
+  const pw  = document.getElementById('admin-pw').value;
+  const pw2 = document.getElementById('admin-pw2').value;
+  const msg = document.getElementById('pw-msg');
+  const show = (text, ok) => { msg.textContent = text; msg.style.display = 'block';
+    msg.style.background = ok ? 'var(--green-lt)' : '#FEF2F2';
+    msg.style.color = ok ? '#065F46' : '#B91C1C'; };
+  if (pw.length < 8) return show('Password must be at least 8 characters.', false);
+  if (pw !== pw2)    return show('Passwords do not match.', false);
+
+  const btn = document.getElementById('admin-pw-save');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  const { error } = await sb.auth.updateUser({ password: pw });
+  btn.disabled = false; btn.textContent = 'Save password';
+  if (error) return show(error.message || 'Could not set the password.', false);
+
+  // Tell the shared login modal this email now has a password, so next time it
+  // offers the password screen straight away instead of the email-code flow.
+  try {
+    const email = (G.user() && G.user().email) || '';
+    const list = JSON.parse(localStorage.getItem('genoti_pw_emails') || '[]');
+    if (email && !list.includes(email)) { list.push(email); localStorage.setItem('genoti_pw_emails', JSON.stringify(list)); }
+    if (email) localStorage.setItem('genoti_last_email', email);
+  } catch (e) {}
+  show('Password set. You can now sign in with your email and this password.', true);
+  setTimeout(closeConfirm, 1600);
+}
 
 function doReview(id, action) {
   const a = APPS.find(x => String(x.id) === String(id));
