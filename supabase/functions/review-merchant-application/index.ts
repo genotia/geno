@@ -73,7 +73,9 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
-    const SITE_URL = Deno.env.get("SITE_URL") ?? "https://genoti.ai";
+    // Canonical host: genoti.ai 308-redirects to www, which can drop the
+    // recovery token, so point the set-password link straight at www.
+    const SITE_URL = Deno.env.get("SITE_URL") ?? "https://www.genoti.ai";
 
     const { data: app, error } = await supabase
       .from("merchant_applications")
