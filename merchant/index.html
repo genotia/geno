@@ -103,7 +103,7 @@
     </form>
 
     <hr class="divider" />
-    <p class="footer-note">Need access? <a href="../register.html">Request access for your business</a></p>
+    <p class="footer-note">Don't have an account? <a href="../register.html">Create your merchant account</a></p>
   </div>
 
   <script>
@@ -111,15 +111,6 @@
     const SUPABASE_KEY = 'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ';
     const { createClient } = supabase;
     const db = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    /* Access is granted by approval only. app_metadata is writable solely by the
-       service role, so a merchant cannot flag themselves approved. */
-    function isApproved(user) {
-      return !!(user && user.app_metadata && user.app_metadata.merchant_approved === true);
-    }
-
-    const PENDING_MSG = 'This account is not approved yet. We review every business before '
-      + 'activating access, and we will email you once it is approved.';
 
     const errEl  = document.getElementById('error-box');
     const infoEl = document.getElementById('info-box');
@@ -147,7 +138,7 @@
       if (event === 'PASSWORD_RECOVERY') showResetForm();
     });
 
-    // Resume a session only if approved — but never when handling a reset link.
+    // Resume an existing session — but never when handling a reset link.
     db.auth.getSession().then(async ({ data }) => {
       if (recovering) { showResetForm(); return; }
       if (!data.session) return;
@@ -158,9 +149,7 @@
         const chk = await db.auth.getUser();
         if (chk.error) { await db.auth.signOut(); return; }
       } catch (e) { try { await db.auth.signOut(); } catch (e2) {} return; }
-      if (isApproved(data.session.user)) { location.href = 'dashboard.html'; return; }
-      await db.auth.signOut();
-      showErr(PENDING_MSG);
+      location.href = 'dashboard.html';
     });
 
     /* Set a new password using the recovery session, then go to the dashboard. */
@@ -179,14 +168,7 @@
         btn.disabled = false; btn.textContent = 'Set password and continue →';
         return;
       }
-      const { data } = await db.auth.getSession();
-      if (data.session && isApproved(data.session.user)) { location.href = 'dashboard.html'; return; }
-      // Password saved but not approved (unusual): send them back to sign in.
-      await db.auth.signOut();
-      document.getElementById('reset-form').style.display = 'none';
-      document.getElementById('login-form').style.display = '';
-      document.querySelector('h1').textContent = 'Sign in';
-      showInfo('Password set. Please sign in with your new password.');
+      location.href = 'dashboard.html';
     }
 
     /* Merchant-initiated reset: email a recovery link back to this page. */
@@ -213,16 +195,6 @@
         email: document.getElementById('email').value.trim(),
         password: document.getElementById('password').value,
       });
-
-      // Correct credentials are not enough: the business must be approved.
-      if (!error && !isApproved(signIn && signIn.user)) {
-        await db.auth.signOut();
-        errEl.textContent = PENDING_MSG;
-        errEl.classList.add('show');
-        btn.disabled = false;
-        btn.textContent = 'Sign in →';
-        return;
-      }
 
       if (error) {
         errEl.textContent = error.message === 'Invalid login credentials'
