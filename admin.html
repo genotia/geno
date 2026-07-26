@@ -537,9 +537,36 @@ function renderOverview() {
 }
 
 /* ── view: MERCHANTS ─────────────────────────────────────────────────── */
+const ONBOARD_CATS = ['salon', 'spa', 'restaurant', 'cafe', 'gym', 'clinic', 'other'];
+function genPw() {
+  const chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = ''; for (let i = 0; i < 10; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return 'Gen-' + s;
+}
+
 function renderMerchants() {
   const cp = D.cp;
-  const tools = `
+  const catOpts = ONBOARD_CATS.map(c => `<option value="${c}" ${c === 'salon' ? 'selected' : ''}>${c[0].toUpperCase() + c.slice(1)}</option>`).join('');
+  const planOpts = ((cp && cp.plans) || []).slice().sort((a, b) => a.rank - b.rank)
+    .map(p => `<option value="${esc(p.key)}" ${p.key === 'growth' ? 'selected' : ''}>${esc(p.name)}${p.price_monthly ? ` · ${inr(p.price_monthly)}/mo` : ''}</option>`).join('');
+  const onboard = `
+    <div class="card" style="margin-bottom:16px">
+      <div class="k">Onboard a merchant</div>
+      <div class="sub" style="margin:4px 0 12px">Create a merchant account with a password already set and provision its workspace instantly — they can log in straight away, no email link.</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px">
+        <input id="ob-name"  class="inp" placeholder="Business name" autocomplete="off">
+        <input id="ob-email" class="inp" type="email" placeholder="merchant@example.com" autocomplete="off">
+        <input id="ob-pass"  class="inp" placeholder="Password (min 8)" value="${genPw()}" autocomplete="off">
+        <select id="ob-cat"  class="inp">${catOpts}</select>
+        <select id="ob-plan" class="inp">${planOpts || '<option value="growth">Business</option>'}</select>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap">
+        <button class="act solid ok" id="ob-btn" onclick="onboardMerchant()">Onboard merchant</button>
+        <span class="sub">Appears in the directory below once created.</span>
+      </div>
+      <div id="ob-msg" style="display:none;font-size:12.5px;margin-top:10px;padding:10px 12px;border-radius:9px"></div>
+    </div>`;
+  const tools = onboard + `
     <div class="tools">
       <div class="card">
         <div class="k">Approve a merchant account</div>
@@ -1072,6 +1099,51 @@ async function approveMerchant() {
   }
   show(`Approved ${email}. Ask them to log out and back in.`, true);
   $('ap-email').value = '';
+}
+
+/* Onboard a merchant end-to-end via the admin-onboard-merchant function
+   (create account + password + workspace + subscription). The function
+   authorises this caller through the admin JWT that supabase-js attaches. */
+async function onboardMerchant() {
+  const name = ($('ob-name').value || '').trim();
+  const email = ($('ob-email').value || '').trim();
+  const pass = $('ob-pass').value || '';
+  const category = $('ob-cat').value, plan_key = $('ob-plan').value;
+  const btn = $('ob-btn'), msg = $('ob-msg');
+  const show = (t, ok) => { msg.innerHTML = t; msg.style.display = 'block';
+    msg.style.background = ok ? 'var(--green-lt)' : 'var(--red-soft)'; msg.style.color = ok ? '#0a5c41' : '#a3271b'; };
+  if (!name) return show('Enter a business name.', false);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return show('Enter a valid email.', false);
+  if (pass.length < 8) return show('Password must be at least 8 characters.', false);
+
+  btn.disabled = true; btn.textContent = 'Onboarding…';
+  const { data, error } = await sb.functions.invoke('admin-onboard-merchant',
+    { body: { email, password: pass, business_name: name, category, plan_key } });
+  btn.disabled = false; btn.textContent = 'Onboard merchant';
+  if (error || (data && data.error)) {
+    let m = (data && data.error) || (error && error.message) || 'Could not onboard.';
+    if (error && error.context && typeof error.context.json === 'function') { try { const b = await error.context.json(); if (b && b.error) m = b.error; } catch (e) {} }
+    return show(esc(m), false);
+  }
+  toast('Merchant onboarded');
+  onboardSuccessModal(name, email, pass);
+  loadData();   // refresh directory + metrics behind the modal
+}
+
+function onboardSuccessModal(name, email, pass) {
+  $('confirm').innerHTML = `
+    <div class="cbox">
+      <div class="ctitle">✓ ${esc(name)} onboarded</div>
+      <div class="cbody">The account is live and can log in now. Share these credentials with the merchant:</div>
+      <div style="margin-top:14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:2">
+        <div>Login &nbsp;<b>www.genoti.ai/merchant</b></div>
+        <div>Email &nbsp;<b>${esc(email)}</b></div>
+        <div>Password &nbsp;<b>${esc(pass)}</b></div>
+      </div>
+      <div class="cwarn">Ask them to change the password after first login.</div>
+      <div class="cacts"><button class="act solid ok" onclick="closeConfirm()">Done</button></div>
+    </div>`;
+  $('confirm').classList.add('open');
 }
 
 /* ── review an application (approve/reject via emailed function page) ── */
