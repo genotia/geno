@@ -468,9 +468,8 @@ function renderOverview() {
   const platform = cp ? `
     <h2 class="sec">Platform</h2>
     <div class="kpis">
-      ${kpi('MRR', inr(k.mrr), '<span class="linky" onclick="go(\'finance\')">Finance →</span>', 'brandval')}
       ${kpi('Merchants', fmt(k.merchants), `${fmt(k.active)} active · ${fmt(k.trialing)} trialing`)}
-      ${kpi('Active subscriptions', fmt(k.active), 'live &amp; paying / trialing')}
+      ${kpi('Listed live', fmt(D.mch.filter(m => m.listed).length), 'visible to customers')}
       ${kpi('Pending approvals', fmt(D.pendingApps + D.pendingReqs), 'applications + upgrade requests')}
     </div>` : cpNote(D.cpWhy);
 
