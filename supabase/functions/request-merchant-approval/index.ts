@@ -27,6 +27,7 @@ serve(async (req) => {
     const address  = String(body.address ?? "").trim();
     const phone    = String(body.phone ?? "").trim();
     const plan     = String(body.plan ?? "").trim() || "not specified";
+    const category = String(body.category ?? "").trim().toLowerCase();
     const branches = Number(body.num_branches) || 1;
     const staff    = Number(body.num_staff) || 1;
 
@@ -53,6 +54,7 @@ serve(async (req) => {
         num_branches:  branches,
         num_staff:     staff,
         plan,
+        category,
         status:        "pending",
       })
       .select("id, created_at, approval_token")
@@ -97,6 +99,7 @@ serve(async (req) => {
 
     <table style="width:100%;border-collapse:collapse;border-top:1px solid #E5E7EB">
       ${row("Business", business)}
+      ${row("Category", category || "not specified")}
       ${row("Contact", fullName)}
       ${row("Email", email)}
       ${row("Phone", phone || "not given")}

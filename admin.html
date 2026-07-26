@@ -297,7 +297,7 @@ async function render() {
     sb.from('deals').select('category, active, merchant_name'),
     sb.from('merchants').select('id, name, category, listed, created_at'),
     sb.from('bookings').select('id, merchant_name, status, customer_email, created_at'),
-    sb.from('merchant_applications').select('id, full_name, business_name, email, phone, address, num_branches, num_staff, plan, status, approval_token, created_at, reviewed_at'),
+    sb.from('merchant_applications').select('id, full_name, business_name, category, email, phone, address, num_branches, num_staff, plan, status, approval_token, created_at, reviewed_at'),
   ]);
 
   const evs   = eventRows.data || [];
@@ -350,12 +350,13 @@ async function render() {
       new Date(b.created_at) - new Date(a.created_at));
     const when = d => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
     return `<div class="tw"><table><thead><tr>
-        <th>Status</th><th>Business</th><th>Contact</th><th>Email</th><th>Phone</th>
+        <th>Status</th><th>Business</th><th>Category</th><th>Contact</th><th>Email</th><th>Phone</th>
         <th class="num">Branches</th><th class="num">Staff</th><th>Plan</th><th>Requested</th><th>Review</th>
       </tr></thead><tbody>
       ${sorted.map(a => `<tr>
         <td><span class="pill ${esc(a.status)}">${esc(a.status)}</span></td>
         <td><b>${esc(a.business_name || '—')}</b>${a.address ? `<div class="sub">${esc(a.address)}</div>` : ''}</td>
+        <td>${a.category ? `<span class="pill" style="background:var(--purple-bg);color:var(--purple)">${esc(a.category)}</span>` : '—'}</td>
         <td>${esc(a.full_name || '—')}</td>
         <td><a href="mailto:${esc(a.email)}">${esc(a.email || '—')}</a></td>
         <td>${esc(a.phone || '—')}</td>

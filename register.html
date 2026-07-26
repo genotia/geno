@@ -278,8 +278,8 @@
     <div class="logo-sub">Discover Local Deals · Pay Less</div>
   </div>
 
-  <h1 class="card-title">Let's create your account</h1>
-  <p class="card-sub">Sign up with Genoti and manage your business</p>
+  <h1 class="card-title">Request your merchant account</h1>
+  <p class="card-sub">Tell us about your business. We verify each one, then set up your workspace.</p>
 
   <div class="banner" id="banner"></div>
 
@@ -317,16 +317,21 @@
         </div>
       </div>
 
-      <!-- Password -->
+      <!-- Business category -->
       <div class="form-group">
-        <div class="pw-wrap">
-          <input type="password" id="f-password" placeholder="Password" autocomplete="new-password" required />
-          <button type="button" class="pw-toggle" onclick="togglePw()" aria-label="Show/hide password">
-            <svg id="pw-eye" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-            </svg>
-          </button>
-        </div>
+        <select id="f-category" required
+          style="width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;color:var(--text);background:var(--white);outline:none;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236B7280%22 stroke-width=%222%22><polyline points=%226 9 12 15 18 9%22/></svg>');background-repeat:no-repeat;background-position:right 14px center;">
+          <option value="" disabled selected>Business category</option>
+          <option value="salon">Salon</option>
+          <option value="spa">Spa</option>
+          <option value="restaurant">Restaurant</option>
+          <option value="cafe">Cafe</option>
+          <option value="buffet">Buffet</option>
+          <option value="gym">Gym / Fitness</option>
+          <option value="yoga">Yoga</option>
+          <option value="clinic">Clinic</option>
+          <option value="other">Other</option>
+        </select>
       </div>
 
       <!-- No. of Branches -->
@@ -388,10 +393,6 @@
     }
   }
 
-  function togglePw() {
-    const inp = document.getElementById('f-password');
-    inp.type = inp.type === 'password' ? 'text' : 'password';
-  }
 
   function showBanner(msg, type) {
     const b = document.getElementById('banner');
@@ -413,46 +414,44 @@
     const address  = document.getElementById('f-address').value.trim();
     const email    = document.getElementById('f-email').value.trim();
     const phone    = document.getElementById('f-phone').value.trim();
-    const password = document.getElementById('f-password').value;
+    const category = document.getElementById('f-category').value;
     const branches = document.getElementById('f-branches').value || 1;
     const staff    = document.getElementById('f-staff').value || 1;
 
     if (!name)     return showBanner('Please enter your full name.', 'error');
     if (!biz)      return showBanner('Please enter your business name.', 'error');
     if (!email)    return showBanner('Please enter your email.', 'error');
-    if (!password || password.length < 8) return showBanner('Password must be at least 8 characters.', 'error');
+    if (!category) return showBanner('Please pick your business category.', 'error');
     if (!captchaChecked) return showBanner('Please confirm you\'re not a robot.', 'error');
 
     setLoading(true);
 
-    const { data, error } = await sb.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name:       name,
-          business_name:   biz,
-          address:         address,
-          phone:           phone ? '+91' + phone.replace(/\s/g, '') : '',
-          num_branches:    parseInt(branches),
-          num_staff:       parseInt(staff),
-        }
+    /* No account yet — the request is recorded and emailed to the admin, who
+       verifies the category and approves. Approval provisions the workspace. */
+    const { data, error } = await sb.functions.invoke('request-merchant-approval', {
+      body: {
+        full_name:     name,
+        business_name: biz,
+        address:       address,
+        email:         email,
+        phone:         phone ? '+91' + phone.replace(/\s/g, '') : '',
+        category:      category,
+        num_branches:  parseInt(branches),
+        num_staff:     parseInt(staff),
       }
     });
 
-    if (error) {
+    if (error || (data && data.error)) {
       setLoading(false);
-      return showBanner(error.message, 'error');
+      return showBanner((data && data.error) || 'We could not send your request just now. Please try again, or email balaji@genoti.ai directly.', 'error');
     }
 
-    showBanner('Account created! Check your email to confirm, then log in.', 'success');
     setLoading(false);
     document.getElementById('signup-form').reset();
     captchaChecked = false;
     document.getElementById('captcha-check').classList.remove('checked');
     document.getElementById('captcha-check').innerHTML = '';
-
-    setTimeout(() => { window.location.href = 'merchant/index.html'; }, 2500);
+    showBanner('Request sent. We review every business and will email ' + email + ' once your workspace is ready.', 'success');
   });
 </script>
 </body>
