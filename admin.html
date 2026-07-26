@@ -147,6 +147,7 @@ async function boot() {
 /* ── Reviewing an application ─────────────────────────────────────────── */
 const FN_URL = 'https://ijsxmgkzwvamwctbkgjo.supabase.co/functions/v1/review-merchant-application';
 let APPS = [];
+let CP = null;   // last control-plane payload, so the manage modal can read plans + the merchant's current sub
 
 function reviewUrl(a, action) {
   return `${FN_URL}?id=${encodeURIComponent(a.id)}&token=${encodeURIComponent(a.approval_token || '')}&action=${action}`;
@@ -331,7 +332,10 @@ function controlPlaneHTML(cp, why) {
         <td class="num">${fmt(m.usage.staff)}</td>
         <td class="num">${fmt(m.usage.services)}</td>
         <td>${when(m.last_active)}</td>
-        <td><a class="act ok" href="merchant/dashboard.html" target="_blank" rel="noopener" title="Open workspace (needs your account linked)">Open</a></td>
+        <td><div class="acts">
+          <button class="act ghost" onclick="openManage('${esc(m.id)}')">Manage</button>
+          <a class="act ok" href="merchant/dashboard.html" target="_blank" rel="noopener" title="Open workspace (needs your account linked)">Open</a>
+        </div></td>
       </tr>`).join('') || '<tr><td colspan="10" class="empty">No merchants yet.</td></tr>'}
     </tbody></table></div>`;
 
@@ -369,6 +373,77 @@ function controlPlaneHTML(cp, why) {
   return overview + directory + modules + usage;
 }
 
+/* ── Phase 2: control actions ─────────────────────────────────────────────
+   Assign a plan or change subscription status straight from the directory.
+   Writes go to merchant_subscriptions with the admin's own session — the
+   "subs managed by admins" RLS policy (using is_admin()) authorises them, so
+   no edge function is needed. admin-metrics recomputes MRR on the next render,
+   so suspending a merchant immediately drops them out of revenue. ── */
+const STATUSES = [
+  ['active',    'Active'],
+  ['trial',     'Trial'],
+  ['past_due',  'Past due'],
+  ['cancelled', 'Suspended'],
+];
+
+function openManage(id) {
+  const m = (CP && CP.merchants || []).find(x => String(x.id) === String(id));
+  if (!m) return;
+  const plans = ((CP && CP.plans) || []).slice().sort((a, b) => a.rank - b.rank);
+  const inr = n => '₹' + fmt(n || 0);
+  const planOpts = plans.map(p =>
+    `<option value="${esc(p.key)}" ${p.key === m.plan_key ? 'selected' : ''}>${esc(p.name)} · ${p.price_monthly ? inr(p.price_monthly) + '/mo' : 'Free'}</option>`).join('');
+  const statusOpts = STATUSES.map(([v, label]) =>
+    `<option value="${v}" ${v === m.status ? 'selected' : ''}>${label}</option>`).join('');
+  const fieldStyle = 'width:100%;margin-top:6px;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:var(--white);outline:none;box-sizing:border-box;';
+
+  document.getElementById('confirm').innerHTML = `
+    <div class="cbox">
+      <div class="ctitle">Manage ${esc(m.name)}</div>
+      <div class="cbody">
+        Set this merchant's plan and subscription status. Takes effect immediately —
+        <b>Suspended</b> removes them from MRR.
+      </div>
+      <div id="mng-msg" style="display:none;font-size:12.5px;margin-top:12px;padding:9px 12px;border-radius:10px;"></div>
+      <div style="margin-top:16px">
+        <label class="k" style="display:block">Plan</label>
+        <select id="mng-plan" style="${fieldStyle}">${planOpts || '<option>No plans found</option>'}</select>
+      </div>
+      <div style="margin-top:14px">
+        <label class="k" style="display:block">Status</label>
+        <select id="mng-status" style="${fieldStyle}">${statusOpts}</select>
+      </div>
+      <div class="cacts">
+        <button class="act ghost" onclick="closeConfirm()">Cancel</button>
+        <button class="act ok solid" id="mng-save" onclick="saveManage('${esc(m.id)}')">Save changes</button>
+      </div>
+    </div>`;
+  document.getElementById('confirm').classList.add('open');
+}
+
+async function saveManage(id) {
+  const msg = document.getElementById('mng-msg');
+  const show = (text, ok) => { msg.textContent = text; msg.style.display = 'block';
+    msg.style.background = ok ? 'var(--green-lt)' : '#FEF2F2';
+    msg.style.color = ok ? '#065F46' : '#B91C1C'; };
+  const plan_key = document.getElementById('mng-plan').value;
+  const status   = document.getElementById('mng-status').value;
+  if (!plan_key) return show('Pick a plan first.', false);
+
+  const btn = document.getElementById('mng-save');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  // Upsert: existing merchants have a row; ones onboarded after the migration
+  // may not, so insert-or-update on the merchant_id primary key.
+  const { error } = await sb.from('merchant_subscriptions').upsert(
+    { merchant_id: id, plan_key, status, updated_at: new Date().toISOString() },
+    { onConflict: 'merchant_id' });
+  btn.disabled = false; btn.textContent = 'Save changes';
+  if (error) return show(error.message || 'Could not save. Check you are on the admins list.', false);
+
+  show('Saved. Refreshing the control plane…', true);
+  setTimeout(() => { closeConfirm(); render(); }, 700);
+}
+
 async function render() {
   document.getElementById('gate').style.display = 'none';
   const p = document.getElementById('panel');
@@ -393,6 +468,7 @@ async function render() {
     sb.functions.invoke('admin-metrics'),
   ]);
   const cp = (cpResp && !cpResp.error && cpResp.data && !cpResp.data.error) ? cpResp.data : null;
+  CP = cp;
   // Surface why the control-plane call failed so it's diagnosable at a glance.
   let cpWhy = '';
   if (!cp) {
