@@ -282,11 +282,12 @@ async function countOf(table, build) {
 
 /* ── Control plane: platform-wide view of merchants, plans, modules, usage.
    Fed by the admin-metrics edge function (cross-tenant, service role). ── */
-function controlPlaneHTML(cp) {
+function controlPlaneHTML(cp, why) {
   if (!cp) {
     return `<div class="note"><b>Control plane not connected yet.</b>
       Apply <code>supabase/migrations/20260726100000_control_plane.sql</code> and deploy the
-      <code>admin-metrics</code> function to see plans, modules, usage and MRR.</div>`;
+      <code>admin-metrics</code> function to see plans, modules, usage and MRR.
+      ${why ? `<br><br><b>Reason:</b> <code>${esc(why)}</code>` : ''}</div>`;
   }
   const k = cp.kpis || {};
   const inr = n => '₹' + fmt(n || 0);
@@ -392,6 +393,20 @@ async function render() {
     sb.functions.invoke('admin-metrics'),
   ]);
   const cp = (cpResp && !cpResp.error && cpResp.data && !cpResp.data.error) ? cpResp.data : null;
+  // Surface why the control-plane call failed so it's diagnosable at a glance.
+  let cpWhy = '';
+  if (!cp) {
+    if (cpResp && cpResp.data && cpResp.data.error) cpWhy = cpResp.data.error;
+    else if (cpResp && cpResp.error) {
+      cpWhy = cpResp.error.message || 'Function call failed';
+      // supabase-js hides the function's own message inside a non-2xx context.
+      if (cpResp.error.context && typeof cpResp.error.context.json === 'function') {
+        try { const b = await cpResp.error.context.json(); if (b && b.error) cpWhy = b.error; } catch (e) {}
+      } else if (/Failed to send a request|Failed to fetch/i.test(cpWhy)) {
+        cpWhy = 'The admin-metrics function is not deployed (or unreachable). Run: supabase functions deploy admin-metrics';
+      }
+    }
+  }
 
   const evs   = eventRows.data || [];
   const dl    = deals.data || [];
@@ -473,7 +488,7 @@ async function render() {
       Traffic numbers stay at zero until you apply <code>supabase/migrations/20260722000000_analytics.sql</code>.
       Everything below it reads live data.</div>` : ''}
     ${missing.length ? `<div class="note"><b>Some reads were refused:</b> ${esc(missing.join(' · '))}</div>` : ''}
-    ${controlPlaneHTML(cp)}
+    ${controlPlaneHTML(cp, cpWhy)}
 
     <h2 class="sec">Audience</h2>
     <div class="grid">

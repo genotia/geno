@@ -1,0 +1,45 @@
+# Supabase project config.
+#
+# The only thing pinned here is per-function JWT verification. Every Genoti
+# edge function either does its own auth (verifies the caller's token and
+# checks the admins/merchant tables itself) or is a public endpoint reached
+# from an email link or before login. None of them rely on the gateway's
+# legacy-secret JWT check — and since the project moved to ES256 asymmetric
+# signing keys, that gateway check can't verify current tokens anyway and
+# rejects the call before it reaches the function ("Failed to fetch" in the
+# browser). So verify_jwt is false for all of them, and their own code is the
+# real gate. Deploys honour these values, so the setting can't silently flip.
+project_id = "ijsxmgkzwvamwctbkgjo"
+
+# Admin control-plane API. Verifies the caller is a signed-in admin via
+# getUser() + the admins table, then reads across tenants with the service role.
+[functions.admin-metrics]
+verify_jwt = false
+
+# One-click merchant approval from the admin panel. Verifies caller is an admin.
+[functions.approve-merchant]
+verify_jwt = false
+
+# Public: merchant sign-up request from register.html (anonymous visitor).
+[functions.request-merchant-approval]
+verify_jwt = false
+
+# Public: approve/reject link opened from a notification email (no JWT on the
+# link; the per-application token is the credential).
+[functions.review-merchant-application]
+verify_jwt = false
+
+# Public: email one-time-code login flow, before any session exists.
+[functions.send-otp]
+verify_jwt = false
+
+[functions.verify-otp]
+verify_jwt = false
+
+# Public: Facebook auth callback.
+[functions.fb-auth]
+verify_jwt = false
+
+# Deal extraction helper.
+[functions.extract-deal]
+verify_jwt = false
