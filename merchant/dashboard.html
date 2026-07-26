@@ -10385,17 +10385,18 @@
         roleEl.insertAdjacentElement('afterend', chip);
       }
     }
+    // Hide modules the plan doesn't include, so a merchant only sees what their
+    // package offers (e.g. Marketplace = Home, Bookings, Deals, Service menu).
     document.querySelectorAll('button[onclick*="switchPage("]').forEach(btn => {
       const mm = (btn.getAttribute('onclick') || '').match(/switchPage\('([^']+)'/);
       if (!mm) return;
-      const locked = pageAccess(mm[1]) !== 'ok';
-      btn.classList.toggle('plan-locked', locked);
-      const has = btn.querySelector('.lock-badge');
-      if (locked && !has) {
-        const s = document.createElement('span');
-        s.className = 'lock-badge'; s.textContent = ' 🔒';
-        btn.appendChild(s);
-      } else if (!locked && has) { has.remove(); }
+      btn.style.display = pageAccess(mm[1]) !== 'ok' ? 'none' : '';
+    });
+    // Collapse any nav group whose items are now all hidden.
+    document.querySelectorAll('.nav-group').forEach(group => {
+      const items = group.querySelectorAll('button[onclick*="switchPage("]');
+      const anyVisible = Array.from(items).some(b => b.style.display !== 'none');
+      group.style.display = (items.length && !anyVisible) ? 'none' : '';
     });
   }
 
