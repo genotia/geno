@@ -41,7 +41,7 @@ serve(async (req) => {
     const password = String(body.password ?? "");
     const businessName = String(body.business_name ?? "").trim() || "New merchant";
     const category = String(body.category ?? "").trim() || null;
-    const planKey = String(body.plan_key ?? "growth").trim();
+    const planKey = String(body.plan_key ?? "starter").trim();   // basic package by default
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: "Enter a valid email." }, 400);
     if (password.length < 8) return json({ error: "Password must be at least 8 characters." }, 400);
 

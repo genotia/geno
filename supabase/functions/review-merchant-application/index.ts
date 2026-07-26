@@ -230,6 +230,12 @@ serve(async (req) => {
           .insert({ user_id: userId, merchant_id: merchant.id, role: "admin" });
         if (muErr) return page("Could not link the owner to the workspace", esc(muErr.message), "bad");
 
+        // Start every new merchant on the basic package (Marketplace: Services,
+        // Deals, Bookings). Without a subscription row plan-gating fails open and
+        // they'd see everything — the admin upgrades the plan when appropriate.
+        await supabase.from("merchant_subscriptions")
+          .upsert({ merchant_id: merchant.id, plan_key: "starter", status: "active" }, { onConflict: "merchant_id" });
+
         // Salon/Spa merchants get the built-out module catalog copied in.
         if (["salon", "spa"].includes((app.category ?? "").toLowerCase())) {
           seeded = await seedFromTemplate(supabase, merchant.id);
