@@ -125,6 +125,19 @@
     const isRecoveryLink = /type=recovery/.test(location.hash) || /[?&](code|token_hash)=/.test(location.search);
     let recovering = isRecoveryLink;
 
+    /* Approval provisions a merchant_users row. Without one there is no
+       workspace, so don't bounce into the dashboard (it would redirect back
+       here) — explain instead. */
+    async function goToWorkspaceOrExplain() {
+      const { data: u } = await db.auth.getUser();
+      const uid = u && u.user && u.user.id;
+      if (!uid) return;
+      const { data: mu, error } = await db.from('merchant_users').select('merchant_id').eq('user_id', uid).limit(1).maybeSingle();
+      if (!error && mu) { location.href = 'dashboard.html'; return; }
+      await db.auth.signOut();
+      showInfo('You are signed in, but your account is not linked to a workspace yet. If you just applied, we will email you once it is approved and set up.');
+    }
+
     function showResetForm() {
       recovering = true;
       document.getElementById('login-form').style.display = 'none';
@@ -149,7 +162,7 @@
         const chk = await db.auth.getUser();
         if (chk.error) { await db.auth.signOut(); return; }
       } catch (e) { try { await db.auth.signOut(); } catch (e2) {} return; }
-      location.href = 'dashboard.html';
+      goToWorkspaceOrExplain();
     });
 
     /* Set a new password using the recovery session, then go to the dashboard. */
@@ -168,7 +181,7 @@
         btn.disabled = false; btn.textContent = 'Set password and continue →';
         return;
       }
-      location.href = 'dashboard.html';
+      goToWorkspaceOrExplain();
     }
 
     /* Merchant-initiated reset: email a recovery link back to this page. */
@@ -204,7 +217,7 @@
         btn.disabled = false;
         btn.textContent = 'Sign in →';
       } else {
-        location.href = 'dashboard.html';
+        goToWorkspaceOrExplain();
       }
     }
   </script>

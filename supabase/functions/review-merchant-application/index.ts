@@ -27,6 +27,50 @@ function page(title: string, body: string, tone: "ok" | "warn" | "bad" = "ok") {
 </body></html>`, { status: 200, headers: { "Content-Type": "text/html; charset=utf-8" } });
 }
 
+// Flat, per-merchant catalog tables copied into a newly-approved salon/spa
+// merchant from the template workspace. Config/catalog only — never
+// transactional data (bookings, clients, invoices). Relational config with
+// cross-row foreign keys (e.g. loyalty tiers → loyalty config, memberships →
+// services) is intentionally NOT deep-copied here; add those once the FK
+// remapping is known. Edit this list to match your schema.
+const TEMPLATE_TABLES = [
+  "service_categories",
+  "services",
+  "products",
+  "rooms",
+  "suppliers",
+  "campaign_templates",
+  "client_segments",
+];
+
+// Best-effort copy — never blocks the approval. Any table that is missing,
+// empty, or errors is skipped.
+async function seedFromTemplate(
+  supabase: ReturnType<typeof createClient>,
+  newMerchantId: string,
+): Promise<string[]> {
+  const copied: string[] = [];
+  const { data: cfg } = await supabase
+    .from("onboarding_config").select("value").eq("key", "salon_spa_template_merchant_id").maybeSingle();
+  const templateId = (cfg?.value ?? "").trim();
+  if (!templateId) return copied;
+
+  for (const table of TEMPLATE_TABLES) {
+    try {
+      const { data: rows, error } = await supabase.from(table).select("*").eq("merchant_id", templateId);
+      if (error || !rows?.length) continue;
+      const copies = rows.map((r: Record<string, unknown>) => {
+        const c = { ...r, merchant_id: newMerchantId };
+        delete c.id; delete c.created_at; delete c.updated_at;
+        return c;
+      });
+      const { error: insErr } = await supabase.from(table).insert(copies);
+      if (!insErr) copied.push(`${table} (${copies.length})`);
+    } catch (_e) { /* skip this table */ }
+  }
+  return copied;
+}
+
 async function mailgun(to: string, subject: string, html: string) {
   const KEY    = Deno.env.get("MAILGUN_API_KEY")!;
   const DOMAIN = Deno.env.get("MAILGUN_DOMAIN")!;
@@ -159,6 +203,40 @@ serve(async (req) => {
       if (metaErr) return page("Could not mark the account approved", esc(metaErr.message), "bad");
     }
 
+    /* ── Provision the merchant's workspace (tenant) ──
+       Approval creates the merchants row + owner merchant_users row, so the
+       merchant logs straight into their own Merchant OS. Idempotent: skipped
+       if this owner already has a workspace. */
+    const userId = created?.user?.id ?? link?.user?.id ?? existingId;
+    let seeded: string[] = [];
+    if (userId) {
+      const { data: existingMU } = await supabase
+        .from("merchant_users").select("merchant_id").eq("user_id", userId).limit(1).maybeSingle();
+
+      if (!existingMU) {
+        const baseSlug = (app.business_name || "merchant").toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-").replace(/(^-+|-+$)/g, "").slice(0, 40) || "merchant";
+        const slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
+
+        const { data: merchant, error: mErr } = await supabase
+          .from("merchants")
+          .insert({ name: app.business_name, category: app.category ?? null, slug })
+          .select("id")
+          .single();
+        if (mErr) return page("Could not create the workspace", esc(mErr.message), "bad");
+
+        const { error: muErr } = await supabase
+          .from("merchant_users")
+          .insert({ user_id: userId, merchant_id: merchant.id, role: "admin" });
+        if (muErr) return page("Could not link the owner to the workspace", esc(muErr.message), "bad");
+
+        // Salon/Spa merchants get the built-out module catalog copied in.
+        if (["salon", "spa"].includes((app.category ?? "").toLowerCase())) {
+          seeded = await seedFromTemplate(supabase, merchant.id);
+        }
+      }
+    }
+
     await mailgun(
       app.email,
       "Your Genoti business account is approved",
@@ -189,10 +267,11 @@ serve(async (req) => {
 
     return page(
       "Approved",
-      `<b>${esc(app.business_name)}</b> is approved.
+      `<b>${esc(app.business_name)}</b> is approved${app.category ? ` (${esc(app.category)})` : ""}.
        ${alreadyExisted ? "An account already existed, so we sent a set-password link." :
-                          "Their account was created and a set-password link was emailed to"}
-       <b>${esc(app.email)}</b>.`,
+                          "Their account and workspace were created and a set-password link was emailed to"}
+       <b>${esc(app.email)}</b>.
+       ${seeded.length ? `<br><br>Seeded from the template: ${esc(seeded.join(", "))}.` : ""}`,
       "ok"
     );
 
