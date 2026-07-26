@@ -109,6 +109,8 @@ const G = window.GenotiAuth;
 const sb = G.sb;
 
 const fmt = n => Number(n || 0).toLocaleString('en-IN');
+const card = (k, v, sub, cls) =>
+  `<div class="card ${cls || ''}"><div class="k">${k}</div><div class="v">${v}</div>${sub ? `<div class="sub">${sub}</div>` : ''}</div>`;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 function state(title, body) {
@@ -278,6 +280,94 @@ async function countOf(table, build) {
   return error ? null : (count || 0);
 }
 
+/* ── Control plane: platform-wide view of merchants, plans, modules, usage.
+   Fed by the admin-metrics edge function (cross-tenant, service role). ── */
+function controlPlaneHTML(cp) {
+  if (!cp) {
+    return `<div class="note"><b>Control plane not connected yet.</b>
+      Apply <code>supabase/migrations/20260726100000_control_plane.sql</code> and deploy the
+      <code>admin-metrics</code> function to see plans, modules, usage and MRR.</div>`;
+  }
+  const k = cp.kpis || {};
+  const inr = n => '₹' + fmt(n || 0);
+  const plansByKey = Object.fromEntries((cp.plans || []).map(p => [p.key, p]));
+  const maxRank = Math.max(1, ...(cp.plans || []).map(p => p.rank || 1));
+
+  // ── Overview ──
+  const overview = `
+    <h2 class="sec">Platform</h2>
+    <div class="grid">
+      ${card('MRR', inr(k.mrr), 'from active subscriptions', 'live')}
+      ${card('Merchants', fmt(k.merchants), `${fmt(k.active)} active · ${fmt(k.trialing)} trialing`)}
+      ${card('ARR (run-rate)', inr((k.mrr || 0) * 12), 'MRR × 12')}
+      ${card('Avg revenue / merchant', inr(k.active ? Math.round((k.mrr||0)/k.active) : 0), 'active only')}
+    </div>`;
+
+  // ── Merchants directory ──
+  const catPill = c => c ? `<span class="pill" style="background:var(--purple-bg);color:var(--purple)">${esc(c)}</span>` : '—';
+  const statusPill = st => {
+    const map = { active:['var(--green-lt)','var(--green)'], trial:['var(--blue-bg)','var(--blue)'],
+      past_due:['var(--amber-bg)','var(--amber)'], cancelled:['#FEF2F2','var(--red)'], none:['var(--bg)','var(--muted)'] };
+    const [bg,fg] = map[st] || map.none;
+    return `<span class="pill" style="background:${bg};color:${fg}">${esc(st)}</span>`;
+  };
+  const when = d => d ? new Date(d).toLocaleDateString('en-IN', { day:'numeric', month:'short' }) : '—';
+  const rowsSorted = (cp.merchants || []).slice().sort((a,b) => (b.usage.bookings - a.usage.bookings));
+  const directory = `
+    <h2 class="sec">Merchants</h2>
+    <div class="tw"><table><thead><tr>
+      <th>Business</th><th>Category</th><th>Plan</th><th>Status</th>
+      <th class="num">Bookings</th><th class="num">Clients</th><th class="num">Staff</th><th class="num">Services</th>
+      <th>Last active</th><th></th>
+    </tr></thead><tbody>
+      ${rowsSorted.map(m => `<tr>
+        <td><b>${esc(m.name)}</b></td>
+        <td>${catPill(m.category)}</td>
+        <td>${esc(m.plan_name || '—')}${m.price_monthly ? `<div class="sub">${inr(m.price_monthly)}/mo</div>` : ''}</td>
+        <td>${statusPill(m.status)}</td>
+        <td class="num">${fmt(m.usage.bookings)}</td>
+        <td class="num">${fmt(m.usage.clients)}</td>
+        <td class="num">${fmt(m.usage.staff)}</td>
+        <td class="num">${fmt(m.usage.services)}</td>
+        <td>${when(m.last_active)}</td>
+        <td><a class="act ok" href="merchant/dashboard.html" target="_blank" rel="noopener" title="Open workspace (needs your account linked)">Open</a></td>
+      </tr>`).join('') || '<tr><td colspan="10" class="empty">No merchants yet.</td></tr>'}
+    </tbody></table></div>`;
+
+  // ── Modules & Plans matrix ──
+  const plansOrdered = (cp.plans || []).slice().sort((a,b) => a.rank - b.rank);
+  const modsOrdered  = (cp.modules || []).slice().sort((a,b) => a.sort - b.sort);
+  const planHead = plansOrdered.map(p =>
+    `<th class="num">${esc(p.name)}<div class="sub" style="font-weight:600">${p.price_monthly ? inr(p.price_monthly)+'/mo' : 'Free'}</div></th>`).join('');
+  const modRows = modsOrdered.map(mod => `<tr>
+      <td><b>${esc(mod.name)}</b>${mod.grp ? `<div class="sub">${esc(mod.grp)}</div>` : ''}</td>
+      ${plansOrdered.map(p => `<td class="num">${(p.rank >= mod.min_plan_rank)
+        ? '<span style="color:var(--green);font-weight:800">✓</span>'
+        : '<span style="color:var(--border)">–</span>'}</td>`).join('')}
+    </tr>`).join('');
+  const modules = `
+    <h2 class="sec">Modules &amp; Plans</h2>
+    <div class="tw"><table><thead><tr><th>Module</th>${planHead}</tr></thead>
+      <tbody>${modRows}</tbody></table></div>`;
+
+  // ── Usage & adoption ──
+  const adoptionRows = Object.entries(k.adoption || {})
+    .sort((a,b) => b[1]-a[1])
+    .map(([mod, n]) => {
+      const pct = k.merchants ? Math.round(n / k.merchants * 100) : 0;
+      return `<tr><td>${esc(mod)}</td><td class="num">${fmt(n)} / ${fmt(k.merchants)}</td>
+        <td style="width:40%"><div class="bar" style="width:${pct}%"></div></td>
+        <td class="num">${pct}%</td></tr>`;
+    }).join('');
+  const usage = `
+    <h2 class="sec">Module adoption</h2>
+    <div class="sub" style="margin:-6px 0 12px">Merchants with real data in each module (live counts).</div>
+    <div class="tw"><table><thead><tr><th>Module</th><th class="num">Merchants using</th><th></th><th class="num">Adoption</th></tr></thead>
+      <tbody>${adoptionRows || '<tr><td colspan="4" class="empty">No usage yet.</td></tr>'}</tbody></table></div>`;
+
+  return overview + directory + modules + usage;
+}
+
 async function render() {
   document.getElementById('gate').style.display = 'none';
   const p = document.getElementById('panel');
@@ -288,6 +378,7 @@ async function render() {
     viewsAll, views1, views7,
     events30m, eventRows,
     deals, merchants, bookings, apps,
+    cpResp,
   ] = await Promise.all([
     countOf('events', q => q.eq('name', 'page_view')),
     countOf('events', q => q.eq('name', 'page_view').gte('created_at', since(1))),
@@ -298,7 +389,9 @@ async function render() {
     sb.from('merchants').select('id, name, category, listed, created_at'),
     sb.from('bookings').select('id, merchant_name, status, customer_email, created_at'),
     sb.from('merchant_applications').select('id, full_name, business_name, category, email, phone, address, num_branches, num_staff, plan, status, approval_token, created_at, reviewed_at'),
+    sb.functions.invoke('admin-metrics'),
   ]);
+  const cp = (cpResp && !cpResp.error && cpResp.data && !cpResp.data.error) ? cpResp.data : null;
 
   const evs   = eventRows.data || [];
   const dl    = deals.data || [];
@@ -374,14 +467,13 @@ async function render() {
     </tbody></table></div>`;
   };
 
-  const card = (k, v, sub, cls) =>
-    `<div class="card ${cls || ''}"><div class="k">${k}</div><div class="v">${v}</div>${sub ? `<div class="sub">${sub}</div>` : ''}</div>`;
 
   p.innerHTML = `
     ${notTracked ? `<div class="note"><b>The events table is not there yet.</b>
       Traffic numbers stay at zero until you apply <code>supabase/migrations/20260722000000_analytics.sql</code>.
       Everything below it reads live data.</div>` : ''}
     ${missing.length ? `<div class="note"><b>Some reads were refused:</b> ${esc(missing.join(' · '))}</div>` : ''}
+    ${controlPlaneHTML(cp)}
 
     <h2 class="sec">Audience</h2>
     <div class="grid">
