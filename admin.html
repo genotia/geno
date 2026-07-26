@@ -4,103 +4,291 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Admin · Genoti</title>
+<title>Genoti Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --green: #1D9E75; --dark-green: #085041; --text: #111827; --muted: #6B7280;
-    --border: #E5E7EB; --bg: #F9FAFB; --white: #fff; --red: #EF4444;
-    --purple: #6D28D9; --purple-bg: #F5F3FF; --amber: #B45309; --amber-bg: #FFFBEB;
-    --blue: #1D4ED8; --blue-bg: #EFF6FF; --green-lt: #ECFDF5; --green-md: #A7F3D0;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+:root{
+  /* new shell palette */
+  --ink:#17161c; --ink-soft:#232230;
+  --surface:#ffffff; --brand:#5b4ae0; --brand-soft:#eeebfb;
+  --border-strong:#d6d5ce;
+  /* legacy tokens kept so every inline style in the JS keeps resolving */
+  --green:#12855f; --dark-green:#085041; --green-lt:#e3f4ec; --green-md:#A7F3D0;
+  --amber:#b5720f; --amber-bg:#fbf0da; --blue:#2c5cc5; --blue-bg:#eef4ff;
+  --red:#c0392b; --red-soft:#fbe9e7; --purple:#5b4ae0; --purple-bg:#eeebfb;
+  --grey:#6b6a75; --grey-soft:#efefec;
+  --text:#1b1a22; --muted:#6b6a75; --text-muted:#6b6a75;
+  --border:#e7e6e0; --bg:#f6f6f4; --white:#ffffff;
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.app{display:flex;min-height:100vh}
 
-  header { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 24px;
-    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  .brand { font-size: 18px; font-weight: 800; letter-spacing: -.5px; display: flex; align-items: center; gap: 10px; }
-  .brand span { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px;
-    background: var(--purple-bg); color: var(--purple); padding: 3px 8px; border-radius: 20px; }
-  .who { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 12px; }
-  .who button { background: none; border: 1px solid var(--border); border-radius: 20px; padding: 6px 13px;
-    font-family: inherit; font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; }
-  .who button:hover { border-color: var(--red); color: var(--red); }
+/* Sidebar */
+.sidebar{width:230px;flex-shrink:0;background:var(--ink);color:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:9px;padding:18px 18px 4px}
+.brand-mark{width:26px;height:26px;border-radius:7px;background:var(--brand);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.brand-name{font-weight:600;font-size:16px}
+.plane{font-size:11px;color:#8a8998;padding:0 18px 14px 45px;letter-spacing:.03em}
+.nav{flex:1;padding:6px 10px}
+.nav-item{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:#c9c8d4;padding:9px 10px;border-radius:8px;font-size:13.5px;text-align:left}
+.nav-item:hover{background:var(--ink-soft);color:#fff}
+.nav-item.active{background:var(--brand);color:#fff;font-weight:500}
+.nav-item svg{width:17px;height:17px;flex-shrink:0}
+.nav-item .badge{margin-left:auto;font-size:11px;background:var(--amber);color:#fff;padding:1px 7px;border-radius:20px;font-weight:600}
+.side-foot{padding:12px 16px;border-top:1px solid var(--ink-soft);display:flex;align-items:center;gap:10px}
+.avatar{width:28px;height:28px;border-radius:50%;background:#38364a;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.side-foot .who{font-size:12.5px;min-width:0}
+.side-foot .who small{display:block;color:#8a8998;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
 
-  main { max-width: 1180px; margin: 0 auto; padding: 24px 20px 60px; }
-  .state { background: var(--white); border: 1px solid var(--border); border-radius: 16px;
-    padding: 40px 28px; text-align: center; max-width: 460px; margin: 60px auto; }
-  .state h2 { margin: 0 0 8px; font-size: 18px; letter-spacing: -.4px; }
-  .state p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.6; }
-  .state a { color: var(--green); font-weight: 700; }
+/* Main */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;gap:14px;padding:14px 26px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:20}
+.topbar h1{font-size:18px;font-weight:600;letter-spacing:-0.01em}
+.search{margin-left:auto;display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:7px 11px;width:240px}
+.search input{border:none;background:none;font-size:13px;width:100%;color:var(--text)}
+.search input:focus{outline:none}
+.search svg{width:15px;height:15px;color:var(--text-muted)}
+.top-btn{background:none;border:1px solid var(--border-strong);border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:500;color:var(--text)}
+.top-btn:hover{border-color:var(--brand);color:var(--brand)}
+.top-btn.danger:hover{border-color:var(--red);color:var(--red)}
 
-  h2.sec { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .7px;
-    color: var(--muted); margin: 30px 0 12px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-  .card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 16px 17px; }
-  .k { font-size: 11.5px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
-  .v { font-size: 27px; font-weight: 800; letter-spacing: -1px; margin-top: 6px; }
-  .sub { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
-  .card.live .v { color: var(--green); }
-  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green);
-    margin-right: 5px; vertical-align: 1px; animation: pulse 1.8s ease-in-out infinite; }
-  @keyframes pulse { 50% { opacity: .3; } }
+.wrap{padding:22px 26px 60px;max-width:1240px;width:100%}
+.view[hidden]{display:none}
 
-  table { width: 100%; border-collapse: collapse; background: var(--white);
-    border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
-  .tw { overflow-x: auto; }
-  th { text-align: left; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px;
-    color: var(--muted); padding: 11px 15px; background: var(--bg); border-bottom: 1px solid var(--border); white-space: nowrap; }
-  td { padding: 11px 15px; font-size: 13.5px; border-bottom: 1px solid var(--border); }
-  tr:last-child td { border-bottom: none; }
-  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
-  .bar { height: 6px; border-radius: 4px; background: var(--green); min-width: 3px; }
-  .pill { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .4px;
-    padding: 3px 8px; border-radius: 20px; }
-  .pill.pending  { background: var(--amber-bg); color: var(--amber); }
-  .pill.approved { background: var(--green-lt); color: var(--green); }
-  .pill.rejected { background: #FEF2F2; color: var(--red); }
-  .empty { padding: 22px 16px; text-align: center; font-size: 13px; color: var(--muted); }
-  .note { background: var(--amber-bg); border: 1px solid #FDE68A; color: var(--amber);
-    border-radius: 12px; padding: 12px 15px; font-size: 12.5px; line-height: 1.6; margin-bottom: 18px; }
-  .note code { background: rgba(0,0,0,.05); padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
-  .acts { display: flex; gap: 6px; }
-  .act { font-family: inherit; font-size: 11.5px; font-weight: 700; padding: 6px 11px; border-radius: 20px;
-    border: 1.5px solid var(--border); background: var(--white); color: var(--muted); cursor: pointer; white-space: nowrap; }
-  .act.ok:hover  { border-color: var(--green); color: var(--green); background: var(--green-lt); }
-  .act.no:hover  { border-color: var(--red); color: var(--red); background: #FEF2F2; }
-  .act.solid.ok  { background: var(--green); border-color: var(--green); color: #fff; }
-  .act.solid.no  { background: var(--red); border-color: var(--red); color: #fff; }
-  .act.solid:hover { opacity: .9; }
-  .act.ghost:hover { border-color: var(--muted); color: var(--text); }
-  #confirm { position: fixed; inset: 0; background: rgba(17,24,39,.55); display: none;
-    align-items: center; justify-content: center; padding: 20px; z-index: 900; }
-  #confirm.open { display: flex; }
-  .cbox { background: var(--white); border-radius: 18px; max-width: 420px; width: 100%; padding: 24px; }
-  .ctitle { font-size: 17px; font-weight: 800; letter-spacing: -.4px; margin-bottom: 10px; }
-  .cbody { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
-  .cwarn { margin-top: 12px; background: var(--amber-bg); border: 1px solid #FDE68A; color: var(--amber);
-    border-radius: 10px; padding: 9px 12px; font-size: 12px; font-weight: 700; }
-  .cacts { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
-  #refresh-hint { display: none; background: var(--blue-bg); border: 1px solid #BFDBFE; color: var(--blue);
-    border-radius: 12px; padding: 11px 15px; font-size: 12.5px; margin-bottom: 16px; }
+/* Gate */
+.state{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:44px 30px;text-align:center;max-width:460px;margin:60px auto}
+.state h2{margin:0 0 8px;font-size:18px;letter-spacing:-.3px}
+.state p{margin:0;font-size:14px;color:var(--muted);line-height:1.6}
+.state a{color:var(--brand);font-weight:600}
+.state code{background:var(--grey-soft);padding:1px 5px;border-radius:4px;font-size:12px}
+
+/* Section heading */
+h2.sec{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:26px 0 12px}
+h2.sec:first-child{margin-top:0}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-bottom:6px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px}
+.kpi .k-lab{font-size:12.5px;color:var(--text-muted);margin-bottom:7px}
+.kpi .k-val{font-size:23px;font-weight:600;letter-spacing:-0.02em}
+.kpi .k-sub{font-size:11.5px;color:var(--text-muted);margin-top:3px}
+.kpi.brandval .k-val{color:var(--brand)}
+.kpi.hot .k-val{color:var(--amber)}
+.kpi .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:5px;vertical-align:1px;animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.3}}
+
+/* legacy card (used by tool cards + some helpers) */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px}
+.card .k{font-size:11.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+.card .v{font-size:23px;font-weight:600;letter-spacing:-.02em;margin-top:6px}
+.card .sub{font-size:11.5px;color:var(--text-muted);margin-top:3px}
+.sub{font-size:11.5px;color:var(--text-muted)}
+
+/* Attention band */
+.attn{display:flex;align-items:center;gap:16px;background:var(--brand-soft);border:1px solid #ddd6f7;border-radius:12px;padding:14px 18px;margin-bottom:16px;flex-wrap:wrap}
+.attn .a-ic{width:40px;height:40px;border-radius:11px;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.attn .a-ic svg{width:20px;height:20px}
+.attn .a-txt{flex:1;min-width:160px}
+.attn .a-title{font-weight:600;font-size:14.5px;color:var(--brand)}
+.attn .a-sub{font-size:12.5px;color:#5a4fb0}
+
+/* Filters */
+.filters{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--border);border-radius:9px;overflow:hidden;flex-wrap:wrap}
+.seg button{border:none;background:none;padding:7px 13px;font-size:12.5px;color:var(--text-muted);text-transform:capitalize}
+.seg button.on{background:var(--brand-soft);color:var(--brand);font-weight:500}
+.filt-label{font-size:12px;color:var(--text-muted);margin-right:2px}
+.spacer{flex:1}
+.count-note{font-size:12.5px;color:var(--text-muted)}
+.linky{color:var(--brand);cursor:pointer;font-size:12.5px;font-weight:500}
+
+/* Panel + table */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:6px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;background:var(--surface)}
+.panel table{border:none}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);font-weight:600;padding:11px 14px;border-bottom:1px solid var(--border);background:#fbfbfa;white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--border);font-size:13.5px;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.rowlink{cursor:pointer}
+tbody tr.rowlink:hover{background:#fafafa}
+.m-name{font-weight:500}
+.m-sub{font-size:12px;color:var(--text-muted)}
+.bar{height:6px;border-radius:4px;background:var(--brand);min-width:3px}
+
+/* tags / pills */
+.cat-tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 9px;border-radius:20px;background:var(--grey-soft);color:var(--text);text-transform:capitalize}
+.cat-salon{background:#eef4ff;color:#2c5cc5}
+.cat-spa{background:#eefaf4;color:#12855f}
+.cat-restaurant,.cat-buffet{background:#fff3ec;color:#c05a1e}
+.cat-cafe{background:#fbf0da;color:#b5720f}
+.cat-gym,.cat-fitness{background:#eeebfb;color:#5b4ae0}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:3px 9px;border-radius:20px}
+.status::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.s-active{background:var(--green-lt);color:var(--green)}
+.s-trial{background:var(--blue-bg);color:var(--blue)}
+.s-past_due{background:var(--amber-bg);color:var(--amber)}
+.s-cancelled{background:var(--red-soft);color:var(--red)}
+.s-none{background:var(--grey-soft);color:var(--grey)}
+.s-pending{background:var(--amber-bg);color:var(--amber)}
+.s-approved{background:var(--green-lt);color:var(--green)}
+.s-rejected{background:var(--red-soft);color:var(--red)}
+/* legacy .pill (applications table uses it) */
+.pill{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:3px 8px;border-radius:20px}
+.pill.pending{background:var(--amber-bg);color:var(--amber)}
+.pill.approved{background:var(--green-lt);color:var(--green)}
+.pill.rejected{background:var(--red-soft);color:var(--red)}
+
+/* actions */
+.acts{display:flex;gap:6px}
+.row-actions{display:flex;gap:6px;justify-content:flex-end}
+.act{font-family:inherit;font-size:12px;font-weight:500;padding:6px 12px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);cursor:pointer;white-space:nowrap}
+.act:hover{border-color:var(--brand);color:var(--brand)}
+.act.ok:hover{border-color:var(--green);color:var(--green)}
+.act.no{color:var(--red);border-color:var(--red-soft)}
+.act.no:hover{border-color:var(--red);color:var(--red)}
+.act.solid{background:var(--brand);border-color:var(--brand);color:#fff}
+.act.solid.ok{background:var(--green);border-color:var(--green);color:#fff}
+.act.solid.no{background:var(--red);border-color:var(--red);color:#fff}
+.act.solid:hover{filter:brightness(1.06);color:#fff}
+.act.ghost{background:none}
+.act.ghost:hover{border-color:var(--muted);color:var(--text)}
+.icon-btn{border:1px solid var(--border);background:var(--surface);border-radius:7px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;color:var(--text-muted)}
+.icon-btn:hover{border-color:var(--brand);color:var(--brand)}
+.icon-btn svg{width:15px;height:15px}
+
+/* empty + note */
+.empty{padding:40px 20px;text-align:center;color:var(--text-muted);font-size:13px}
+.empty svg{width:32px;height:32px;opacity:.4;margin-bottom:10px}
+.note{background:var(--amber-bg);border:1px solid #f2d79b;color:var(--amber);border-radius:12px;padding:12px 15px;font-size:12.5px;line-height:1.6;margin-bottom:16px}
+.note code{background:rgba(0,0,0,.05);padding:1px 5px;border-radius:4px;font-size:11.5px}
+
+/* tool card row */
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:820px){.tools{grid-template-columns:1fr}}
+.inp{width:100%;padding:9px 12px;border:1px solid var(--border-strong);border-radius:9px;font-size:13.5px;font-family:inherit;background:var(--surface);color:var(--text);outline:none}
+.inp:focus{border-color:var(--brand)}
+
+/* Categories */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.cat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
+.cat-card h3{font-size:15px;font-weight:600;margin-bottom:3px;display:flex;align-items:center;gap:8px}
+.cat-card .cc-count{font-size:12.5px;color:var(--text-muted);margin-bottom:14px}
+.cc-lab{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin:12px 0 6px}
+.mods{display:flex;flex-wrap:wrap;gap:6px}
+.mod{font-size:12px;background:var(--brand-soft);color:var(--brand);padding:4px 9px;border-radius:7px}
+
+/* Drawer */
+.scrim{position:fixed;inset:0;background:rgba(20,19,26,.4);opacity:0;pointer-events:none;transition:opacity .18s;z-index:40}
+.scrim.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100vh;width:430px;max-width:92vw;background:var(--surface);box-shadow:-8px 0 30px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .2s;z-index:50;display:flex;flex-direction:column}
+.drawer.show{transform:translateX(0)}
+.dr-head{padding:20px 22px;border-bottom:1px solid var(--border);position:relative}
+.dr-close{position:absolute;top:16px;right:18px;border:none;background:none;color:var(--text-muted);font-size:22px;line-height:1}
+.dr-body{padding:20px 22px;overflow-y:auto;flex:1}
+.dr-name{font-size:18px;font-weight:600;margin-bottom:8px;padding-right:26px}
+.dr-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0 4px}
+.dr-stat{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:9px 10px;text-align:center}
+.dr-stat b{display:block;font-size:17px;font-weight:600}
+.dr-stat span{font-size:10.5px;color:var(--text-muted)}
+.field{margin-bottom:14px}
+.field .f-lab{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-bottom:4px}
+.field .f-val{font-size:14px}
+.dr-foot{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap}
+.dr-foot .act{flex:1;justify-content:center;text-align:center;text-decoration:none}
+
+/* Confirm modal (kept from original; restyled) */
+#confirm{position:fixed;inset:0;background:rgba(20,19,26,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:60}
+#confirm.open{display:flex}
+.cbox{background:var(--surface);border-radius:14px;max-width:440px;width:100%;padding:24px;max-height:90vh;overflow-y:auto}
+.ctitle{font-size:17px;font-weight:600;letter-spacing:-.2px;margin-bottom:10px}
+.cbody{font-size:13.5px;color:var(--text-muted);line-height:1.6}
+.cwarn{margin-top:12px;background:var(--amber-bg);border:1px solid #f2d79b;color:var(--amber);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:500}
+.cacts{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+
+/* Toast + refresh hint */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;font-size:13.5px;opacity:0;pointer-events:none;transition:all .2s;z-index:70}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#refresh-hint{display:none;background:var(--blue-bg);border:1px solid #cfe0f7;color:var(--blue);border-radius:12px;padding:11px 15px;font-size:12.5px;margin-bottom:16px}
+
+@media(max-width:900px){.sidebar{width:66px}.brand-name,.plane,.side-foot .who,.nav-item span:not(.badge){display:none}.nav-item{justify-content:center}.nav-item .badge{position:absolute;margin:0;transform:translate(12px,-12px)}.nav-item{position:relative}}
+@media(max-width:640px){.search{width:150px}.dr-stats{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
+<div class="app">
 
-<header>
-  <div class="brand">Genoti <span>Admin</span></div>
-  <div class="who" id="who"></div>
-</header>
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">G</div><div class="brand-name">Genoti</div></div>
+    <div class="plane">Platform admin</div>
+    <nav class="nav" id="nav">
+      <button class="nav-item active" data-view="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Overview</span>
+      </button>
+      <button class="nav-item" data-view="merchants">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16l-1 13H5L4 7zM9 7V5a3 3 0 0 1 6 0v2"/></svg>
+        <span>Merchants</span>
+      </button>
+      <button class="nav-item" data-view="approvals">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        <span>Approvals</span> <span class="badge" id="nav-pending" style="display:none">0</span>
+      </button>
+      <button class="nav-item" data-view="plans">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5"/></svg>
+        <span>Plans &amp; modules</span>
+      </button>
+      <button class="nav-item" data-view="analytics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+        <span>Analytics</span>
+      </button>
+      <button class="nav-item" data-view="categories">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+        <span>Categories</span>
+      </button>
+    </nav>
+    <div class="side-foot"><div class="avatar" id="side-avatar">–</div><div class="who">Admin<small id="side-email">Genoti admin</small></div></div>
+  </aside>
 
-<main>
-  <div id="gate" class="state">
-    <h2>Checking access…</h2>
-    <p>One moment.</p>
-  </div>
-  <div id="refresh-hint">Review opened in a new tab. Come back here and the list refreshes automatically.</div>
-  <div id="panel" style="display:none"></div>
-</main>
+  <main class="main">
+    <div class="topbar">
+      <h1 id="page-title">Overview</h1>
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+        <input type="text" id="search" placeholder="Search merchants">
+      </div>
+      <div id="who-actions" style="display:none;gap:8px">
+        <button class="top-btn" onclick="openSetPw()">Set password</button>
+        <button class="top-btn danger" onclick="G.signOut().then(()=>location.reload())">Log out</button>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div id="gate" class="state"><h2>Checking access…</h2><p>One moment.</p></div>
+      <div id="refresh-hint">Review opened in a new tab. Come back here and the list refreshes automatically.</div>
+
+      <section class="view" id="view-overview" hidden></section>
+      <section class="view" id="view-merchants" hidden></section>
+      <section class="view" id="view-approvals" hidden></section>
+      <section class="view" id="view-plans" hidden></section>
+      <section class="view" id="view-analytics" hidden></section>
+      <section class="view" id="view-categories" hidden></section>
+    </div>
+  </main>
+</div>
+
+<div class="scrim" id="scrim" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer"><div id="drawer-content"></div></aside>
 <div id="confirm" onclick="if(event.target===this)closeConfirm()"></div>
+<div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="auth.js"></script>
@@ -108,370 +296,84 @@
 const G = window.GenotiAuth;
 const sb = G.sb;
 
+/* ── helpers ─────────────────────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
 const fmt = n => Number(n || 0).toLocaleString('en-IN');
+const inr = n => '₹' + fmt(n || 0);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const when = d => d ? new Date(d).toLocaleDateString('en-IN', { day:'numeric', month:'short' }) : '—';
+const whenY = d => d ? new Date(d).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '—';
+const whenT = d => d ? new Date(d).toLocaleString('en-IN', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) : '—';
+const toast = m => { const t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2400); };
+
+const kpi = (lab, val, sub, cls) =>
+  `<div class="kpi ${cls || ''}"><div class="k-lab">${lab}</div><div class="k-val">${val}</div>${sub ? `<div class="k-sub">${sub}</div>` : ''}</div>`;
 const card = (k, v, sub, cls) =>
   `<div class="card ${cls || ''}"><div class="k">${k}</div><div class="v">${v}</div>${sub ? `<div class="sub">${sub}</div>` : ''}</div>`;
-const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const catTag = c => c ? `<span class="cat-tag cat-${esc(String(c).toLowerCase())}">${esc(c)}</span>` : '<span class="cat-tag">—</span>';
+const SUB_STATUS_LABEL = { active:'Active', trial:'Trial', past_due:'Past due', cancelled:'Suspended', none:'No plan' };
+const subStatusPill = st => `<span class="status s-${esc(st || 'none')}">${esc(SUB_STATUS_LABEL[st] || st || '—')}</span>`;
 
-function state(title, body) {
-  document.getElementById('panel').style.display = 'none';
-  const g = document.getElementById('gate');
-  g.style.display = '';
-  g.innerHTML = `<h2>${title}</h2><p>${body}</p>`;
+function barTable(rows, label, valLabel) {
+  if (!rows.length) return `<div class="panel"><div class="empty">Nothing yet.</div></div>`;
+  const max = Math.max(...rows.map(r => r[1]));
+  return `<div class="panel"><div class="tw"><table><thead><tr><th>${label}</th><th class="num">${valLabel}</th><th style="width:34%"></th></tr></thead><tbody>
+    ${rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td class="num">${fmt(v)}</td>
+      <td><div class="bar" style="width:${Math.round(v / max * 100)}%"></div></td></tr>`).join('')}
+  </tbody></table></div></div>`;
 }
 
-/* ── Access: logged in AND on the admins table. The table is the real
-      gate — RLS refuses the reads regardless of what this page thinks. ── */
+/* ── access gate ─────────────────────────────────────────────────────── */
+function showGate(title, body) {
+  document.querySelectorAll('.view').forEach(v => v.hidden = true);
+  const g = $('gate'); g.style.display = ''; g.innerHTML = `<h2>${title}</h2><p>${body}</p>`;
+}
+function hideGate() { $('gate').style.display = 'none'; go(VIEW); }
+
 async function boot() {
   const user = await G.ready;
-
   if (!user) {
-    state('Admin access', 'You need to log in with an admin account. ' +
+    showGate('Admin access', 'You need to log in with an admin account.' +
       '<br><br><a href="#" onclick="G.open({icon:\'lock\',title:\'Admin login\',msg:\'Log in with your admin account to open the dashboard.\'});return false">Log in</a>');
     G.onChange(u => { if (u) location.reload(); });
     return;
   }
-
-  document.getElementById('who').innerHTML =
-    `${esc(user.email)} <button onclick="openSetPw()">Set password</button> <button onclick="G.signOut().then(()=>location.reload())">Log out</button>`;
+  $('who-actions').style.display = 'flex';
+  $('side-email').textContent = user.email;
+  $('side-avatar').textContent = (user.email || '?').slice(0, 2).toUpperCase();
 
   const { data, error } = await sb.from('admins').select('email').limit(1);
   if (error || !data || !data.length) {
-    state('Not an admin', `<b>${esc(user.email)}</b> is not on the admin list, so this dashboard is not available. ` +
+    showGate('Not an admin', `<b>${esc(user.email)}</b> is not on the admin list, so this dashboard is not available. ` +
       'If that is wrong, add the address to the <code>admins</code> table.');
     return;
   }
-  render();
+  loadData();
 }
 
-/* ── Reviewing an application ─────────────────────────────────────────── */
+/* ── data ────────────────────────────────────────────────────────────── */
 const FN_URL = 'https://ijsxmgkzwvamwctbkgjo.supabase.co/functions/v1/review-merchant-application';
-let APPS = [];
-let CP = null;   // last control-plane payload, so the manage modal can read plans + the merchant's current sub
-
-function reviewUrl(a, action) {
-  return `${FN_URL}?id=${encodeURIComponent(a.id)}&token=${encodeURIComponent(a.approval_token || '')}&action=${action}`;
-}
-
-/* Approving creates a real account and emails a set-password link, so both
-   actions are confirmed first and neither can be undone from here. */
-function askReview(id, action) {
-  const a = APPS.find(x => String(x.id) === String(id));
-  if (!a) return;
-  const approve = action === 'approve';
-  document.getElementById('confirm').innerHTML = `
-    <div class="cbox">
-      <div class="ctitle">${approve ? 'Approve' : 'Reject'} ${esc(a.business_name)}?</div>
-      <div class="cbody">
-        ${approve
-          ? `This creates an account for <b>${esc(a.email)}</b> and emails them a link to set a password. They get access to the merchant dashboard straight away.`
-          : `This marks the request rejected and no account is created. <b>${esc(a.email)}</b> is not emailed, so follow up yourself if you want to.`}
-        <div class="cwarn">This cannot be undone from this panel.</div>
-      </div>
-      <div class="cacts">
-        <button class="act ghost" onclick="closeConfirm()">Cancel</button>
-        <button class="act ${approve ? 'ok' : 'no'} solid" onclick="doReview('${esc(a.id)}','${action}')">
-          ${approve ? 'Approve and create account' : 'Reject request'}
-        </button>
-      </div>
-    </div>`;
-  document.getElementById('confirm').classList.add('open');
-}
-
-function closeConfirm() { document.getElementById('confirm').classList.remove('open'); }
-
-/* One-click merchant approval via the approve-merchant edge function (which
-   verifies this caller is an admin, then sets the approval flag). */
-async function approveMerchant() {
-  const email = (document.getElementById('ap-email').value || '').trim();
-  const btn = document.getElementById('ap-btn');
-  const msg = document.getElementById('ap-msg');
-  const show = (text, ok) => { msg.textContent = text; msg.style.display = 'block';
-    msg.style.background = ok ? 'var(--green-lt)' : '#FEF2F2';
-    msg.style.color = ok ? '#065F46' : '#B91C1C'; };
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return show('Enter a valid merchant email.', false);
-
-  btn.disabled = true; btn.textContent = 'Approving…';
-  const { data, error } = await sb.functions.invoke('approve-merchant', { body: { email } });
-  btn.disabled = false; btn.textContent = 'Approve';
-
-  if (error || (data && data.error)) {
-    let m = (data && data.error) || error.message || 'Could not approve.';
-    // supabase-js wraps non-2xx as a generic error; surface the function body when present.
-    if (error && error.context && typeof error.context.json === 'function') {
-      try { const b = await error.context.json(); if (b && b.error) m = b.error; } catch (e) {}
-    }
-    return show(m, false);
-  }
-  show(`Approved ${email}. Ask them to log out and back in.`, true);
-  document.getElementById('ap-email').value = '';
-}
-
-/* Let the admin set (or change) a password so they can sign in without an
-   email code next time. Uses the current session — no re-auth needed. */
-function openSetPw() {
-  document.getElementById('confirm').innerHTML = `
-    <div class="cbox">
-      <div class="ctitle">Set a password</div>
-      <div class="cbody">Choose a password so you can sign in with email + password next time, instead of a one-time code.</div>
-      <div id="pw-msg" style="display:none;font-size:12.5px;margin-top:12px;padding:9px 12px;border-radius:10px;"></div>
-      <input id="admin-pw"  type="password" placeholder="New password (min 8)" autocomplete="new-password"
-        style="width:100%;margin-top:14px;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;">
-      <input id="admin-pw2" type="password" placeholder="Confirm password" autocomplete="new-password"
-        style="width:100%;margin-top:10px;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;">
-      <div class="cacts">
-        <button class="act ghost" onclick="closeConfirm()">Cancel</button>
-        <button class="act ok solid" id="admin-pw-save" onclick="saveAdminPw()">Save password</button>
-      </div>
-    </div>`;
-  document.getElementById('confirm').classList.add('open');
-  setTimeout(() => document.getElementById('admin-pw').focus(), 60);
-}
-
-async function saveAdminPw() {
-  const pw  = document.getElementById('admin-pw').value;
-  const pw2 = document.getElementById('admin-pw2').value;
-  const msg = document.getElementById('pw-msg');
-  const show = (text, ok) => { msg.textContent = text; msg.style.display = 'block';
-    msg.style.background = ok ? 'var(--green-lt)' : '#FEF2F2';
-    msg.style.color = ok ? '#065F46' : '#B91C1C'; };
-  if (pw.length < 8) return show('Password must be at least 8 characters.', false);
-  if (pw !== pw2)    return show('Passwords do not match.', false);
-
-  const btn = document.getElementById('admin-pw-save');
-  btn.disabled = true; btn.textContent = 'Saving…';
-  const { error } = await sb.auth.updateUser({ password: pw });
-  btn.disabled = false; btn.textContent = 'Save password';
-  if (error) return show(error.message || 'Could not set the password.', false);
-
-  // Tell the shared login modal this email now has a password, so next time it
-  // offers the password screen straight away instead of the email-code flow.
-  try {
-    const email = (G.user() && G.user().email) || '';
-    const list = JSON.parse(localStorage.getItem('genoti_pw_emails') || '[]');
-    if (email && !list.includes(email)) { list.push(email); localStorage.setItem('genoti_pw_emails', JSON.stringify(list)); }
-    if (email) localStorage.setItem('genoti_last_email', email);
-  } catch (e) {}
-  show('Password set. You can now sign in with your email and this password.', true);
-  setTimeout(closeConfirm, 1600);
-}
-
-function doReview(id, action) {
-  const a = APPS.find(x => String(x.id) === String(id));
-  closeConfirm();
-  if (!a) return;
-  // The function replies with its own HTML result page, so open it directly.
-  window.open(reviewUrl(a, action), '_blank', 'noopener');
-  document.getElementById('refresh-hint').style.display = '';
-}
-
-/* Coming back from that tab, pull fresh statuses. */
-window.addEventListener('focus', () => {
-  const hint = document.getElementById('refresh-hint');
-  if (hint && hint.style.display !== 'none') { hint.style.display = 'none'; render(); }
-});
-
-/* ── Data ─────────────────────────────────────────────────────────────── */
 const since = d => new Date(Date.now() - d * 864e5).toISOString();
+let APPS = [];
+let CP = null;
+let VIEW = 'overview';
+let D = {};                 // last loaded dataset, read by every view renderer
+let flt = { cat:'all', status:'all', search:'' };
 
 async function countOf(table, build) {
-  let q = sb.from(table).select('*', { count: 'exact', head: true });
+  let q = sb.from(table).select('*', { count:'exact', head:true });
   if (build) q = build(q);
   const { count, error } = await q;
   return error ? null : (count || 0);
 }
 
-/* ── Control plane: platform-wide view of merchants, plans, modules, usage.
-   Fed by the admin-metrics edge function (cross-tenant, service role). ── */
-function controlPlaneHTML(cp, why) {
-  if (!cp) {
-    return `<div class="note"><b>Control plane not connected yet.</b>
-      Apply <code>supabase/migrations/20260726100000_control_plane.sql</code> and deploy the
-      <code>admin-metrics</code> function to see plans, modules, usage and MRR.
-      ${why ? `<br><br><b>Reason:</b> <code>${esc(why)}</code>` : ''}</div>`;
-  }
-  const k = cp.kpis || {};
-  const inr = n => '₹' + fmt(n || 0);
-  const plansByKey = Object.fromEntries((cp.plans || []).map(p => [p.key, p]));
-  const maxRank = Math.max(1, ...(cp.plans || []).map(p => p.rank || 1));
-
-  // ── Overview ──
-  const overview = `
-    <h2 class="sec">Platform</h2>
-    <div class="grid">
-      ${card('MRR', inr(k.mrr), 'from active subscriptions', 'live')}
-      ${card('Merchants', fmt(k.merchants), `${fmt(k.active)} active · ${fmt(k.trialing)} trialing`)}
-      ${card('ARR (run-rate)', inr((k.mrr || 0) * 12), 'MRR × 12')}
-      ${card('Avg revenue / merchant', inr(k.active ? Math.round((k.mrr||0)/k.active) : 0), 'active only')}
-    </div>`;
-
-  // ── Merchants directory ──
-  const catPill = c => c ? `<span class="pill" style="background:var(--purple-bg);color:var(--purple)">${esc(c)}</span>` : '—';
-  const statusPill = st => {
-    const map = { active:['var(--green-lt)','var(--green)'], trial:['var(--blue-bg)','var(--blue)'],
-      past_due:['var(--amber-bg)','var(--amber)'], cancelled:['#FEF2F2','var(--red)'], none:['var(--bg)','var(--muted)'] };
-    const [bg,fg] = map[st] || map.none;
-    return `<span class="pill" style="background:${bg};color:${fg}">${esc(st)}</span>`;
-  };
-  const when = d => d ? new Date(d).toLocaleDateString('en-IN', { day:'numeric', month:'short' }) : '—';
-  const rowsSorted = (cp.merchants || []).slice().sort((a,b) => (b.usage.bookings - a.usage.bookings));
-  const directory = `
-    <h2 class="sec">Merchants</h2>
-    <div class="tw"><table><thead><tr>
-      <th>Business</th><th>Category</th><th>Plan</th><th>Status</th>
-      <th class="num">Bookings</th><th class="num">Clients</th><th class="num">Staff</th><th class="num">Services</th>
-      <th>Last active</th><th></th>
-    </tr></thead><tbody>
-      ${rowsSorted.map(m => `<tr>
-        <td><b>${esc(m.name)}</b></td>
-        <td>${catPill(m.category)}</td>
-        <td>${esc(m.plan_name || '—')}${m.price_monthly ? `<div class="sub">${inr(m.price_monthly)}/mo</div>` : ''}</td>
-        <td>${statusPill(m.status)}</td>
-        <td class="num">${fmt(m.usage.bookings)}</td>
-        <td class="num">${fmt(m.usage.clients)}</td>
-        <td class="num">${fmt(m.usage.staff)}</td>
-        <td class="num">${fmt(m.usage.services)}</td>
-        <td>${when(m.last_active)}</td>
-        <td><div class="acts">
-          <button class="act ghost" onclick="openManage('${esc(m.id)}')">Manage</button>
-          <a class="act ok" href="merchant/dashboard.html" target="_blank" rel="noopener" title="Open workspace (needs your account linked)">Open</a>
-        </div></td>
-      </tr>`).join('') || '<tr><td colspan="10" class="empty">No merchants yet.</td></tr>'}
-    </tbody></table></div>`;
-
-  // ── Modules & Plans matrix ──
-  const plansOrdered = (cp.plans || []).slice().sort((a,b) => a.rank - b.rank);
-  const modsOrdered  = (cp.modules || []).slice().sort((a,b) => a.sort - b.sort);
-  const planHead = plansOrdered.map(p =>
-    `<th class="num">${esc(p.name)}<div class="sub" style="font-weight:600">${p.price_monthly ? inr(p.price_monthly)+'/mo' : 'Free'}</div></th>`).join('');
-  const modRows = modsOrdered.map(mod => `<tr>
-      <td><b>${esc(mod.name)}</b>${mod.grp ? `<div class="sub">${esc(mod.grp)}</div>` : ''}</td>
-      ${plansOrdered.map(p => `<td class="num">${(p.rank >= mod.min_plan_rank)
-        ? '<span style="color:var(--green);font-weight:800">✓</span>'
-        : '<span style="color:var(--border)">–</span>'}</td>`).join('')}
-    </tr>`).join('');
-  const modules = `
-    <h2 class="sec">Modules &amp; Plans</h2>
-    <div class="tw"><table><thead><tr><th>Module</th>${planHead}</tr></thead>
-      <tbody>${modRows}</tbody></table></div>`;
-
-  // ── Usage & adoption ──
-  const adoptionRows = Object.entries(k.adoption || {})
-    .sort((a,b) => b[1]-a[1])
-    .map(([mod, n]) => {
-      const pct = k.merchants ? Math.round(n / k.merchants * 100) : 0;
-      return `<tr><td>${esc(mod)}</td><td class="num">${fmt(n)} / ${fmt(k.merchants)}</td>
-        <td style="width:40%"><div class="bar" style="width:${pct}%"></div></td>
-        <td class="num">${pct}%</td></tr>`;
-    }).join('');
-  const usage = `
-    <h2 class="sec">Module adoption</h2>
-    <div class="sub" style="margin:-6px 0 12px">Merchants with real data in each module (live counts).</div>
-    <div class="tw"><table><thead><tr><th>Module</th><th class="num">Merchants using</th><th></th><th class="num">Adoption</th></tr></thead>
-      <tbody>${adoptionRows || '<tr><td colspan="4" class="empty">No usage yet.</td></tr>'}</tbody></table></div>`;
-
-  return overview + directory + modules + usage;
-}
-
-/* ── Phase 2: control actions ─────────────────────────────────────────────
-   Assign a plan or change subscription status straight from the directory.
-   Writes go to merchant_subscriptions with the admin's own session — the
-   "subs managed by admins" RLS policy (using is_admin()) authorises them, so
-   no edge function is needed. admin-metrics recomputes MRR on the next render,
-   so suspending a merchant immediately drops them out of revenue. ── */
-const STATUSES = [
-  ['active',    'Active'],
-  ['trial',     'Trial'],
-  ['past_due',  'Past due'],
-  ['cancelled', 'Suspended'],
-];
-
-function openManage(id, presetPlanKey, requestId) {
-  const m = (CP && CP.merchants || []).find(x => String(x.id) === String(id));
-  if (!m) return;
-  const plans = ((CP && CP.plans) || []).slice().sort((a, b) => a.rank - b.rank);
-  const inr = n => '₹' + fmt(n || 0);
-  const wantPlan = presetPlanKey || m.plan_key;   // an upgrade request preselects the asked-for plan
-  const planOpts = plans.map(p =>
-    `<option value="${esc(p.key)}" ${p.key === wantPlan ? 'selected' : ''}>${esc(p.name)} · ${p.price_monthly ? inr(p.price_monthly) + '/mo' : 'Free'}</option>`).join('');
-  const statusOpts = STATUSES.map(([v, label]) =>
-    `<option value="${v}" ${v === m.status ? 'selected' : ''}>${label}</option>`).join('');
-  const fieldStyle = 'width:100%;margin-top:6px;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:var(--white);outline:none;box-sizing:border-box;';
-
-  document.getElementById('confirm').innerHTML = `
-    <div class="cbox">
-      <div class="ctitle">Manage ${esc(m.name)}</div>
-      <div class="cbody">
-        Set this merchant's plan and subscription status. Takes effect immediately —
-        <b>Suspended</b> removes them from MRR.
-      </div>
-      <div id="mng-msg" style="display:none;font-size:12.5px;margin-top:12px;padding:9px 12px;border-radius:10px;"></div>
-      <div style="margin-top:16px">
-        <label class="k" style="display:block">Plan</label>
-        <select id="mng-plan" style="${fieldStyle}">${planOpts || '<option>No plans found</option>'}</select>
-      </div>
-      <div style="margin-top:14px">
-        <label class="k" style="display:block">Status</label>
-        <select id="mng-status" style="${fieldStyle}">${statusOpts}</select>
-      </div>
-      <div class="cacts">
-        <button class="act ghost" onclick="closeConfirm()">Cancel</button>
-        <button class="act ok solid" id="mng-save" onclick="saveManage('${esc(m.id)}', ${requestId ? `'${esc(requestId)}'` : 'null'})">Save changes</button>
-      </div>
-    </div>`;
-  document.getElementById('confirm').classList.add('open');
-}
-
-async function saveManage(id, requestId) {
-  const msg = document.getElementById('mng-msg');
-  const show = (text, ok) => { msg.textContent = text; msg.style.display = 'block';
-    msg.style.background = ok ? 'var(--green-lt)' : '#FEF2F2';
-    msg.style.color = ok ? '#065F46' : '#B91C1C'; };
-  const plan_key = document.getElementById('mng-plan').value;
-  const status   = document.getElementById('mng-status').value;
-  if (!plan_key) return show('Pick a plan first.', false);
-
-  const btn = document.getElementById('mng-save');
-  btn.disabled = true; btn.textContent = 'Saving…';
-  // Upsert: existing merchants have a row; ones onboarded after the migration
-  // may not, so insert-or-update on the merchant_id primary key. The DB trigger
-  // records this change to plan_change_log automatically.
-  const { error } = await sb.from('merchant_subscriptions').upsert(
-    { merchant_id: id, plan_key, status, updated_at: new Date().toISOString() },
-    { onConflict: 'merchant_id' });
-  if (error) { btn.disabled = false; btn.textContent = 'Save changes';
-    return show(error.message || 'Could not save. Check you are on the admins list.', false); }
-
-  // If this came from an upgrade request, close it out.
-  if (requestId && requestId !== 'null') {
-    await sb.from('upgrade_requests')
-      .update({ status: 'actioned', actioned_at: new Date().toISOString(), actioned_by: (G.user() && G.user().email) || null })
-      .eq('id', requestId);
-  }
-  btn.disabled = false; btn.textContent = 'Save changes';
-  show('Saved. Refreshing the control plane…', true);
-  setTimeout(() => { closeConfirm(); render(); }, 700);
-}
-
-/* Dismiss (or otherwise resolve) an upgrade request without changing a plan. */
-async function actionRequest(id, status) {
-  const { error } = await sb.from('upgrade_requests')
-    .update({ status, actioned_at: new Date().toISOString(), actioned_by: (G.user() && G.user().email) || null })
-    .eq('id', id);
-  if (!error) render();
-}
-
-async function render() {
-  document.getElementById('gate').style.display = 'none';
-  const p = document.getElementById('panel');
-  p.style.display = '';
-  p.innerHTML = '<div class="empty">Loading…</div>';
+async function loadData() {
+  $('gate').style.display = 'none';
+  if (!D.loaded) { const v = $('view-' + VIEW); v.hidden = false; v.innerHTML = `<div class="panel"><div class="empty">Loading…</div></div>`; }
 
   const [
-    viewsAll, views1, views7,
-    events30m, eventRows,
-    deals, merchants, bookings, apps,
-    cpResp, reqResp, logResp,
+    viewsAll, views1, views7, events30m, eventRows,
+    deals, merchants, bookings, apps, cpResp, reqResp, logResp,
   ] = await Promise.all([
     countOf('events', q => q.eq('name', 'page_view')),
     countOf('events', q => q.eq('name', 'page_view').gte('created_at', since(1))),
@@ -483,18 +385,17 @@ async function render() {
     sb.from('bookings').select('id, merchant_name, status, customer_email, created_at'),
     sb.from('merchant_applications').select('id, full_name, business_name, category, email, phone, address, num_branches, num_staff, plan, status, approval_token, created_at, reviewed_at'),
     sb.functions.invoke('admin-metrics'),
-    sb.from('upgrade_requests').select('id, merchant_id, current_plan_key, requested_plan_key, status, created_at').order('created_at', { ascending: false }),
-    sb.from('plan_change_log').select('merchant_id, actor_email, from_plan, to_plan, from_status, to_status, changed_at').order('changed_at', { ascending: false }).limit(40),
+    sb.from('upgrade_requests').select('id, merchant_id, current_plan_key, requested_plan_key, status, created_at').order('created_at', { ascending:false }),
+    sb.from('plan_change_log').select('merchant_id, actor_email, from_plan, to_plan, from_status, to_status, changed_at').order('changed_at', { ascending:false }).limit(40),
   ]);
+
   const cp = (cpResp && !cpResp.error && cpResp.data && !cpResp.data.error) ? cpResp.data : null;
   CP = cp;
-  // Surface why the control-plane call failed so it's diagnosable at a glance.
   let cpWhy = '';
   if (!cp) {
     if (cpResp && cpResp.data && cpResp.data.error) cpWhy = cpResp.data.error;
     else if (cpResp && cpResp.error) {
       cpWhy = cpResp.error.message || 'Function call failed';
-      // supabase-js hides the function's own message inside a non-2xx context.
       if (cpResp.error.context && typeof cpResp.error.context.json === 'function') {
         try { const b = await cpResp.error.context.json(); if (b && b.error) cpWhy = b.error; } catch (e) {}
       } else if (/Failed to send a request|Failed to fetch/i.test(cpWhy)) {
@@ -503,189 +404,539 @@ async function render() {
     }
   }
 
-  const evs   = eventRows.data || [];
-  const dl    = deals.data || [];
-  const mch   = merchants.data || [];
-  const bk    = bookings.data || [];
-  const ap    = apps.data || [];
+  const evs = eventRows.data || [], dl = deals.data || [], mch = merchants.data || [];
+  const bk = bookings.data || [], ap = apps.data || [];
   APPS = ap;
-  const upReqs  = (reqResp && reqResp.data) || [];
+  const upReqs = (reqResp && reqResp.data) || [];
   const planLog = (logResp && logResp.data) || [];
-  // Merchant id → name, and plan key → name, for the requests + audit sections.
+
   const nameById = {};
   mch.forEach(m => { nameById[m.id] = m.name; });
   if (cp && cp.merchants) cp.merchants.forEach(m => { if (!nameById[m.id]) nameById[m.id] = m.name; });
   const planName = k => { const p = (cp && cp.plans || []).find(x => x.key === k); return p ? p.name : (k || '—'); };
 
   const uniq = (arr, k) => new Set(arr.map(r => r[k]).filter(Boolean)).size;
-  const visitors30 = uniq(evs, 'visitor_id');
-  const signedIn30 = uniq(evs, 'user_id');
-  const liveNow    = uniq(events30m.data || [], 'session_id');
-  const bkToday    = bk.filter(b => new Date(b.created_at) >= new Date(since(1))).length;
-  const bookers    = uniq(bk, 'customer_email');
-  const bkPending  = bk.filter(b => b.status === 'pending').length;
-
-  const missing = [deals, merchants, bookings, apps, eventRows]
-    .filter(r => r.error).map(r => r.error.message);
-
-  const notTracked = viewsAll === null;
-
-  /* group helper */
   const group = (rows, key) => {
     const m = {};
     rows.forEach(r => { const k = r[key] || 'Uncategorised'; m[k] = (m[k] || 0) + 1; });
     return Object.entries(m).sort((a, b) => b[1] - a[1]);
   };
 
-  const dealsByCat = group(dl.filter(d => d.active !== false), 'category');
-  const mchByCat   = group(mch, 'category');
-  const bkByMerch  = group(bk, 'merchant_name');
-  const pagesByViews = group(evs.filter(e => e.name === 'page_view'), 'path');
-
-  const barTable = (rows, label, valLabel) => {
-    if (!rows.length) return `<div class="empty">Nothing yet.</div>`;
-    const max = Math.max(...rows.map(r => r[1]));
-    return `<div class="tw"><table><thead><tr><th>${label}</th><th class="num">${valLabel}</th><th style="width:34%"></th></tr></thead><tbody>
-      ${rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td class="num">${fmt(v)}</td>
-        <td><div class="bar" style="width:${Math.round(v / max * 100)}%"></div></td></tr>`).join('')}
-    </tbody></table></div>`;
+  D = {
+    loaded:true, cp, cpWhy, mch, ap, dl, bk, evs, upReqs, planLog, nameById, planName,
+    viewsAll, views1, views7,
+    liveNow: uniq(events30m.data || [], 'session_id'),
+    visitors30: uniq(evs, 'visitor_id'),
+    signedIn30: uniq(evs, 'user_id'),
+    bkToday: bk.filter(b => new Date(b.created_at) >= new Date(since(1))).length,
+    bookers: uniq(bk, 'customer_email'),
+    bkPending: bk.filter(b => b.status === 'pending').length,
+    dealsByCat: group(dl.filter(d => d.active !== false), 'category'),
+    mchByCat: group(mch, 'category'),
+    bkByMerch: group(bk, 'merchant_name'),
+    pagesByViews: group(evs.filter(e => e.name === 'page_view'), 'path'),
+    missing: [deals, merchants, bookings, apps, eventRows].filter(r => r.error).map(r => r.error.message),
+    notTracked: viewsAll === null,
+    pendingApps: ap.filter(a => a.status === 'pending').length,
+    pendingReqs: upReqs.filter(r => r.status === 'pending').length,
   };
 
-  /* Who is actually waiting. Pending first, then most recent. */
-  const applicantsTable = rows => {
-    if (!rows.length) return '<div class="empty">No applications yet.</div>';
-    const rank = { pending: 0, approved: 1, rejected: 2 };
-    const sorted = rows.slice().sort((a, b) =>
-      (rank[a.status] ?? 9) - (rank[b.status] ?? 9) ||
-      new Date(b.created_at) - new Date(a.created_at));
-    const when = d => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
-    return `<div class="tw"><table><thead><tr>
-        <th>Status</th><th>Business</th><th>Category</th><th>Contact</th><th>Email</th><th>Phone</th>
-        <th class="num">Branches</th><th class="num">Staff</th><th>Plan</th><th>Requested</th><th>Review</th>
-      </tr></thead><tbody>
-      ${sorted.map(a => `<tr>
-        <td><span class="pill ${esc(a.status)}">${esc(a.status)}</span></td>
-        <td><b>${esc(a.business_name || '—')}</b>${a.address ? `<div class="sub">${esc(a.address)}</div>` : ''}</td>
-        <td>${a.category ? `<span class="pill" style="background:var(--purple-bg);color:var(--purple)">${esc(a.category)}</span>` : '—'}</td>
-        <td>${esc(a.full_name || '—')}</td>
-        <td><a href="mailto:${esc(a.email)}">${esc(a.email || '—')}</a></td>
-        <td>${esc(a.phone || '—')}</td>
-        <td class="num">${esc(a.num_branches ?? '—')}</td>
-        <td class="num">${esc(a.num_staff ?? '—')}</td>
-        <td>${esc(a.plan || '—')}</td>
-        <td>${esc(when(a.created_at))}</td>
-        <td>${a.status === 'pending'
-          ? `<div class="acts">
-               <button class="act ok" onclick="askReview('${esc(a.id)}','approve')">Approve</button>
-               <button class="act no" onclick="askReview('${esc(a.id)}','reject')">Reject</button>
-             </div>`
-          : `<span class="sub">${esc(when(a.reviewed_at))}</span>`}</td>
-      </tr>`).join('')}
-    </tbody></table></div>`;
-  };
+  // approvals badge
+  const badge = D.pendingApps + D.pendingReqs;
+  const nb = $('nav-pending'); nb.textContent = badge; nb.style.display = badge ? '' : 'none';
 
-  /* Pending upgrade requests raised by merchants from a locked module. */
-  const upgradeRequestsHTML = () => {
-    if (!upReqs.length) return '';
-    const when = d => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '—';
-    const pending = upReqs.filter(r => r.status === 'pending');
-    const rows = pending.length ? pending.map(r => `<tr>
-        <td><b>${esc(nameById[r.merchant_id] || r.merchant_id)}</b></td>
-        <td>${esc(planName(r.current_plan_key))} → <b>${esc(planName(r.requested_plan_key))}</b></td>
-        <td>${when(r.created_at)}</td>
-        <td><div class="acts">
-          <button class="act ok" onclick="openManage('${esc(r.merchant_id)}','${esc(r.requested_plan_key || '')}','${esc(r.id)}')">Assign</button>
-          <button class="act no" onclick="actionRequest('${esc(r.id)}','dismissed')">Dismiss</button>
-        </div></td>
-      </tr>`).join('') : '<tr><td colspan="4" class="empty">No pending requests.</td></tr>';
-    return `<h2 class="sec">Upgrade requests${pending.length ? ` · ${pending.length}` : ''}</h2>
-      <div class="tw"><table><thead><tr><th>Business</th><th>Requested</th><th>When</th><th></th></tr></thead>
-      <tbody>${rows}</tbody></table></div>`;
-  };
-
-  /* Automatic audit trail of every subscription change (from the trigger). */
-  const planLogHTML = () => {
-    if (!planLog.length) return '';
-    const when = d => d ? new Date(d).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
-    const chg = (a, b) => (a && a !== b) ? `${esc(a)} → <b>${esc(b)}</b>` : `<b>${esc(b || '—')}</b>`;
-    return `<h2 class="sec">Plan change log</h2>
-      <div class="tw"><table><thead><tr><th>When</th><th>Business</th><th>Plan</th><th>Status</th><th>By</th></tr></thead>
-      <tbody>${planLog.map(l => `<tr>
-        <td>${when(l.changed_at)}</td>
-        <td>${esc(nameById[l.merchant_id] || l.merchant_id)}</td>
-        <td>${chg(planName(l.from_plan), planName(l.to_plan))}</td>
-        <td>${chg(l.from_status, l.to_status)}</td>
-        <td>${esc(l.actor_email || 'system')}</td>
-      </tr>`).join('')}</tbody></table></div>`;
-  };
-
-
-  p.innerHTML = `
-    ${notTracked ? `<div class="note"><b>The events table is not there yet.</b>
-      Traffic numbers stay at zero until you apply <code>supabase/migrations/20260722000000_analytics.sql</code>.
-      Everything below it reads live data.</div>` : ''}
-    ${missing.length ? `<div class="note"><b>Some reads were refused:</b> ${esc(missing.join(' · '))}</div>` : ''}
-    ${controlPlaneHTML(cp, cpWhy)}
-    ${upgradeRequestsHTML()}
-    ${planLogHTML()}
-
-    <h2 class="sec">Audience</h2>
-    <div class="grid">
-      ${card('Viewing now', `<span class="dot"></span>${fmt(liveNow)}`, 'active sessions, last 30 min', 'live')}
-      ${card('Page views', fmt(viewsAll), 'all time')}
-      ${card('Views today', fmt(views1), 'last 24 hours')}
-      ${card('Views this week', fmt(views7), 'last 7 days')}
-      ${card('Unique visitors', fmt(visitors30), 'last 30 days')}
-      ${card('Signed-in users', fmt(signedIn30), 'active, last 30 days')}
-    </div>
-
-    <h2 class="sec">Deals</h2>
-    <div class="grid">
-      ${card('Live deals', fmt(dl.filter(d => d.active !== false).length), `${fmt(dl.length)} total incl. inactive`)}
-      ${card('Categories', fmt(dealsByCat.length), 'with at least one live deal')}
-    </div>
-    <div style="margin-top:12px">${barTable(dealsByCat, 'Deals by category', 'Deals')}</div>
-
-    <h2 class="sec">Bookings</h2>
-    <div class="grid">
-      ${card('Total bookings', fmt(bk.length), 'all time')}
-      ${card('Booked today', fmt(bkToday), 'last 24 hours')}
-      ${card('Customers booking', fmt(bookers), 'unique accounts')}
-      ${card('Awaiting confirmation', fmt(bkPending), 'status: pending')}
-      ${card('View → booking', viewsAll ? (bk.length / viewsAll * 100).toFixed(1) + '%' : '—', 'bookings per page view')}
-    </div>
-    <div style="margin-top:12px">${barTable(bkByMerch, 'Bookings by merchant', 'Bookings')}</div>
-
-    <h2 class="sec">Merchants</h2>
-    <div class="card" style="margin-bottom:12px">
-      <div class="k">Approve a merchant account</div>
-      <div class="sub" style="margin:4px 0 10px">Grants dashboard access to an existing merchant email (sets the approval flag). They log in again to pick it up.</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <input id="ap-email" type="email" placeholder="merchant@example.com" autocomplete="off"
-          style="flex:1;min-width:200px;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13.5px;font-family:inherit;outline:none;">
-        <button class="act ok solid" id="ap-btn" onclick="approveMerchant()">Approve</button>
-      </div>
-      <div id="ap-msg" style="display:none;font-size:12.5px;margin-top:10px;padding:9px 12px;border-radius:10px;"></div>
-    </div>
-    <div class="card" style="margin-bottom:12px">
-      <div class="k">Salon / Spa Merchant OS</div>
-      <div class="sub" style="margin:4px 0 10px">Open the full salon/spa module set (Services, Bookings, Staff, Clients, Loyalty, Inventory, Marketing…) in the Merchant OS. Your admin account must be linked to a workspace to load it — see the grant SQL if it says "not linked".</div>
-      <a class="act ok solid" href="merchant/dashboard.html" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Open the Merchant OS →</a>
-    </div>
-    <div class="grid">
-      ${card('Onboarded', fmt(mch.length), 'in the merchants table')}
-      ${card('Listed live', fmt(mch.filter(m => m.listed).length), 'visible to customers')}
-      ${card('Applications', fmt(ap.length), 'requests to join')}
-      ${card('Awaiting approval', fmt(ap.filter(a => a.status === 'pending').length), 'need your decision')}
-      ${card('Merchants with bookings', fmt(bkByMerch.length), 'have taken at least one')}
-    </div>
-    <div style="margin-top:12px">${barTable(mchByCat, 'Merchants by category', 'Merchants')}</div>
-    <div style="margin-top:12px">${applicantsTable(ap)}</div>
-
-    <h2 class="sec">Traffic by page</h2>
-    ${barTable(pagesByViews, 'Page', 'Views (30d)')}
-  `;
+  renderAll();
 }
+// existing action code calls render() to refresh — keep that working.
+const render = loadData;
+
+function cpNote(why) {
+  return `<div class="note"><b>Control plane not connected yet.</b>
+    Apply <code>supabase/migrations/20260726100000_control_plane.sql</code> and deploy the
+    <code>admin-metrics</code> function to see plans, modules, usage and MRR.
+    ${why ? `<br><br><b>Reason:</b> <code>${esc(why)}</code>` : ''}</div>`;
+}
+
+/* ── view: OVERVIEW ──────────────────────────────────────────────────── */
+function renderOverview() {
+  const cp = D.cp, k = (cp && cp.kpis) || {};
+  const platform = cp ? `
+    <h2 class="sec">Platform</h2>
+    <div class="kpis">
+      ${kpi('MRR', inr(k.mrr), 'from active subscriptions', 'brandval')}
+      ${kpi('ARR (run-rate)', inr((k.mrr || 0) * 12), 'MRR × 12')}
+      ${kpi('Merchants', fmt(k.merchants), `${fmt(k.active)} active · ${fmt(k.trialing)} trialing`)}
+      ${kpi('Avg revenue / merchant', inr(k.active ? Math.round((k.mrr || 0) / k.active) : 0), 'active only')}
+    </div>` : cpNote(D.cpWhy);
+
+  const attn = (D.pendingApps || D.pendingReqs) ? `
+    <div class="attn">
+      <div class="a-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
+      <div class="a-txt">
+        <div class="a-title">${D.pendingApps} application${D.pendingApps === 1 ? '' : 's'} &amp; ${D.pendingReqs} upgrade request${D.pendingReqs === 1 ? '' : 's'} waiting</div>
+        <div class="a-sub">Review and action them in Approvals.</div>
+      </div>
+      <button class="act solid" onclick="go('approvals')">Go to approvals →</button>
+    </div>` : '';
+
+  const audience = `
+    <h2 class="sec">Live activity</h2>
+    <div class="kpis">
+      ${kpi('Viewing now', `<span class="dot"></span>${fmt(D.liveNow)}`, 'active sessions, last 30 min')}
+      ${kpi('Views today', fmt(D.views1), 'last 24 hours')}
+      ${kpi('Unique visitors', fmt(D.visitors30), 'last 30 days')}
+      ${kpi('Bookings today', fmt(D.bkToday), 'last 24 hours')}
+    </div>`;
+
+  // top merchants by bookings (from the control plane)
+  let topMerch = '';
+  if (cp && cp.merchants && cp.merchants.length) {
+    const rows = cp.merchants.slice().sort((a, b) => b.usage.bookings - a.usage.bookings).slice(0, 5);
+    topMerch = `
+      <h2 class="sec">Most active merchants</h2>
+      <div class="panel"><div class="tw"><table><thead><tr><th>Business</th><th>Category</th><th>Plan</th><th class="num">Bookings</th><th class="num">Clients</th></tr></thead><tbody>
+        ${rows.map(m => `<tr class="rowlink" onclick="openDrawer('${esc(m.id)}')">
+          <td class="m-name">${esc(m.name)}</td><td>${catTag(m.category)}</td>
+          <td>${esc(m.plan_name || '—')}</td><td class="num">${fmt(m.usage.bookings)}</td><td class="num">${fmt(m.usage.clients)}</td>
+        </tr>`).join('')}
+      </tbody></table></div></div>`;
+  }
+
+  $('view-overview').innerHTML = attn + platform + audience + topMerch;
+}
+
+/* ── view: MERCHANTS ─────────────────────────────────────────────────── */
+function renderMerchants() {
+  const cp = D.cp;
+  const tools = `
+    <div class="tools">
+      <div class="card">
+        <div class="k">Approve a merchant account</div>
+        <div class="sub" style="margin:4px 0 10px">Grants dashboard access to an existing merchant email (sets the approval flag). They log in again to pick it up.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <input id="ap-email" type="email" placeholder="merchant@example.com" autocomplete="off" class="inp" style="flex:1;min-width:180px">
+          <button class="act solid ok" id="ap-btn" onclick="approveMerchant()">Approve</button>
+        </div>
+        <div id="ap-msg" style="display:none;font-size:12.5px;margin-top:10px;padding:9px 12px;border-radius:9px"></div>
+      </div>
+      <div class="card">
+        <div class="k">Salon / Spa Merchant OS</div>
+        <div class="sub" style="margin:4px 0 10px">Open the full salon/spa module set (Services, Bookings, Staff, Clients, Loyalty, Inventory, Marketing…). Your admin account must be linked to a workspace to load it.</div>
+        <a class="act solid" href="merchant/dashboard.html" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Open the Merchant OS →</a>
+      </div>
+    </div>`;
+
+  const stats = `<div class="kpis" style="margin-bottom:16px">
+      ${kpi('Onboarded', fmt(D.mch.length), 'in the merchants table')}
+      ${kpi('Listed live', fmt(D.mch.filter(m => m.listed).length), 'visible to customers')}
+      ${kpi('With bookings', fmt(D.bkByMerch.length), 'taken at least one')}
+    </div>`;
+
+  if (!cp || !cp.merchants) {
+    $('view-merchants').innerHTML = cpNote(D.cpWhy) + tools + stats;
+    return;
+  }
+
+  const cats = ['all', ...Array.from(new Set(cp.merchants.map(m => m.category).filter(Boolean)))];
+  const statuses = ['all', 'active', 'trial', 'past_due', 'cancelled'];
+  const catSeg = `<div class="seg" id="cat-seg">${cats.map(c => `<button data-cat="${esc(c)}" class="${flt.cat === c ? 'on' : ''}">${c === 'all' ? 'All' : esc(c)}</button>`).join('')}</div>`;
+  const stSeg = `<div class="seg" id="st-seg">${statuses.map(s => `<button data-st="${esc(s)}" class="${flt.status === s ? 'on' : ''}">${s === 'all' ? 'All' : (SUB_STATUS_LABEL[s] || s)}</button>`).join('')}</div>`;
+
+  const q = flt.search.toLowerCase();
+  const list = cp.merchants.filter(m => {
+    if (flt.cat !== 'all' && m.category !== flt.cat) return false;
+    if (flt.status !== 'all' && (m.status || 'none') !== flt.status) return false;
+    if (q && !((m.name || '').toLowerCase().includes(q) || (m.category || '').toLowerCase().includes(q))) return false;
+    return true;
+  }).sort((a, b) => b.usage.bookings - a.usage.bookings);
+
+  const rows = list.length ? list.map(m => `<tr class="rowlink" onclick="openDrawer('${esc(m.id)}')">
+      <td><div class="m-name">${esc(m.name)}</div></td>
+      <td>${catTag(m.category)}</td>
+      <td>${esc(m.plan_name || '—')}${m.price_monthly ? `<div class="m-sub">${inr(m.price_monthly)}/mo</div>` : ''}</td>
+      <td>${subStatusPill(m.status)}</td>
+      <td class="num">${fmt(m.usage.bookings)}</td>
+      <td class="num">${fmt(m.usage.clients)}</td>
+      <td class="num">${fmt(m.usage.staff)}</td>
+      <td class="num">${fmt(m.usage.services)}</td>
+      <td>${when(m.last_active)}</td>
+      <td onclick="event.stopPropagation()"><div class="row-actions">
+        <button class="act ghost" onclick="openManage('${esc(m.id)}')">Manage</button>
+        <a class="act ok" href="merchant/dashboard.html" target="_blank" rel="noopener">Open</a>
+      </div></td>
+    </tr>`).join('')
+    : `<tr><td colspan="10"><div class="empty">No merchants match these filters.</div></td></tr>`;
+
+  $('view-merchants').innerHTML = `
+    ${tools}${stats}
+    <div class="filters">
+      <span class="filt-label">Category</span>${catSeg}
+      <span class="filt-label" style="margin-left:6px">Status</span>${stSeg}
+      <span class="spacer"></span>
+      <span class="count-note">Showing ${list.length} of ${cp.merchants.length}</span>
+    </div>
+    <div class="panel"><div class="tw"><table><thead><tr>
+      <th>Merchant</th><th>Category</th><th>Plan</th><th>Status</th>
+      <th class="num">Bookings</th><th class="num">Clients</th><th class="num">Staff</th><th class="num">Services</th>
+      <th>Last active</th><th></th>
+    </tr></thead><tbody>${rows}</tbody></table></div></div>`;
+
+  const cs = $('cat-seg'); if (cs) cs.addEventListener('click', e => { const b = e.target.closest('[data-cat]'); if (!b) return; flt.cat = b.dataset.cat; renderMerchants(); });
+  const ss = $('st-seg'); if (ss) ss.addEventListener('click', e => { const b = e.target.closest('[data-st]'); if (!b) return; flt.status = b.dataset.st; renderMerchants(); });
+}
+
+/* ── view: APPROVALS ─────────────────────────────────────────────────── */
+function applicantsTable(rows) {
+  if (!rows.length) return `<div class="panel"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><div>No applications yet.</div></div></div>`;
+  const rank = { pending:0, approved:1, rejected:2 };
+  const sorted = rows.slice().sort((a, b) => (rank[a.status] ?? 9) - (rank[b.status] ?? 9) || new Date(b.created_at) - new Date(a.created_at));
+  return `<div class="panel"><div class="tw"><table><thead><tr>
+      <th>Status</th><th>Business</th><th>Category</th><th>Contact</th><th>Email</th><th>Phone</th>
+      <th class="num">Branches</th><th class="num">Staff</th><th>Plan</th><th>Requested</th><th>Review</th>
+    </tr></thead><tbody>
+    ${sorted.map(a => `<tr>
+      <td><span class="status s-${esc(a.status)}">${esc(a.status)}</span></td>
+      <td><b>${esc(a.business_name || '—')}</b>${a.address ? `<div class="m-sub">${esc(a.address)}</div>` : ''}</td>
+      <td>${a.category ? catTag(a.category) : '—'}</td>
+      <td>${esc(a.full_name || '—')}</td>
+      <td><a href="mailto:${esc(a.email)}" style="color:var(--brand)">${esc(a.email || '—')}</a></td>
+      <td>${esc(a.phone || '—')}</td>
+      <td class="num">${esc(a.num_branches ?? '—')}</td>
+      <td class="num">${esc(a.num_staff ?? '—')}</td>
+      <td>${esc(a.plan || '—')}</td>
+      <td>${esc(whenY(a.created_at))}</td>
+      <td>${a.status === 'pending'
+        ? `<div class="row-actions"><button class="act ok" onclick="askReview('${esc(a.id)}','approve')">Approve</button><button class="act no" onclick="askReview('${esc(a.id)}','reject')">Reject</button></div>`
+        : `<span class="m-sub">${esc(whenY(a.reviewed_at))}</span>`}</td>
+    </tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+
+function upgradeRequestsTable() {
+  const pending = D.upReqs.filter(r => r.status === 'pending');
+  if (!pending.length) return `<div class="panel"><div class="empty">No pending upgrade requests.</div></div>`;
+  return `<div class="panel"><div class="tw"><table><thead><tr><th>Business</th><th>Requested</th><th>When</th><th></th></tr></thead><tbody>
+    ${pending.map(r => `<tr>
+      <td><b>${esc(D.nameById[r.merchant_id] || r.merchant_id)}</b></td>
+      <td>${esc(D.planName(r.current_plan_key))} → <b>${esc(D.planName(r.requested_plan_key))}</b></td>
+      <td>${when(r.created_at)}</td>
+      <td><div class="row-actions">
+        <button class="act ok" onclick="openManage('${esc(r.merchant_id)}','${esc(r.requested_plan_key || '')}','${esc(r.id)}')">Assign</button>
+        <button class="act no" onclick="actionRequest('${esc(r.id)}','dismissed')">Dismiss</button>
+      </div></td>
+    </tr>`).join('')}
+  </tbody></table></div></div>`;
+}
+
+function renderApprovals() {
+  $('view-approvals').innerHTML = `
+    <h2 class="sec">Upgrade requests${D.pendingReqs ? ` · ${D.pendingReqs}` : ''}</h2>
+    ${upgradeRequestsTable()}
+    <h2 class="sec">Merchant applications${D.pendingApps ? ` · ${D.pendingApps} pending` : ''}</h2>
+    ${applicantsTable(D.ap)}`;
+}
+
+/* ── view: PLANS & MODULES ───────────────────────────────────────────── */
+function renderPlans() {
+  const cp = D.cp;
+  if (!cp) { $('view-plans').innerHTML = cpNote(D.cpWhy); return; }
+  const k = cp.kpis || {};
+  const plansOrdered = (cp.plans || []).slice().sort((a, b) => a.rank - b.rank);
+  const modsOrdered = (cp.modules || []).slice().sort((a, b) => a.sort - b.sort);
+  const planHead = plansOrdered.map(p => `<th class="num">${esc(p.name)}<div class="m-sub" style="font-weight:500">${p.price_monthly ? inr(p.price_monthly) + '/mo' : 'Free'}</div></th>`).join('');
+  const modRows = modsOrdered.map(mod => `<tr>
+      <td><b>${esc(mod.name)}</b>${mod.grp ? `<div class="m-sub">${esc(mod.grp)}</div>` : ''}</td>
+      ${plansOrdered.map(p => `<td class="num">${p.rank >= mod.min_plan_rank ? '<span style="color:var(--green);font-weight:700">✓</span>' : '<span style="color:var(--border-strong)">–</span>'}</td>`).join('')}
+    </tr>`).join('');
+
+  const adoptionRows = Object.entries(k.adoption || {}).sort((a, b) => b[1] - a[1]).map(([mod, n]) => {
+    const pct = k.merchants ? Math.round(n / k.merchants * 100) : 0;
+    return `<tr><td style="text-transform:capitalize">${esc(mod)}</td><td class="num">${fmt(n)} / ${fmt(k.merchants)}</td>
+      <td style="width:40%"><div class="bar" style="width:${pct}%"></div></td><td class="num">${pct}%</td></tr>`;
+  }).join('');
+
+  const logRows = D.planLog.map(l => {
+    const chg = (a, b) => (a && a !== b) ? `${esc(a)} → <b>${esc(b)}</b>` : `<b>${esc(b || '—')}</b>`;
+    return `<tr><td>${whenT(l.changed_at)}</td><td>${esc(D.nameById[l.merchant_id] || l.merchant_id)}</td>
+      <td>${chg(D.planName(l.from_plan), D.planName(l.to_plan))}</td><td>${chg(l.from_status, l.to_status)}</td>
+      <td class="m-sub">${esc(l.actor_email || 'system')}</td></tr>`;
+  }).join('');
+
+  $('view-plans').innerHTML = `
+    <h2 class="sec">Plans</h2>
+    <div class="kpis" style="margin-bottom:16px">
+      ${plansOrdered.map(p => kpi(p.name, p.price_monthly ? inr(p.price_monthly) : 'Free',
+        `${fmt(((k.byPlan || {})[p.name]) || 0)} merchant${(((k.byPlan || {})[p.name]) || 0) === 1 ? '' : 's'}${p.price_monthly ? '' : ' · entry tier'}`)).join('')}
+    </div>
+    <h2 class="sec">Modules &amp; plans</h2>
+    <div class="panel"><div class="tw"><table><thead><tr><th>Module</th>${planHead}</tr></thead><tbody>${modRows}</tbody></table></div></div>
+    <h2 class="sec">Module adoption</h2>
+    <div class="sub" style="margin:-4px 0 10px">Merchants with real data in each module (live counts).</div>
+    <div class="panel"><div class="tw"><table><thead><tr><th>Module</th><th class="num">Merchants using</th><th></th><th class="num">Adoption</th></tr></thead>
+      <tbody>${adoptionRows || '<tr><td colspan="4"><div class="empty">No usage yet.</div></td></tr>'}</tbody></table></div></div>
+    <h2 class="sec">Plan change log</h2>
+    ${D.planLog.length ? `<div class="panel"><div class="tw"><table><thead><tr><th>When</th><th>Business</th><th>Plan</th><th>Status</th><th>By</th></tr></thead><tbody>${logRows}</tbody></table></div></div>`
+      : '<div class="panel"><div class="empty">No plan changes recorded yet.</div></div>'}`;
+}
+
+/* ── view: ANALYTICS ─────────────────────────────────────────────────── */
+function renderAnalytics() {
+  const note = D.notTracked ? `<div class="note"><b>The events table is not there yet.</b>
+    Traffic numbers stay at zero until you apply <code>supabase/migrations/20260722000000_analytics.sql</code>. Everything below reads live data.</div>` : '';
+  const missing = D.missing.length ? `<div class="note"><b>Some reads were refused:</b> ${esc(D.missing.join(' · '))}</div>` : '';
+
+  $('view-analytics').innerHTML = `
+    ${note}${missing}
+    <h2 class="sec">Audience</h2>
+    <div class="kpis">
+      ${kpi('Viewing now', `<span class="dot"></span>${fmt(D.liveNow)}`, 'active sessions, last 30 min')}
+      ${kpi('Page views', fmt(D.viewsAll), 'all time')}
+      ${kpi('Views today', fmt(D.views1), 'last 24 hours')}
+      ${kpi('Views this week', fmt(D.views7), 'last 7 days')}
+      ${kpi('Unique visitors', fmt(D.visitors30), 'last 30 days')}
+      ${kpi('Signed-in users', fmt(D.signedIn30), 'active, last 30 days')}
+    </div>
+    <h2 class="sec">Deals</h2>
+    <div class="kpis">
+      ${kpi('Live deals', fmt(D.dl.filter(d => d.active !== false).length), `${fmt(D.dl.length)} total incl. inactive`)}
+      ${kpi('Categories', fmt(D.dealsByCat.length), 'with at least one live deal')}
+    </div>
+    <div style="margin-top:12px">${barTable(D.dealsByCat, 'Deals by category', 'Deals')}</div>
+    <h2 class="sec">Bookings</h2>
+    <div class="kpis">
+      ${kpi('Total bookings', fmt(D.bk.length), 'all time')}
+      ${kpi('Booked today', fmt(D.bkToday), 'last 24 hours')}
+      ${kpi('Customers booking', fmt(D.bookers), 'unique accounts')}
+      ${kpi('Awaiting confirmation', fmt(D.bkPending), 'status: pending')}
+      ${kpi('View → booking', D.viewsAll ? (D.bk.length / D.viewsAll * 100).toFixed(1) + '%' : '—', 'bookings per page view')}
+    </div>
+    <div style="margin-top:12px">${barTable(D.bkByMerch, 'Bookings by merchant', 'Bookings')}</div>
+    <h2 class="sec">Traffic by page</h2>
+    ${barTable(D.pagesByViews, 'Page', 'Views (30d)')}`;
+}
+
+/* ── view: CATEGORIES ────────────────────────────────────────────────── */
+function renderCategories() {
+  const cp = D.cp;
+  const cats = D.mchByCat.length ? D.mchByCat.map(([c]) => c) : [];
+  const dealsBy = Object.fromEntries(D.dealsByCat);
+  const activeByCat = {};
+  if (cp && cp.merchants) cp.merchants.forEach(m => { if (m.status === 'active') activeByCat[m.category] = (activeByCat[m.category] || 0) + 1; });
+  const modsFor = c => {
+    const mods = (cp && cp.modules) || [];
+    const scoped = mods.filter(m => !m.category_scope || !m.category_scope.length || m.category_scope.includes(c));
+    return (scoped.length ? scoped : mods).slice().sort((a, b) => a.sort - b.sort);
+  };
+
+  const out = cats.map(c => {
+    const total = (D.mchByCat.find(x => x[0] === c) || [, 0])[1];
+    const active = activeByCat[c] || 0;
+    const mods = modsFor(c);
+    return `<div class="cat-card">
+      <h3>${catTag(c)}</h3>
+      <div class="cc-count">${fmt(total)} merchant${total === 1 ? '' : 's'} · ${fmt(active)} active · ${fmt(dealsBy[c] || 0)} live deal${(dealsBy[c] || 0) === 1 ? '' : 's'}</div>
+      <div class="cc-lab">Modules available</div>
+      <div class="mods">${mods.length ? mods.map(m => `<span class="mod">${esc(m.name)}</span>`).join('') : '<span class="m-sub">Connect the control plane to list modules.</span>'}</div>
+    </div>`;
+  }).join('');
+
+  $('view-categories').innerHTML = `
+    <h2 class="sec">Categories &amp; the modules they provision</h2>
+    ${cats.length ? `<div class="cat-grid">${out}</div>` : '<div class="panel"><div class="empty">No merchant categories yet.</div></div>'}`;
+}
+
+/* ── render dispatch ─────────────────────────────────────────────────── */
+function renderAll() {
+  renderOverview(); renderMerchants(); renderApprovals();
+  renderPlans(); renderAnalytics(); renderCategories();
+}
+
+const TITLES = { overview:'Overview', merchants:'Merchants', approvals:'Approvals', plans:'Plans & modules', analytics:'Analytics', categories:'Categories' };
+function go(name) {
+  VIEW = name;
+  document.querySelectorAll('.view').forEach(v => v.hidden = v.id !== 'view-' + name);
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === name));
+  $('page-title').textContent = TITLES[name] || name;
+  $('search').style.display = (name === 'merchants' || name === 'overview') ? '' : 'none';
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', () => go(n.dataset.view)));
+$('search').addEventListener('input', e => {
+  flt.search = e.target.value.trim();
+  if (flt.search && VIEW !== 'merchants') go('merchants');
+  renderMerchants();
+});
+
+/* ── merchant drawer ─────────────────────────────────────────────────── */
+function openDrawer(id) {
+  const m = (CP && CP.merchants || []).find(x => String(x.id) === String(id));
+  if (!m) return;
+  const u = m.usage || {};
+  $('drawer-content').innerHTML = `
+    <div class="dr-head"><button class="dr-close" onclick="closeDrawer()">&times;</button>
+      <div class="dr-name">${esc(m.name)}</div>${subStatusPill(m.status)} ${catTag(m.category)}</div>
+    <div class="dr-body">
+      <div class="dr-stats">
+        <div class="dr-stat"><b>${fmt(u.bookings)}</b><span>Bookings</span></div>
+        <div class="dr-stat"><b>${fmt(u.clients)}</b><span>Clients</span></div>
+        <div class="dr-stat"><b>${fmt(u.staff)}</b><span>Staff</span></div>
+        <div class="dr-stat"><b>${fmt(u.services)}</b><span>Services</span></div>
+      </div>
+      <div class="field"><div class="f-lab">Plan</div><div class="f-val">${esc(m.plan_name || 'No plan')}${m.price_monthly ? ` · ${inr(m.price_monthly)}/mo` : ''}</div></div>
+      <div class="field"><div class="f-lab">Subscription status</div><div class="f-val">${subStatusPill(m.status)}</div></div>
+      <div class="field"><div class="f-lab">Products / memberships</div><div class="f-val">${fmt(u.products)} products · ${fmt(u.memberships)} memberships</div></div>
+      <div class="field"><div class="f-lab">Last active</div><div class="f-val">${m.last_active ? whenY(m.last_active) : '—'}</div></div>
+      <div class="field"><div class="f-lab">Listed to customers</div><div class="f-val">${m.listed ? 'Yes' : 'No'}</div></div>
+      <div class="field"><div class="f-lab">Onboarded</div><div class="f-val">${m.created_at ? whenY(m.created_at) : '—'}</div></div>
+    </div>
+    <div class="dr-foot">
+      <button class="act solid" onclick="openManage('${esc(m.id)}')">Manage plan</button>
+      <a class="act" href="merchant/dashboard.html" target="_blank" rel="noopener">Open workspace</a>
+    </div>`;
+  $('drawer').classList.add('show'); $('scrim').classList.add('show');
+}
+function closeDrawer() { $('drawer').classList.remove('show'); $('scrim').classList.remove('show'); }
+
+/* ── control actions: manage plan / status ───────────────────────────── */
+const STATUSES = [['active','Active'], ['trial','Trial'], ['past_due','Past due'], ['cancelled','Suspended']];
+
+function openManage(id, presetPlanKey, requestId) {
+  const m = (CP && CP.merchants || []).find(x => String(x.id) === String(id));
+  if (!m) return;
+  closeDrawer();
+  const plans = ((CP && CP.plans) || []).slice().sort((a, b) => a.rank - b.rank);
+  const wantPlan = presetPlanKey || m.plan_key;
+  const planOpts = plans.map(p => `<option value="${esc(p.key)}" ${p.key === wantPlan ? 'selected' : ''}>${esc(p.name)} · ${p.price_monthly ? inr(p.price_monthly) + '/mo' : 'Free'}</option>`).join('');
+  const statusOpts = STATUSES.map(([v, label]) => `<option value="${v}" ${v === m.status ? 'selected' : ''}>${label}</option>`).join('');
+  const fieldStyle = 'width:100%;margin-top:6px;padding:10px 12px;border:1px solid var(--border-strong);border-radius:9px;font-size:14px;font-family:inherit;background:var(--white);outline:none;box-sizing:border-box;';
+  $('confirm').innerHTML = `
+    <div class="cbox">
+      <div class="ctitle">Manage ${esc(m.name)}</div>
+      <div class="cbody">Set this merchant's plan and subscription status. Takes effect immediately — <b>Suspended</b> removes them from MRR.</div>
+      <div id="mng-msg" style="display:none;font-size:12.5px;margin-top:12px;padding:9px 12px;border-radius:9px"></div>
+      <div style="margin-top:16px"><label class="k" style="display:block;font-size:11.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em">Plan</label>
+        <select id="mng-plan" style="${fieldStyle}">${planOpts || '<option>No plans found</option>'}</select></div>
+      <div style="margin-top:14px"><label class="k" style="display:block;font-size:11.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em">Status</label>
+        <select id="mng-status" style="${fieldStyle}">${statusOpts}</select></div>
+      <div class="cacts">
+        <button class="act ghost" onclick="closeConfirm()">Cancel</button>
+        <button class="act solid ok" id="mng-save" onclick="saveManage('${esc(m.id)}', ${requestId ? `'${esc(requestId)}'` : 'null'})">Save changes</button>
+      </div>
+    </div>`;
+  $('confirm').classList.add('open');
+}
+
+async function saveManage(id, requestId) {
+  const msg = $('mng-msg');
+  const show = (text, ok) => { msg.textContent = text; msg.style.display = 'block';
+    msg.style.background = ok ? 'var(--green-lt)' : 'var(--red-soft)'; msg.style.color = ok ? '#0a5c41' : '#a3271b'; };
+  const plan_key = $('mng-plan').value, status = $('mng-status').value;
+  if (!plan_key) return show('Pick a plan first.', false);
+  const btn = $('mng-save'); btn.disabled = true; btn.textContent = 'Saving…';
+  const { error } = await sb.from('merchant_subscriptions').upsert(
+    { merchant_id:id, plan_key, status, updated_at:new Date().toISOString() }, { onConflict:'merchant_id' });
+  if (error) { btn.disabled = false; btn.textContent = 'Save changes'; return show(error.message || 'Could not save. Check you are on the admins list.', false); }
+  if (requestId && requestId !== 'null') {
+    await sb.from('upgrade_requests').update({ status:'actioned', actioned_at:new Date().toISOString(), actioned_by:(G.user() && G.user().email) || null }).eq('id', requestId);
+  }
+  btn.disabled = false; btn.textContent = 'Save changes';
+  show('Saved. Refreshing…', true);
+  toast('Plan updated');
+  setTimeout(() => { closeConfirm(); loadData(); }, 700);
+}
+
+async function actionRequest(id, status) {
+  const { error } = await sb.from('upgrade_requests').update({ status, actioned_at:new Date().toISOString(), actioned_by:(G.user() && G.user().email) || null }).eq('id', id);
+  if (!error) { toast('Request ' + status); loadData(); }
+}
+
+/* ── approve a merchant by email (edge function) ─────────────────────── */
+async function approveMerchant() {
+  const email = ($('ap-email').value || '').trim();
+  const btn = $('ap-btn'), msg = $('ap-msg');
+  const show = (text, ok) => { msg.textContent = text; msg.style.display = 'block';
+    msg.style.background = ok ? 'var(--green-lt)' : 'var(--red-soft)'; msg.style.color = ok ? '#0a5c41' : '#a3271b'; };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return show('Enter a valid merchant email.', false);
+  btn.disabled = true; btn.textContent = 'Approving…';
+  const { data, error } = await sb.functions.invoke('approve-merchant', { body:{ email } });
+  btn.disabled = false; btn.textContent = 'Approve';
+  if (error || (data && data.error)) {
+    let m = (data && data.error) || (error && error.message) || 'Could not approve.';
+    if (error && error.context && typeof error.context.json === 'function') { try { const b = await error.context.json(); if (b && b.error) m = b.error; } catch (e) {} }
+    return show(m, false);
+  }
+  show(`Approved ${email}. Ask them to log out and back in.`, true);
+  $('ap-email').value = '';
+}
+
+/* ── review an application (approve/reject via emailed function page) ── */
+function reviewUrl(a, action) { return `${FN_URL}?id=${encodeURIComponent(a.id)}&token=${encodeURIComponent(a.approval_token || '')}&action=${action}`; }
+function askReview(id, action) {
+  const a = APPS.find(x => String(x.id) === String(id));
+  if (!a) return;
+  const approve = action === 'approve';
+  $('confirm').innerHTML = `
+    <div class="cbox">
+      <div class="ctitle">${approve ? 'Approve' : 'Reject'} ${esc(a.business_name)}?</div>
+      <div class="cbody">${approve
+        ? `This creates an account for <b>${esc(a.email)}</b> and emails them a link to set a password. They get access to the merchant dashboard straight away.`
+        : `This marks the request rejected and no account is created. <b>${esc(a.email)}</b> is not emailed, so follow up yourself if you want to.`}
+        <div class="cwarn">This cannot be undone from this panel.</div></div>
+      <div class="cacts"><button class="act ghost" onclick="closeConfirm()">Cancel</button>
+        <button class="act solid ${approve ? 'ok' : 'no'}" onclick="doReview('${esc(a.id)}','${action}')">${approve ? 'Approve and create account' : 'Reject request'}</button></div>
+    </div>`;
+  $('confirm').classList.add('open');
+}
+function doReview(id, action) {
+  const a = APPS.find(x => String(x.id) === String(id));
+  closeConfirm();
+  if (!a) return;
+  window.open(reviewUrl(a, action), '_blank', 'noopener');
+  $('refresh-hint').style.display = '';
+}
+function closeConfirm() { $('confirm').classList.remove('open'); }
+
+/* ── set / change admin password ─────────────────────────────────────── */
+function openSetPw() {
+  const fieldStyle = 'width:100%;margin-top:10px;padding:11px 13px;border:1px solid var(--border-strong);border-radius:9px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;';
+  $('confirm').innerHTML = `
+    <div class="cbox">
+      <div class="ctitle">Set a password</div>
+      <div class="cbody">Choose a password so you can sign in with email + password next time, instead of a one-time code.</div>
+      <div id="pw-msg" style="display:none;font-size:12.5px;margin-top:12px;padding:9px 12px;border-radius:9px"></div>
+      <input id="admin-pw" type="password" placeholder="New password (min 8)" autocomplete="new-password" style="${fieldStyle}">
+      <input id="admin-pw2" type="password" placeholder="Confirm password" autocomplete="new-password" style="${fieldStyle}">
+      <div class="cacts"><button class="act ghost" onclick="closeConfirm()">Cancel</button>
+        <button class="act solid ok" id="admin-pw-save" onclick="saveAdminPw()">Save password</button></div>
+    </div>`;
+  $('confirm').classList.add('open');
+  setTimeout(() => $('admin-pw').focus(), 60);
+}
+async function saveAdminPw() {
+  const pw = $('admin-pw').value, pw2 = $('admin-pw2').value, msg = $('pw-msg');
+  const show = (text, ok) => { msg.textContent = text; msg.style.display = 'block';
+    msg.style.background = ok ? 'var(--green-lt)' : 'var(--red-soft)'; msg.style.color = ok ? '#0a5c41' : '#a3271b'; };
+  if (pw.length < 8) return show('Password must be at least 8 characters.', false);
+  if (pw !== pw2) return show('Passwords do not match.', false);
+  const btn = $('admin-pw-save'); btn.disabled = true; btn.textContent = 'Saving…';
+  const { error } = await sb.auth.updateUser({ password: pw });
+  btn.disabled = false; btn.textContent = 'Save password';
+  if (error) return show(error.message || 'Could not set the password.', false);
+  try {
+    const email = (G.user() && G.user().email) || '';
+    const list = JSON.parse(localStorage.getItem('genoti_pw_emails') || '[]');
+    if (email && !list.includes(email)) { list.push(email); localStorage.setItem('genoti_pw_emails', JSON.stringify(list)); }
+    if (email) localStorage.setItem('genoti_last_email', email);
+  } catch (e) {}
+  show('Password set. You can now sign in with your email and this password.', true);
+  setTimeout(closeConfirm, 1600);
+}
+
+/* Coming back from a review tab, pull fresh statuses. */
+window.addEventListener('focus', () => {
+  const hint = $('refresh-hint');
+  if (hint && hint.style.display !== 'none') { hint.style.display = 'none'; loadData(); }
+});
 
 boot();
 </script>
