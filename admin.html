@@ -177,6 +177,26 @@ tbody tr.rowlink:hover{background:#fafafa}
 .inp{width:100%;padding:9px 12px;border:1px solid var(--border-strong);border-radius:9px;font-size:13.5px;font-family:inherit;background:var(--surface);color:var(--text);outline:none}
 .inp:focus{border-color:var(--brand)}
 
+/* Plan editor + module matrix */
+.plan-edit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-bottom:6px}
+.pe-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;border-top:3px solid var(--border-strong)}
+.pe-card.tier-r1{border-top-color:var(--grey)}
+.pe-card.tier-r2{border-top-color:var(--green)}
+.pe-card.tier-r3{border-top-color:var(--brand)}
+.pe-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.pe-badge{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border-radius:20px;background:var(--grey-soft);color:var(--text)}
+.pe-card.tier-r2 .pe-badge{background:var(--green-lt);color:var(--green)}
+.pe-card.tier-r3 .pe-badge{background:var(--brand-soft);color:var(--brand)}
+.pe-price{font-size:26px;font-weight:600;letter-spacing:-.02em}
+.pe-price span{font-size:13px;color:var(--text-muted);font-weight:500}
+.pe-yr{font-size:11.5px;color:var(--green);margin-top:2px}
+.pe-tag{font-size:12.5px;color:var(--text-muted);margin:8px 0 10px;line-height:1.5;min-height:34px}
+.pe-meta{font-size:11.5px;color:var(--text-muted);border-top:1px solid var(--border);padding-top:9px}
+.mtx-cell{cursor:pointer;user-select:none;color:var(--border-strong)}
+.mtx-cell.inc{color:var(--green);font-weight:700}
+.mtx-cell.min{background:var(--green-lt)}
+.mtx-cell:hover{background:var(--brand-soft);color:var(--brand)}
+
 /* Categories */
 .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
 .cat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
@@ -641,16 +661,38 @@ function renderApprovals() {
 }
 
 /* ── view: PLANS & MODULES ───────────────────────────────────────────── */
+const YEARLY_FACTOR = 0.8;   // public pricing page: "Save 20%" on yearly
 function renderPlans() {
   const cp = D.cp;
   if (!cp) { $('view-plans').innerHTML = cpNote(D.cpWhy); return; }
-  const k = cp.kpis || {};
-  const plansOrdered = (cp.plans || []).slice().sort((a, b) => a.rank - b.rank);
-  const modsOrdered = (cp.modules || []).slice().sort((a, b) => a.sort - b.sort);
-  const planHead = plansOrdered.map(p => `<th class="num">${esc(p.name)}<div class="m-sub" style="font-weight:500">${p.price_monthly ? inr(p.price_monthly) + '/mo' : 'Free'}</div></th>`).join('');
-  const modRows = modsOrdered.map(mod => `<tr>
-      <td><b>${esc(mod.name)}</b>${mod.grp ? `<div class="m-sub">${esc(mod.grp)}</div>` : ''}</td>
-      ${plansOrdered.map(p => `<td class="num">${p.rank >= mod.min_plan_rank ? '<span style="color:var(--green);font-weight:700">✓</span>' : '<span style="color:var(--border-strong)">–</span>'}</td>`).join('')}
+  const k = cp.kpis || {}, byPlan = k.byPlan || {};
+  const plans = (cp.plans || []).slice().sort((a, b) => a.rank - b.rank);
+  const mods = (cp.modules || []).slice().sort((a, b) => a.sort - b.sort);
+  const modCount = p => mods.filter(m => p.rank >= m.min_plan_rank).length;
+
+  // ── Editable plan cards ──
+  const planCards = `<div class="plan-edit-grid">${plans.map(p => {
+    const yr = p.price_monthly ? Math.round(p.price_monthly * YEARLY_FACTOR) : 0;
+    return `<div class="pe-card tier-r${p.rank}">
+      <div class="pe-top"><span class="pe-badge">${esc(p.name)}</span>
+        <button class="icon-btn" title="Edit plan" onclick="openPlanEdit('${esc(p.key)}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></button>
+      </div>
+      <div class="pe-price">${p.price_monthly ? inr(p.price_monthly) : 'Free'}<span>${p.price_monthly ? '/mo' : ''}</span></div>
+      ${p.price_monthly ? `<div class="pe-yr">${inr(yr)}/mo billed yearly</div>` : ''}
+      <div class="pe-tag">${esc(p.tagline || '')}</div>
+      <div class="pe-meta">${modCount(p)} modules · ${fmt(byPlan[p.name] || 0)} merchant${(byPlan[p.name] || 0) === 1 ? '' : 's'}</div>
+    </div>`;
+  }).join('')}</div>`;
+
+  // ── Clickable module × plan matrix (click a cell to set the tier it unlocks from) ──
+  const head = plans.map(p => `<th class="num">${esc(p.name)}</th>`).join('');
+  const rows = mods.map(m => `<tr>
+      <td><b>${esc(m.name)}</b>${m.grp ? `<div class="m-sub">${esc(m.grp)}</div>` : ''}</td>
+      ${plans.map(p => {
+        const inc = p.rank >= m.min_plan_rank, isMin = p.rank === m.min_plan_rank;
+        return `<td class="num mtx-cell ${inc ? 'inc' : ''} ${isMin ? 'min' : ''}" title="Unlock ${esc(m.name)} from ${esc(p.name)} up" onclick="setModuleTier('${esc(m.key)}',${p.rank})">${inc ? '✓' : '·'}</td>`;
+      }).join('')}
     </tr>`).join('');
 
   const adoptionRows = Object.entries(k.adoption || {}).sort((a, b) => b[1] - a[1]).map(([mod, n]) => {
@@ -660,17 +702,68 @@ function renderPlans() {
   }).join('');
 
   $('view-plans').innerHTML = `
-    <h2 class="sec">Plans</h2>
-    <div class="kpis" style="margin-bottom:16px">
-      ${plansOrdered.map(p => kpi(p.name, p.price_monthly ? inr(p.price_monthly) : 'Free',
-        `${fmt(((k.byPlan || {})[p.name]) || 0)} merchant${(((k.byPlan || {})[p.name]) || 0) === 1 ? '' : 's'}${p.price_monthly ? '' : ' · entry tier'}`)).join('')}
-    </div>
-    <h2 class="sec">Modules &amp; plans</h2>
-    <div class="panel"><div class="tw"><table><thead><tr><th>Module</th>${planHead}</tr></thead><tbody>${modRows}</tbody></table></div></div>
+    <div class="note" style="background:var(--brand-soft);border-color:#ddd6f7;color:#4a3fb0">
+      These plans power the public <a href="merchant/pricing.html" target="_blank" rel="noopener" style="color:var(--brand);font-weight:600">pricing page</a> and your MRR.
+      Editing a price updates both instantly; yearly is shown at 20% off automatically.</div>
+    <h2 class="sec">Plans <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--text-muted)">· click the pencil to edit price, name or tagline</span></h2>
+    ${planCards}
+    <h2 class="sec">Modules by plan</h2>
+    <div class="sub" style="margin:-4px 0 10px">Click a cell to set the tier a module unlocks from — that tier and every higher one include it.</div>
+    <div class="panel"><div class="tw"><table><thead><tr><th>Module</th>${head}</tr></thead><tbody>${rows}</tbody></table></div></div>
     <h2 class="sec">Module adoption</h2>
     <div class="sub" style="margin:-4px 0 10px">Merchants with real data in each module (live counts).</div>
     <div class="panel"><div class="tw"><table><thead><tr><th>Module</th><th class="num">Merchants using</th><th></th><th class="num">Adoption</th></tr></thead>
       <tbody>${adoptionRows || '<tr><td colspan="4"><div class="empty">No usage yet.</div></td></tr>'}</tbody></table></div></div>`;
+}
+
+/* Edit a plan's price / name / tagline — writes to plans (admin RLS), which
+   drives both MRR and the public pricing page. */
+function openPlanEdit(key) {
+  const p = (CP && CP.plans || []).find(x => x.key === key);
+  if (!p) return;
+  const fs = 'width:100%;margin:6px 0 14px;padding:10px 12px;border:1px solid var(--border-strong);border-radius:9px;font-size:14px;font-family:inherit;background:var(--white);color:var(--text);outline:none;box-sizing:border-box;';
+  const ls = 'display:block;font-size:11.5px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em';
+  $('confirm').innerHTML = `
+    <div class="cbox">
+      <div class="ctitle">Edit the ${esc(p.name)} plan</div>
+      <div class="cbody">This price shows on the public pricing page and is used for MRR. Yearly is derived automatically at 20% off.</div>
+      <div id="pe-msg" style="display:none;font-size:12.5px;margin-top:12px;padding:9px 12px;border-radius:9px"></div>
+      <div style="margin-top:16px">
+        <label style="${ls}">Plan name</label><input id="pe-name" value="${esc(p.name)}" style="${fs}">
+        <label style="${ls}">Price (₹ / month) — 0 for a free tier</label><input id="pe-price" type="number" min="0" step="1" value="${p.price_monthly || 0}" style="${fs}">
+        <label style="${ls}">Tagline (shown on the pricing card)</label><textarea id="pe-tagline" style="${fs};min-height:64px;resize:vertical">${esc(p.tagline || '')}</textarea>
+      </div>
+      <div class="cacts">
+        <button class="act ghost" onclick="closeConfirm()">Cancel</button>
+        <button class="act solid ok" id="pe-save" onclick="savePlan('${esc(key)}')">Save changes</button>
+      </div>
+    </div>`;
+  $('confirm').classList.add('open');
+  setTimeout(() => $('pe-name').focus(), 60);
+}
+
+async function savePlan(key) {
+  const msg = $('pe-msg');
+  const show = (t, ok) => { msg.textContent = t; msg.style.display = 'block';
+    msg.style.background = ok ? 'var(--green-lt)' : 'var(--red-soft)'; msg.style.color = ok ? '#0a5c41' : '#a3271b'; };
+  const name = $('pe-name').value.trim();
+  const price = parseInt($('pe-price').value, 10);
+  const tagline = $('pe-tagline').value.trim();
+  if (!name) return show('Give the plan a name.', false);
+  if (isNaN(price) || price < 0) return show('Enter a valid price (0 or more).', false);
+  const btn = $('pe-save'); btn.disabled = true; btn.textContent = 'Saving…';
+  const { error } = await sb.from('plans').update({ name, price_monthly: price, tagline }).eq('key', key);
+  btn.disabled = false; btn.textContent = 'Save changes';
+  if (error) return show(error.message || 'Could not save. Check you are on the admins list.', false);
+  show('Saved. Updating…', true); toast('Plan updated');
+  setTimeout(() => { closeConfirm(); loadData(); }, 700);
+}
+
+/* Set the lowest plan tier a module unlocks from (writes modules.min_plan_rank). */
+async function setModuleTier(key, rank) {
+  const { error } = await sb.from('modules').update({ min_plan_rank: rank }).eq('key', key);
+  if (error) { toast('Could not update: ' + (error.message || 'error')); return; }
+  toast('Module tier updated'); loadData();
 }
 
 /* ── view: FINANCE ───────────────────────────────────────────────────── */

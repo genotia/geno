@@ -746,22 +746,34 @@
 
 <script>
   let isYearly = false;
+  const YEARLY_FACTOR = 0.8;   // yearly = 20% off the monthly rate
 
-  const prices = {
-    monthly: { p1:'&#8377;199', p2:'&#8377;599',   p3:'&#8377;1,199', p4:'&#8377;2,499' },
-    yearly:  { p1:'&#8377;159', p2:'&#8377;479',   p3:'&#8377;959',   p4:'&#8377;1,999' }
+  /* Monthly prices. p1–p3 mirror the plans table (rank 1/2/3) and are refreshed
+     live from it below; p4 (Scale / Enterprise) is not a subscription plan, so
+     it stays managed here. These defaults keep the page correct if the fetch
+     fails or is slow. */
+  const CFG = {
+    p1: { monthly: 199,  name: 'Marketplace', tagline: 'List services, post off-peak deals, and take bookings online.' },
+    p2: { monthly: 599,  name: 'Business',    tagline: 'Full operations suite — staff, inventory, loyalty, CRM, and more.' },
+    p3: { monthly: 1199, name: 'AI Pro',      tagline: 'Everything in Business plus AI agents, marketing automation, and ads.' },
+    p4: { monthly: 2499, name: 'Scale',       tagline: 'Multi-location chains, franchise groups, and enterprise businesses.' }
   };
-  const notes = {
-    monthly: { p1:'Billed monthly', p2:'Billed monthly', p3:'Billed monthly', p4:'Billed monthly' },
-    yearly:  {
-      p1:'&#8377;1,908/yr &middot; save &#8377;480',
-      p2:'&#8377;5,748/yr &middot; save &#8377;1,440',
-      p3:'&#8377;11,508/yr &middot; save &#8377;2,880',
-      p4:'&#8377;23,988/yr &middot; save &#8377;6,000'
-    }
-  };
+  const rupee = n => '&#8377;' + Number(n || 0).toLocaleString('en-IN');
+  const yearlyOf = m => Math.round(m * YEARLY_FACTOR);
 
   function toggleBilling() { setBilling(!isYearly); }
+
+  function renderPrices() {
+    ['p1','p2','p3','p4'].forEach(id => {
+      const c = CFG[id];
+      const per = isYearly ? yearlyOf(c.monthly) : c.monthly;
+      document.getElementById(id).innerHTML = c.monthly ? rupee(per) : 'Free';
+      const note = document.getElementById('pn' + id.slice(1));
+      if (!c.monthly) note.innerHTML = 'No monthly fee';
+      else if (isYearly) note.innerHTML = rupee(per * 12) + '/yr &middot; save ' + rupee((c.monthly - per) * 12);
+      else note.innerHTML = 'Billed monthly';
+    });
+  }
 
   function setBilling(yearly) {
     isYearly = yearly;
@@ -770,13 +782,38 @@
     sw.setAttribute('aria-checked', yearly.toString());
     document.getElementById('lbl-m').classList.toggle('active', !yearly);
     document.getElementById('lbl-a').classList.toggle('active', yearly);
-    const p = yearly ? prices.yearly  : prices.monthly;
-    const n = yearly ? notes.yearly   : notes.monthly;
-    ['p1','p2','p3','p4'].forEach(id => {
-      document.getElementById(id).innerHTML = p[id];
-      document.getElementById('pn' + id.slice(1)).innerHTML = n[id];
-    });
+    renderPrices();
   }
+
+  /* Pull live prices, names and taglines from the admin-managed plans table so
+     the pricing page always matches what the admin sets. Anonymous read only. */
+  (function loadLivePricing() {
+    const SB = 'https://ijsxmgkzwvamwctbkgjo.supabase.co';
+    const KEY = 'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ';
+    fetch(SB + '/rest/v1/plans?select=name,rank,price_monthly,tagline&order=rank', {
+      headers: { apikey: KEY, Authorization: 'Bearer ' + KEY }
+    })
+      .then(r => r.ok ? r.json() : [])
+      .then(rows => {
+        if (!Array.isArray(rows) || !rows.length) return;
+        const byRank = { 1: 'p1', 2: 'p2', 3: 'p3' };
+        rows.forEach(pl => {
+          const id = byRank[pl.rank];
+          if (!id) return;
+          if (typeof pl.price_monthly === 'number') CFG[id].monthly = pl.price_monthly;
+          if (pl.name) CFG[id].name = pl.name;
+          if (pl.tagline) CFG[id].tagline = pl.tagline;
+          const card = document.getElementById(id).closest('.plan-card');
+          if (card) {
+            const nm = card.querySelector('.plan-name'); if (nm) nm.textContent = CFG[id].name;
+            const tg = card.querySelector('.plan-tagline'); if (tg) tg.textContent = CFG[id].tagline;
+          }
+        });
+        renderPrices();
+      })
+      .catch(() => {});
+  })();
+  renderPrices();
 
   function toggleFaq(i) {
     const a    = document.getElementById('faq-a-' + i);
