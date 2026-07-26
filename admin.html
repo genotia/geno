@@ -1068,21 +1068,26 @@ async function saveManage(id, requestId) {
   const plan_key = $('mng-plan').value, status = $('mng-status').value;
   if (!plan_key) return show('Pick a plan first.', false);
   const btn = $('mng-save'); btn.disabled = true; btn.textContent = 'Saving…';
-  const { error } = await sb.from('merchant_subscriptions').upsert(
-    { merchant_id:id, plan_key, status, updated_at:new Date().toISOString() }, { onConflict:'merchant_id' });
-  if (error) { btn.disabled = false; btn.textContent = 'Save changes'; return show(error.message || 'Could not save. Check you are on the admins list.', false); }
-  if (requestId && requestId !== 'null') {
-    await sb.from('upgrade_requests').update({ status:'actioned', actioned_at:new Date().toISOString(), actioned_by:(G.user() && G.user().email) || null }).eq('id', requestId);
-  }
+  // Route through the service-role function so the write never trips RLS.
+  const reqId = (requestId && requestId !== 'null') ? requestId : null;
+  const { data, error } = await sb.functions.invoke('admin-set-subscription',
+    { body: { merchant_id: id, plan_key, status, request_id: reqId } });
   btn.disabled = false; btn.textContent = 'Save changes';
+  if (error || (data && data.error)) {
+    let m = (data && data.error) || (error && error.message) || 'Could not save.';
+    if (error && error.context && typeof error.context.json === 'function') { try { const b = await error.context.json(); if (b && b.error) m = b.error; } catch (e) {} }
+    return show(esc(m), false);
+  }
   show('Saved. Refreshing…', true);
   toast('Plan updated');
   setTimeout(() => { closeConfirm(); loadData(); }, 700);
 }
 
 async function actionRequest(id, status) {
-  const { error } = await sb.from('upgrade_requests').update({ status, actioned_at:new Date().toISOString(), actioned_by:(G.user() && G.user().email) || null }).eq('id', id);
-  if (!error) { toast('Request ' + status); loadData(); }
+  const { data, error } = await sb.functions.invoke('admin-set-subscription',
+    { body: { request_id: id, request_status: status } });
+  if (error || (data && data.error)) { toast('Could not update the request'); return; }
+  toast('Request ' + status); loadData();
 }
 
 /* ── approve a merchant by email (edge function) ─────────────────────── */

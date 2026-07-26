@@ -21,6 +21,11 @@ verify_jwt = false
 [functions.admin-onboard-merchant]
 verify_jwt = false
 
+# Admin subscription change (plan/status) + upgrade-request resolution via the
+# service role, so panel writes don't depend on the caller's RLS.
+[functions.admin-set-subscription]
+verify_jwt = false
+
 # One-click merchant approval from the admin panel. Verifies caller is an admin.
 [functions.approve-merchant]
 verify_jwt = false
