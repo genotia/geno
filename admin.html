@@ -242,6 +242,10 @@ tbody tr.rowlink:hover{background:#fafafa}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
         <span>Approvals</span> <span class="badge" id="nav-pending" style="display:none">0</span>
       </button>
+      <button class="nav-item" data-view="finance">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+        <span>Finance</span>
+      </button>
       <button class="nav-item" data-view="plans">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5"/></svg>
         <span>Plans &amp; modules</span>
@@ -278,6 +282,7 @@ tbody tr.rowlink:hover{background:#fafafa}
       <section class="view" id="view-overview" hidden></section>
       <section class="view" id="view-merchants" hidden></section>
       <section class="view" id="view-approvals" hidden></section>
+      <section class="view" id="view-finance" hidden></section>
       <section class="view" id="view-plans" hidden></section>
       <section class="view" id="view-analytics" hidden></section>
       <section class="view" id="view-categories" hidden></section>
@@ -463,10 +468,10 @@ function renderOverview() {
   const platform = cp ? `
     <h2 class="sec">Platform</h2>
     <div class="kpis">
-      ${kpi('MRR', inr(k.mrr), 'from active subscriptions', 'brandval')}
-      ${kpi('ARR (run-rate)', inr((k.mrr || 0) * 12), 'MRR × 12')}
+      ${kpi('MRR', inr(k.mrr), '<span class="linky" onclick="go(\'finance\')">Finance →</span>', 'brandval')}
       ${kpi('Merchants', fmt(k.merchants), `${fmt(k.active)} active · ${fmt(k.trialing)} trialing`)}
-      ${kpi('Avg revenue / merchant', inr(k.active ? Math.round((k.mrr || 0) / k.active) : 0), 'active only')}
+      ${kpi('Active subscriptions', fmt(k.active), 'live &amp; paying / trialing')}
+      ${kpi('Pending approvals', fmt(D.pendingApps + D.pendingReqs), 'applications + upgrade requests')}
     </div>` : cpNote(D.cpWhy);
 
   const attn = (D.pendingApps || D.pendingReqs) ? `
@@ -655,13 +660,6 @@ function renderPlans() {
       <td style="width:40%"><div class="bar" style="width:${pct}%"></div></td><td class="num">${pct}%</td></tr>`;
   }).join('');
 
-  const logRows = D.planLog.map(l => {
-    const chg = (a, b) => (a && a !== b) ? `${esc(a)} → <b>${esc(b)}</b>` : `<b>${esc(b || '—')}</b>`;
-    return `<tr><td>${whenT(l.changed_at)}</td><td>${esc(D.nameById[l.merchant_id] || l.merchant_id)}</td>
-      <td>${chg(D.planName(l.from_plan), D.planName(l.to_plan))}</td><td>${chg(l.from_status, l.to_status)}</td>
-      <td class="m-sub">${esc(l.actor_email || 'system')}</td></tr>`;
-  }).join('');
-
   $('view-plans').innerHTML = `
     <h2 class="sec">Plans</h2>
     <div class="kpis" style="margin-bottom:16px">
@@ -673,10 +671,81 @@ function renderPlans() {
     <h2 class="sec">Module adoption</h2>
     <div class="sub" style="margin:-4px 0 10px">Merchants with real data in each module (live counts).</div>
     <div class="panel"><div class="tw"><table><thead><tr><th>Module</th><th class="num">Merchants using</th><th></th><th class="num">Adoption</th></tr></thead>
-      <tbody>${adoptionRows || '<tr><td colspan="4"><div class="empty">No usage yet.</div></td></tr>'}</tbody></table></div></div>
+      <tbody>${adoptionRows || '<tr><td colspan="4"><div class="empty">No usage yet.</div></td></tr>'}</tbody></table></div></div>`;
+}
+
+/* ── view: FINANCE ───────────────────────────────────────────────────── */
+function renderFinance() {
+  const cp = D.cp;
+  if (!cp) { $('view-finance').innerHTML = cpNote(D.cpWhy); return; }
+  const k = cp.kpis || {}, M = cp.merchants || [];
+  const plans = (cp.plans || []).slice().sort((a, b) => a.rank - b.rank);
+  const mrr = k.mrr || 0;
+  const sumPrice = arr => arr.reduce((s, m) => s + (m.price_monthly || 0), 0);
+  const paying   = M.filter(m => m.status === 'active' && (m.price_monthly || 0) > 0).length;
+  const trials   = M.filter(m => m.status === 'trial');
+  const atRisk   = M.filter(m => m.status === 'past_due' || m.status === 'cancelled');
+  const trialMRR = sumPrice(trials), atRiskMRR = sumPrice(atRisk);
+
+  const revenue = `
+    <h2 class="sec">Recurring revenue</h2>
+    <div class="kpis">
+      ${kpi('MRR', inr(mrr), 'active subscriptions', 'brandval')}
+      ${kpi('ARR (run-rate)', inr(mrr * 12), 'MRR × 12')}
+      ${kpi('Avg revenue / merchant', inr(k.active ? Math.round(mrr / k.active) : 0), 'active only')}
+      ${kpi('Paying subscriptions', fmt(paying), `${fmt(k.active)} active · ${fmt(k.trialing)} trialing`)}
+    </div>`;
+
+  const flow = `
+    <h2 class="sec">Pipeline &amp; risk</h2>
+    <div class="kpis">
+      ${kpi('Trial pipeline', inr(trialMRR), `${fmt(trials.length)} on trial · potential MRR`)}
+      ${kpi('MRR at risk', inr(atRiskMRR), `${fmt(atRisk.length)} past due / suspended`, atRiskMRR ? 'hot' : '')}
+    </div>`;
+
+  const rows = plans.map(p => {
+    const act = M.filter(m => m.status === 'active' && m.plan_key === p.key).length;
+    const contrib = act * (p.price_monthly || 0);
+    return { p, act, contrib, pct: mrr ? Math.round(contrib / mrr * 100) : 0 };
+  });
+  const byPlan = `
+    <h2 class="sec">Revenue by plan</h2>
+    <div class="panel"><div class="tw"><table><thead><tr><th>Plan</th><th class="num">Price</th><th class="num">Active</th><th class="num">MRR</th><th style="width:26%"></th><th class="num">Share</th></tr></thead><tbody>
+      ${rows.map(r => `<tr>
+        <td><b>${esc(r.p.name)}</b></td>
+        <td class="num">${r.p.price_monthly ? inr(r.p.price_monthly) : 'Free'}</td>
+        <td class="num">${fmt(r.act)}</td>
+        <td class="num">${inr(r.contrib)}</td>
+        <td><div class="bar" style="width:${r.pct}%"></div></td>
+        <td class="num">${r.pct}%</td>
+      </tr>`).join('')}
+    </tbody></table></div></div>`;
+
+  const order = [['active','Active'], ['trial','Trial'], ['past_due','Past due'], ['cancelled','Suspended'], ['none','No plan']];
+  const health = `
+    <h2 class="sec">Subscription health</h2>
+    <div class="panel"><div class="tw"><table><thead><tr><th>Status</th><th class="num">Merchants</th><th class="num">Monthly value</th></tr></thead><tbody>
+      ${order.map(([st, lab]) => {
+        const ms = M.filter(m => (m.status || 'none') === st);
+        if (!ms.length) return '';
+        return `<tr><td>${subStatusPill(st)}</td><td class="num">${fmt(ms.length)}</td><td class="num">${inr(sumPrice(ms))}</td></tr>`;
+      }).join('') || '<tr><td colspan="3"><div class="empty">No subscriptions yet.</div></td></tr>'}
+    </tbody></table></div></div>`;
+
+  const chg = (a, b) => (a && a !== b) ? `${esc(a)} → <b>${esc(b)}</b>` : `<b>${esc(b || '—')}</b>`;
+  const logRows = D.planLog.map(l => `<tr>
+      <td>${whenT(l.changed_at)}</td>
+      <td>${esc(D.nameById[l.merchant_id] || l.merchant_id)}</td>
+      <td>${chg(D.planName(l.from_plan), D.planName(l.to_plan))}</td>
+      <td>${chg(l.from_status, l.to_status)}</td>
+      <td class="m-sub">${esc(l.actor_email || 'system')}</td>
+    </tr>`).join('');
+  const log = `
     <h2 class="sec">Plan change log</h2>
     ${D.planLog.length ? `<div class="panel"><div class="tw"><table><thead><tr><th>When</th><th>Business</th><th>Plan</th><th>Status</th><th>By</th></tr></thead><tbody>${logRows}</tbody></table></div></div>`
       : '<div class="panel"><div class="empty">No plan changes recorded yet.</div></div>'}`;
+
+  $('view-finance').innerHTML = revenue + flow + byPlan + health + log;
 }
 
 /* ── view: ANALYTICS ─────────────────────────────────────────────────── */
@@ -748,10 +817,10 @@ function renderCategories() {
 /* ── render dispatch ─────────────────────────────────────────────────── */
 function renderAll() {
   renderOverview(); renderMerchants(); renderApprovals();
-  renderPlans(); renderAnalytics(); renderCategories();
+  renderFinance(); renderPlans(); renderAnalytics(); renderCategories();
 }
 
-const TITLES = { overview:'Overview', merchants:'Merchants', approvals:'Approvals', plans:'Plans & modules', analytics:'Analytics', categories:'Categories' };
+const TITLES = { overview:'Overview', merchants:'Merchants', approvals:'Approvals', finance:'Finance', plans:'Plans & modules', analytics:'Analytics', categories:'Categories' };
 function go(name) {
   VIEW = name;
   document.querySelectorAll('.view').forEach(v => v.hidden = v.id !== 'view-' + name);
