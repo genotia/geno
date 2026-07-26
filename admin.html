@@ -877,33 +877,64 @@ function renderAnalytics() {
 }
 
 /* ── view: CATEGORIES ────────────────────────────────────────────────── */
+// Base business categories always offered as columns, plus whatever exists in
+// the data. Column set is stored so the toggle can normalise "all" correctly.
+const BASE_CATS = ['salon', 'spa', 'restaurant', 'cafe', 'gym', 'clinic'];
+let MODULE_CATS = [];
+const moduleAppliesTo = (m, c) => !m.category_scope || !m.category_scope.length || m.category_scope.includes(c);
+
 function renderCategories() {
   const cp = D.cp;
-  const cats = D.mchByCat.length ? D.mchByCat.map(([c]) => c) : [];
-  const dealsBy = Object.fromEntries(D.dealsByCat);
-  const activeByCat = {};
-  if (cp && cp.merchants) cp.merchants.forEach(m => { if (m.status === 'active') activeByCat[m.category] = (activeByCat[m.category] || 0) + 1; });
-  const modsFor = c => {
-    const mods = (cp && cp.modules) || [];
-    const scoped = mods.filter(m => !m.category_scope || !m.category_scope.length || m.category_scope.includes(c));
-    return (scoped.length ? scoped : mods).slice().sort((a, b) => a.sort - b.sort);
-  };
+  if (!cp || !cp.modules) { $('view-categories').innerHTML = cpNote(D.cpWhy); return; }
+  const mods = (cp.modules || []).slice().sort((a, b) => a.sort - b.sort);
 
-  const out = cats.map(c => {
-    const total = (D.mchByCat.find(x => x[0] === c) || [, 0])[1];
-    const active = activeByCat[c] || 0;
-    const mods = modsFor(c);
-    return `<div class="cat-card">
-      <h3>${catTag(c)}</h3>
-      <div class="cc-count">${fmt(total)} merchant${total === 1 ? '' : 's'} · ${fmt(active)} active · ${fmt(dealsBy[c] || 0)} live deal${(dealsBy[c] || 0) === 1 ? '' : 's'}</div>
-      <div class="cc-lab">Modules available</div>
-      <div class="mods">${mods.length ? mods.map(m => `<span class="mod">${esc(m.name)}</span>`).join('') : '<span class="m-sub">Connect the control plane to list modules.</span>'}</div>
-    </div>`;
+  // Columns = base categories ∪ merchant categories ∪ any category already scoped.
+  const set = new Set(BASE_CATS);
+  (cp.merchants || []).forEach(m => { if (m.category) set.add(m.category); });
+  mods.forEach(m => (m.category_scope || []).forEach(c => set.add(c)));
+  const cats = Array.from(set).sort();
+  MODULE_CATS = cats;
+
+  const mchCount = {};
+  (cp.merchants || []).forEach(m => { if (m.category) mchCount[m.category] = (mchCount[m.category] || 0) + 1; });
+
+  const head = cats.map(c => `<th class="num" style="text-transform:capitalize">${esc(c)}<div class="m-sub" style="font-weight:500">${fmt(mchCount[c] || 0)} merch</div></th>`).join('');
+  const rows = mods.map(m => {
+    const all = !m.category_scope || !m.category_scope.length;
+    return `<tr>
+      <td><b>${esc(m.name)}</b>${m.grp ? `<div class="m-sub">${esc(m.grp)}</div>` : ''}</td>
+      <td class="num">${all ? '<span class="m-sub">All</span>' : `<span class="m-sub">${fmt(m.category_scope.length)}</span>`}</td>
+      ${cats.map(c => {
+        const on = moduleAppliesTo(m, c);
+        return `<td class="num mtx-cell ${on ? 'inc' : ''}" title="${on ? 'Offered to' : 'Not offered to'} ${esc(c)} — click to toggle" onclick="toggleModuleCategory('${esc(m.key)}','${esc(c)}')">${on ? '✓' : '·'}</td>`;
+      }).join('')}
+    </tr>`;
   }).join('');
 
   $('view-categories').innerHTML = `
     <h2 class="sec">Modules by category</h2>
-    ${cats.length ? `<div class="cat-grid">${out}</div>` : '<div class="panel"><div class="empty">No merchant categories yet.</div></div>'}`;
+    <div class="sub" style="margin:-4px 0 10px">Which modules each business category is offered. Click a cell to toggle — “All” means every category, including future ones.</div>
+    <div class="panel"><div class="tw"><table><thead><tr><th>Module</th><th class="num">Scope</th>${head}</tr></thead>
+      <tbody>${rows}</tbody></table></div></div>`;
+}
+
+/* Toggle whether a module is offered to a category (writes modules.category_scope;
+   empty array = all categories). A module must stay offered to ≥1 category. */
+async function toggleModuleCategory(key, cat) {
+  const m = (CP && CP.modules || []).find(x => x.key === key);
+  if (!m) return;
+  const all = MODULE_CATS.slice();
+  const cur = (m.category_scope && m.category_scope.length) ? m.category_scope.slice() : all.slice();
+  const i = cur.indexOf(cat);
+  if (i >= 0) {
+    if (cur.length <= 1) { toast('A module must stay offered to at least one category.'); return; }
+    cur.splice(i, 1);
+  } else { cur.push(cat); }
+  const coversAll = all.every(c => cur.includes(c));
+  const next = coversAll ? [] : cur;
+  const { error } = await sb.from('modules').update({ category_scope: next }).eq('key', key);
+  if (error) { toast('Could not update: ' + (error.message || 'error')); return; }
+  toast('Module scope updated'); loadData();
 }
 
 /* ── render dispatch ─────────────────────────────────────────────────── */
