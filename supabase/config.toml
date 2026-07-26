@@ -16,6 +16,11 @@ project_id = "ijsxmgkzwvamwctbkgjo"
 [functions.admin-metrics]
 verify_jwt = false
 
+# Admin onboarding: create a merchant with a password + provision its workspace.
+# Self-authorises (admin JWT or the ONBOARD_SECRET), so gateway JWT stays off.
+[functions.admin-onboard-merchant]
+verify_jwt = false
+
 # One-click merchant approval from the admin panel. Verifies caller is an admin.
 [functions.approve-merchant]
 verify_jwt = false
