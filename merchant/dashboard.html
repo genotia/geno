@@ -10404,7 +10404,7 @@
     if (el) el.classList.remove('open');
   }
 
-  function showPlanModal(title, bodyHtml) {
+  function showPlanModal(title, bodyHtml, actionsHtml) {
     let el = document.getElementById('plan-modal');
     if (!el) {
       el = document.createElement('div');
@@ -10415,7 +10415,7 @@
     el.innerHTML = `<div class="pm-box">
         <div class="pm-title">${title}</div>
         <div class="pm-body">${bodyHtml}</div>
-        <div class="pm-acts"><button class="pm-btn" onclick="closePlanModal()">Got it</button></div>
+        <div class="pm-acts">${actionsHtml || '<button class="pm-btn" onclick="closePlanModal()">Got it</button>'}</div>
       </div>`;
     el.classList.add('open');
   }
@@ -10424,10 +10424,35 @@
     const target = planForRank(PAGE_RANK[page] || 0);
     const price = target && target.price_monthly ? ' (₹' + Number(target.price_monthly).toLocaleString('en-IN') + '/mo)' : '';
     const name  = target ? target.name : 'a higher';
+    // A merchant can't self-serve upgrade, but they can ask — the request lands
+    // in the admin panel for the team to action.
+    const actions = target
+      ? `<button class="pm-btn ghost" onclick="closePlanModal()">Maybe later</button>
+         <button class="pm-btn" id="pm-req" onclick="requestUpgrade('${target.key}', this)">Request upgrade</button>`
+      : `<button class="pm-btn" onclick="closePlanModal()">Got it</button>`;
     showPlanModal('🔒 Part of the ' + (target ? target.name : 'upgrade') + ' plan',
       `This feature unlocks on the <b>${name}</b> plan${price}.` +
       (currentPlan ? ` You're currently on <b>${currentPlan.name}</b>.` : '') +
-      `<br><br>Talk to your Genoti account manager to upgrade — it takes effect straight away.`);
+      `<br><br>Request an upgrade and the Genoti team will switch it on for you.`,
+      actions);
+  }
+
+  async function requestUpgrade(targetKey, btn) {
+    btn.disabled = true; btn.textContent = 'Sending…';
+    const { error } = await db.from('upgrade_requests').insert({
+      merchant_id:        currentMerchant.id,
+      requested_by:       currentUser.id,
+      current_plan_key:   currentPlan ? currentPlan.key : null,
+      requested_plan_key: targetKey,
+    });
+    if (error) {
+      btn.disabled = false; btn.textContent = 'Request upgrade';
+      if (!btn.previousElementSibling || btn.previousElementSibling.className !== 'pm-err') {
+        btn.insertAdjacentHTML('beforebegin', '<span class="pm-err" style="color:#DC2626;font-size:12px;margin-right:auto">Could not send — try again.</span>');
+      }
+      return;
+    }
+    btn.textContent = 'Requested ✓'; btn.classList.add('done'); btn.disabled = true;
   }
 
   function showSuspendedModal() {
@@ -10462,10 +10487,14 @@
         box-shadow:0 12px 48px rgba(0,0,0,.2); font-family:inherit; }
       #plan-modal .pm-title { font-size:18px; font-weight:800; letter-spacing:-.4px; margin-bottom:10px; color:#111827; }
       #plan-modal .pm-body { font-size:14px; color:#374151; line-height:1.6; }
-      #plan-modal .pm-acts { display:flex; justify-content:flex-end; margin-top:22px; }
+      #plan-modal .pm-acts { display:flex; justify-content:flex-end; align-items:center; gap:8px; margin-top:22px; }
       #plan-modal .pm-btn { background:#1D9E75; color:#fff; border:none; border-radius:10px; padding:10px 20px;
         font-size:14px; font-weight:700; font-family:inherit; cursor:pointer; }
-      #plan-modal .pm-btn:hover { opacity:.9; }`;
+      #plan-modal .pm-btn:hover { opacity:.9; }
+      #plan-modal .pm-btn.ghost { background:#fff; color:#6B7280; border:1.5px solid #E5E7EB; }
+      #plan-modal .pm-btn.ghost:hover { border-color:#9CA3AF; color:#374151; opacity:1; }
+      #plan-modal .pm-btn.done { background:#059669; cursor:default; }
+      #plan-modal .pm-btn:disabled { cursor:default; }`;
     document.head.appendChild(css);
   })();
 

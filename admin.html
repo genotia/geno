@@ -386,13 +386,14 @@ const STATUSES = [
   ['cancelled', 'Suspended'],
 ];
 
-function openManage(id) {
+function openManage(id, presetPlanKey, requestId) {
   const m = (CP && CP.merchants || []).find(x => String(x.id) === String(id));
   if (!m) return;
   const plans = ((CP && CP.plans) || []).slice().sort((a, b) => a.rank - b.rank);
   const inr = n => '₹' + fmt(n || 0);
+  const wantPlan = presetPlanKey || m.plan_key;   // an upgrade request preselects the asked-for plan
   const planOpts = plans.map(p =>
-    `<option value="${esc(p.key)}" ${p.key === m.plan_key ? 'selected' : ''}>${esc(p.name)} · ${p.price_monthly ? inr(p.price_monthly) + '/mo' : 'Free'}</option>`).join('');
+    `<option value="${esc(p.key)}" ${p.key === wantPlan ? 'selected' : ''}>${esc(p.name)} · ${p.price_monthly ? inr(p.price_monthly) + '/mo' : 'Free'}</option>`).join('');
   const statusOpts = STATUSES.map(([v, label]) =>
     `<option value="${v}" ${v === m.status ? 'selected' : ''}>${label}</option>`).join('');
   const fieldStyle = 'width:100%;margin-top:6px;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:var(--white);outline:none;box-sizing:border-box;';
@@ -415,13 +416,13 @@ function openManage(id) {
       </div>
       <div class="cacts">
         <button class="act ghost" onclick="closeConfirm()">Cancel</button>
-        <button class="act ok solid" id="mng-save" onclick="saveManage('${esc(m.id)}')">Save changes</button>
+        <button class="act ok solid" id="mng-save" onclick="saveManage('${esc(m.id)}', ${requestId ? `'${esc(requestId)}'` : 'null'})">Save changes</button>
       </div>
     </div>`;
   document.getElementById('confirm').classList.add('open');
 }
 
-async function saveManage(id) {
+async function saveManage(id, requestId) {
   const msg = document.getElementById('mng-msg');
   const show = (text, ok) => { msg.textContent = text; msg.style.display = 'block';
     msg.style.background = ok ? 'var(--green-lt)' : '#FEF2F2';
@@ -433,15 +434,31 @@ async function saveManage(id) {
   const btn = document.getElementById('mng-save');
   btn.disabled = true; btn.textContent = 'Saving…';
   // Upsert: existing merchants have a row; ones onboarded after the migration
-  // may not, so insert-or-update on the merchant_id primary key.
+  // may not, so insert-or-update on the merchant_id primary key. The DB trigger
+  // records this change to plan_change_log automatically.
   const { error } = await sb.from('merchant_subscriptions').upsert(
     { merchant_id: id, plan_key, status, updated_at: new Date().toISOString() },
     { onConflict: 'merchant_id' });
-  btn.disabled = false; btn.textContent = 'Save changes';
-  if (error) return show(error.message || 'Could not save. Check you are on the admins list.', false);
+  if (error) { btn.disabled = false; btn.textContent = 'Save changes';
+    return show(error.message || 'Could not save. Check you are on the admins list.', false); }
 
+  // If this came from an upgrade request, close it out.
+  if (requestId && requestId !== 'null') {
+    await sb.from('upgrade_requests')
+      .update({ status: 'actioned', actioned_at: new Date().toISOString(), actioned_by: (G.user() && G.user().email) || null })
+      .eq('id', requestId);
+  }
+  btn.disabled = false; btn.textContent = 'Save changes';
   show('Saved. Refreshing the control plane…', true);
   setTimeout(() => { closeConfirm(); render(); }, 700);
+}
+
+/* Dismiss (or otherwise resolve) an upgrade request without changing a plan. */
+async function actionRequest(id, status) {
+  const { error } = await sb.from('upgrade_requests')
+    .update({ status, actioned_at: new Date().toISOString(), actioned_by: (G.user() && G.user().email) || null })
+    .eq('id', id);
+  if (!error) render();
 }
 
 async function render() {
@@ -454,7 +471,7 @@ async function render() {
     viewsAll, views1, views7,
     events30m, eventRows,
     deals, merchants, bookings, apps,
-    cpResp,
+    cpResp, reqResp, logResp,
   ] = await Promise.all([
     countOf('events', q => q.eq('name', 'page_view')),
     countOf('events', q => q.eq('name', 'page_view').gte('created_at', since(1))),
@@ -466,6 +483,8 @@ async function render() {
     sb.from('bookings').select('id, merchant_name, status, customer_email, created_at'),
     sb.from('merchant_applications').select('id, full_name, business_name, category, email, phone, address, num_branches, num_staff, plan, status, approval_token, created_at, reviewed_at'),
     sb.functions.invoke('admin-metrics'),
+    sb.from('upgrade_requests').select('id, merchant_id, current_plan_key, requested_plan_key, status, created_at').order('created_at', { ascending: false }),
+    sb.from('plan_change_log').select('merchant_id, actor_email, from_plan, to_plan, from_status, to_status, changed_at').order('changed_at', { ascending: false }).limit(40),
   ]);
   const cp = (cpResp && !cpResp.error && cpResp.data && !cpResp.data.error) ? cpResp.data : null;
   CP = cp;
@@ -490,6 +509,13 @@ async function render() {
   const bk    = bookings.data || [];
   const ap    = apps.data || [];
   APPS = ap;
+  const upReqs  = (reqResp && reqResp.data) || [];
+  const planLog = (logResp && logResp.data) || [];
+  // Merchant id → name, and plan key → name, for the requests + audit sections.
+  const nameById = {};
+  mch.forEach(m => { nameById[m.id] = m.name; });
+  if (cp && cp.merchants) cp.merchants.forEach(m => { if (!nameById[m.id]) nameById[m.id] = m.name; });
+  const planName = k => { const p = (cp && cp.plans || []).find(x => x.key === k); return p ? p.name : (k || '—'); };
 
   const uniq = (arr, k) => new Set(arr.map(r => r[k]).filter(Boolean)).size;
   const visitors30 = uniq(evs, 'visitor_id');
@@ -558,6 +584,41 @@ async function render() {
     </tbody></table></div>`;
   };
 
+  /* Pending upgrade requests raised by merchants from a locked module. */
+  const upgradeRequestsHTML = () => {
+    if (!upReqs.length) return '';
+    const when = d => d ? new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '—';
+    const pending = upReqs.filter(r => r.status === 'pending');
+    const rows = pending.length ? pending.map(r => `<tr>
+        <td><b>${esc(nameById[r.merchant_id] || r.merchant_id)}</b></td>
+        <td>${esc(planName(r.current_plan_key))} → <b>${esc(planName(r.requested_plan_key))}</b></td>
+        <td>${when(r.created_at)}</td>
+        <td><div class="acts">
+          <button class="act ok" onclick="openManage('${esc(r.merchant_id)}','${esc(r.requested_plan_key || '')}','${esc(r.id)}')">Assign</button>
+          <button class="act no" onclick="actionRequest('${esc(r.id)}','dismissed')">Dismiss</button>
+        </div></td>
+      </tr>`).join('') : '<tr><td colspan="4" class="empty">No pending requests.</td></tr>';
+    return `<h2 class="sec">Upgrade requests${pending.length ? ` · ${pending.length}` : ''}</h2>
+      <div class="tw"><table><thead><tr><th>Business</th><th>Requested</th><th>When</th><th></th></tr></thead>
+      <tbody>${rows}</tbody></table></div>`;
+  };
+
+  /* Automatic audit trail of every subscription change (from the trigger). */
+  const planLogHTML = () => {
+    if (!planLog.length) return '';
+    const when = d => d ? new Date(d).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+    const chg = (a, b) => (a && a !== b) ? `${esc(a)} → <b>${esc(b)}</b>` : `<b>${esc(b || '—')}</b>`;
+    return `<h2 class="sec">Plan change log</h2>
+      <div class="tw"><table><thead><tr><th>When</th><th>Business</th><th>Plan</th><th>Status</th><th>By</th></tr></thead>
+      <tbody>${planLog.map(l => `<tr>
+        <td>${when(l.changed_at)}</td>
+        <td>${esc(nameById[l.merchant_id] || l.merchant_id)}</td>
+        <td>${chg(planName(l.from_plan), planName(l.to_plan))}</td>
+        <td>${chg(l.from_status, l.to_status)}</td>
+        <td>${esc(l.actor_email || 'system')}</td>
+      </tr>`).join('')}</tbody></table></div>`;
+  };
+
 
   p.innerHTML = `
     ${notTracked ? `<div class="note"><b>The events table is not there yet.</b>
@@ -565,6 +626,8 @@ async function render() {
       Everything below it reads live data.</div>` : ''}
     ${missing.length ? `<div class="note"><b>Some reads were refused:</b> ${esc(missing.join(' · '))}</div>` : ''}
     ${controlPlaneHTML(cp, cpWhy)}
+    ${upgradeRequestsHTML()}
+    ${planLogHTML()}
 
     <h2 class="sec">Audience</h2>
     <div class="grid">
