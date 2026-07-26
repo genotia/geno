@@ -3900,6 +3900,12 @@
   let currentUser = null;
   let currentMerchant = null;
   let currentRole = null;
+  // Plan gating (Phase 3). planRank stays 999 = "fail open" until we positively
+  // read a subscription, so nobody is locked out before the plan is known.
+  let currentPlan = null;   // { key, name, rank, status } once loaded
+  let planRank = 999;
+  let planSuspended = false;
+  let PLANS = [];           // catalog, for the upgrade prompt
   let selectedColor = '#FDF4FF';
   let editingId = null;
   let currentDeals = [];
@@ -4160,6 +4166,24 @@
 
     currentRole = mu.role;
     currentMerchant = mu.merchants;
+
+    // Plan gating: read this merchant's subscription + the plan catalog. Only
+    // gate when a real row comes back — otherwise stay fully open (see globals).
+    try {
+      const [{ data: sub }, { data: plans }] = await Promise.all([
+        db.from('merchant_subscriptions')
+          .select('plan_key, status, plans(rank, name, price_monthly)')
+          .eq('merchant_id', currentMerchant.id).maybeSingle(),
+        db.from('plans').select('key, name, rank, price_monthly').order('rank'),
+      ]);
+      PLANS = plans || [];
+      if (sub && sub.plans) {
+        currentPlan  = { key: sub.plan_key, name: sub.plans.name, rank: sub.plans.rank, status: sub.status };
+        planRank     = sub.plans.rank;
+        planSuspended = !['active', 'trial'].includes(sub.status);
+      }
+    } catch (e) { /* fail open — no gating */ }
+    applyPlanGating();
 
     // Update sidebar
     document.getElementById('sb-merchant-name').textContent = currentMerchant.name;
@@ -10316,6 +10340,134 @@
     await loadProducts();
     closeProdOverlay();
   }
+
+  /* ── PLAN GATING (Phase 3) ──────────────────────────────────────────────
+     Lock modules above the merchant's plan. Fails open: with planRank = 999
+     (no subscription read) nothing is gated. Enforcement only bites once the
+     admin has assigned a plan whose row this merchant can read. ── */
+
+  // Dashboard page key → the plan rank that unlocks it. Marketplace = 1,
+  // Business = 2, AI Pro = 3. Rank 0 = always available (home, setup).
+  const PAGE_RANK = {
+    home: 0, setup: 0,
+    // Marketplace
+    bookings: 1, deals: 1, 'service-menu': 1,
+    // Business
+    'team-members': 2, shifts: 2, sales: 2, productivity: 2,
+    'clients-list': 2, 'client-segments': 2, 'client-loyalty': 2,
+    memberships: 2, 'product-list': 2,
+    'inv-overview': 2, 'inv-items': 2, 'inv-intake': 2, 'inv-usage': 2,
+    'inv-adjustments': 2, 'inv-suppliers': 2, 'generate-bill': 2,
+    // AI Pro
+    'mktg-notifications': 3, 'mktg-advertising': 3,
+  };
+
+  // 'ok' | 'locked' (plan too low) | 'suspended' (subscription not active)
+  function pageAccess(page) {
+    const req = PAGE_RANK[page] || 0;
+    if (req === 0) return 'ok';
+    if (planSuspended) return 'suspended';
+    if (planRank < req) return 'locked';
+    return 'ok';
+  }
+
+  function planForRank(rank) { return PLANS.find(p => p.rank === rank) || null; }
+
+  // Mark locked nav buttons and drop a plan badge by the role chip.
+  function applyPlanGating() {
+    if (currentPlan) {
+      const roleEl = document.getElementById('role-chip');
+      if (roleEl && !document.getElementById('plan-chip')) {
+        const chip = document.createElement('span');
+        chip.id = 'plan-chip';
+        chip.className = 'plan-chip' + (planSuspended ? ' suspended' : '');
+        chip.textContent = planSuspended ? '⚠ ' + currentPlan.name + ' · suspended' : currentPlan.name;
+        roleEl.insertAdjacentElement('afterend', chip);
+      }
+    }
+    document.querySelectorAll('button[onclick*="switchPage("]').forEach(btn => {
+      const mm = (btn.getAttribute('onclick') || '').match(/switchPage\('([^']+)'/);
+      if (!mm) return;
+      const locked = pageAccess(mm[1]) !== 'ok';
+      btn.classList.toggle('plan-locked', locked);
+      const has = btn.querySelector('.lock-badge');
+      if (locked && !has) {
+        const s = document.createElement('span');
+        s.className = 'lock-badge'; s.textContent = ' 🔒';
+        btn.appendChild(s);
+      } else if (!locked && has) { has.remove(); }
+    });
+  }
+
+  function closePlanModal() {
+    const el = document.getElementById('plan-modal');
+    if (el) el.classList.remove('open');
+  }
+
+  function showPlanModal(title, bodyHtml) {
+    let el = document.getElementById('plan-modal');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'plan-modal';
+      el.addEventListener('click', e => { if (e.target === el) closePlanModal(); });
+      document.body.appendChild(el);
+    }
+    el.innerHTML = `<div class="pm-box">
+        <div class="pm-title">${title}</div>
+        <div class="pm-body">${bodyHtml}</div>
+        <div class="pm-acts"><button class="pm-btn" onclick="closePlanModal()">Got it</button></div>
+      </div>`;
+    el.classList.add('open');
+  }
+
+  function showUpgradeModal(page) {
+    const target = planForRank(PAGE_RANK[page] || 0);
+    const price = target && target.price_monthly ? ' (₹' + Number(target.price_monthly).toLocaleString('en-IN') + '/mo)' : '';
+    const name  = target ? target.name : 'a higher';
+    showPlanModal('🔒 Part of the ' + (target ? target.name : 'upgrade') + ' plan',
+      `This feature unlocks on the <b>${name}</b> plan${price}.` +
+      (currentPlan ? ` You're currently on <b>${currentPlan.name}</b>.` : '') +
+      `<br><br>Talk to your Genoti account manager to upgrade — it takes effect straight away.`);
+  }
+
+  function showSuspendedModal() {
+    showPlanModal('⚠ Subscription suspended',
+      `Your Genoti subscription is currently suspended, so this feature is paused. ` +
+      `Please get in touch to reactivate your account.`);
+  }
+
+  // Intercept navigation. Runs after the lazy-load override, so a blocked page
+  // never switches panels nor triggers its data load.
+  const _planGuardSwitch = switchPage;
+  switchPage = function(page, btn) {
+    const access = pageAccess(page);
+    if (access === 'locked')    { showUpgradeModal(page); return; }
+    if (access === 'suspended') { showSuspendedModal();   return; }
+    _planGuardSwitch(page, btn);
+  };
+
+  // Styles for locked items + the upgrade modal.
+  (function () {
+    const css = document.createElement('style');
+    css.textContent = `
+      .plan-locked { opacity: .5; }
+      .lock-badge { font-size: .85em; }
+      .plan-chip { display:inline-block; margin-left:8px; padding:2px 9px; border-radius:20px;
+        font-size:11px; font-weight:700; background:#F5F3FF; color:#6D28D9; vertical-align:middle; }
+      .plan-chip.suspended { background:#FEF2F2; color:#DC2626; }
+      #plan-modal { position:fixed; inset:0; background:rgba(17,24,39,.55); display:none;
+        align-items:center; justify-content:center; padding:20px; z-index:2000; }
+      #plan-modal.open { display:flex; }
+      #plan-modal .pm-box { background:#fff; border-radius:18px; max-width:420px; width:100%; padding:26px 24px;
+        box-shadow:0 12px 48px rgba(0,0,0,.2); font-family:inherit; }
+      #plan-modal .pm-title { font-size:18px; font-weight:800; letter-spacing:-.4px; margin-bottom:10px; color:#111827; }
+      #plan-modal .pm-body { font-size:14px; color:#374151; line-height:1.6; }
+      #plan-modal .pm-acts { display:flex; justify-content:flex-end; margin-top:22px; }
+      #plan-modal .pm-btn { background:#1D9E75; color:#fff; border:none; border-radius:10px; padding:10px 20px;
+        font-size:14px; font-weight:700; font-family:inherit; cursor:pointer; }
+      #plan-modal .pm-btn:hover { opacity:.9; }`;
+    document.head.appendChild(css);
+  })();
 
   init();
 </script>
