@@ -421,6 +421,11 @@ async function render() {
       </div>
       <div id="ap-msg" style="display:none;font-size:12.5px;margin-top:10px;padding:9px 12px;border-radius:10px;"></div>
     </div>
+    <div class="card" style="margin-bottom:12px">
+      <div class="k">Salon / Spa Merchant OS</div>
+      <div class="sub" style="margin:4px 0 10px">Open the full salon/spa module set (Services, Bookings, Staff, Clients, Loyalty, Inventory, Marketing…) in the Merchant OS. Your admin account must be linked to a workspace to load it — see the grant SQL if it says "not linked".</div>
+      <a class="act ok solid" href="merchant/dashboard.html" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Open the Merchant OS →</a>
+    </div>
     <div class="grid">
       ${card('Onboarded', fmt(mch.length), 'in the merchants table')}
       ${card('Listed live', fmt(mch.filter(m => m.listed).length), 'visible to customers')}
