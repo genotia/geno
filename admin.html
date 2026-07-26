@@ -276,7 +276,7 @@ tbody tr.rowlink:hover{background:#fafafa}
       </button>
       <button class="nav-item" data-view="categories">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
-        <span>Categories</span>
+        <span>Modules</span>
       </button>
     </nav>
     <div class="side-foot"><div class="avatar" id="side-avatar">–</div><div class="who">Admin<small id="side-email">Genoti admin</small></div></div>
@@ -902,7 +902,7 @@ function renderCategories() {
   }).join('');
 
   $('view-categories').innerHTML = `
-    <h2 class="sec">Categories &amp; the modules they provision</h2>
+    <h2 class="sec">Modules by category</h2>
     ${cats.length ? `<div class="cat-grid">${out}</div>` : '<div class="panel"><div class="empty">No merchant categories yet.</div></div>'}`;
 }
 
@@ -912,7 +912,7 @@ function renderAll() {
   renderFinance(); renderPlans(); renderAnalytics(); renderCategories();
 }
 
-const TITLES = { overview:'Overview', merchants:'Merchants', approvals:'Approvals', finance:'Finance', plans:'Plans & modules', analytics:'Analytics', categories:'Categories' };
+const TITLES = { overview:'Overview', merchants:'Merchants', approvals:'Approvals', finance:'Finance', plans:'Plans & modules', analytics:'Analytics', categories:'Modules' };
 function go(name) {
   VIEW = name;
   document.querySelectorAll('.view').forEach(v => v.hidden = v.id !== 'view-' + name);
