@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tools | Genoti for Merchants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#5b4ae0; --brand-deep:#3f2fb0; --brand-soft:#efecfc;
+  --ink:#1a1830; --text:#2a2840; --muted:#6b6a7e;
+  --bg:#ffffff; --bg-alt:#faf9fe; --border:#eceaf5;
+  --found:#5b4ae0; --found-soft:#efecfc;
+  --value:#0e9e6e; --value-soft:#e4f6ef;
+  --radius:16px; --maxw:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+:focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:4px}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;gap:22px;height:66px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:19px;color:var(--ink);letter-spacing:-0.02em}
+.links{display:flex;gap:18px;margin-left:10px}
+.links>a,.dropdown>a{font-size:14.5px;color:var(--muted);font-weight:500;display:inline-flex;align-items:center;gap:5px}
+.links>a:hover,.dropdown>a:hover{color:var(--ink)}
+.links a.active,.dropdown>a.active{color:var(--brand);font-weight:600}
+.dropdown{position:relative}
+.dropdown>a svg{width:12px;height:12px;transition:transform .15s}
+.menu{position:absolute;top:calc(100% + 10px);left:-12px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 40px -20px rgba(60,45,150,.45);padding:8px;min-width:270px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .15s;z-index:60}
+.dropdown:hover .menu,.dropdown:focus-within .menu{opacity:1;visibility:visible;transform:translateY(0)}
+.dropdown:hover>a svg{transform:rotate(180deg)}
+.menu a{display:block;padding:9px 11px;border-radius:8px;color:var(--text)}
+.menu a:hover{background:var(--bg-alt)}
+.menu .mlabel{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:8px 11px 4px}
+.menu a .mtitle{font-weight:600;color:var(--ink);display:block;font-size:14px}
+.menu a:hover .mtitle{color:var(--brand)}
+.menu a .mdesc{font-size:12px;color:var(--muted)}
+.right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.smenu-wrap{position:relative;display:inline-flex}
+.smenu-btn{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink);background:#fff;border:1px solid var(--border);border-radius:40px;padding:8px 15px;cursor:pointer;font-family:inherit}
+.smenu-btn:hover{border-color:var(--brand);color:var(--brand)}
+.smenu-btn .ham{display:flex;flex-direction:column;gap:3px}
+.smenu-btn .ham span{display:block;width:15px;height:1.6px;background:currentColor;border-radius:2px}
+.smenu{position:absolute;top:calc(100% + 10px);right:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 40px -20px rgba(60,45,150,.45);padding:8px;min-width:236px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .15s;z-index:60}
+.smenu-wrap:hover .smenu,.smenu-wrap:focus-within .smenu{opacity:1;visibility:visible;transform:translateY(0)}
+.smenu a{display:block;padding:9px 11px;border-radius:8px;color:var(--text);font-size:14px;font-weight:500}
+.smenu a:hover{background:var(--bg-alt);color:var(--brand)}
+.smenu .mhead{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:9px 11px 4px}
+.smenu .mdiv{height:1px;background:var(--border);margin:6px 0}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px;border-radius:10px;padding:10px 18px;border:1px solid transparent;cursor:pointer;transition:transform .08s,filter .12s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.outline{background:#fff;color:var(--ink);border-color:var(--border)}
+.btn.outline:hover{border-color:var(--brand);color:var(--brand)}
+.btn.sm{padding:8px 14px;font-size:13.5px}
+.btn svg{width:16px;height:16px}
+.hero{position:relative;overflow:hidden;padding:74px 0 40px;text-align:center}
+.hero::before{content:"";position:absolute;top:-190px;left:50%;transform:translateX(-50%);width:760px;height:520px;background:radial-gradient(circle at 50% 40%,rgba(91,74,224,.16),transparent 62%);z-index:0}
+.hero .wrap{position:relative;z-index:1}
+.eyebrow-pill{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--brand);background:var(--brand-soft);padding:6px 14px;border-radius:30px;margin-bottom:20px}
+.eyebrow-pill svg{width:15px;height:15px}
+.hero h1{font-size:clamp(34px,5vw,52px);line-height:1.08;letter-spacing:-0.03em;color:var(--ink);font-weight:700;max-width:18ch;margin:0 auto 18px}
+.hero p.sub{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:58ch;margin:0 auto 24px}
+.hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.jump{display:flex;justify-content:center;gap:10px;margin:40px auto 0;flex-wrap:wrap}
+.jump a{display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px 18px;font-weight:600;font-size:14.5px;color:var(--ink)}
+.jump a:hover{border-color:var(--brand)}
+.jump a .dot{width:10px;height:10px;border-radius:50%}
+.sec{padding:52px 0}
+.grouphead{padding-bottom:10px;margin-bottom:6px;border-bottom:2px solid var(--border)}
+.grouphead .ge{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand);margin-bottom:6px}
+.grouphead .ge svg{width:16px;height:16px}
+.grouphead h2{font-size:clamp(22px,2.7vw,29px);letter-spacing:-0.02em;color:var(--ink);font-weight:700}
+.grouphead p{font-size:15px;color:var(--muted);margin-top:4px;max-width:60ch}
+.tool{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center;padding:34px 0}
+.tool + .tool{border-top:1px solid var(--border)}
+.tool.rev .copy{order:2}
+.badge{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.badge svg{width:26px;height:26px}
+.b-value{background:var(--value-soft);color:var(--value)}
+.b-found{background:var(--found-soft);color:var(--found)}
+.tool h3{font-size:27px;letter-spacing:-0.02em;color:var(--ink);font-weight:700;margin-bottom:10px}
+.tool .desc{font-size:15.5px;color:var(--muted);margin-bottom:16px}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.tag{font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;background:var(--bg-alt);border:1px solid var(--border);color:var(--text)}
+.tag.who{background:var(--found-soft);color:var(--found);border-color:transparent}
+.tag.whoc{background:var(--value-soft);color:var(--value);border-color:transparent}
+.tag.live{background:var(--value-soft);color:var(--value);border-color:transparent}
+.tag.soon{background:#f4f3f8;color:var(--muted);border-color:transparent}
+.tool .act{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.tool .act .more{font-size:14px;font-weight:600;color:var(--brand)}
+.vcard{background:linear-gradient(160deg,#fff,var(--bg-alt));border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:0 24px 60px -34px rgba(60,45,150,.5)}
+.vhead{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:14px}
+.vrow{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:10px}
+.vrow:last-child{margin-bottom:0}
+.vrow .t{font-size:13.5px;font-weight:600;color:var(--ink)}
+.vrow .s{font-size:12px;color:var(--muted)}
+.vrow .val{margin-left:auto;font-size:14px;font-weight:700}
+.vbig{background:var(--ink);color:#fff;border-radius:12px;padding:16px;text-align:center;margin-top:4px}
+.vbig .n{font-size:26px;font-weight:700;color:#9ff0cf}
+.vbig .l{font-size:12px;color:#c9c6e6}
+.bar{height:8px;border-radius:6px;background:var(--bg-alt);overflow:hidden;margin-top:8px}
+.bar span{display:block;height:100%;border-radius:6px}
+.tiein{background:var(--ink);color:#fff;border-radius:22px;padding:44px 40px;position:relative;overflow:hidden;text-align:center;margin-top:20px}
+.tiein::before{content:"";position:absolute;bottom:-140px;left:50%;transform:translateX(-50%);width:560px;height:340px;background:radial-gradient(circle,rgba(123,106,255,.35),transparent 65%)}
+.tiein .in{position:relative;z-index:1;max-width:680px;margin:0 auto}
+.tiein h2{font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-bottom:12px}
+.tiein p{color:#c9c6e6;font-size:15.5px;margin-bottom:22px}
+.tiein .btn.primary{background:#fff;color:var(--brand)}
+.final{text-align:center;padding:66px 0 40px}
+.final h2{font-size:clamp(28px,4vw,38px);letter-spacing:-0.02em;color:var(--ink);font-weight:700;margin-bottom:14px}
+.final p{color:var(--muted);font-size:17px;margin-bottom:26px}
+footer{background:var(--bg-alt);border-top:1px solid var(--border);padding:52px 0 30px}
+.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+.fbrand .logo{margin-bottom:12px}.fbrand p{font-size:13.5px;color:var(--muted);max-width:26ch}
+footer h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);font-weight:600;margin-bottom:14px}
+footer ul{list-style:none}footer li{margin-bottom:9px}
+footer li a{font-size:13.5px;color:var(--muted)}footer li a:hover{color:var(--brand)}
+.fbottom{border-top:1px solid var(--border);margin-top:36px;padding-top:20px;font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media(max-width:860px){.links{display:none}.tool{grid-template-columns:1fr;gap:24px}.tool.rev .copy{order:0}.fcols{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0"><a class="logo" href="ai-agents.html"><img src="../genoti_logo.svg" alt="" style="width:28px;height:28px">Genoti</a></div>
+    <nav class="links">
+      <div class="dropdown">
+        <a href="ai-agents.html">AI Agents <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="menu">
+          <a href="get-found.html"><span class="mtitle">Get Found</span><span class="mdesc">Show up first and get demand</span></a>
+          <a href="get-booked.html"><span class="mtitle">Get Booked</span><span class="mdesc">Win every inquiry, fill slots</span></a>
+          <a href="get-them-back.html"><span class="mtitle">Get Them Back</span><span class="mdesc">Cut no-shows, grow repeats</span></a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="merchant-os.html">Merchant OS <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="menu">
+          <a href="merchant-os-saas.html"><span class="mtitle">SaaS</span><span class="mdesc">11+ modules to run your business</span></a>
+          <a href="merchant-os-platform.html"><span class="mtitle">Platform</span><span class="mdesc">Built for every local business</span></a>
+          <a href="merchant-os-integrations.html"><span class="mtitle">Integration</span><span class="mdesc">Works with your existing tools</span></a>
+        </div>
+      </div>
+      <a href="pricing.html">Pricing</a>
+      <a href="business-types.html">Business Types</a>
+      <div class="dropdown">
+        <a href="tools.html" class="active">Tools <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="menu">
+          <a href="tools.html"><span class="mtitle">All tools</span><span class="mdesc">Every free tool in one place</span></a>
+          <div class="mlabel">For users</div>
+          <a href="tool-customer-savings.html"><span class="mtitle">Customer Savings Calculator</span><span class="mdesc">What customers save</span></a>
+          <a href="tool-best-time.html"><span class="mtitle">Best Time to Book</span><span class="mdesc">Cheapest windows to book</span></a>
+          <div class="mlabel">For merchants</div>
+          <a href="tool-true-price.html"><span class="mtitle">True Price Calculator</span><span class="mdesc">What you really keep</span></a>
+          <a href="tool-keyword-analysis.html"><span class="mtitle">Keyword Analysis</span><span class="mdesc">Terms customers search</span></a>
+          <a href="tool-gbp-audit.html"><span class="mtitle">Google Business Profile Audit</span><span class="mdesc">Fix your local ranking</span></a>
+          <a href="tool-website-health.html"><span class="mtitle">Website Health &amp; Strategy</span><span class="mdesc">Your site's local SEO</span></a>
+        </div>
+      </div>
+    </nav>
+    <div class="right">
+      <div class="smenu-wrap">
+        <button class="smenu-btn" aria-label="Menu">Menu <span class="ham"><span></span><span></span><span></span></span></button>
+        <div class="smenu">
+          <div class="mhead">For businesses</div>
+          <a href="merchant-os.html">Merchant OS</a>
+          <a href="business-types.html">Business Types</a>
+          <a href="ai-agents.html">AI Agents</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="tools.html">Tools</a>
+          <a href="../register.html">Sign up</a>
+          <div class="mdiv"></div>
+          <div class="mhead">For customers</div>
+          <a href="../index.html">Marketplace</a>
+          <a href="../download-the-app.html">Download the app</a>
+          <a href="../help.html">Help &amp; support</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2-2 2.6-2.6z"/></svg> Tools</span>
+    <h1>Free tools for customers and businesses.</h1>
+    <p class="sub">Tools that help customers see the real price, and help businesses price, get found, and grow. Free to start, with no signup.</p>
+    <div class="cta">
+      <a class="btn primary" href="#for-users">For users <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn outline" href="#for-merchants">For merchants</a>
+    </div>
+    <div class="jump">
+      <a href="#for-users"><span class="dot" style="background:var(--value)"></span>For users &middot; 2 tools</a>
+      <a href="#for-merchants"><span class="dot" style="background:var(--found)"></span>For merchants &middot; 4 tools</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOR USERS -->
+<section class="sec" id="for-users">
+  <div class="wrap">
+    <div class="grouphead">
+      <div class="ge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>For users</div>
+      <h2>Tools for customers</h2>
+      <p>See what a service really costs, and the cheapest time to book it, before you commit.</p>
+    </div>
+
+    <div class="tool" id="customer-savings">
+      <div class="copy">
+        <div class="badge b-value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h3>Customer Savings Calculator</h3>
+        <p class="desc">See what you save. Compare the usual marked-up price against the real Genoti price with off-peak and negotiated deals, so the saving is a clear number before you book.</p>
+        <div class="tags"><span class="tag whoc">For customers</span><span class="tag live">Live</span><span class="tag">Powers Get Found</span></div>
+        <div class="act"><a class="btn primary sm" href="tool-customer-savings.html">Open tool <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="more" href="tool-customer-savings.html">See details &rarr;</a></div>
+      </div>
+      <div class="visual">
+        <div class="vcard">
+          <div class="vhead">A &#8377;1,200 salon service</div>
+          <div class="vrow"><div><div class="t">Usual price</div><div class="s">What you would normally pay</div></div><div class="val">&#8377;1,200</div></div>
+          <div class="vrow"><div><div class="t">Genoti real price</div><div class="s">Off-peak, negotiated</div></div><div class="val" style="color:var(--value)">&#8377;950</div></div>
+          <div class="vbig"><div class="n">You save &#8377;250</div><div class="l">about 21% on this booking</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool rev" id="best-time">
+      <div class="copy">
+        <div class="badge b-value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Best Time to Book</h3>
+        <p class="desc">Book at the cheapest time. See the off-peak and last-minute windows when prices drop for the service you want, so you always pay the real low price.</p>
+        <div class="tags"><span class="tag whoc">For customers</span><span class="tag soon">Coming soon</span><span class="tag">Powers Get Found</span></div>
+        <div class="act"><a class="btn primary sm" href="tool-best-time.html">See details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+      <div class="visual">
+        <div class="vcard">
+          <div class="vhead">Cheapest windows this week</div>
+          <div class="vrow"><div><div class="t">Tue 2 - 4 PM</div><div class="s">Off-peak</div></div><div class="val" style="color:var(--value)">-25%</div></div>
+          <div class="vrow"><div><div class="t">Wed 3 - 5 PM</div><div class="s">Off-peak</div></div><div class="val" style="color:var(--value)">-20%</div></div>
+          <div class="vrow"><div><div class="t">Thu 11 AM - 1 PM</div><div class="s">Last minute</div></div><div class="val" style="color:var(--value)">-18%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR MERCHANTS -->
+<section class="sec" id="for-merchants" style="background:var(--bg-alt);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="grouphead">
+      <div class="ge" style="color:var(--found)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l1-5h16l1 5M4 9h16v11H4zM9 13h6"/></svg>For merchants</div>
+      <h2>Tools for your business</h2>
+      <p>Know your real take-home, learn what customers search for, and see how findable you are, then hand the work to your AI agents.</p>
+    </div>
+
+    <div class="tool" id="true-price">
+      <div class="copy">
+        <div class="badge b-value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="3"/><path d="M8 6h8M8 10h8M8 14h5"/></svg></div>
+        <h3>True Price Calculator</h3>
+        <p class="desc">See what you actually keep. Enter your price and monthly volume, and watch how much aggregator commissions take versus what you take home on Genoti at zero commission.</p>
+        <div class="tags"><span class="tag who">For merchants</span><span class="tag live">Live</span><span class="tag">Feeds your pricing</span></div>
+        <div class="act"><a class="btn primary sm" href="tool-true-price.html">Open tool <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="more" href="tool-true-price.html">See details &rarr;</a></div>
+      </div>
+      <div class="visual">
+        <div class="vcard">
+          <div class="vhead">Monthly take-home on &#8377;1,00,000 of bookings</div>
+          <div class="vrow"><div><div class="t">On a typical aggregator</div><div class="s">After ~25% commission</div></div><div class="val" style="color:#c65b5b">&#8377;75,000</div></div>
+          <div class="vrow"><div><div class="t">On Genoti</div><div class="s">Zero booking commission</div></div><div class="val" style="color:var(--value)">&#8377;1,00,000</div></div>
+          <div class="vbig"><div class="n">+&#8377;25,000</div><div class="l">more in your pocket every month</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool rev" id="keyword-analysis">
+      <div class="copy">
+        <div class="badge b-found"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></div>
+        <h3>Keyword Analysis</h3>
+        <p class="desc">Find the exact terms nearby customers use to search for a business like yours, see roughly how often each is searched, and learn which ones you should be showing up for.</p>
+        <div class="tags"><span class="tag who">For merchants</span><span class="tag soon">Coming soon</span><span class="tag">Powers Get Found</span></div>
+        <div class="act"><a class="btn primary sm" href="tool-keyword-analysis.html">See details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+      <div class="visual">
+        <div class="vcard">
+          <div class="vhead">Top local searches near you</div>
+          <div class="vrow"><div><div class="t">salon near indiranagar</div></div><div class="val" style="color:var(--found)">2,400/mo</div></div>
+          <div class="vrow"><div><div class="t">bridal makeup bangalore</div></div><div class="val" style="color:var(--found)">1,300/mo</div></div>
+          <div class="vrow"><div><div class="t">hair spa near me</div></div><div class="val" style="color:var(--found)">880/mo</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool" id="gbp-audit">
+      <div class="copy">
+        <div class="badge b-found"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+        <h3>Google Business Profile Audit</h3>
+        <p class="desc">Scan your Google Business Profile in seconds, spot the gaps that keep you out of near-me and map results, and get a prioritised fix list to climb the local pack.</p>
+        <div class="tags"><span class="tag who">For merchants</span><span class="tag soon">Coming soon</span><span class="tag">Powers Get Found</span></div>
+        <div class="act"><a class="btn primary sm" href="tool-gbp-audit.html">See details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+      <div class="visual">
+        <div class="vcard">
+          <div class="vhead">Profile health</div>
+          <div class="vrow"><div style="width:100%"><div class="t">Score 62 / 100</div><div class="bar"><span style="width:62%;background:var(--found)"></span></div></div></div>
+          <div class="vrow"><div><div class="t">Missing hours &amp; 4 photos</div><div class="s">Add to lift ranking</div></div><div class="val" style="color:#c9852b">Fix</div></div>
+          <div class="vrow"><div><div class="t">3 unanswered reviews</div><div class="s">Reply to build trust</div></div><div class="val" style="color:#c9852b">3</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool rev" id="website-health">
+      <div class="copy">
+        <div class="badge b-found"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18v14H3zM3 9h18M8 18v3M16 18v3"/></svg></div>
+        <h3>Website Health &amp; Strategy</h3>
+        <p class="desc">Check your website for the local SEO basics customers and Google both look for, from speed to mobile to contact details, and get a clear plan of what to fix first.</p>
+        <div class="tags"><span class="tag who">For merchants</span><span class="tag soon">Coming soon</span><span class="tag">Powers Get Found</span></div>
+        <div class="act"><a class="btn primary sm" href="tool-website-health.html">See details <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+      <div class="visual">
+        <div class="vcard">
+          <div class="vhead">Site check</div>
+          <div class="vrow"><div style="width:100%"><div class="t">Speed 71 / 100</div><div class="bar"><span style="width:71%;background:var(--found)"></span></div></div></div>
+          <div class="vrow"><div><div class="t">Mobile friendly</div><div class="s">Passes core checks</div></div><div class="val" style="color:var(--value)">OK</div></div>
+          <div class="vrow"><div><div class="t">No click-to-call</div><div class="s">Add for more bookings</div></div><div class="val" style="color:#c9852b">Fix</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" style="padding-top:40px">
+  <div class="wrap">
+    <div class="tiein">
+      <div class="in">
+        <h2>The tools show the gap. The agents close it.</h2>
+        <p>A free tool tells you your real price, or where nearby customers cannot find you. Your Genoti AI agents then act on it every day, so you are never left with just a report and a to-do list.</p>
+        <a class="btn primary" href="ai-agents.html">Meet the AI agents <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Start with a free tool. Grow with Genoti.</h2>
+    <p>No credit card. No signup to try the calculators.</p>
+    <a class="btn primary" href="#for-users">Try a tool now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div class="fbrand"><a class="logo" href="ai-agents.html"><img src="../genoti_logo.svg" alt="" style="width:26px;height:26px">Genoti</a><p>Discover local deals at the real price.</p></div>
+      <div><h4>For Users</h4><ul><li><a href="../dealbox.html">DealBox</a></li><li><a href="../index.html">OffPeak Deals</a></li><li><a href="../last-minute.html">LastMinute Deals</a></li><li><a href="../negotiate.html">Negotiate by AI</a></li><li><a href="../dealhub.html">DealHub</a></li></ul></div>
+      <div><h4>For Merchants</h4><ul><li><a href="merchant-os.html">Merchant OS</a></li><li><a href="ai-agents.html">AI Agents</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="tools.html">Tools</a></li><li><a href="business-types.html">Business Types</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="../help.html">Contact</a></li></ul></div>
+    </div>
+    <div class="fbottom"><span>&copy; 2026 OffPeak Technologies Pvt. Ltd.</span><span>Privacy &middot; Terms</span></div>
+  </div>
+</footer>
+
+</body>
+</html>

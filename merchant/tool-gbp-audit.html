@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Business Profile Audit | Genoti Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#5b4ae0; --brand-deep:#3f2fb0; --brand-soft:#efecfc;
+  --ink:#1a1830; --text:#2a2840; --muted:#6b6a7e;
+  --bg:#ffffff; --bg-alt:#faf9fe; --border:#eceaf5;
+  --value:#0e9e6e; --value-soft:#e4f6ef; --found:#5b4ae0; --found-soft:#efecfc;
+  --accent:#5b4ae0; --accent-soft:#efecfc;
+  --maxw:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+:focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:4px}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;gap:22px;height:66px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:19px;color:var(--ink);letter-spacing:-0.02em}
+.links{display:flex;gap:18px;margin-left:10px}
+.links>a,.dropdown>a{font-size:14.5px;color:var(--muted);font-weight:500;display:inline-flex;align-items:center;gap:5px}
+.links>a:hover,.dropdown>a:hover{color:var(--ink)}
+.links a.active,.dropdown>a.active{color:var(--brand);font-weight:600}
+.dropdown{position:relative}
+.dropdown>a svg{width:12px;height:12px;transition:transform .15s}
+.menu{position:absolute;top:calc(100% + 10px);left:-12px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 40px -20px rgba(60,45,150,.45);padding:8px;min-width:270px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .15s;z-index:60}
+.dropdown:hover .menu,.dropdown:focus-within .menu{opacity:1;visibility:visible;transform:translateY(0)}
+.dropdown:hover>a svg{transform:rotate(180deg)}
+.menu a{display:block;padding:9px 11px;border-radius:8px;color:var(--text)}
+.menu a:hover{background:var(--bg-alt)}
+.menu .mlabel{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:8px 11px 4px}
+.menu a .mtitle{font-weight:600;color:var(--ink);display:block;font-size:14px}
+.menu a:hover .mtitle{color:var(--brand)}
+.menu a .mdesc{font-size:12px;color:var(--muted)}
+.right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.smenu-wrap{position:relative;display:inline-flex}
+.smenu-btn{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink);background:#fff;border:1px solid var(--border);border-radius:40px;padding:8px 15px;cursor:pointer;font-family:inherit}
+.smenu-btn:hover{border-color:var(--brand);color:var(--brand)}
+.smenu-btn .ham{display:flex;flex-direction:column;gap:3px}
+.smenu-btn .ham span{display:block;width:15px;height:1.6px;background:currentColor;border-radius:2px}
+.smenu{position:absolute;top:calc(100% + 10px);right:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 40px -20px rgba(60,45,150,.45);padding:8px;min-width:236px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .15s;z-index:60}
+.smenu-wrap:hover .smenu,.smenu-wrap:focus-within .smenu{opacity:1;visibility:visible;transform:translateY(0)}
+.smenu a{display:block;padding:9px 11px;border-radius:8px;color:var(--text);font-size:14px;font-weight:500}
+.smenu a:hover{background:var(--bg-alt);color:var(--brand)}
+.smenu .mhead{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:9px 11px 4px}
+.smenu .mdiv{height:1px;background:var(--border);margin:6px 0}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px;border-radius:10px;padding:10px 18px;border:1px solid transparent;cursor:pointer;transition:transform .08s,filter .12s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.outline{background:#fff;color:var(--ink);border-color:var(--border)}
+.btn.outline:hover{border-color:var(--brand);color:var(--brand)}
+.btn svg{width:16px;height:16px}
+.hero{position:relative;overflow:hidden;padding:64px 0 44px}
+.hero::before{content:"";position:absolute;top:-200px;right:-120px;width:640px;height:520px;background:radial-gradient(circle at 60% 40%,var(--accent-soft),transparent 60%);z-index:0;opacity:.8}
+.hero .wrap{position:relative;z-index:1;max-width:760px}
+.crumb{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:14px}
+.hero h1{font-size:clamp(32px,4.6vw,50px);line-height:1.1;letter-spacing:-0.03em;color:var(--ink);font-weight:700;margin-bottom:18px}
+.hero p.sub{font-size:18px;color:var(--muted);margin-bottom:24px;max-width:54ch}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.badges{display:flex;gap:10px;flex-wrap:wrap}
+.badge{font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;background:var(--bg-alt);border:1px solid var(--border);color:var(--text)}
+.badge.hl{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.sec{padding:58px 0}
+.sec-alt{background:var(--bg-alt);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.eyebrow{font-size:13px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.sec h2{font-size:clamp(24px,3vw,32px);letter-spacing:-0.02em;color:var(--ink);font-weight:700;line-height:1.15;max-width:22ch}
+.sec .lead{font-size:16.5px;color:var(--muted);max-width:60ch;margin-top:14px}
+.center{text-align:center}.center h2,.center .lead{margin-left:auto;margin-right:auto}
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px}
+.c3{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px}
+.sec-alt .c3{background:#fff}
+.c3 .ci{width:42px;height:42px;border-radius:11px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.c3 .ci svg{width:20px;height:20px}
+.c3 h3{font-size:16.5px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.c3 p{font-size:14px;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:36px}
+.step{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px}
+.sec-alt .step{background:#fff}
+.step .num{width:34px;height:34px;border-radius:10px;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.step h4{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:7px}
+.step p{font-size:14px;color:var(--muted)}
+.others{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px}
+.ocard{display:block;background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;transition:transform .1s,border-color .12s}
+.ocard:hover{transform:translateY(-2px);border-color:var(--brand)}
+.ocard .ob{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.ocard .ob svg{width:20px;height:20px}
+.ocard h4{font-size:16.5px;font-weight:700;color:var(--ink);margin-bottom:5px}
+.ocard p{font-size:13.5px;color:var(--muted);margin-bottom:10px}
+.ocard .more{font-size:13px;font-weight:600;color:var(--brand)}
+.final{text-align:center;padding:70px 0 40px}
+.final h2{font-size:clamp(28px,4vw,38px);letter-spacing:-0.02em;color:var(--ink);font-weight:700;margin-bottom:14px}
+.final p{color:var(--muted);font-size:17px;margin-bottom:26px}
+footer{background:var(--bg-alt);border-top:1px solid var(--border);padding:52px 0 30px}
+.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+.fbrand .logo{margin-bottom:12px}.fbrand p{font-size:13.5px;color:var(--muted);max-width:26ch}
+footer h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);font-weight:600;margin-bottom:14px}
+footer ul{list-style:none}footer li{margin-bottom:9px}
+footer li a{font-size:13.5px;color:var(--muted)}footer li a:hover{color:var(--brand)}
+.fbottom{border-top:1px solid var(--border);margin-top:36px;padding-top:20px;font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media(max-width:860px){.links{display:none}.cards3,.steps{grid-template-columns:1fr}.others{grid-template-columns:1fr}.fcols{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0"><a class="logo" href="ai-agents.html"><img src="../genoti_logo.svg" alt="" style="width:28px;height:28px">Genoti</a></div>
+    <nav class="links">
+      <div class="dropdown">
+        <a href="ai-agents.html">AI Agents <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="menu">
+          <a href="get-found.html"><span class="mtitle">Get Found</span><span class="mdesc">Show up first and get demand</span></a>
+          <a href="get-booked.html"><span class="mtitle">Get Booked</span><span class="mdesc">Win every inquiry, fill slots</span></a>
+          <a href="get-them-back.html"><span class="mtitle">Get Them Back</span><span class="mdesc">Cut no-shows, grow repeats</span></a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <a href="merchant-os.html">Merchant OS <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="menu">
+          <a href="merchant-os-saas.html"><span class="mtitle">SaaS</span><span class="mdesc">11+ modules to run your business</span></a>
+          <a href="merchant-os-platform.html"><span class="mtitle">Platform</span><span class="mdesc">Built for every local business</span></a>
+          <a href="merchant-os-integrations.html"><span class="mtitle">Integration</span><span class="mdesc">Works with your existing tools</span></a>
+        </div>
+      </div>
+      <a href="pricing.html">Pricing</a>
+      <a href="business-types.html">Business Types</a>
+      <div class="dropdown">
+        <a href="tools.html" class="active">Tools <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="menu">
+          <a href="tools.html"><span class="mtitle">All tools</span><span class="mdesc">Every free tool in one place</span></a>
+          <div class="mlabel">For users</div>
+          <a href="tool-customer-savings.html"><span class="mtitle">Customer Savings Calculator</span><span class="mdesc">What customers save</span></a>
+          <a href="tool-best-time.html"><span class="mtitle">Best Time to Book</span><span class="mdesc">Cheapest windows to book</span></a>
+          <div class="mlabel">For merchants</div>
+          <a href="tool-true-price.html"><span class="mtitle">True Price Calculator</span><span class="mdesc">What you really keep</span></a>
+          <a href="tool-keyword-analysis.html"><span class="mtitle">Keyword Analysis</span><span class="mdesc">Terms customers search</span></a>
+          <a href="tool-gbp-audit.html"><span class="mtitle">Google Business Profile Audit</span><span class="mdesc">Fix your local ranking</span></a>
+          <a href="tool-website-health.html"><span class="mtitle">Website Health &amp; Strategy</span><span class="mdesc">Your site's local SEO</span></a>
+        </div>
+      </div>
+    </nav>
+    <div class="right">
+      <div class="smenu-wrap">
+        <button class="smenu-btn" aria-label="Menu">Menu <span class="ham"><span></span><span></span><span></span></span></button>
+        <div class="smenu">
+          <div class="mhead">For businesses</div>
+          <a href="merchant-os.html">Merchant OS</a>
+          <a href="business-types.html">Business Types</a>
+          <a href="ai-agents.html">AI Agents</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="tools.html">Tools</a>
+          <a href="../register.html">Sign up</a>
+          <div class="mdiv"></div>
+          <div class="mhead">For customers</div>
+          <a href="../index.html">Marketplace</a>
+          <a href="../download-the-app.html">Download the app</a>
+          <a href="../help.html">Help &amp; support</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="crumb">Tools · Google Business Profile Audit</div>
+    <h1>Fix what keeps you off the map.</h1>
+    <p class="sub">The Google Business Profile Audit scans your profile, finds the gaps that hurt your near-me ranking, and gives you a prioritised fix list.</p>
+    <div class="cta">
+      <a class="btn primary" href="#">Join the waitlist <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn outline" href="tools.html">All tools</a>
+    </div>
+    <div class="badges"><span class="badge hl">For merchants</span><span class="badge">Coming soon</span><span class="badge">Powers Get Found</span></div>
+  </div>
+</section>
+
+<section class="sec sec-alt">
+  <div class="wrap center">
+    <div class="eyebrow">Why it matters</div>
+    <h2>Your Google profile is your storefront in search</h2>
+    <p class="lead">For a local business, the Google Business Profile is often the first thing a customer sees, and the thing that decides whether you appear in the map pack at all. Small gaps quietly cost you visits.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="center" style="max-width:640px;margin:0 auto"><div class="eyebrow">What you get</div><h2>Clear answers, not a data dump</h2></div>
+    <div class="cards3"><div class="c3"><div class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg></div><h3>A profile score</h3><p>Where you stand right now, at a glance.</p></div><div class="c3"><div class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg></div><h3>The gaps that matter</h3><p>Missing hours, photos, categories, and posts.</p></div><div class="c3"><div class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg></div><h3>A fix list, in order</h3><p>What to do first for the biggest ranking lift.</p></div></div>
+  </div>
+</section>
+
+<section class="sec sec-alt">
+  <div class="wrap center">
+    <div class="eyebrow">How it works</div>
+    <h2>Three steps, a minute or two</h2>
+    <div class="steps" style="text-align:left"><div class="step"><div class="num">1</div><h4>Enter your business</h4><p>Find your profile in a few seconds.</p></div><div class="step"><div class="num">2</div><h4>Get your audit</h4><p>A score plus a prioritised list of gaps.</p></div><div class="step"><div class="num">3</div><h4>Let Get Found act</h4><p>The agent keeps the profile optimised over time.</p></div></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="eyebrow">More free tools</div>
+    <h2>Keep going</h2>
+    <div class="others"><a class="ocard" href="tool-keyword-analysis.html"><div class="ob" style="background:var(--found-soft);color:var(--found)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></div><h4>Keyword Analysis</h4><p>Another free tool to grow your business.</p><span class="more">See details &rarr;</span></a><a class="ocard" href="tool-website-health.html"><div class="ob" style="background:var(--found-soft);color:var(--found)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18v14H3zM3 9h18M8 18v3M16 18v3"/></svg></div><h4>Website Health &amp; Strategy</h4><p>Another free tool to grow your business.</p><span class="more">See details &rarr;</span></a></div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Fix what keeps you off the map.</h2>
+    <p>Free to use. Part of the Genoti toolkit for local businesses.</p>
+    <a class="btn primary" href="#">Join the waitlist <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div class="fbrand"><a class="logo" href="ai-agents.html"><img src="../genoti_logo.svg" alt="" style="width:26px;height:26px">Genoti</a><p>Discover local deals at the real price.</p></div>
+      <div><h4>For Users</h4><ul><li><a href="../dealbox.html">DealBox</a></li><li><a href="../index.html">OffPeak Deals</a></li><li><a href="../last-minute.html">LastMinute Deals</a></li><li><a href="../negotiate.html">Negotiate by AI</a></li><li><a href="../dealhub.html">DealHub</a></li></ul></div>
+      <div><h4>For Merchants</h4><ul><li><a href="merchant-os.html">Merchant OS</a></li><li><a href="ai-agents.html">AI Agents</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="tools.html">Tools</a></li><li><a href="business-types.html">Business Types</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="../help.html">Contact</a></li></ul></div>
+    </div>
+    <div class="fbottom"><span>&copy; 2026 OffPeak Technologies Pvt. Ltd.</span><span>Privacy &middot; Terms</span></div>
+  </div>
+</footer>
+</body>
+</html>
