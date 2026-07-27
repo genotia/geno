@@ -39,7 +39,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdro
 .menu a .mtitle{font-weight:600;color:var(--ink);display:block;font-size:14px}
 .menu a:hover .mtitle{color:var(--brand)}
 .menu a .mdesc{font-size:12px;color:var(--muted)}
-.menu .mlabel{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:8px 11px 4px}
+.menu .mlabel{font-size:14px;font-weight:700;color:var(--ink);padding:10px 11px 5px}
+.menu-tools a .mtitle{font-weight:500;font-size:12.5px;color:var(--muted)}
 .right{margin-left:auto;display:flex;align-items:center;gap:16px}
 .right a.ghost{font-size:14.5px;color:var(--ink);font-weight:500}
 .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px;border-radius:10px;padding:10px 18px;border:1px solid transparent;cursor:pointer;transition:transform .08s,filter .12s}
@@ -146,16 +147,15 @@ footer li a{font-size:13.5px;color:var(--muted)}footer li a:hover{color:var(--br
       <a href="business-types.html">Business Types</a>
       <div class="dropdown">
         <a href="tools.html">Tools <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
-        <div class="menu">
-          <a href="tools.html"><span class="mtitle">All tools</span><span class="mdesc">Every free tool in one place</span></a>
-          <div class="mlabel">For users</div>
-          <a href="tool-customer-savings.html"><span class="mtitle">Customer Savings Calculator</span><span class="mdesc">What customers save</span></a>
-          <a href="tool-best-time.html"><span class="mtitle">Best Time to Book</span><span class="mdesc">Cheapest windows to book</span></a>
+        <div class="menu menu-tools">
           <div class="mlabel">For merchants</div>
-          <a href="tool-true-price.html"><span class="mtitle">True Price Calculator</span><span class="mdesc">What you really keep</span></a>
-          <a href="tool-keyword-analysis.html"><span class="mtitle">Keyword Analysis</span><span class="mdesc">Terms customers search</span></a>
-          <a href="tool-gbp-audit.html"><span class="mtitle">Google Business Profile Audit</span><span class="mdesc">Fix your local ranking</span></a>
-          <a href="tool-website-health.html"><span class="mtitle">Website Health &amp; Strategy</span><span class="mdesc">Your site's local SEO</span></a>
+          <a href="tool-true-price.html"><span class="mtitle">True Price Calculator</span></a>
+          <a href="tool-keyword-analysis.html"><span class="mtitle">Keyword Analysis</span></a>
+          <a href="tool-gbp-audit.html"><span class="mtitle">Google Business Profile Audit</span></a>
+          <a href="tool-website-health.html"><span class="mtitle">Website Health &amp; Strategy</span></a>
+          <div class="mlabel">For users</div>
+          <a href="tool-customer-savings.html"><span class="mtitle">Customer Savings Calculator</span></a>
+          <a href="tool-best-time.html"><span class="mtitle">Best Time to Book</span></a>
         </div>
       </div>
     </nav>
