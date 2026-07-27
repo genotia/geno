@@ -48,6 +48,19 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdro
 .btn.outline{background:#fff;color:var(--ink);border-color:var(--border)}
 .btn.outline:hover{border-color:var(--brand);color:var(--brand)}
 .btn svg{width:16px;height:16px}
+/* Menu button + dropdown (self-contained) */
+.smenu-wrap{position:relative;display:inline-flex}
+.smenu-btn{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink);background:#fff;border:1px solid var(--border);border-radius:40px;padding:8px 15px;cursor:pointer;font-family:inherit}
+.smenu-btn:hover{border-color:var(--brand);color:var(--brand)}
+.smenu-btn .ham{display:flex;flex-direction:column;gap:3px}
+.smenu-btn .ham span{display:block;width:15px;height:1.6px;background:currentColor;border-radius:2px}
+.smenu{position:absolute;top:calc(100% + 10px);right:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 40px -20px rgba(60,45,150,.45);padding:8px;min-width:236px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .15s;z-index:60}
+.smenu-wrap:hover .smenu,.smenu-wrap:focus-within .smenu{opacity:1;visibility:visible;transform:translateY(0)}
+.smenu a{display:block;padding:9px 11px;border-radius:8px;color:var(--text);font-size:14px;font-weight:500}
+.smenu a:hover{background:var(--bg-alt);color:var(--brand)}
+.smenu .mhead{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:9px 11px 4px}
+.smenu .mdiv{height:1px;background:var(--border);margin:6px 0}
+@media(max-width:860px){.right a.ghost,.right a.btn.primary{display:none}}
 .hero{position:relative;overflow:hidden;padding:64px 0 44px}
 .hero::before{content:"";position:absolute;top:-200px;right:-100px;width:640px;height:520px;background:radial-gradient(circle at 60% 40%,rgba(209,86,138,.14),transparent 62%);z-index:0}
 .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
@@ -151,6 +164,22 @@ footer li a:hover{color:var(--brand)}
     <div class="right">
       <a class="ghost" href="../index.html">Marketplace</a>
       <a class="btn primary" href="../register.html">Sign up</a>
+      <div class="smenu-wrap">
+        <button class="smenu-btn" aria-label="Menu">Menu <span class="ham"><span></span><span></span><span></span></span></button>
+        <div class="smenu">
+          <div class="mhead">For businesses</div>
+          <a href="merchant-os.html">Merchant OS</a>
+          <a href="business-types.html">Business Types</a>
+          <a href="ai-agents.html">AI Agents</a>
+          <a href="pricing.html">Pricing</a>
+          <a href="../register.html">Sign up</a>
+          <div class="mdiv"></div>
+          <div class="mhead">For customers</div>
+          <a href="../index.html">Marketplace</a>
+          <a href="../download-the-app.html">Download the app</a>
+          <a href="../help.html">Help &amp; support</a>
+        </div>
+      </div>
     </div>
   </div>
 </header>
