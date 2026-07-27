@@ -117,7 +117,8 @@
 
     /* ── FOOTER ── */
     footer { background:#111827; color:rgba(255,255,255,.6); padding:44px 24px 28px; }
-    .footer-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:36px; margin-bottom:36px; }
+    .footer-inner { max-width:1200px; margin:0 auto; }
+    .footer-top { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:36px; margin-bottom:36px; }
     .f-logo { font-size:20px; font-weight:800; color:white; letter-spacing:-.5px; margin-bottom:8px; }
     .f-logo span { color:var(--green); }
     .f-tagline { font-size:13px; line-height:1.6; }
@@ -135,10 +136,10 @@
     .footer-bottom a { color:rgba(255,255,255,.5); text-decoration:none; }
 
     /* ── RESPONSIVE ── */
-    @media (max-width:900px) { .agents-grid { grid-template-columns:repeat(2,1fr); } .verticals-grid { grid-template-columns:1fr; } .footer-inner { grid-template-columns:1fr 1fr; } }
+    @media (max-width:900px) { .agents-grid { grid-template-columns:repeat(2,1fr); } .verticals-grid { grid-template-columns:1fr; } .footer-top { grid-template-columns:1fr 1fr; } }
     @media (max-width:640px) {
       .nav-links { display:none; } .btn-marketplace { display:none; } .btn-signup { display:none; }
-      .agents-grid { grid-template-columns:1fr; } .footer-inner { grid-template-columns:1fr; }
+      .agents-grid { grid-template-columns:1fr; } .footer-top { grid-template-columns:1fr; }
       .ah-stats { flex-wrap:wrap; }
     }
     .trust-bar { position:sticky; top:64px; z-index:99; background:linear-gradient(90deg,#0f172a 0%,#1e293b 100%); padding:10px 32px; display:flex; align-items:center; justify-content:center; gap:0; }
