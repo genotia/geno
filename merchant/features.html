@@ -90,35 +90,33 @@
     .os-chips { display: flex; flex-wrap: wrap; gap: 5px; }
     .os-chip { font-size: 11px; padding: 3px 9px; border-radius: 20px; background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
 
-    /* ── AI AGENTS SECTION ── */
-    .ai-section { background: #071f16; }
-    .ai-section .sec-label { color: #4ADEAB; }
-    .ai-section .sec-title { color: #fff; }
-    .ai-section .sec-sub { color: rgba(255,255,255,.5); }
-    .ai-cat-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 32px 0 24px; }
+    /* ── AI AGENTS SECTION (light — matches Merchant OS) ── */
+    .ai-section { background: var(--bg); }
+    .ai-cat-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 28px 0 22px; }
     .ai-cat-btn {
       display: inline-flex; align-items: center; gap: 7px;
-      padding: 8px 16px; border-radius: 20px;
-      border: 1.5px solid rgba(255,255,255,.15);
-      background: rgba(255,255,255,.05);
-      font-size: 13px; font-weight: 600; color: rgba(240,253,248,.55);
+      padding: 7px 14px; border-radius: 20px;
+      border: 1.5px solid var(--border); background: var(--white);
+      font-size: 12.5px; font-weight: 600; color: var(--muted);
       cursor: pointer; transition: all .15s; white-space: nowrap; font-family: inherit;
     }
-    .ai-cat-btn:hover { border-color: rgba(255,255,255,.3); color: #F0FDF8; }
-    .ai-cat-btn.active { color: #fff; }
-    .ai-tab-count { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; background: rgba(255,255,255,.18); }
-    .ai-group { margin-bottom: 36px; }
-    .ai-group-label { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: rgba(240,253,248,.4); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,.07); }
-    .agents-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-    .agent-card { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 18px; transition: background .15s, transform .15s; }
-    .agent-card:hover { background: rgba(255,255,255,.09); transform: translateY(-1px); }
-    .ac-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .ac-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-    .ac-live { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
-    .ac-live.live { background: rgba(29,158,117,.18); color: #4ADEAB; }
-    .ac-live.soon { background: rgba(255,255,255,.08); color: rgba(255,255,255,.4); }
-    .ac-name { font-size: 13px; font-weight: 700; color: #F0FDF8; margin-bottom: 5px; }
-    .ac-desc { font-size: 11.5px; color: rgba(240,253,248,.45); line-height: 1.55; }
+    .ai-cat-btn:hover { border-color: var(--muted); color: var(--text); }
+    .ai-cat-btn.active { color: #fff; border-color: transparent; }
+    .ai-tab-count { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; background: rgba(0,0,0,.06); color: inherit; }
+    .ai-cat-btn.active .ai-tab-count { background: rgba(255,255,255,.28); color: #fff; }
+    .ai-group { margin-bottom: 26px; }
+    .ai-group-label { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; padding-bottom: 9px; border-bottom: 1px solid var(--border); }
+    .ai-group-count { margin-left: 4px; font-weight: 600; opacity: .65; }
+    .agents-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .agent-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 13px 14px; transition: box-shadow .15s, transform .15s; }
+    .agent-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.06); transform: translateY(-1px); }
+    .ac-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .ac-icon { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .ac-live { font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
+    .ac-live.live { background: rgba(29,158,117,.12); color: var(--green); }
+    .ac-live.soon { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+    .ac-name { font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 3px; letter-spacing: -.2px; }
+    .ac-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
 
     /* ── PLATFORM HIGHLIGHTS ── */
     .platform-section { background: var(--white); }
@@ -609,7 +607,7 @@
     if (activeCat === 'all') {
       wrap.innerHTML = CATS.map(cat => `
         <div class="ai-group">
-          <div class="ai-group-label"><span>${cat.icon}</span> ${cat.label}</div>
+          <div class="ai-group-label"><span>${cat.icon}</span> ${cat.label} <span class="ai-group-count">${AGENTS[cat.id].length}</span></div>
           <div class="agents-grid">
             ${AGENTS[cat.id].map((a, i) => agentCard(a, i, cat)).join('')}
           </div>
