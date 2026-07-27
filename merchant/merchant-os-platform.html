@@ -60,7 +60,6 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdro
 .smenu a:hover{background:var(--bg-alt);color:var(--brand)}
 .smenu .mhead{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:9px 11px 4px}
 .smenu .mdiv{height:1px;background:var(--border);margin:6px 0}
-@media(max-width:860px){.right a.ghost,.right a.btn.primary{display:none}}
 .hero{position:relative;overflow:hidden;padding:64px 0 44px}
 .hero::before{content:"";position:absolute;top:-200px;right:-100px;width:640px;height:520px;background:radial-gradient(circle at 60% 40%,rgba(14,158,110,.13),transparent 62%);z-index:0}
 .hero .wrap{position:relative;z-index:1;max-width:760px}
@@ -116,7 +115,7 @@ footer li a{font-size:13.5px;color:var(--muted)}footer li a:hover{color:var(--br
 
 <header>
   <div class="wrap nav">
-    <a class="logo" href="merchant-os.html"><span class="mark">G</span>Genoti</a>
+    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0"><a class="logo" href="ai-agents.html"><img src="../genoti_logo.svg" alt="" style="width:28px;height:28px">Genoti</a><span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">AI Operating System for Local Businesses</span></div>
     <nav class="links">
       <div class="dropdown">
         <a href="merchant-os.html">Merchant OS <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
@@ -306,7 +305,7 @@ footer li a{font-size:13.5px;color:var(--muted)}footer li a:hover{color:var(--br
 <footer>
   <div class="wrap">
     <div class="fcols">
-      <div class="fbrand"><a class="logo" href="merchant-os.html"><span class="mark">G</span>Genoti</a><p>Discover local deals at the real price.</p></div>
+      <div class="fbrand"><a class="logo" href="ai-agents.html"><img src="../genoti_logo.svg" alt="" style="width:26px;height:26px">Genoti</a><p>Discover local deals at the real price.</p></div>
       <div><h4>For Users</h4><ul><li><a href="../dealbox.html">DealBox</a></li><li><a href="../index.html">OffPeak Deals</a></li><li><a href="../last-minute.html">LastMinute Deals</a></li><li><a href="../negotiate.html">Negotiate by AI</a></li><li><a href="../dealhub.html">DealHub</a></li></ul></div>
       <div><h4>For Merchants</h4><ul><li><a href="merchant-os.html">Merchant OS</a></li><li><a href="ai-agents.html">AI Agents</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="dealdrop.html">DealDrop</a></li><li><a href="migrate.html">Switch to Genoti</a></li></ul></div>
       <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="../help.html">Contact</a></li></ul></div>
