@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platform | Genoti Merchant OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#5b4ae0; --brand-deep:#3f2fb0; --brand-soft:#efecfc;
+  --ink:#1a1830; --text:#2a2840; --muted:#6b6a7e;
+  --bg:#ffffff; --bg-alt:#faf9fe; --border:#eceaf5;
+  --saas:#5b4ae0; --saas-soft:#efecfc; --integration:#d1568a; --integration-soft:#fceef4;
+  --accent:#0e9e6e; --accent-soft:#e4f6ef;
+  --radius:16px; --maxw:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+:focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:4px}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;gap:24px;height:66px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:19px;color:var(--ink);letter-spacing:-0.02em}
+.logo .mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--brand-deep));display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px}
+.links{display:flex;gap:20px;margin-left:12px}
+.links>a,.dropdown>a{font-size:14.5px;color:var(--muted);font-weight:500;display:inline-flex;align-items:center;gap:5px}
+.links>a:hover,.dropdown>a:hover{color:var(--ink)}
+.dropdown{position:relative}
+.dropdown>a svg{width:12px;height:12px;transition:transform .15s}
+.menu{position:absolute;top:calc(100% + 10px);left:-12px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 40px -20px rgba(60,45,150,.45);padding:8px;min-width:250px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .15s;z-index:60}
+.dropdown:hover .menu,.dropdown:focus-within .menu{opacity:1;visibility:visible;transform:translateY(0)}
+.dropdown:hover>a svg{transform:rotate(180deg)}
+.menu a{display:block;padding:9px 11px;border-radius:8px;color:var(--text)}
+.menu a:hover{background:var(--bg-alt)}
+.menu a .mtitle{font-weight:600;color:var(--ink);display:block;font-size:14px}
+.menu a:hover .mtitle{color:var(--brand)}
+.menu a .mdesc{font-size:12px;color:var(--muted)}
+.right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.right a.ghost{font-size:14.5px;color:var(--ink);font-weight:500}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px;border-radius:10px;padding:10px 18px;border:1px solid transparent;cursor:pointer;transition:transform .08s,filter .12s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.outline{background:#fff;color:var(--ink);border-color:var(--border)}
+.btn.outline:hover{border-color:var(--brand);color:var(--brand)}
+.btn svg{width:16px;height:16px}
+.hero{position:relative;overflow:hidden;padding:64px 0 44px}
+.hero::before{content:"";position:absolute;top:-200px;right:-100px;width:640px;height:520px;background:radial-gradient(circle at 60% 40%,rgba(14,158,110,.13),transparent 62%);z-index:0}
+.hero .wrap{position:relative;z-index:1;max-width:760px}
+.crumb{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:14px}
+.hero h1{font-size:clamp(32px,4.6vw,50px);line-height:1.1;letter-spacing:-0.03em;color:var(--ink);font-weight:700;margin-bottom:18px}
+.hero p.sub{font-size:18px;color:var(--muted);margin-bottom:26px;max-width:52ch}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.badges{display:flex;gap:20px;flex-wrap:wrap}
+.badges span{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;color:var(--ink)}
+.badges svg{width:16px;height:16px;color:var(--accent)}
+.sec{padding:60px 0}
+.sec-alt{background:var(--bg-alt);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.eyebrow{font-size:13px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.sec h2{font-size:clamp(24px,3vw,32px);letter-spacing:-0.02em;color:var(--ink);font-weight:700;line-height:1.15;max-width:24ch}
+.sec .lead{font-size:16px;color:var(--muted);max-width:60ch;margin-top:14px}
+.sec-head{max-width:640px;margin-bottom:32px}
+.center{text-align:center}.center h2,.center .lead{margin-left:auto;margin-right:auto}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+.pcard{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px}
+.pcard .pi{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:15px}
+.pcard .pi svg{width:22px;height:22px}
+.pcard h3{font-size:17px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.pcard .pd{font-size:14px;color:var(--muted);margin-bottom:14px}
+.pcard ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.pcard li{display:flex;gap:9px;align-items:flex-start;font-size:14px;color:var(--muted)}
+.pcard li svg{width:16px;height:16px;color:var(--accent);flex-shrink:0;margin-top:3px}
+.diff{display:flex;flex-direction:column;gap:14px;margin-top:28px;max-width:660px}
+.diff .row{display:flex;gap:12px;align-items:flex-start}
+.diff .row svg{width:22px;height:22px;color:var(--accent);flex-shrink:0;margin-top:1px}
+.diff .row span{font-size:15.5px;color:var(--muted)}.diff .row b{color:var(--ink)}
+.agents2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px}
+.acard{display:block;background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;transition:transform .1s,border-color .12s}
+.acard:hover{transform:translateY(-2px);border-color:var(--brand)}
+.acard .ab{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.acard .ab svg{width:22px;height:22px}
+.acard h4{font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.acard p{font-size:14px;color:var(--muted);margin-bottom:12px}
+.acard .more{font-size:13.5px;font-weight:600;color:var(--brand)}
+.final{text-align:center;padding:70px 0 40px}
+.final h2{font-size:clamp(28px,4vw,38px);letter-spacing:-0.02em;color:var(--ink);font-weight:700;margin-bottom:14px}
+.final p{color:var(--muted);font-size:17px;margin-bottom:26px}
+footer{background:var(--bg-alt);border-top:1px solid var(--border);padding:52px 0 30px}
+.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+.fbrand .logo{margin-bottom:12px}.fbrand p{font-size:13.5px;color:var(--muted);max-width:26ch}
+footer h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);font-weight:600;margin-bottom:14px}
+footer ul{list-style:none}footer li{margin-bottom:9px}
+footer li a{font-size:13.5px;color:var(--muted)}footer li a:hover{color:var(--brand)}
+.fbottom{border-top:1px solid var(--border);margin-top:36px;padding-top:20px;font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media(max-width:860px){.links{display:none}.agents2{grid-template-columns:1fr}.fcols{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="merchant-os.html"><span class="mark">G</span>Genoti</a>
+    <nav class="links">
+      <div class="dropdown">
+        <a href="merchant-os.html">Merchant OS <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="menu">
+          <a href="merchant-os-saas.html"><span class="mtitle">SaaS</span><span class="mdesc">11+ modules to run your business</span></a>
+          <a href="merchant-os-platform.html"><span class="mtitle">Platform</span><span class="mdesc">Built for every local business</span></a>
+          <a href="merchant-os-integrations.html"><span class="mtitle">Integration</span><span class="mdesc">Works with your existing tools</span></a>
+        </div>
+      </div>
+      <a href="business-types.html">Business Types</a>
+      <div class="dropdown">
+        <a href="ai-agents.html">AI Agents <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="menu">
+          <a href="get-found.html"><span class="mtitle">Get Found</span><span class="mdesc">Show up first and get demand</span></a>
+          <a href="get-booked.html"><span class="mtitle">Get Booked</span><span class="mdesc">Win every inquiry, fill slots</span></a>
+          <a href="get-them-back.html"><span class="mtitle">Get Them Back</span><span class="mdesc">Cut no-shows, grow repeats</span></a>
+        </div>
+      </div>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+    <div class="right">
+      <a class="ghost" href="../index.html">Marketplace</a>
+      <a class="btn primary" href="../register.html">Sign up</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="crumb">Merchant OS · Platform</div>
+    <h1>Built for every local business.</h1>
+    <p class="sub">A single salon or a chain of clinics. On your phone or the front desk. One location or fifty. The platform under Merchant OS flexes to how you actually work, and keeps your data safe while it does.</p>
+    <div class="cta">
+      <a class="btn primary" href="../register.html">Start free trial <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn outline" href="merchant-os.html">Back to overview</a>
+    </div>
+    <div class="badges">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Mobile-first</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Secure &amp; compliant</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Multi-location ready</span>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-alt">
+  <div class="wrap center">
+    <div class="eyebrow">Why the platform matters</div>
+    <h2>Your business is not a desktop, single-location template</h2>
+    <p class="lead">You run from the floor, not a back office. You might have one branch today and three next year. Your data belongs to you and your customers. The platform is built for that reality, so the software bends to your business rather than the other way round.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-head center" style="margin:0 auto 32px">
+      <div class="eyebrow">Six platform strengths</div>
+      <h2>What "built for local" actually means</h2>
+    </div>
+    <div class="pgrid">
+      <div class="pcard">
+        <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+        <h3>Mobile-first management</h3>
+        <p class="pd">Run your entire business from your phone. Your dashboard, calendar, and team in your pocket.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>iOS and Android apps</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Real-time booking notifications</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Staff schedule on the go</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Instant revenue snapshots</li>
+        </ul>
+      </div>
+      <div class="pcard">
+        <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>WhatsApp-first communication</h3>
+        <p class="pd">Your customers live on WhatsApp, so Genoti reaches them right where they are.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Automated booking confirmations</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Reminders before appointments</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Post-visit review requests</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Campaigns and deal alerts</li>
+        </ul>
+      </div>
+      <div class="pcard">
+        <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Secure and compliant</h3>
+        <p class="pd">Enterprise-grade security for businesses of any size. Your data and your customers' data stays safe.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>SOC 2-compliant infrastructure</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Encrypted at rest and in transit</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Role-based staff access controls</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>GDPR and DPDP Act ready</li>
+        </ul>
+      </div>
+      <div class="pcard">
+        <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></div>
+        <h3>Multi-location ready</h3>
+        <p class="pd">Manage all your branches from one account, with a clear view across every location.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Centralized multi-branch dashboard</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Per-location staff and inventory</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Cross-location booking transfers</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Rollup analytics and reporting</li>
+        </ul>
+      </div>
+      <div class="pcard">
+        <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg></div>
+        <h3>No setup hassle</h3>
+        <p class="pd">Go live in under 30 minutes. No IT team needed. The onboarding team gets you set up.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>30-minute guided onboarding</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Import existing customer data</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Staff training resources included</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Dedicated support during go-live</li>
+        </ul>
+      </div>
+      <div class="pcard">
+        <div class="pi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></svg></div>
+        <h3>Data you can actually use</h3>
+        <p class="pd">Stop guessing. Every decision backed by real numbers, not hunches.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Daily revenue and booking dashboards</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Customer lifetime value tracking</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Peak vs off-peak analysis</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Staff performance reports</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-alt">
+  <div class="wrap">
+    <div class="eyebrow">What makes it different</div>
+    <h2>Enterprise capability, local-business simplicity</h2>
+    <div class="diff">
+      <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><span><b>Phone-shaped, not desk-shaped.</b> The full business runs from the same app you already carry.</span></div>
+      <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><span><b>One branch or fifty, same account.</b> Add locations without migrating or rebuilding.</span></div>
+      <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><span><b>Serious security, no IT team.</b> SOC 2 and DPDP-ready protection with a 30-minute setup.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="eyebrow">Explore the rest of Merchant OS</div>
+    <h2>Platform is one of three parts</h2>
+    <div class="agents2">
+      <a class="acard" href="merchant-os-saas.html">
+        <div class="ab" style="background:var(--saas-soft);color:var(--saas)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <h4>SaaS</h4>
+        <p>The 11+ modules that run your day to day, from bookings to reporting.</p>
+        <span class="more">Learn more →</span>
+      </a>
+      <a class="acard" href="merchant-os-integrations.html">
+        <div class="ab" style="background:var(--integration-soft);color:var(--integration)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 8a4 4 0 0 0 0 8M17 8a4 4 0 0 1 0 8M9 12h6"/></svg></div>
+        <h4>Integration</h4>
+        <p>Connects to WhatsApp, Google, payments, and the tools you already use.</p>
+        <span class="more">Learn more →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>A platform that works the way you do.</h2>
+    <p>Start your 14-day free trial. No credit card required.</p>
+    <a class="btn primary" href="../register.html">Get started free <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div class="fbrand"><a class="logo" href="merchant-os.html"><span class="mark">G</span>Genoti</a><p>Discover local deals at the real price.</p></div>
+      <div><h4>For Users</h4><ul><li><a href="../dealbox.html">DealBox</a></li><li><a href="../index.html">OffPeak Deals</a></li><li><a href="../last-minute.html">LastMinute Deals</a></li><li><a href="../negotiate.html">Negotiate by AI</a></li><li><a href="../dealhub.html">DealHub</a></li></ul></div>
+      <div><h4>For Merchants</h4><ul><li><a href="merchant-os.html">Merchant OS</a></li><li><a href="ai-agents.html">AI Agents</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="dealdrop.html">DealDrop</a></li><li><a href="migrate.html">Switch to Genoti</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="../help.html">Contact</a></li></ul></div>
+    </div>
+    <div class="fbottom"><span>© 2026 OffPeak Technologies Pvt. Ltd.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+</body>
+</html>
