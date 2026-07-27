@@ -1,226 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Merchant Login | Genoti AI</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --green: #1D9E75; --dark-green: #085041; --text: #111827;
-      --muted: #6B7280; --border: #E5E7EB; --bg: #F9FAFB;
-      --white: #fff; --red: #E53E3E;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg); color: var(--text);
-      min-height: 100vh; display: flex; align-items: center;
-      justify-content: center; padding: 24px;
-    }
-    .card {
-      background: var(--white); border: 1px solid var(--border);
-      border-radius: 20px; padding: 40px 40px 36px;
-      width: 100%; max-width: 420px;
-      box-shadow: 0 4px 32px rgba(0,0,0,.07);
-    }
-    .logo { font-size: 22px; font-weight: 800; letter-spacing: -.5px; color: var(--text); text-decoration: none; display: block; }
-    .logo span { color: var(--green); }
-    .logo-sub { font-size: 10px; font-weight: 500; color: var(--muted); letter-spacing: .2px; display: block; margin-top: 2px; margin-bottom: 28px; }
-    .portal-badge { display: inline-flex; align-items: center; gap: 5px; background: #D1FAE5; color: var(--dark-green); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; letter-spacing: .3px; margin-bottom: 20px; }
-    h1 { font-size: 22px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 4px; }
-    .sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
-    label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-    input[type=email], input[type=password] {
-      width: 100%; padding: 11px 14px;
-      border: 1.5px solid var(--border); border-radius: 10px;
-      font-size: 14px; color: var(--text); background: var(--white);
-      outline: none; transition: border-color .15s; margin-bottom: 16px;
-    }
-    input:focus { border-color: var(--green); }
-    .btn-sign-in {
-      width: 100%; background: var(--green); color: var(--white);
-      border: none; border-radius: 10px; padding: 13px;
-      font-size: 15px; font-weight: 700; cursor: pointer;
-      transition: opacity .15s; margin-top: 4px;
-    }
-    .btn-sign-in:hover { opacity: .88; }
-    .btn-sign-in:disabled { opacity: .5; cursor: not-allowed; }
-    .error-box {
-      background: #FEF2F2; border: 1px solid #FECACA;
-      border-radius: 8px; padding: 10px 12px;
-      font-size: 13px; color: #DC2626; margin-bottom: 16px; display: none;
-    }
-    .error-box.show { display: block; }
-    .info-box {
-      background: #ECFDF5; border: 1px solid #A7F3D0;
-      border-radius: 8px; padding: 10px 12px;
-      font-size: 13px; color: #065F46; margin-bottom: 16px; display: none;
-    }
-    .info-box.show { display: block; }
-    .link-btn { background: none; border: none; color: var(--green); font-size: 12.5px; font-weight: 600;
-      cursor: pointer; padding: 0; font-family: inherit; margin-top: 14px; display: inline-block; }
-    .link-btn:hover { text-decoration: underline; }
-    .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0 20px; }
-    .footer-note { font-size: 12px; color: var(--muted); text-align: center; }
-    .footer-note a { color: var(--green); text-decoration: none; }
-    .footer-note a:hover { text-decoration: underline; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genoti for Merchants</title>
+<link rel="canonical" href="ai-agents.html">
+<script>
+  /* /merchant/ lands on the AI Agents page by default. A Supabase
+     password-recovery link still points at /merchant/index.html, so if this
+     URL carries a recovery token, forward it (token intact) to the login page
+     where the set-password form lives — no auth config change needed. */
+  (function () {
+    var s = location.search, h = location.hash;
+    var recovery = /type=recovery/.test(h) || /[?&](code|token_hash)=/.test(s);
+    location.replace((recovery ? 'login.html' : 'ai-agents.html') + s + h);
+  })();
+</script>
+<meta http-equiv="refresh" content="0; url=ai-agents.html">
 </head>
-<body>
-  <div class="card">
-    <a href="../index.html" class="logo"><img src="../genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
-    <span class="logo-sub">Discover Local Deals · Pay Less</span>
-
-    <div class="portal-badge">🏪 Merchant Portal</div>
-
-    <h1>Sign in</h1>
-    <p class="sub">Manage your off-peak deals from one place.</p>
-
-    <div class="error-box" id="error-box"></div>
-    <div class="info-box" id="info-box"></div>
-
-    <form onsubmit="login(event)" id="login-form">
-      <label for="email">Email address</label>
-      <input type="email" id="email" placeholder="you@example.com" autocomplete="email" required />
-
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required />
-
-      <button type="submit" class="btn-sign-in" id="btn-sign-in">Sign in →</button>
-      <button type="button" class="link-btn" onclick="forgotPassword()">Forgot your password?</button>
-    </form>
-
-    <!-- Shown when arriving from a password reset / set-password email link -->
-    <form onsubmit="setPassword(event)" id="reset-form" style="display:none">
-      <label for="new-password">New password</label>
-      <input type="password" id="new-password" placeholder="At least 8 characters" autocomplete="new-password" minlength="8" required />
-
-      <label for="new-password2">Confirm password</label>
-      <input type="password" id="new-password2" placeholder="Re-enter password" autocomplete="new-password" minlength="8" required />
-
-      <button type="submit" class="btn-sign-in" id="btn-set-pw">Set password and continue →</button>
-    </form>
-
-    <hr class="divider" />
-    <p class="footer-note">Don't have an account? <a href="../register.html">Create your merchant account</a></p>
-  </div>
-
-  <script>
-    const SUPABASE_URL = 'https://ijsxmgkzwvamwctbkgjo.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_fQfaGCU4jLbdUSCPM-pVjQ_oqK3UxkJ';
-    const { createClient } = supabase;
-    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const errEl  = document.getElementById('error-box');
-    const infoEl = document.getElementById('info-box');
-    function showErr(msg)  { infoEl.classList.remove('show'); errEl.textContent = msg;  errEl.classList.add('show'); }
-    function showInfo(msg) { errEl.classList.remove('show');  infoEl.textContent = msg; infoEl.classList.add('show'); }
-
-    /* A reset / set-password email link redirects here carrying a recovery
-       token. supabase-js turns it into a PASSWORD_RECOVERY event; we must NOT
-       auto-redirect to the dashboard — instead show the "set a new password"
-       form. The URL also carries the token in the hash, so detect it up front
-       to suppress the resume-session redirect in that case. */
-    const isRecoveryLink = /type=recovery/.test(location.hash) || /[?&](code|token_hash)=/.test(location.search);
-    let recovering = isRecoveryLink;
-
-    /* Approval provisions a merchant_users row. Without one there is no
-       workspace, so don't bounce into the dashboard (it would redirect back
-       here) — explain instead. */
-    async function goToWorkspaceOrExplain() {
-      const { data: u } = await db.auth.getUser();
-      const uid = u && u.user && u.user.id;
-      if (!uid) return;
-      const { data: mu, error } = await db.from('merchant_users').select('merchant_id').eq('user_id', uid).limit(1).maybeSingle();
-      if (!error && mu) { location.href = 'dashboard.html'; return; }
-      await db.auth.signOut();
-      showInfo('You are signed in, but your account is not linked to a workspace yet. If you just applied, we will email you once it is approved and set up.');
-    }
-
-    function showResetForm() {
-      recovering = true;
-      document.getElementById('login-form').style.display = 'none';
-      document.getElementById('reset-form').style.display = '';
-      document.querySelector('h1').textContent = 'Set your password';
-      document.querySelector('.sub').textContent = 'Choose a password to finish setting up your account.';
-      showInfo('Almost there — set a password to open your dashboard.');
-    }
-
-    db.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') showResetForm();
-    });
-
-    // Resume an existing session — but never when handling a reset link.
-    db.auth.getSession().then(async ({ data }) => {
-      if (recovering) { showResetForm(); return; }
-      if (!data.session) return;
-      // Stale token from before the ES256 signing-keys switch can't be verified
-      // ("unrecognized JWT kid"). Confirm it, and clear it if it's bad so the
-      // merchant just logs in fresh instead of being stuck on an error.
-      try {
-        const chk = await db.auth.getUser();
-        if (chk.error) { await db.auth.signOut(); return; }
-      } catch (e) { try { await db.auth.signOut(); } catch (e2) {} return; }
-      goToWorkspaceOrExplain();
-    });
-
-    /* Set a new password using the recovery session, then go to the dashboard. */
-    async function setPassword(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btn-set-pw');
-      const pw  = document.getElementById('new-password').value;
-      const pw2 = document.getElementById('new-password2').value;
-      if (pw.length < 8) { showErr('Password must be at least 8 characters.'); return; }
-      if (pw !== pw2)    { showErr('Passwords do not match.'); return; }
-
-      btn.disabled = true; btn.textContent = 'Saving…';
-      const { error } = await db.auth.updateUser({ password: pw });
-      if (error) {
-        showErr(error.message || 'Could not set the password. The link may have expired — request a new one below.');
-        btn.disabled = false; btn.textContent = 'Set password and continue →';
-        return;
-      }
-      goToWorkspaceOrExplain();
-    }
-
-    /* Merchant-initiated reset: email a recovery link back to this page. */
-    async function forgotPassword() {
-      const email = document.getElementById('email').value.trim();
-      if (!email) { showErr('Enter your email address first, then tap “Forgot your password?”.'); return; }
-      const { error } = await db.auth.resetPasswordForEmail(email, {
-        redirectTo: location.origin + '/merchant/index.html',
-      });
-      if (error) { showErr(error.message); return; }
-      showInfo('If that email has an account, a password reset link is on its way. Check your inbox.');
-    }
-
-    async function login(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btn-sign-in');
-      const errEl = document.getElementById('error-box');
-
-      btn.disabled = true;
-      btn.textContent = 'Signing in…';
-      errEl.classList.remove('show');
-
-      const { data: signIn, error } = await db.auth.signInWithPassword({
-        email: document.getElementById('email').value.trim(),
-        password: document.getElementById('password').value,
-      });
-
-      if (error) {
-        errEl.textContent = error.message === 'Invalid login credentials'
-          ? 'Incorrect email or password. Please try again.'
-          : error.message;
-        errEl.classList.add('show');
-        btn.disabled = false;
-        btn.textContent = 'Sign in →';
-      } else {
-        goToWorkspaceOrExplain();
-      }
-    }
-  </script>
-<script src="geno-merchant-chat.js"></script>
+<body style="font-family:system-ui,-apple-system,sans-serif;padding:32px;color:#2a2840">
+  <p>Redirecting… <a href="ai-agents.html" style="color:#5b4ae0;font-weight:600">Continue to Genoti for Merchants</a></p>
 </body>
 </html>

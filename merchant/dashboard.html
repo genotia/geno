@@ -4151,7 +4151,7 @@
   async function init() {
     try {
     const { data: { session } } = await db.auth.getSession();
-    if (!session) { location.href = 'index.html'; return; }
+    if (!session) { location.href = 'login.html'; return; }
 
     currentUser = session.user;
 
@@ -4162,7 +4162,7 @@
       .eq('user_id', currentUser.id)
       .single();
 
-    if (error || !mu) { location.href = 'index.html'; return; }
+    if (error || !mu) { location.href = 'login.html'; return; }
 
     currentRole = mu.role;
     currentMerchant = mu.merchants;
@@ -4204,7 +4204,7 @@
     document.getElementById('home-greeting-sub').textContent = new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
     await Promise.all([loadDeals(), loadHome()]);
-    } catch (e) { console.error('Dashboard init error:', e); location.href = 'index.html'; }
+    } catch (e) { console.error('Dashboard init error:', e); location.href = 'login.html'; }
   }
 
   /* ── HOME ── */
@@ -4725,7 +4725,7 @@
   /* ── LOGOUT ── */
   async function logout() {
     await db.auth.signOut();
-    location.href = 'index.html';
+    location.href = 'login.html';
   }
 
   /* ════════════════════════════════════════════
