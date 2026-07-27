@@ -63,22 +63,14 @@
     .sec-label { font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--green); margin-bottom: 6px; }
     .sec-title { font-size: clamp(22px, 2.5vw, 30px); font-weight: 800; letter-spacing: -.6px; margin-bottom: 8px; }
     .sec-sub { font-size: 15px; color: var(--muted); max-width: 600px; line-height: 1.65; }
-    .cats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .cat-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 18px; padding: 28px; display: flex; flex-direction: column; transition: box-shadow .2s, transform .2s; scroll-margin-top: 80px; }
-    .cat-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.08); transform: translateY(-2px); }
-    .cat-card-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
-    .cat-icon-wrap { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
-    .cat-card-meta { flex: 1; }
-    .cat-name { font-size: 18px; font-weight: 800; letter-spacing: -.4px; margin-bottom: 3px; }
-    .cat-count { font-size: 11px; font-weight: 600; color: var(--muted); }
-    .cat-desc { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 16px; }
-    .cat-subs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 18px; }
-    .cat-sub { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
-    .cat-highlights { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
-    .cat-highlights li { font-size: 12.5px; color: var(--muted); display: flex; gap: 7px; align-items: center; }
-    .cat-highlights li::before { content: "✓"; font-weight: 700; flex-shrink: 0; }
-    .cat-cta { margin-top: auto; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; padding: 10px 18px; border-radius: 10px; border: 1.5px solid; cursor: pointer; text-decoration: none; transition: opacity .15s; }
-    .cat-cta:hover { opacity: .8; }
+    /* Dark category tiles (ported from merchants.html "Browse by Category") */
+    .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .cat-tile { background: #111827; border-radius: 16px; padding: 18px 20px; display: flex; align-items: center; gap: 14px; cursor: pointer; text-decoration: none; transition: background .18s, transform .18s; border: 1px solid rgba(255,255,255,.05); scroll-margin-top: 90px; }
+    .cat-tile:hover { background: #1f2937; transform: translateY(-2px); }
+    .cat-tile-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .cat-tile-info { flex: 1; min-width: 0; }
+    .cat-tile-name { font-size: 15px; font-weight: 700; color: #F9FAFB; margin-bottom: 4px; line-height: 1.2; }
+    .cat-tile-count { font-size: 12px; color: #9CA3AF; }
 
     /* ── COMMON FEATURES BANNER ── */
     .common-section { padding: 72px 24px; background: var(--white); border-top: 1px solid var(--border); }
@@ -134,12 +126,12 @@
       .nav-links { display: none; }
       .btn-marketplace { display: none; }
       .btn-signup { display: none; }
-      .cats-grid { grid-template-columns: 1fr 1fr; }
+      .cat-grid { grid-template-columns: 1fr 1fr; }
       .common-grid { grid-template-columns: 1fr 1fr; }
       .footer-top { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
-      .cats-grid { grid-template-columns: 1fr; }
+      .cat-grid { grid-template-columns: 1fr; }
       .common-grid { grid-template-columns: 1fr 1fr; }
       .footer-top { grid-template-columns: 1fr; }
       .footer-bottom { flex-direction: column; text-align: center; }
@@ -246,7 +238,7 @@
       <div class="sec-title">Find your business type</div>
       <div class="sec-sub">Every category comes with a tailored set of OS modules and AI agents pre-configured for your workflow.</div>
     </div>
-    <div class="cats-grid" id="cats-grid"></div>
+    <div class="cat-grid" id="cats-grid"></div>
   </div>
 </section>
 
@@ -368,63 +360,72 @@
 <script>
   const BIZ_DATA = [
     {
-      icon: '🍽️', cat: 'Restaurants & Dining',
+      icon: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="21" y1="15" x2="21" y2="22"/><path d="M21 2a5 5 0 0 0-5 5 5 5 0 0 0 5 5"/>',
+      cat: 'Restaurants & Dining', tag: 'Table & queue management',
       color: '#EF4444', bg: 'rgba(239,68,68,.09)', border: 'rgba(239,68,68,.2)',
       desc: 'Table reservations, off-peak deals, loyalty programs, and WhatsApp marketing automation for restaurants and cafes.',
       subs: ['Restaurants', 'Cafes', 'Fine Dining', 'Buffet Restaurants'],
       highlights: ['Table & party reservations', 'Off-peak deal listing', 'WhatsApp marketing campaigns', 'Loyalty & gift card rewards']
     },
     {
-      icon: '🏋️', cat: 'Fitness & Sports',
+      icon: '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>',
+      cat: 'Fitness & Sports', tag: 'Class & membership tools',
       color: '#F59E0B', bg: 'rgba(245,158,11,.09)', border: 'rgba(245,158,11,.2)',
       desc: 'Fill every class and slot, track member retention, and automate renewals across your gym, yoga studio, or training centre.',
       subs: ['Gyms', 'Yoga Studios', 'Pilates Studios', 'CrossFit Centers', 'Personal Trainers'],
       highlights: ['Class & slot scheduling', 'Membership auto-renewal', 'Attendance tracking', 'AI re-engagement for lapsed members']
     },
     {
-      icon: '🏥', cat: 'Health & Medical',
+      icon: '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>',
+      cat: 'Health & Medical', tag: 'Appointments & follow-ups',
       color: '#3B82F6', bg: 'rgba(59,130,246,.09)', border: 'rgba(59,130,246,.2)',
       desc: 'Patient appointments, doctor scheduling, and clinic management built for the healthcare workflow (with compliance in mind).',
       subs: ['Clinics', 'Dentists', 'Dermatologists', 'Physiotherapists', 'Family Physicians'],
       highlights: ['Patient appointment booking', 'Doctor roster management', 'Follow-up reminders', 'Google review automation']
     },
     {
-      icon: '💅', cat: 'Beauty & Wellness',
+      icon: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/>',
+      cat: 'Beauty & Wellness', tag: 'Scheduling & packages',
       color: '#EC4899', bg: 'rgba(236,72,153,.09)', border: 'rgba(236,72,153,.2)',
       desc: 'From independent salons to MedSpa chains: manage bookings, staff commissions, product retail, and loyalty programs in one place.',
       subs: ['Salons', 'Spa', 'MedSpa', 'Beauty Parlors', 'Nail Studios', 'Laser Clinics', 'Skin Care Clinics'],
       highlights: ['Appointment & walk-in booking', 'Staff commission tracking', 'Membership & package plans', 'Product retail & inventory']
     },
     {
-      icon: '🔬', cat: 'Diagnostics',
+      icon: '<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>',
+      cat: 'Diagnostics', tag: 'Test slots & home collection',
       color: '#8B5CF6', bg: 'rgba(139,92,246,.09)', border: 'rgba(139,92,246,.2)',
       desc: 'Manage test slot bookings, patient communication, home collection scheduling, and report notifications for diagnostic centres.',
       subs: ['Blood Test Labs', 'Pathology Labs', 'MRI Centers', 'CT Scan Centers', 'X-Ray Centers', 'Ultrasound Centers'],
       highlights: ['Test slot & home collection booking', 'Patient result notifications', 'Staff & technician scheduling', 'Doctor referral management']
     },
     {
-      icon: '🏨', cat: 'Hospitals',
+      icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>',
+      cat: 'Hospitals', tag: 'OPD & specialist scheduling',
       color: '#06B6D4', bg: 'rgba(6,182,212,.09)', border: 'rgba(6,182,212,.2)',
       desc: 'OPD scheduling, specialist availability, and patient communication for multi-specialty and day-care hospitals.',
       subs: ['Multi-Specialty Hospitals', 'Specialty Hospitals', 'Day-Care Hospitals'],
       highlights: ['OPD appointment management', 'Specialist scheduling', 'Queue & wait-time management', 'Post-discharge follow-ups']
     },
     {
-      icon: '🏩', cat: 'Hospitality',
+      icon: '<path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2"/>',
+      cat: 'Hospitality', tag: 'Room & venue booking',
       color: '#14B8A6', bg: 'rgba(20,184,166,.09)', border: 'rgba(20,184,166,.2)',
       desc: 'Room and venue bookings, off-peak occupancy deals, and guest communication for hotels, resorts, and boutique properties.',
       subs: ['Hotels', 'Resorts', 'Boutique Hotels', 'Business Hotels'],
       highlights: ['Room & venue booking', 'Off-peak occupancy deals', 'Guest WhatsApp messaging', 'Multi-property management']
     },
     {
-      icon: '🖥️', cat: 'Shared Spaces',
+      icon: '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
+      cat: 'Shared Spaces', tag: 'Desk & room reservations',
       color: '#6366F1', bg: 'rgba(99,102,241,.09)', border: 'rgba(99,102,241,.2)',
       desc: 'Hot-desk and meeting room bookings, member management, utilisation analytics, and corporate billing for co-working spaces.',
       subs: ['Co-working Spaces', 'Meeting Rooms', 'Conference Rooms'],
       highlights: ['Desk & room slot booking', 'Membership & day-pass plans', 'Space utilisation analytics', 'Corporate billing & invoicing']
     },
     {
-      icon: '🏸', cat: 'Sports Facilities',
+      icon: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+      cat: 'Sports Facilities', tag: 'Court & slot booking',
       color: '#10B981', bg: 'rgba(16,185,129,.09)', border: 'rgba(16,185,129,.2)',
       desc: 'Court and turf slot bookings, dynamic peak/off-peak pricing, team scheduling, and membership packages for sports venues.',
       subs: ['Badminton Courts', 'Tennis Courts', 'Football Turf', 'Cricket Nets', 'Swimming Pools'],
@@ -434,23 +435,17 @@
 
   function catSlug(cat) { return 'cat-' + cat.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
 
-  /* ── Render category cards ── */
+  /* ── Render category tiles (dark tile + tinted SVG-icon box, matching merchants.html) ── */
   document.getElementById('cats-grid').innerHTML = BIZ_DATA.map(b => `
-    <div class="cat-card" id="${catSlug(b.cat)}">
-      <div class="cat-card-top">
-        <div class="cat-icon-wrap" style="background:${b.bg};border:1.5px solid ${b.border}">${b.icon}</div>
-        <div class="cat-card-meta">
-          <div class="cat-name">${b.cat}</div>
-          <div class="cat-count">${b.subs.length} business types</div>
-        </div>
+    <a href="../register.html" class="cat-tile" id="${catSlug(b.cat)}">
+      <div class="cat-tile-icon" style="background:${b.color}26">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${b.color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${b.icon}</svg>
       </div>
-      <p class="cat-desc">${b.desc}</p>
-      <div class="cat-subs">${b.subs.map(s => `<span class="cat-sub">${s}</span>`).join('')}</div>
-      <ul class="cat-highlights" style="--hl:${b.color}">${b.highlights.map(h => `<li style="color:var(--text)"><span style="color:${b.color}">✓</span> ${h}</li>`).join('')}</ul>
-      <a href="../register.html" class="cat-cta" style="color:${b.color};border-color:${b.border};background:${b.bg}">
-        Get started free <span style="font-size:16px">→</span>
-      </a>
-    </div>
+      <div class="cat-tile-info">
+        <div class="cat-tile-name">${b.cat}</div>
+        <div class="cat-tile-count">${b.tag}</div>
+      </div>
+    </a>
   `).join('');
 
   /* ── Render quick-browse strip ── */
