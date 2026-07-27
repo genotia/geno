@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Booked | Genoti AI Agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#5b4ae0; --brand-deep:#3f2fb0; --brand-soft:#efecfc;
+  --ink:#1a1830; --text:#2a2840; --muted:#6b6a7e;
+  --bg:#ffffff; --bg-alt:#faf9fe; --border:#eceaf5;
+  --booked:#0e9e6e; --booked-soft:#e4f6ef; --back:#d1568a; --back-soft:#fceef4;
+  --accent:#0e9e6e; --accent-soft:#e4f6ef;
+  --radius:16px; --maxw:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+:focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:4px}
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;gap:26px;height:66px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:19px;color:var(--ink);letter-spacing:-0.02em}
+.logo .mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--brand-deep));display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px}
+.nav .links{display:flex;gap:22px;margin-left:14px}
+.nav .links>a,.dropdown>a{font-size:14.5px;color:var(--muted);font-weight:500;display:inline-flex;align-items:center;gap:5px}
+.nav .links>a:hover,.dropdown>a:hover{color:var(--ink)}
+.dropdown{position:relative}
+.dropdown>a svg{width:12px;height:12px;transition:transform .15s}
+.menu{position:absolute;top:calc(100% + 10px);left:-12px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 40px -20px rgba(60,45,150,.45);padding:8px;min-width:250px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .15s;z-index:60}
+.dropdown:hover .menu,.dropdown:focus-within .menu{opacity:1;visibility:visible;transform:translateY(0)}
+.dropdown:hover>a svg{transform:rotate(180deg)}
+.menu a{display:block;padding:9px 11px;border-radius:8px}
+.menu a:hover{background:var(--bg-alt)}
+.menu a .mtitle{font-weight:600;color:var(--ink);display:block;font-size:14px}
+.menu a:hover .mtitle{color:var(--brand)}
+.menu a .mdesc{font-size:12px;color:var(--muted)}
+.nav .right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.nav .right a.ghost{font-size:14.5px;color:var(--ink);font-weight:500}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px;border-radius:10px;padding:10px 18px;border:1px solid transparent;cursor:pointer;transition:transform .08s,filter .12s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.outline{background:#fff;color:var(--ink);border-color:var(--border)}
+.btn.outline:hover{border-color:var(--brand);color:var(--brand)}
+.btn svg{width:16px;height:16px}
+.hero{position:relative;overflow:hidden;padding:64px 0 44px}
+.hero::before{content:"";position:absolute;top:-200px;right:-100px;width:640px;height:520px;background:radial-gradient(circle at 60% 40%,rgba(14,158,110,.14),transparent 62%);z-index:0}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.crumb{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:14px}
+.hero h1{font-size:clamp(32px,4.4vw,48px);line-height:1.1;letter-spacing:-0.03em;color:var(--ink);font-weight:700;margin-bottom:18px}
+.hero p.sub{font-size:18px;color:var(--muted);margin-bottom:26px;max-width:44ch}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.badges{display:flex;gap:20px;flex-wrap:wrap}
+.badges span{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;color:var(--ink)}
+.badges svg{width:16px;height:16px;color:var(--accent)}
+.vcard{background:linear-gradient(160deg,#fff,var(--bg-alt));border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:0 24px 60px -34px rgba(60,45,150,.5)}
+.vrow{display:flex;align-items:center;gap:12px;padding:13px 14px;background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:10px}
+.vrow:last-child{margin-bottom:0}
+.vrow .ic{width:36px;height:36px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vrow .ic svg{width:18px;height:18px}
+.vrow .t{font-size:13.5px;font-weight:600;color:var(--ink)}
+.vrow .s{font-size:12px;color:var(--muted)}
+.vrow .tag{margin-left:auto;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--accent-soft);color:var(--accent)}
+.sec{padding:64px 0}
+.sec-alt{background:var(--bg-alt);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.eyebrow{font-size:13px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.sec h2{font-size:clamp(26px,3.2vw,36px);letter-spacing:-0.02em;color:var(--ink);font-weight:700;line-height:1.15;max-width:22ch}
+.sec .lead{font-size:16.5px;color:var(--muted);max-width:58ch;margin-top:14px}
+.center{text-align:center}
+.center h2,.center .lead{margin-left:auto;margin-right:auto}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:16px;padding:26px 22px}
+.stat .n{font-size:38px;font-weight:700;color:var(--accent);letter-spacing:-0.02em;line-height:1}
+.stat .l{font-size:14.5px;color:var(--text);margin-top:10px}
+.src{font-size:12px;color:var(--muted);margin-top:18px}
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center;padding:34px 0}
+.feat + .feat{border-top:1px solid var(--border)}
+.feat.rev .fc{order:2}
+.feat h3{font-size:23px;font-weight:700;color:var(--ink);letter-spacing:-0.01em;margin-bottom:12px}
+.feat p{font-size:15.5px;color:var(--muted);margin-bottom:14px}
+.example{font-size:14px;color:var(--text);background:var(--accent-soft);border-radius:10px;padding:12px 14px}
+.example b{color:var(--accent)}
+.hero-chip{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--brand);background:var(--brand-soft);padding:5px 11px;border-radius:20px;margin-bottom:14px}
+.hero-chip svg{width:14px;height:14px}
+.diff{display:flex;flex-direction:column;gap:14px;margin-top:28px;max-width:640px}
+.diff .row{display:flex;gap:12px;align-items:flex-start}
+.diff .row svg{width:22px;height:22px;color:var(--accent);flex-shrink:0;margin-top:1px}
+.diff .row span{font-size:15.5px;color:var(--muted)}
+.diff .row b{color:var(--ink)}
+.result{background:var(--ink);color:#fff;border-radius:22px;padding:44px 40px;position:relative;overflow:hidden;text-align:center}
+.result::before{content:"";position:absolute;bottom:-140px;left:50%;transform:translateX(-50%);width:560px;height:340px;background:radial-gradient(circle,rgba(123,106,255,.35),transparent 65%)}
+.result .in{position:relative;z-index:1;max-width:720px;margin:0 auto}
+.result .quote{font-size:21px;font-weight:600;letter-spacing:-0.01em;margin-bottom:24px}
+.result .metrics{display:flex;gap:44px;justify-content:center;flex-wrap:wrap}
+.result .metrics .n{font-size:34px;font-weight:700;color:#9ff0cf}
+.result .metrics .l{font-size:13px;color:#a9a6c8}
+.result .who{margin-top:22px;font-size:13.5px;color:#a9a6c8}
+.agents2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px}
+.acard{display:block;background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;transition:transform .1s,border-color .12s}
+.acard:hover{transform:translateY(-2px);border-color:var(--brand)}
+.acard .ab{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.acard .ab svg{width:22px;height:22px}
+.acard h4{font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.acard p{font-size:14px;color:var(--muted);margin-bottom:12px}
+.acard .more{font-size:13.5px;font-weight:600;color:var(--brand)}
+.final{text-align:center;padding:72px 0 40px}
+.final h2{font-size:clamp(28px,4vw,40px);letter-spacing:-0.02em;color:var(--ink);font-weight:700;margin-bottom:14px;max-width:22ch;margin-left:auto;margin-right:auto}
+.final p{color:var(--muted);font-size:17px;margin-bottom:26px}
+footer{background:var(--bg-alt);border-top:1px solid var(--border);padding:52px 0 30px}
+.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+.fbrand .logo{margin-bottom:12px}
+.fbrand p{font-size:13.5px;color:var(--muted);max-width:26ch}
+footer h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);font-weight:600;margin-bottom:14px}
+footer ul{list-style:none}
+footer li{margin-bottom:9px}
+footer li a{font-size:13.5px;color:var(--muted)}
+footer li a:hover{color:var(--brand)}
+.fbottom{border-top:1px solid var(--border);margin-top:36px;padding-top:20px;font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media(max-width:860px){
+  .nav .links{display:none}
+  .hero .wrap{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
+  .feat{grid-template-columns:1fr;gap:24px}
+  .feat.rev .fc{order:0}
+  .agents2{grid-template-columns:1fr}
+  .fcols{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="merchants.html"><span class="mark">G</span>Genoti</a>
+    <nav class="links">
+      <a href="business-types.html">Business Types</a>
+      <a href="merchant-os.html">Merchant OS</a>
+      <div class="dropdown">
+        <a href="ai-agents.html">AI Agents <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="menu">
+          <a href="ai-agents.html"><span class="mtitle">Overview</span><span class="mdesc">All three agents at a glance</span></a>
+          <a href="get-found.html"><span class="mtitle">Get Found</span><span class="mdesc">Show up first and get demand</span></a>
+          <a href="get-booked.html"><span class="mtitle">Get Booked</span><span class="mdesc">Win every inquiry, fill slots</span></a>
+          <a href="get-them-back.html"><span class="mtitle">Get Them Back</span><span class="mdesc">Cut no-shows, grow repeats</span></a>
+        </div>
+      </div>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+    <div class="right">
+      <a class="ghost" href="../index.html">Marketplace</a>
+      <a class="btn primary" href="../register.html">Sign up</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="crumb">AI Agents · Get Booked</div>
+      <h1>Never miss an inquiry. Turn every message into a booking.</h1>
+      <p class="sub">Get Booked answers the moment a customer reaches out, day or night, settles on a price with Genoti Negotiate, and fills your quiet hours, so a message never slips away to the business that replied faster.</p>
+      <div class="cta">
+        <a class="btn primary" href="../register.html">Start free trial <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn outline" href="#how">See how it works</a>
+      </div>
+      <div class="badges">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Reply in seconds</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Book around the clock</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Fill empty slots</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="vcard">
+        <div class="vrow"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><div class="t">New inquiry answered</div><div class="s">Replied in 4 seconds, 11:48 PM</div></div><span class="tag">24/7</span></div>
+        <div class="vrow"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z"/></svg></div><div><div class="t">Genoti Negotiate</div><div class="s">Settled at ₹899, booked for Saturday</div></div><span class="tag">Won</span></div>
+        <div class="vrow"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><div class="t">Off-peak slot filled</div><div class="s">Tuesday 3 PM, 20% off</div></div><span class="tag">Booked</span></div>
+        <div class="vrow"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><div><div class="t">Confirmation sent</div><div class="s">On WhatsApp, with directions</div></div><span class="tag">Done</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-alt">
+  <div class="wrap center">
+    <div class="eyebrow">Why speed matters</div>
+    <h2>A missed message is a booking lost to someone else</h2>
+    <p class="lead">When a customer reaches out, they are usually messaging a few businesses at once. Whoever answers first and clearest tends to win the booking. The window is minutes, not hours.</p>
+    <div class="stats">
+      <div class="stat"><div class="n">78%</div><div class="l">of customers book with the business that responds first</div></div>
+      <div class="stat"><div class="n">21x</div><div class="l">more likely to win a lead when you reply within 5 minutes rather than 30</div></div>
+      <div class="stat"><div class="n">~42 hrs</div><div class="l">is how long the average business takes to respond to an inquiry</div></div>
+    </div>
+    <p class="src">Sources: Lead Connect; Lead Response Management Study (Oldroyd, MIT / InsideSales); Harvard Business Review, "The Short Life of Online Sales Leads." Verify and cite before publishing.</p>
+  </div>
+</section>
+
+<section class="sec" id="how">
+  <div class="wrap">
+    <div class="center" style="margin-bottom:8px">
+      <div class="eyebrow">What Get Booked does</div>
+      <h2>Your 24/7 receptionist that also closes the deal</h2>
+      <p class="lead">It does not just reply. It answers questions, settles on a price, books the slot, and confirms, without you touching your phone.</p>
+    </div>
+
+    <div class="feat">
+      <div class="fc">
+        <h3>Instant inquiry response, day or night</h3>
+        <p>Get Booked replies within seconds on chat, WhatsApp, or by voice, understands what the customer is asking, and guides them toward a booking. It never sleeps, never takes a break, and handles many conversations at once.</p>
+        <div class="example">Example: <b>"Hi! For microblading we have Tuesday 2 PM or Wednesday 4 PM. Which suits you?"</b> sent at midnight, while you rest.</div>
+      </div>
+      <div class="hero-visual">
+        <div class="vcard">
+          <div class="vrow"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><div class="t">Replied in 4 seconds</div><div class="s">Even after closing time</div></div><span class="tag">24/7</span></div>
+          <div class="vrow"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M5 8h9a3 3 0 0 1 0 6H7"/></svg></div><div><div class="t">Answered pricing question</div><div class="s">From your real service list</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat rev">
+      <div class="fc">
+        <span class="hero-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z"/></svg>Only on Genoti</span>
+        <h3>Genoti Negotiate closes the price gap</h3>
+        <p>Price-sensitive customers ask "what is your best rate" and then vanish. Genoti Negotiate is the one agent no competitor has. It negotiates on your behalf inside the rules you set, settles on a price that works for both sides, and books the appointment on the spot, so a haggler becomes a paying customer instead of a lost lead.</p>
+        <div class="example">Example: a customer asks for a discount, Negotiate offers an <b>off-peak Tuesday slot at ₹899</b>, and books it, all within your limits.</div>
+      </div>
+      <div class="hero-visual">
+        <div class="vcard">
+          <div class="vrow"><div class="ic" style="background:var(--brand-soft);color:var(--brand)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z"/></svg></div><div><div class="t">Negotiate settled at ₹899</div><div class="s">Within the floor you set</div></div><span class="tag" style="background:var(--brand-soft);color:var(--brand)">Won</span></div>
+          <div class="vrow"><div class="ic" style="background:var(--brand-soft);color:var(--brand)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div><div><div class="t">Booked for Saturday 5 PM</div><div class="s">Added to your calendar</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="fc">
+        <h3>Fill your empty slots, then confirm</h3>
+        <p>Get Booked posts off-peak and last minute deals to turn your quiet hours into bookings, checks your availability, confirms the appointment, and sends a WhatsApp confirmation with directions. Once someone is ready, you do not have to do a thing.</p>
+        <div class="example">Example: a slow Tuesday afternoon filled with a <b>20% off last minute slot</b>, confirmed automatically.</div>
+      </div>
+      <div class="hero-visual">
+        <div class="vcard">
+          <div class="vrow"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><div class="t">Off-peak slot filled</div><div class="s">Tuesday 3 PM, 20% off</div></div><span class="tag">Booked</span></div>
+          <div class="vrow"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><div><div class="t">WhatsApp confirmation sent</div><div class="s">With time, address, directions</div></div><span class="tag">Done</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-alt">
+  <div class="wrap">
+    <div class="eyebrow">Why it beats a front desk</div>
+    <h2>Always on, always consistent, a fraction of the cost</h2>
+    <div class="diff">
+      <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><span><b>Available 24/7, 365 days.</b> It answers the midnight message a front desk would miss entirely.</span></div>
+      <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><span><b>Replies in seconds and handles many at once.</b> No queue, no hold, no missed message during a busy stretch.</span></div>
+      <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><span><b>Only Genoti negotiates and books.</b> It does not just reply, it settles the price and secures the appointment.</span></div>
+      <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg><span><b>A fraction of a full-time hire.</b> All of this for far less than the cost of front desk staff.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="result">
+      <div class="in">
+        <div class="quote">"Messages used to sit unanswered until morning. Now every inquiry gets a reply in seconds and my calendar stays full, even the slow days."</div>
+        <div class="metrics">
+          <div><div class="n">Seconds</div><div class="l">to first reply, any hour</div></div>
+          <div><div class="n">More</div><div class="l">inquiries turned into bookings</div></div>
+          <div><div class="n">Fewer</div><div class="l">empty slots each week</div></div>
+        </div>
+        <div class="who">Placeholder testimonial. Replace with a real Founding 100 quote and numbers.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-alt">
+  <div class="wrap">
+    <div class="eyebrow">Works even better with the rest of your team</div>
+    <h2>Get booked is one part of the funnel</h2>
+    <div class="agents2">
+      <a class="acard" href="get-found.html">
+        <div class="ab" style="background:var(--brand-soft);color:var(--brand)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></div>
+        <h4>Get Found</h4>
+        <p>Bring the inquiries in the first place, from local search and the Genoti marketplace.</p>
+        <span class="more">Learn more →</span>
+      </a>
+      <a class="acard" href="get-them-back.html">
+        <div class="ab" style="background:var(--back-soft);color:var(--back)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 21v-5h5"/></svg></div>
+        <h4>Get Them Back</h4>
+        <p>Turn the customers you just booked into loyal regulars who return again and again.</p>
+        <span class="more">Learn more →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Ready to turn every inquiry into a booking?</h2>
+    <p>Start your 14-day free trial. No credit card required.</p>
+    <a class="btn primary" href="../register.html">Get started free <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fcols">
+      <div class="fbrand"><a class="logo" href="merchants.html"><span class="mark">G</span>Genoti</a><p>Discover local deals at the real price.</p></div>
+      <div><h4>For Users</h4><ul><li><a href="../dealbox.html">DealBox</a></li><li><a href="../index.html">OffPeak Deals</a></li><li><a href="../last-minute.html">LastMinute Deals</a></li><li><a href="../negotiate.html">Negotiate by AI</a></li><li><a href="../dealhub.html">DealHub</a></li></ul></div>
+      <div><h4>For Merchants</h4><ul><li><a href="merchant-os.html">Merchant OS</a></li><li><a href="ai-agents.html">AI Agents</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="dealdrop.html">DealDrop</a></li><li><a href="migrate.html">Switch to Genoti</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Blog</a></li><li><a href="#">Careers</a></li><li><a href="../help.html">Contact</a></li></ul></div>
+    </div>
+    <div class="fbottom"><span>© 2026 OffPeak Technologies Pvt. Ltd.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+</body>
+</html>

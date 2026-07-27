@@ -1,297 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Agents | Genoti AI</title>
-  <style>
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-    :root {
-      --green:#1D9E75; --dark-green:#085041; --text:#111827; --muted:#6B7280;
-      --border:#E5E7EB; --bg:#F9FAFB; --white:#fff; --red:#EF4444; --orange:#F59E0B;
-      --purple:#8B5CF6; --blue:#3B82F6; --teal:#14B8A6;
-    }
-    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; color:var(--text); background:var(--bg); line-height:1.5; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents | Genoti for Merchants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#5b4ae0;
+  --brand-deep:#3f2fb0;
+  --brand-soft:#efecfc;
+  --ink:#1a1830;
+  --text:#2a2840;
+  --muted:#6b6a7e;
+  --bg:#ffffff;
+  --bg-alt:#faf9fe;
+  --border:#eceaf5;
+  --found:#5b4ae0;   --found-soft:#efecfc;
+  --booked:#0e9e6e;  --booked-soft:#e4f6ef;
+  --back:#d1568a;    --back-soft:#fceef4;
+  --radius:16px;
+  --maxw:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+:focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:4px}
 
-    /* ── NAVBAR ── */
-    nav { position: sticky; top: 0; z-index: 200; background: var(--white); border-bottom: 1px solid var(--border); }
-    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-    .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--text); text-decoration: none; flex-shrink: 0; }
-    .logo span { color: var(--green); }
-    .nav-links { display: flex; gap: 4px; list-style: none; align-items: center; }
-    .nav-links a { text-decoration: none; font-size: 15px; font-weight: 500; color: var(--text); padding: 8px 16px; border-radius: 8px; transition: background .15s, color .15s; display: block; }
-    .nav-links a:hover { background: var(--bg); }
-    .nav-links a.active { color: var(--green); font-weight: 600; }
-    .nav-right { display: flex; align-items: center; gap: 8px; }
-    .btn-marketplace { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid var(--border); border-radius: 40px; padding: 9px 20px; cursor: pointer; text-decoration: none; transition: border-color .15s, background .15s; font-family: inherit; white-space: nowrap; }
-    .btn-marketplace:hover { border-color: #9CA3AF; background: var(--bg); }
-    .btn-signup { display: inline-flex; align-items: center; font-size: 14px; font-weight: 700; color: var(--white); background: var(--text); border: none; border-radius: 40px; padding: 10px 24px; cursor: pointer; text-decoration: none; transition: opacity .15s; font-family: inherit; white-space: nowrap; }
-    .btn-signup:hover { opacity: .82; }
-    .btn-pill-menu { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text); background: var(--white); border: 1.5px solid #D1D5DB; border-radius: 40px; padding: 9px 18px; cursor: pointer; transition: border-color .15s, background .15s; font-family: inherit; }
-    .btn-pill-menu:hover { border-color: var(--text); background: var(--bg); }
-    .menu-icon { display: flex; flex-direction: column; gap: 4px; }
-    .menu-icon span { display: block; width: 16px; height: 1.5px; background: var(--text); border-radius: 2px; }
-    .menu-dropdown-wrap { position: relative; display: flex; align-items: center; gap: 8px; }
-    .menu-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 300px; background: var(--white); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,.14); z-index: 500; padding: 8px 0; }
-    .menu-dropdown.open { display: block; }
-    .menu-main-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; font-size: 16px; font-weight: 700; color: var(--text); text-decoration: none; cursor: default; font-family: inherit; }
-    .menu-main-item.clickable { cursor: pointer; transition: background .12s; }
-    .menu-main-item.clickable:hover { background: var(--bg); border-radius: 10px; }
-    .menu-main-arrow { font-size: 18px; color: var(--muted); font-weight: 400; }
-    .menu-sub-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 14px; font-weight: 400; color: #374151; text-decoration: none; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: inherit; transition: background .12s; }
-    .menu-sub-item:hover { background: var(--bg); }
-    .menu-sub-item.highlight { color: var(--green); font-weight: 600; }
-    .menu-sub-item svg { flex-shrink: 0; color: var(--muted); }
-    .menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
+/* Nav */
+header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;gap:26px;height:66px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:19px;color:var(--ink);letter-spacing:-0.02em}
+.logo .mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--brand-deep));display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px}
+.nav .links{display:flex;gap:22px;margin-left:14px}
+.nav .links a{font-size:14.5px;color:var(--muted);font-weight:500}
+.nav .links a:hover{color:var(--ink)}
+.nav .links .dropdown{position:relative}
+.nav .links .dropdown>a{display:inline-flex;align-items:center;gap:5px}
+.nav .links .dropdown>a svg{width:12px;height:12px;transition:transform .15s}
+.nav .links .menu{position:absolute;top:calc(100% + 10px);left:-12px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 16px 40px -20px rgba(60,45,150,.45);padding:8px;min-width:250px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .15s;z-index:60}
+.nav .links .dropdown:hover .menu,.nav .links .dropdown:focus-within .menu{opacity:1;visibility:visible;transform:translateY(0)}
+.nav .links .dropdown:hover>a svg{transform:rotate(180deg)}
+.nav .links .menu a{display:block;padding:9px 11px;border-radius:8px;color:var(--text)}
+.nav .links .menu a:hover{background:var(--bg-alt)}
+.nav .links .menu a .mtitle{font-weight:600;color:var(--ink);display:block;font-size:14px}
+.nav .links .menu a:hover .mtitle{color:var(--brand)}
+.nav .links .menu a .mdesc{font-size:12px;color:var(--muted)}
+.podlink{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--brand);margin-top:14px}
+.nav .right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.nav .right a.ghost{font-size:14.5px;color:var(--ink);font-weight:500}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14.5px;border-radius:10px;padding:10px 18px;border:1px solid transparent;cursor:pointer;transition:transform .08s,filter .12s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.outline{background:#fff;color:var(--ink);border-color:var(--border)}
+.btn.outline:hover{border-color:var(--brand);color:var(--brand)}
+.btn svg{width:16px;height:16px}
 
-    /* ── HERO ── */
-    .agents-hero {
-      background:linear-gradient(160deg,#071f16 0%,#0d2e22 45%,#0a2518 100%);
-      padding:64px 24px 72px; text-align:center; position:relative; overflow:hidden;
-    }
-    .agents-hero::before { content:''; position:absolute; top:-60px; right:-60px; width:360px; height:360px; background:radial-gradient(circle,rgba(29,158,117,.2) 0%,transparent 70%); border-radius:50%; }
-    .agents-hero::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:40px; background:var(--bg); clip-path:ellipse(55% 100% at 50% 100%); }
-    .ah-inner { max-width:760px; margin:0 auto; position:relative; z-index:1; }
-    .ah-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(74,222,171,.15); border:1px solid rgba(74,222,171,.3); color:#4ADEAB; font-size:11px; font-weight:700; padding:5px 14px; border-radius:20px; margin-bottom:20px; letter-spacing:.6px; text-transform:uppercase; }
-    .ah-badge .dot { width:6px; height:6px; background:#4ADEAB; border-radius:50%; animation:blink 1.4s infinite; }
-    @keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
-    .agents-hero h1 { font-size:clamp(28px,5vw,54px); font-weight:800; letter-spacing:-1.5px; color:#F0FDF8; margin-bottom:14px; line-height:1.1; }
-    .agents-hero h1 em { font-style:normal; color:#4ADEAB; }
-    .agents-hero p { font-size:17px; color:rgba(240,253,248,.6); max-width:520px; margin:0 auto 40px; }
-    .ah-stats { display:flex; gap:0; justify-content:center; max-width:520px; margin:0 auto; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:14px; overflow:hidden; }
-    .ah-stat { flex:1; padding:16px 10px; text-align:center; border-right:1px solid rgba(255,255,255,.08); }
-    .ah-stat:last-child { border-right:none; }
-    .ah-stat .v { font-size:24px; font-weight:800; color:#F0FDF8; letter-spacing:-.5px; }
-    .ah-stat .v em { color:#4ADEAB; font-style:normal; }
-    .ah-stat .l { font-size:11px; color:rgba(240,253,248,.5); margin-top:2px; }
+/* Hero */
+.hero{position:relative;overflow:hidden;padding:78px 0 56px;text-align:center}
+.hero::before{content:"";position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:760px;height:520px;background:radial-gradient(circle at 50% 40%,rgba(91,74,224,.18),rgba(91,74,224,0) 62%);z-index:0}
+.hero .wrap{position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--brand);background:var(--brand-soft);padding:6px 14px;border-radius:30px;margin-bottom:22px}
+.eyebrow svg{width:15px;height:15px}
+.hero h1{font-size:clamp(34px,5vw,54px);line-height:1.08;letter-spacing:-0.03em;color:var(--ink);font-weight:700;max-width:16ch;margin:0 auto 20px}
+.hero p.sub{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:60ch;margin:0 auto 14px}
+.hero .cta{display:flex;gap:12px;justify-content:center;margin:28px 0 18px;flex-wrap:wrap}
+.hero .support{font-size:13.5px;color:var(--muted);max-width:52ch;margin:0 auto}
 
-    /* ── CATEGORY TABS ── */
-    .agents-section { max-width:1200px; margin:0 auto; padding:48px 24px 60px; }
-    .cat-tabs-wrap { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:36px; }
-    .cat-tab { display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:24px; border:1.5px solid var(--border); background:var(--white); font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:all .15s; }
-    .cat-tab:hover { border-color:var(--green); color:var(--green); }
-    .cat-tab.active { color:white; border-color:transparent; }
-    .cat-tab .tab-count { background:rgba(255,255,255,.25); color:inherit; font-size:11px; font-weight:700; padding:1px 7px; border-radius:10px; }
+/* Funnel strip */
+.funnel{display:flex;align-items:stretch;justify-content:center;gap:0;max-width:760px;margin:44px auto 0;flex-wrap:wrap}
+.fstep{flex:1;min-width:180px;background:#fff;border:1px solid var(--border);padding:16px 18px;position:relative}
+.fstep:first-child{border-radius:14px 0 0 14px}
+.fstep:last-child{border-radius:0 14px 14px 0}
+.fstep .stage{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600;margin-bottom:3px}
+.fstep .nm{font-size:15px;font-weight:600;color:var(--ink)}
+.fstep .dot{width:9px;height:9px;border-radius:50%;margin-bottom:9px}
+@media(max-width:640px){.fstep{border-radius:14px!important;min-width:100%}}
 
-    /* ── AGENT CARDS ── */
-    .agents-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-    .agent-card { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:20px; transition:transform .2s,box-shadow .2s; }
-    .agent-card:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.08); }
-    .ac-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
-    .ac-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
-    .ac-badge { font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; }
-    .badge-live { background:rgba(29,158,117,.1); color:var(--green); }
-    .badge-soon { background:rgba(107,114,128,.1); color:var(--muted); }
-    .ac-name { font-size:15px; font-weight:700; color:var(--text); margin-bottom:5px; }
-    .ac-desc { font-size:13px; color:var(--muted); line-height:1.5; }
+/* Sections */
+section.pods{padding:70px 0 20px}
+.pod{display:grid;grid-template-columns:0.9fr 1.1fr;gap:44px;align-items:center;padding:38px 0}
+.pod + .pod{border-top:1px solid var(--border)}
+.pod .visual{order:2}
+.pod.rev .copy{order:2}
+.pod.rev .visual{order:1}
+.badge{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.badge svg{width:26px;height:26px}
+.b-found{background:var(--found-soft);color:var(--found)}
+.b-booked{background:var(--booked-soft);color:var(--booked)}
+.b-back{background:var(--back-soft);color:var(--back)}
+.pod h2{font-size:30px;letter-spacing:-0.02em;color:var(--ink);font-weight:700;margin-bottom:12px}
+.pod .promise{font-size:18px;font-weight:600;color:var(--ink);margin-bottom:14px;line-height:1.4}
+.pod .body{font-size:15.5px;color:var(--muted);margin-bottom:20px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.chip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;color:var(--text);background:var(--bg-alt);border:1px solid var(--border);padding:7px 12px;border-radius:9px}
+.chip svg{width:14px;height:14px;color:var(--brand)}
+.plan{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;color:var(--muted)}
+.plan b{color:var(--ink);font-weight:600}
 
-    /* ── VERTICALS ── */
-    .verticals-section { background:white; border-top:1px solid var(--border); padding:56px 24px 64px; }
-    .vs-inner { max-width:1200px; margin:0 auto; }
-    .vs-header { text-align:center; margin-bottom:40px; }
-    .vs-eyebrow { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--green); background:rgba(29,158,117,.08); padding:5px 14px; border-radius:20px; margin-bottom:12px; }
-    .vs-title { font-size:clamp(22px,4vw,36px); font-weight:800; color:var(--text); letter-spacing:-.5px; margin-bottom:10px; }
-    .vs-sub { font-size:15px; color:var(--muted); max-width:500px; margin:0 auto; }
-    .verticals-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
-    .vertical-card { border-radius:18px; overflow:hidden; border:1px solid var(--border); }
-    .vc-head { padding:24px 24px 20px; display:flex; align-items:center; gap:14px; }
-    .vc-emoji { width:52px; height:52px; border-radius:14px; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-size:26px; }
-    .vc-head-name { font-size:18px; font-weight:800; color:white; }
-    .vc-head-sub { font-size:13px; color:rgba(255,255,255,.7); margin-top:2px; }
-    .vc-agents { padding:16px 20px 20px; background:var(--bg); display:flex; flex-direction:column; gap:10px; }
-    .vc-agent { background:white; border:1px solid var(--border); border-radius:10px; padding:13px; display:flex; align-items:flex-start; gap:10px; }
-    .vca-icon { font-size:18px; flex-shrink:0; }
-    .vca-name { font-size:13px; font-weight:700; color:var(--text); }
-    .vca-desc { font-size:12px; color:var(--muted); margin-top:2px; }
+/* Visual card */
+.vcard{background:linear-gradient(160deg,#fff,var(--bg-alt));border:1px solid var(--border);border-radius:20px;padding:26px;box-shadow:0 20px 50px -30px rgba(60,45,150,.4)}
+.vrow{display:flex;align-items:center;gap:12px;padding:13px 14px;background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:10px}
+.vrow:last-child{margin-bottom:0}
+.vrow .ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vrow .ic svg{width:17px;height:17px}
+.vrow .t{font-size:13.5px;font-weight:600;color:var(--ink)}
+.vrow .s{font-size:12px;color:var(--muted)}
+.vrow .tag{margin-left:auto;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px}
+.tag-live{background:var(--booked-soft);color:var(--booked)}
+.tag-247{background:var(--brand-soft);color:var(--brand)}
+.tag-star{background:var(--back-soft);color:var(--back)}
 
-    /* ── CTA ── */
-    .agents-cta { background:linear-gradient(135deg,#0D1F1A,#0A2E22); padding:64px 24px; text-align:center; }
-    .cta-inner { max-width:600px; margin:0 auto; }
-    .agents-cta h2 { font-size:clamp(24px,4vw,38px); font-weight:800; color:#F0FDF8; letter-spacing:-.5px; margin-bottom:14px; }
-    .agents-cta p { font-size:16px; color:rgba(240,253,248,.6); margin-bottom:32px; }
-    .cta-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
-    .btn-cta-primary { padding:14px 28px; background:#4ADEAB; color:#0D1F1A; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; transition:opacity .15s; }
-    .btn-cta-primary:hover { opacity:.9; }
-    .btn-cta-ghost { padding:14px 28px; background:rgba(255,255,255,.08); color:#F0FDF8; border:1px solid rgba(255,255,255,.2); border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; transition:all .15s; }
-    .btn-cta-ghost:hover { background:rgba(255,255,255,.14); }
+/* Backbone */
+.backbone{background:var(--ink);color:#fff;border-radius:22px;padding:46px 40px;margin:40px 0;text-align:center;position:relative;overflow:hidden}
+.backbone::before{content:"";position:absolute;bottom:-120px;left:50%;transform:translateX(-50%);width:560px;height:320px;background:radial-gradient(circle,rgba(123,106,255,.35),transparent 65%)}
+.backbone .wrap2{position:relative;z-index:1;max-width:720px;margin:0 auto}
+.backbone h2{font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-bottom:12px}
+.backbone p{color:#c9c6e6;font-size:15.5px;margin-bottom:22px}
+.bb-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.bb-tags span{font-size:13px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);padding:7px 13px;border-radius:9px}
 
-    /* ── FOOTER ── */
-    footer { background:#111827; color:rgba(255,255,255,.6); padding:44px 24px 28px; }
-    .footer-inner { max-width:1200px; margin:0 auto; }
-    .footer-top { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:36px; margin-bottom:36px; }
-    .f-logo { font-size:20px; font-weight:800; color:white; letter-spacing:-.5px; margin-bottom:8px; }
-    .f-logo span { color:var(--green); }
-    .f-tagline { font-size:13px; line-height:1.6; }
-    .footer-col h4 { font-size:13px; font-weight:700; color:white; margin-bottom:12px; }
-    .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
-    .footer-col ul a { text-decoration:none; font-size:13px; color:rgba(255,255,255,.55); transition:color .15s; }
-    .footer-col ul a:hover { color:white; }
-    .footer-col ul a { display: flex; align-items: center; gap: 7px; }
-    .footer-col ul a svg { flex-shrink: 0; opacity: .8; }
-    .footer-col ul li.parent-link a { color: #4ade80; font-weight: 700; }
-    .footer-col ul li.child { padding-left: 12px; }
-    .footer-col ul li.child a { font-size: 12px; color: rgba(255,255,255,.4); }
-    .footer-col ul li.child a svg { width: 12px; height: 12px; }
-    .footer-bottom { border-top:1px solid rgba(255,255,255,.1); padding-top:20px; font-size:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
-    .footer-bottom a { color:rgba(255,255,255,.5); text-decoration:none; }
+/* Closing CTA */
+.cta-band{text-align:center;padding:70px 0 40px}
+.cta-band h2{font-size:clamp(28px,4vw,40px);letter-spacing:-0.02em;color:var(--ink);font-weight:700;margin-bottom:14px}
+.cta-band p{color:var(--muted);font-size:17px;margin-bottom:26px}
+.cta-band .reassure{font-size:13.5px;color:var(--muted);margin-top:18px}
 
-    /* ── RESPONSIVE ── */
-    @media (max-width:900px) { .agents-grid { grid-template-columns:repeat(2,1fr); } .verticals-grid { grid-template-columns:1fr; } .footer-top { grid-template-columns:1fr 1fr; } }
-    @media (max-width:640px) {
-      .nav-links { display:none; } .btn-marketplace { display:none; } .btn-signup { display:none; }
-      .agents-grid { grid-template-columns:1fr; } .footer-top { grid-template-columns:1fr; }
-      .ah-stats { flex-wrap:wrap; }
-    }
-    .trust-bar { position:sticky; top:64px; z-index:99; background:linear-gradient(90deg,#0f172a 0%,#1e293b 100%); padding:10px 32px; display:flex; align-items:center; justify-content:center; gap:0; }
-    .trust-step { display:flex; align-items:center; gap:8px; padding:0 20px; }
-    .trust-step-icon { width:30px; height:30px; background:rgba(255,255,255,.1); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
-    .trust-step-title { font-size:12px; font-weight:700; color:white; }
-    .trust-step-sub { font-size:10px; color:#94a3b8; }
-    .trust-arrow { color:#1D9E75; font-size:16px; font-weight:700; opacity:.8; padding:0 4px; }
-    .trust-badge { margin-left:28px; padding:5px 14px; background:rgba(29,158,117,.2); border:1px solid rgba(29,158,117,.4); border-radius:20px; font-size:11px; font-weight:700; color:#4ade80; white-space:nowrap; }
-  </style>
+/* Footer */
+footer{background:var(--bg-alt);border-top:1px solid var(--border);padding:52px 0 30px;margin-top:30px}
+.fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+.fbrand .logo{margin-bottom:12px}
+.fbrand p{font-size:13.5px;color:var(--muted);max-width:26ch}
+footer h4{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);font-weight:600;margin-bottom:14px}
+footer ul{list-style:none}
+footer li{margin-bottom:9px}
+footer li a{font-size:13.5px;color:var(--muted)}
+footer li a:hover{color:var(--brand)}
+.fbottom{border-top:1px solid var(--border);margin-top:36px;padding-top:20px;font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+@media(max-width:860px){
+  .nav .links{display:none}
+  .pod{grid-template-columns:1fr;gap:26px}
+  .pod .visual,.pod.rev .visual,.pod.rev .copy{order:0}
+  .fcols{grid-template-columns:1fr 1fr}
+}
+</style>
 </head>
 <body>
 
-<!-- ══ NAVBAR ══ -->
-<nav>
-  <div class="nav-inner">
-    <div style="display:flex;flex-direction:column;gap:1px;flex-shrink:0">
-      <a href="merchants.html" class="logo"><img src="../genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
-      <span style="font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.2px">AI Operating System for Local Businesses</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="business-types.html">Business Types</a></li>
-      <li><a href="merchant-os.html">Merchant OS</a></li>
-      <li><a href="ai-agents.html" class="active">AI Agents</a></li>
-      <li><a href="pricing.html">Pricing</a></li>
-    </ul>
-    <div class="nav-right">
-      <a href="../index.html" class="btn-marketplace">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Marketplace
-      </a>
-      <a href="../register.html" class="btn-signup">Sign up</a>
-      <div class="menu-dropdown-wrap">
-        <button class="btn-pill-menu" onclick="toggleMenu()" aria-label="Menu">
-          Menu
-          <div class="menu-icon"><span></span><span></span><span></span></div>
-        </button>
-        <div class="menu-dropdown" id="menu-dropdown">
-          <div class="menu-main-item">For businesses</div>
-          <a href="merchants.html" class="menu-sub-item">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            For Merchants
-          </a>
-          <a href="business-types.html" class="menu-sub-item">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-            Business Types
-          </a>
-          <a href="merchant-os.html" class="menu-sub-item">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            Merchant OS
-          </a>
-          <a href="ai-agents.html" class="menu-sub-item highlight">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M12 2a3 3 0 0 1 3 3v6H9V5a3 3 0 0 1 3-3z"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/><path d="M8 2v2M16 2v2"/></svg>
-            AI Agents Platform
-          </a>
-          <a href="pricing.html" class="menu-sub-item">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            Pricing
-          </a>
-          <div class="menu-divider"></div>
-          <a href="../index.html" class="menu-main-item clickable">
-            <span style="display:flex;align-items:center;gap:10px">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-              For customers
-            </span>
-            <span class="menu-main-arrow">→</span>
-          </a>
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="merchants.html"><span class="mark">G</span>Genoti</a>
+    <nav class="links">
+      <a href="business-types.html">Business Types</a>
+      <a href="merchant-os.html">Merchant OS</a>
+      <div class="dropdown">
+        <a href="ai-agents.html">AI Agents <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="menu">
+          <a href="ai-agents.html"><span class="mtitle">Overview</span><span class="mdesc">All three agents at a glance</span></a>
+          <a href="get-found.html"><span class="mtitle">Get Found</span><span class="mdesc">Show up first and get demand</span></a>
+          <a href="get-booked.html"><span class="mtitle">Get Booked</span><span class="mdesc">Win every inquiry, fill slots</span></a>
+          <a href="get-them-back.html"><span class="mtitle">Get Them Back</span><span class="mdesc">Cut no-shows, grow repeats</span></a>
         </div>
       </div>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+    <div class="right">
+      <a class="ghost" href="../index.html">Marketplace</a>
+      <a class="btn primary" href="../register.html">Sign up</a>
     </div>
   </div>
-</nav>
+</header>
 
-<!-- HERO -->
-<section class="agents-hero">
-  <div class="ah-inner">
-    <div class="ah-badge"><span class="dot"></span> Agentic AI Platform</div>
-    <h1>AI Employees for<br><em>Every Local Business</em></h1>
-    <p>Replace repetitive work with AI workers that increase revenue, improve customer experience, and optimise operations.</p>
-    <div class="ah-stats">
-      <div class="ah-stat"><div class="v">22<em>+</em></div><div class="l">AI Agents</div></div>
-      <div class="ah-stat"><div class="v">4</div><div class="l">Industry Verticals</div></div>
-      <div class="ah-stat"><div class="v">24<em>/7</em></div><div class="l">Always on</div></div>
-      <div class="ah-stat"><div class="v">40<em>%</em></div><div class="l">Avg. revenue lift</div></div>
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z"/></svg> AI Agents</span>
+    <h1>Three teammates who work while you don't.</h1>
+    <p class="sub">Running a local business never stops. Getting found, winning the booking, bringing customers back. Genoti's AI agents take those three jobs off your plate and run them around the clock, so you can stay on the floor with the customer in front of you.</p>
+    <div class="cta">
+      <a class="btn primary" href="../register.html">Start free trial <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn outline" href="#agents">See it in action</a>
+    </div>
+    <p class="support">Dozens of automations, organised into three simple jobs. Always on, across WhatsApp, phone, search and social.</p>
+
+    <div class="funnel">
+      <div class="fstep"><div class="dot" style="background:var(--found)"></div><div class="stage">Attract</div><div class="nm">Get Found</div></div>
+      <div class="fstep"><div class="dot" style="background:var(--booked)"></div><div class="stage">Convert</div><div class="nm">Get Booked</div></div>
+      <div class="fstep"><div class="dot" style="background:var(--back)"></div><div class="stage">Retain</div><div class="nm">Get Them Back</div></div>
     </div>
   </div>
 </section>
 
-<!-- GENERAL AGENTS -->
-<div class="agents-section">
-  <div class="cat-tabs-wrap" id="cat-tabs"></div>
-  <div class="agents-grid" id="agents-grid"></div>
-</div>
+<section class="pods" id="agents">
+  <div class="wrap">
 
-<!-- VERTICAL AGENTS -->
-<div class="verticals-section">
-  <div class="vs-inner">
-    <div class="vs-header">
-      <div class="vs-eyebrow">Industry Specific</div>
-      <div class="vs-title">Vertical-Specific AI Agents</div>
-      <div class="vs-sub">Purpose-built agents trained for your exact industry, not generic AI.</div>
+    <!-- GET FOUND -->
+    <div class="pod">
+      <div class="copy">
+        <div class="badge b-found"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></div>
+        <h2>Get Found</h2>
+        <p class="promise">Show up first when nearby customers search, and get demand sent straight to you from the Genoti marketplace.</p>
+        <p class="body">Most tools stop at helping you rank on Google. Genoti does that too, but it also lists you in a marketplace that is already sending nearby customers looking for exactly what you offer. So getting found is not only about search. It is about demand arriving at your door before you have lifted a finger.</p>
+        <div class="chips">
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Genoti marketplace listing</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Google Business Profile sync</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Near-me SEO &amp; presence</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Keyword rank tracking</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Social content &amp; scheduling</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Hyperlocal ads</span>
+        </div>
+        <span class="plan"><b>On every plan:</b> your marketplace listing. Full presence tools with Scale.</span>
+        <div><a class="podlink" href="get-found.html">See how Get Found works →</a></div>
+      </div>
+      <div class="visual">
+        <div class="vcard">
+          <div class="vrow"><div class="ic b-found"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16l-1 13H5L4 7zM9 7V5a3 3 0 0 1 6 0v2"/></svg></div><div><div class="t">Genoti marketplace</div><div class="s">3 nearby customers viewing you now</div></div><span class="tag tag-live">Live</span></div>
+          <div class="vrow"><div class="ic b-found"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div><div class="t">Near-me search</div><div class="s">Ranked #1 for "salon in Indiranagar"</div></div></div>
+          <div class="vrow"><div class="ic b-found"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="3.5"/></svg></div><div><div class="t">Instagram post scheduled</div><div class="s">Auto-generated, goes live at 6 PM</div></div></div>
+        </div>
+      </div>
     </div>
-    <div class="verticals-grid" id="verticals-grid"></div>
+
+    <!-- GET BOOKED -->
+    <div class="pod rev">
+      <div class="copy">
+        <div class="badge b-booked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18M9 15l2 2 4-4"/></svg></div>
+        <h2>Get Booked</h2>
+        <p class="promise">Answer every inquiry the moment it lands, turn it into a confirmed booking, and fill your empty slots.</p>
+        <p class="body">A missed message is a missed booking. Get Booked replies the instant someone reaches out, day or night, on chat or by phone, confirms the appointment, and quietly fills your slow hours with off-peak and last minute deals. And only Genoti negotiates for you. Genoti Negotiate settles on a price that works for both sides and books it on the spot, so a price shopper becomes a paying customer instead of a lost lead.</p>
+        <div class="chips">
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>24/7 AI chat assistant</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>AI voice receptionist</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Online booking page</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>WhatsApp confirmations</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Off-peak &amp; last minute deals</span>
+          <span class="chip" style="border-color:var(--brand);background:var(--brand-soft)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z"/></svg>Genoti Negotiate</span>
+        </div>
+        <span class="plan"><b>On every plan:</b> booking, confirmations, off-peak deals &amp; Negotiate. AI chat and voice with AI Pro.</span>
+        <div><a class="podlink" href="get-booked.html">See how Get Booked works →</a></div>
+      </div>
+      <div class="visual">
+        <div class="vcard">
+          <div class="vrow"><div class="ic b-booked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><div class="t">New inquiry answered</div><div class="s">Replied in 4 seconds, 11:48 PM</div></div><span class="tag tag-247">24/7</span></div>
+          <div class="vrow"><div class="ic b-booked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z"/></svg></div><div><div class="t">Genoti Negotiate</div><div class="s">Settled at ₹899, booked for Saturday</div></div><span class="tag tag-star">Won</span></div>
+          <div class="vrow"><div class="ic b-booked"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><div class="t">Off-peak slot filled</div><div class="s">Tuesday 3 PM, 20% off</div></div><span class="tag tag-live">Booked</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GET THEM BACK -->
+    <div class="pod">
+      <div class="copy">
+        <div class="badge b-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 21v-5h5"/></svg></div>
+        <h2>Get Them Back</h2>
+        <p class="promise">Cut no-shows, win repeat visits, and turn happy clients into reviews and referrals.</p>
+        <p class="body">The cheapest customer to win is the one who already loves you. Get Them Back reminds clients before they forget, wins back the ones who have drifted away, rewards the regulars, and asks for a review at exactly the right moment, then replies to every one so your reputation keeps working long after the customer has left.</p>
+        <div class="chips">
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Reminders &amp; no-show reduction</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Customer re-engagement</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Loyalty, gift cards &amp; referrals</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Review requests &amp; AI responses</span>
+          <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>Reputation management</span>
+        </div>
+        <span class="plan"><b>With AI Pro and Scale:</b> the full retention and reputation agents.</span>
+        <div><a class="podlink" href="get-them-back.html">See how Get Them Back works →</a></div>
+      </div>
+      <div class="visual">
+        <div class="vcard">
+          <div class="vrow"><div class="ic b-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><div class="t">Reminder sent</div><div class="s">Tomorrow 10 AM, reply Y to confirm</div></div><span class="tag tag-247">Auto</span></div>
+          <div class="vrow"><div class="ic b-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.4 5.4 5.6.5-4.2 3.8 1.2 5.8L12 18l-5 2.9 1.2-5.8L4 13.4l5.6-.5L12 3z"/></svg></div><div><div class="t">5-star review posted</div><div class="s">AI replied with a thank-you</div></div><span class="tag tag-star">+1</span></div>
+          <div class="vrow"><div class="ic b-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6M16 6l-4-4-4 4M12 2v13"/></svg></div><div><div class="t">Win-back offer sent</div><div class="s">To 24 clients not seen in 60 days</div></div><span class="tag tag-live">Sent</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="backbone">
+    <div class="wrap2">
+      <h2>All running on your business's backbone</h2>
+      <p>Behind the three agents sits your Genoti operating system. The agents act. The operating system keeps the record straight. Together they make sure the work gets done and nothing slips through.</p>
+      <div class="bb-tags">
+        <span>Staff &amp; scheduling</span>
+        <span>Inventory</span>
+        <span>Catalogue &amp; menu</span>
+        <span>Customer CRM</span>
+        <span>Analytics</span>
+        <span>Multi-location</span>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- CTA -->
-<div class="agents-cta">
-  <div class="cta-inner">
-    <h2>Ready to hire your first AI employee?</h2>
-    <p>Start with one agent, scale to a full AI workforce. No technical setup required.</p>
-    <div class="cta-btns">
-      <button class="btn-cta-primary">Start free trial →</button>
-      <button class="btn-cta-ghost">Talk to sales</button>
-    </div>
+<section class="cta-band">
+  <div class="wrap">
+    <h2>Ready to fill your empty slots?</h2>
+    <p>Start your 14-day free trial today. No credit card required.</p>
+    <a class="btn primary" href="../register.html">Get started free <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    <p class="reassure">Join thousands of merchants across Bengaluru and beyond.</p>
   </div>
-</div>
+</section>
 
-<!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <a href="../index.html" class="logo"><img src="../genoti_logo.svg" alt="" style="width:34px;height:34px;vertical-align:middle;margin-right:4px">Genoti</a>
+  <div class="wrap">
+    <div class="fcols">
+      <div class="fbrand">
+        <a class="logo" href="merchants.html"><span class="mark">G</span>Genoti</a>
         <p>Discover local deals at the real price.</p>
       </div>
-      <div class="footer-col">
+      <div>
         <h4>For Users</h4>
         <ul>
-          <li class="parent-link"><a href="../dealbox.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> DealBox</a></li>
-          <li class="child"><a href="../index.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> OffPeak Deals</a></li>
-          <li class="child"><a href="../last-minute.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> LastMinute Deals</a></li>
-          <li class="child"><a href="../negotiate.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Negotiate by AI</a></li>
-          <li class="child"><a href="../notify.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notify Me</a></li>
-          <li><a href="../dealhub.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> DealHub: Discover Deals</a></li>
-          <li><a href="../dealbook.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> DealBook: Personal Savings Tracker</a></li>
+          <li><a href="../dealbox.html">DealBox</a></li>
+          <li><a href="../index.html">OffPeak Deals</a></li>
+          <li><a href="../last-minute.html">LastMinute Deals</a></li>
+          <li><a href="../negotiate.html">Negotiate by AI</a></li>
+          <li><a href="../dealhub.html">DealHub</a></li>
         </ul>
       </div>
-      <div class="footer-col">
+      <div>
         <h4>For Merchants</h4>
         <ul>
-          <li><a href="../calculator.html">True Price Calculator</a></li>
-          <li><a href="../register.html">List your Business</a></li>
-          <li><a href="#">Merchant Dashboard</a></li>
-          <li><a href="merchants.html">For Merchants</a></li>
-          <li><a href="#">Agentic PODs</a></li>
+          <li><a href="merchant-os.html">Merchant OS</a></li>
+          <li><a href="ai-agents.html">AI Agents</a></li>
           <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="dealdrop.html">DealDrop</a></li>
           <li><a href="migrate.html">Switch to Genoti</a></li>
-          <li><a href="dealdrop.html">DealDrop: free WhatsApp listing</a></li>
         </ul>
       </div>
-      <div class="footer-col">
+      <div>
         <h4>Company</h4>
         <ul>
           <li><a href="#">About</a></li>
@@ -301,166 +345,12 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2026 OffPeak Technologies Pvt. Ltd. · <a href="#">Privacy</a> · <a href="#">Terms</a></span>
-      <div class="footer-socials">
-        <a href="#">Twitter</a>
-        <a href="#">Instagram</a>
-        <a href="#">LinkedIn</a>
-      </div>
+    <div class="fbottom">
+      <span>© 2026 OffPeak Technologies Pvt. Ltd.</span>
+      <span>Privacy · Terms</span>
     </div>
   </div>
 </footer>
 
-<script>
-const CATS = [
-  { id:'revenue',   label:'Revenue',       icon:'💰', color:'#1D9E75', bg:'rgba(29,158,117,.1)', count:5 },
-  { id:'cx',        label:'Customer Cx',   icon:'😊', color:'#8B5CF6', bg:'rgba(139,92,246,.1)', count:5 },
-  { id:'ops',       label:'Operations',    icon:'⚙️', color:'#3B82F6', bg:'rgba(59,130,246,.1)', count:5 },
-  { id:'marketing', label:'Marketing',     icon:'📣', color:'#F59E0B', bg:'rgba(245,158,11,.1)', count:4 },
-  { id:'data',      label:'Intelligence',  icon:'📊', color:'#14B8A6', bg:'rgba(20,184,166,.1)', count:4 },
-];
-
-const AGENTS = {
-  revenue: [
-    {n:'AI Sales Agent',            icon:'💼', desc:'Converts inquiries into confirmed bookings automatically via chat and voice.'},
-    {n:'AI Upsell Agent',           icon:'⬆️', desc:'Recommends premium add-ons and upgrades at the perfect moment in the customer journey.'},
-    {n:'AI Dynamic Pricing Agent',  icon:'💱', desc:'Adjusts prices in real-time based on demand, time of day, and seat occupancy.'},
-    {n:'AI Yield Management Agent', icon:'📈', desc:'Maximises revenue per appointment slot by intelligently filling gaps in your calendar.'},
-    {n:'AI Membership Agent',       icon:'🎟️', desc:'Sells, manages, and auto-renews subscription plans with zero manual effort.'},
-  ],
-  cx: [
-    {n:'AI Receptionist',       icon:'📞', desc:'Handles calls, messages, and walk-ins 24/7. Never miss a customer again.'},
-    {n:'AI Concierge Agent',    icon:'🛎️', desc:'Personalises service recommendations for every customer based on their history.'},
-    {n:'AI Review Agent',       icon:'⭐', desc:'Collects, monitors, and responds to reviews automatically across all platforms.'},
-    {n:'AI Loyalty Agent',      icon:'🎁', desc:'Manages rewards, points, and repeat-visit incentives to keep customers coming back.'},
-    {n:'AI Retention Agent',    icon:'🔄', desc:'Re-engages lapsed customers with smart, timely offers before they go to a competitor.'},
-  ],
-  ops: [
-    {n:'AI Scheduler',          icon:'📅', desc:'Optimises staff schedules, shift planning, and resource allocation automatically.'},
-    {n:'AI Workforce Manager',  icon:'👥', desc:'Tracks attendance, performance, and team productivity in one dashboard.'},
-    {n:'AI Inventory Agent',    icon:'📦', desc:'Monitors stock levels and triggers automatic reorders before you run out.'},
-    {n:'AI Procurement Agent',  icon:'🛒', desc:'Automates supplier ordering with cost-optimised recommendations.'},
-    {n:'AI Expense Auditor',    icon:'🔍', desc:'Flags anomalies, controls costs, and generates expense reports in real time.'},
-  ],
-  marketing: [
-    {n:'AI Campaign Manager',   icon:'📣', desc:'Plans and executes targeted promotions across SMS, email, and social channels.'},
-    {n:'AI Social Media Agent', icon:'📱', desc:'Creates and publishes branded content to Instagram, Google, and Facebook automatically.'},
-    {n:'AI Local SEO Agent',    icon:'📍', desc:'Boosts your Google Maps ranking and local search visibility without paid ads.'},
-    {n:'AI Referral Agent',     icon:'🤝', desc:'Automates word-of-mouth referral programs that consistently drive new clients.'},
-  ],
-  data: [
-    {n:'AI Customer Data Platform', icon:'🗄️', desc:'Unifies all customer data from bookings, payments, and reviews into one profile.'},
-    {n:'AI Business Analyst',       icon:'📊', desc:'Delivers daily insights, KPIs, and performance reports. No spreadsheets needed.'},
-    {n:'AI Forecasting Agent',      icon:'🔮', desc:'Predicts demand, revenue trends, and customer churn weeks in advance.'},
-    {n:'AI Competitive Intelligence',icon:'🕵️', desc:'Monitors competitor pricing, reviews, and promotions in your local area.'},
-  ],
-};
-
-const VERTICALS = [
-  {
-    name:'Restaurant', emoji:'🍽️', grad:'linear-gradient(135deg,#F59E0B,#B45309)',
-    agents:[
-      {icon:'🍽️', n:'AI Waiter',                      d:'Takes orders, answers menu questions, and upsells specials via chat or kiosk.'},
-      {icon:'📝', n:'AI Order Taker',                  d:'Processes voice and digital orders accurately with zero wait time.'},
-      {icon:'👨‍🍳', n:'AI Kitchen Agent',               d:'Optimises prep times, ticket flow, and kitchen coordination in real time.'},
-      {icon:'🪑', n:'AI Table Optimisation Agent',     d:'Maximises table turns and reduces walk-away wait times.'},
-    ]
-  },
-  {
-    name:'Salon & Spa', emoji:'💇', grad:'linear-gradient(135deg,#1D9E75,#085041)',
-    agents:[
-      {icon:'✂️', n:'AI Stylist Assistant',             d:'Helps clients choose services, styles, and products that suit them.'},
-      {icon:'📅', n:'AI Rebooking Agent',               d:'Automatically re-books clients before they drift to another salon.'},
-      {icon:'🎁', n:'AI Package Recommendation Agent',  d:'Suggests seasonal bundles and packages to increase average spend.'},
-    ]
-  },
-  {
-    name:'Gym & Fitness', emoji:'🏋️', grad:'linear-gradient(135deg,#EF4444,#991B1B)',
-    agents:[
-      {icon:'💪', n:'AI Fitness Coach',                 d:'Delivers personalised workout and nutrition recommendations for every member.'},
-      {icon:'🔄', n:'AI Membership Retention Agent',    d:'Identifies at-risk members and re-engages them before they cancel.'},
-    ]
-  },
-  {
-    name:'Clinic & MedSpa', emoji:'🏥', grad:'linear-gradient(135deg,#3B82F6,#1D4ED8)',
-    agents:[
-      {icon:'📋', n:'AI Appointment Coordinator',       d:'Schedules, confirms, and manages patient appointments automatically.'},
-      {icon:'💬', n:'AI Follow-Up Agent',               d:'Sends post-treatment follow-ups and care instructions on time.'},
-      {icon:'🚫', n:'AI No-Show Reduction Agent',       d:'Cuts no-show rates with smart reminders and frictionless rebooking.'},
-    ]
-  },
-];
-
-let activeCat = 'revenue';
-
-function renderTabs() {
-  document.getElementById('cat-tabs').innerHTML = CATS.map(c =>
-    `<button class="cat-tab${c.id===activeCat?' active':''}"
-      style="${c.id===activeCat?`background:${c.color};border-color:${c.color}`:''}"
-      onclick="switchCat('${c.id}')">
-      ${c.icon} ${c.label}
-      <span class="tab-count">${c.count}</span>
-    </button>`
-  ).join('');
-}
-
-function switchCat(id) {
-  activeCat = id;
-  renderTabs();
-  renderAgents();
-}
-
-function renderAgents() {
-  const cat = CATS.find(c => c.id===activeCat);
-  const list = AGENTS[activeCat] || [];
-  document.getElementById('agents-grid').innerHTML = list.map((a,i) =>
-    `<div class="agent-card">
-      <div class="ac-top">
-        <div class="ac-icon" style="background:${cat.bg}">${a.icon}</div>
-        <span class="ac-badge ${i<2?'badge-live':'badge-soon'}">${i<2?'● Live':'Coming soon'}</span>
-      </div>
-      <div class="ac-name">${a.n}</div>
-      <div class="ac-desc">${a.desc}</div>
-    </div>`
-  ).join('');
-}
-
-function renderVerticals() {
-  document.getElementById('verticals-grid').innerHTML = VERTICALS.map(v =>
-    `<div class="vertical-card">
-      <div class="vc-head" style="background:${v.grad}">
-        <div class="vc-emoji">${v.emoji}</div>
-        <div>
-          <div class="vc-head-name">${v.name}</div>
-          <div class="vc-head-sub">${v.agents.length} AI Agent${v.agents.length>1?'s':''}</div>
-        </div>
-      </div>
-      <div class="vc-agents">
-        ${v.agents.map(a=>`
-          <div class="vc-agent">
-            <div class="vca-icon">${a.icon}</div>
-            <div><div class="vca-name">${a.n}</div><div class="vca-desc">${a.d}</div></div>
-          </div>`
-        ).join('')}
-      </div>
-    </div>`
-  ).join('');
-}
-
-function toggleMenu() {
-  document.getElementById('menu-dropdown').classList.toggle('open');
-}
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.menu-dropdown-wrap')) {
-    document.getElementById('menu-dropdown').classList.remove('open');
-  }
-});
-
-renderTabs();
-renderAgents();
-renderVerticals();
-</script>
-<script src="geno-merchant-chat.js"></script>
 </body>
 </html>
