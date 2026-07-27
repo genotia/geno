@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Features: Genoti AI for Merchants</title>
+  <title>Merchant OS: Genoti AI for Local Businesses</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -200,7 +200,7 @@
     </div>
     <ul class="nav-links">
       <li><a href="business-types.html">Business Types</a></li>
-      <li><a href="features.html" class="active">Features</a></li>
+      <li><a href="merchant-os.html" class="active">Merchant OS</a></li>
       <li><a href="pricing.html">Pricing</a></li>
     </ul>
     <div class="nav-right">
@@ -218,15 +218,15 @@
           <div class="menu-main-item">For businesses</div>
           <a href="merchants.html" class="menu-sub-item">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Merchant OS
+            For Merchants
           </a>
           <a href="business-types.html" class="menu-sub-item">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
             Business Types
           </a>
-          <a href="features.html" class="menu-sub-item">
+          <a href="merchant-os.html" class="menu-sub-item">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            Features
+            Merchant OS
           </a>
           <a href="ai-agents.html" class="menu-sub-item">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M12 2a3 3 0 0 1 3 3v6H9V5a3 3 0 0 1 3-3z"/><circle cx="8" cy="16" r="1" fill="currentColor"/><circle cx="16" cy="16" r="1" fill="currentColor"/><path d="M8 2v2M16 2v2"/></svg>
@@ -260,7 +260,7 @@
 
 <!-- ══ HERO ══ -->
 <section class="hero">
-  <div class="hero-eyebrow">✨ Features</div>
+  <div class="hero-eyebrow">✨ Merchant OS</div>
   <h1>Everything to run your business.<br><em>Nothing you don't need.</em></h1>
   <p class="hero-sub">One platform combines a powerful SaaS operating system with 22+ AI agents working 24/7, so you can focus on your customers, not admin.</p>
   <div class="hero-stats">
@@ -275,7 +275,6 @@
 <div class="section-nav">
   <div class="section-nav-inner">
     <button class="snav-btn active" onclick="scrollToSection(this,'os')">🏪 Merchant OS</button>
-    <button class="snav-btn" onclick="scrollToSection(this,'ai')">🤖 AI Agents</button>
     <button class="snav-btn" onclick="scrollToSection(this,'platform')">⚡ Platform</button>
     <button class="snav-btn" onclick="scrollToSection(this,'integrations')">🔌 Integrations</button>
   </div>
@@ -292,17 +291,6 @@
       </div>
     </div>
     <div class="os-grid" id="os-grid"></div>
-  </div>
-</section>
-
-<!-- ══ AI AGENTS ══ -->
-<section class="page-section ai-section" id="ai">
-  <div class="section-wrap">
-    <div class="sec-label">Intelligence Layer</div>
-    <div class="sec-title">AI Agents: 22+ working 24/7</div>
-    <div class="sec-sub">AI employees that never sleep. Each agent handles a specific job, from answering calls to running campaigns to predicting demand.</div>
-    <div class="ai-cat-tabs" id="ai-cat-tabs"></div>
-    <div id="ai-agents-wrap"></div>
   </div>
 </section>
 
@@ -470,7 +458,7 @@
           <li><a href="../calculator.html">True Price Calculator</a></li>
           <li><a href="../register.html">List your Business</a></li>
           <li><a href="#">Merchant Dashboard</a></li>
-          <li><a href="merchants.html">Merchant OS</a></li>
+          <li><a href="merchants.html">For Merchants</a></li>
           <li><a href="#">Agentic PODs</a></li>
           <li><a href="pricing.html">Pricing</a></li>
           <li><a href="migrate.html">Switch to Genoti</a></li>
@@ -539,101 +527,6 @@
     </div>
   `).join('');
 
-  /* ── AI Agents ── */
-  const CATS = [
-    { id:'revenue',   label:'Revenue',      icon:'💰', color:'#1D9E75', bg:'rgba(29,158,117,.18)',  count:5 },
-    { id:'cx',        label:'Customer Cx',  icon:'😊', color:'#8B5CF6', bg:'rgba(139,92,246,.18)',  count:5 },
-    { id:'ops',       label:'Operations',   icon:'⚙️', color:'#3B82F6', bg:'rgba(59,130,246,.18)',  count:5 },
-    { id:'marketing', label:'Marketing',    icon:'📣', color:'#F59E0B', bg:'rgba(245,158,11,.18)',  count:4 },
-    { id:'data',      label:'Intelligence', icon:'📊', color:'#14B8A6', bg:'rgba(20,184,166,.18)',  count:4 },
-  ];
-
-  const AGENTS = {
-    revenue: [
-      { icon:'💼', name:'AI Sales Agent',           desc:'Converts inquiries into confirmed bookings and table reservations via chat and voice, 24/7.' },
-      { icon:'⬆️', name:'AI Upsell Agent',          desc:'Recommends premium add-ons and upgrades at the right moment in the customer journey.' },
-      { icon:'💱', name:'AI Dynamic Pricing Agent', desc:'Adjusts prices in real-time based on demand, time of day, and slot occupancy.' },
-      { icon:'📈', name:'AI Yield Management Agent',desc:'Fills appointment and table gaps intelligently to maximise revenue per slot.' },
-      { icon:'🎟️', name:'AI Membership Agent',      desc:'Sells, manages, and auto-renews subscription plans effortlessly.' },
-    ],
-    cx: [
-      { icon:'📞', name:'AI Receptionist',          desc:'Handles calls, messages, and walk-ins 24/7. Never miss a customer or booking.' },
-      { icon:'🛎️', name:'AI Concierge Agent',       desc:'Guides patients or customers to the right service based on their needs and history.' },
-      { icon:'⭐', name:'AI Review Agent',           desc:'Collects and responds to reviews across Google, Zomato, and all platforms automatically.' },
-      { icon:'🎁', name:'AI Loyalty Agent',          desc:'Manages points, rewards, and repeat-visit incentives automatically.' },
-      { icon:'🔄', name:'AI Retention Agent',        desc:'Re-engages lapsed customers or patients with timely reminders and offers.' },
-    ],
-    ops: [
-      { icon:'📅', name:'AI Scheduler',             desc:'Optimises staff rosters, test slots, and resource allocation automatically.' },
-      { icon:'👥', name:'AI Workforce Manager',      desc:'Tracks attendance, performance, and team productivity in one view.' },
-      { icon:'📦', name:'AI Inventory Agent',        desc:'Monitors stock and triggers automatic reorders before you run out.' },
-      { icon:'🛒', name:'AI Procurement Agent',      desc:'Automates supplier orders with cost-optimised recommendations.' },
-      { icon:'🔍', name:'AI Expense Auditor',        desc:'Flags anomalies and generates expense reports in real time.' },
-    ],
-    marketing: [
-      { icon:'📣', name:'AI Campaign Manager',       desc:'Plans and executes targeted promotions across WhatsApp, SMS, email, and social.' },
-      { icon:'📱', name:'AI Social Media Agent',     desc:'Creates and publishes branded content to Instagram, Google, and Facebook.' },
-      { icon:'📍', name:'AI Local SEO Agent',        desc:'Boosts Google Maps ranking and local search visibility without paid ads.' },
-      { icon:'🤝', name:'AI Referral Agent',         desc:'Automates doctor and customer referral programs that consistently drive new bookings.' },
-    ],
-    data: [
-      { icon:'🗄️', name:'AI Customer Data Platform',desc:'Unifies data from bookings, payments, and reviews into one patient or customer profile.' },
-      { icon:'📊', name:'AI Business Analyst',       desc:'Delivers daily KPIs and insights: no spreadsheets needed.' },
-      { icon:'🔮', name:'AI Forecasting Agent',      desc:'Predicts appointment demand, test volumes, and revenue trends weeks in advance.' },
-      { icon:'🕵️', name:'AI Competitive Intelligence',desc:'Monitors competitor pricing and promotions in your local area.' },
-    ],
-  };
-
-  let activeCat = 'all';
-  const TOTAL = CATS.reduce((s, c) => s + c.count, 0);
-
-  function renderAiTabs() {
-    const allActive = activeCat === 'all';
-    document.getElementById('ai-cat-tabs').innerHTML =
-      `<button class="ai-cat-btn${allActive?' active':''}" style="${allActive?'background:#475569;border-color:#475569;color:#fff':''}" onclick="switchCat('all')">
-        🤖 All agents <span class="ai-tab-count">${TOTAL}</span>
-      </button>` +
-      CATS.map(c => `
-        <button class="ai-cat-btn${c.id===activeCat?' active':''}"
-          style="${c.id===activeCat?`background:${c.color};border-color:${c.color};color:#fff`:''}"
-          onclick="switchCat('${c.id}')">
-          ${c.icon} ${c.label} <span class="ai-tab-count">${c.count}</span>
-        </button>
-      `).join('');
-  }
-
-  function renderAgents() {
-    const wrap = document.getElementById('ai-agents-wrap');
-    if (activeCat === 'all') {
-      wrap.innerHTML = CATS.map(cat => `
-        <div class="ai-group">
-          <div class="ai-group-label"><span>${cat.icon}</span> ${cat.label} <span class="ai-group-count">${AGENTS[cat.id].length}</span></div>
-          <div class="agents-grid">
-            ${AGENTS[cat.id].map((a, i) => agentCard(a, i, cat)).join('')}
-          </div>
-        </div>
-      `).join('');
-    } else {
-      const cat = CATS.find(c => c.id === activeCat);
-      wrap.innerHTML = `<div class="agents-grid">${AGENTS[activeCat].map((a, i) => agentCard(a, i, cat)).join('')}</div>`;
-    }
-  }
-
-  function agentCard(a, i, cat) {
-    return `<div class="agent-card">
-      <div class="ac-head">
-        <div class="ac-icon" style="background:${cat.bg}">${a.icon}</div>
-        <span class="ac-live ${i < 2 ? 'live' : 'soon'}">${i < 2 ? '● Live' : 'Soon'}</span>
-      </div>
-      <div class="ac-name">${a.name}</div>
-      <div class="ac-desc">${a.desc}</div>
-    </div>`;
-  }
-
-  function switchCat(id) { activeCat = id; renderAiTabs(); renderAgents(); }
-
-  renderAiTabs();
-  renderAgents();
 </script>
 <script src="geno-merchant-chat.js"></script>
 </body>
